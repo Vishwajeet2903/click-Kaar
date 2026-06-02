@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.angular/
+.vscode/
+
+npm-debug.log
+yarn-error.log
+ng-serve.log
+ng-serve.err.log
+
+*.local
