@@ -30,8 +30,7 @@ import { ProductService } from '../services/product.service';
             <li class="nav-item"><a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Projects</a></li>
           </ul>
           <div class="actions">
-            <a routerLink="/contact" class="post">Post Project</a>
-            <a routerLink="/cart" class="bell" aria-label="Cart">●<span>{{ cart.count() }}</span></a>
+             <a routerLink="/cart" class="bell" aria-label="Cart">●<span>{{ cart.count() }}</span></a>
             <a routerLink="/login" class="avatar" aria-label="Login"></a>
           </div>
         </div>
