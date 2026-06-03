@@ -31,12 +31,12 @@ import { AppButtonComponent } from '../shared/components/app-button.component';
   styles: [`
     .login-page { background: #fff; min-height: 100vh; overflow: hidden; position: relative; }
     .login-brand { align-items: center; color: #d99411; display: flex; font-size: 1.1rem; font-weight: 700; gap: .75rem; left: 10vw; letter-spacing: .42rem; position: absolute; top: 3rem; z-index: 2; }
-    .login-brand span { align-items: center; background: #ff9700; color: #fff; display: inline-flex; height: 44px; justify-content: center; letter-spacing: 0; width: 44px; }
+    .login-brand span { align-items: center; background: #ff9700; border-radius: 5%; color: #fff; display: inline-flex; height: 44px; justify-content: center; letter-spacing: 0; width: 44px; }
     .login-form { left: 10vw; max-width: 520px; position: absolute; top: 26vh; width: 34vw; z-index: 2; }
     h1 { color: #171717; font-size: clamp(2rem, 3vw, 2.7rem); font-weight: 600; margin: 0 0 .65rem; }
     h1::after { background: #d8a43b; content: ""; display: inline-block; height: 1px; margin-left: .7rem; vertical-align: middle; width: 90px; }
     p { color: #777; font-size: .9rem; margin-bottom: 2rem; }
-    .google { align-items: center; background: #fff; border: 1px solid #d8a43b; color: #171717; display: flex; font-size: 1.05rem; gap: .7rem; justify-content: center; min-height: 46px; width: 100%; }
+    .google { align-items: center; background: #fff; border: 1px solid #d8a43b; border-radius: 5%; color: #171717; display: flex; font-size: 1.05rem; gap: .7rem; justify-content: center; min-height: 46px; width: 100%; }
     .google span { color: #4285f4; font-weight: 900; }
     .divider { align-items: center; color: #777; display: grid; gap: 1rem; grid-template-columns: 1fr auto 1fr; margin: 1.6rem 0 2.4rem; }
     .divider::before, .divider::after { background: #dddddd; content: ""; height: 1px; }

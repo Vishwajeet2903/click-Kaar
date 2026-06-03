@@ -13,7 +13,7 @@ import { Component, input } from '@angular/core';
       align-items: center;
       background: linear-gradient(90deg, #ff9700, #ffc36d);
       border: 0;
-      border-radius: 0;
+      border-radius: 5%;
       color: #fff;
       display: inline-flex;
       font-weight: 700;

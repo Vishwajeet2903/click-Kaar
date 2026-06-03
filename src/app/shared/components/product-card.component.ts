@@ -32,7 +32,7 @@ import { Product } from '../../models/product.model';
     </article>
   `,
   styles: [`
-    .product-card { background: #fff; border: 1px solid #ededed; border-radius: 0; box-shadow: 0 8px 22px rgba(0,0,0,.08); height: 100%; overflow: hidden; transition: transform .2s ease, border-color .2s ease; }
+    .product-card { background: #fff; border: 1px solid #ededed; border-radius: 2.5%; box-shadow: 0 8px 22px rgba(0,0,0,.08); height: 100%; overflow: hidden; transition: transform .2s ease, border-color .2s ease; }
     .product-card:hover { border-color: rgba(216,164,59,.7); transform: translateY(-3px); }
     .media-link { display: block; overflow: hidden; }
     img { aspect-ratio: 4/3; height: auto; width: 100%; transition: transform .35s ease; }

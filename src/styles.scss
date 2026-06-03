@@ -68,7 +68,7 @@ img {
 .surface {
   background: $card;
   border: 1px solid $line;
-  border-radius: 8px;
+  border-radius: 2.5%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
@@ -78,7 +78,7 @@ img {
   border: 1px solid #b7b7b7;
   color: $text;
   min-height: 42px;
-  border-radius: 0;
+  border-radius: 5%;
 }
 
 .form-control:focus,
@@ -96,7 +96,7 @@ img {
 .mat-mdc-dialog-surface {
   background: #ffffff !important;
   color: $text !important;
-  border-radius: 8px !important;
+  border-radius: 2.5% !important;
 }
 
 .mat-mdc-snack-bar-container .mdc-snackbar__surface {

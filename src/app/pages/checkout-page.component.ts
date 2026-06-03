@@ -54,7 +54,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     .panel, .success { padding: 1.25rem; margin-bottom: 1rem; }
     h2 { font-size: 1.2rem; font-weight: 900; margin-bottom: 1rem; }
     .pay-grid { display: grid; gap: .8rem; grid-template-columns: repeat(3, 1fr); }
-    .pay-grid label { border: 1px solid rgba(148,163,184,.2); border-radius: 8px; cursor: pointer; font-weight: 900; padding: 1rem; text-align: center; }
+    .pay-grid label { border: 1px solid rgba(148,163,184,.2); border-radius: 2.5%; cursor: pointer; font-weight: 900; padding: 1rem; text-align: center; }
     .pay-grid label.active { background: rgba(255,151,0,.14); border-color: #ff9700; }
     .panel p { display: flex; justify-content: space-between; gap: 1rem; }
     .grand { border-top: 1px solid rgba(148,163,184,.16); padding-top: 1rem; }

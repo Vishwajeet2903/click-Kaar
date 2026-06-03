@@ -47,10 +47,10 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   `,
   styles: [`
     .item { align-items: center; display: grid; gap: 1rem; grid-template-columns: 130px 1fr auto; margin-bottom: 1rem; padding: 1rem; }
-    .item img { aspect-ratio: 1/1; border-radius: 8px; object-fit: cover; width: 130px; }
+    .item img { aspect-ratio: 1/1; border-radius: 2.5%; object-fit: cover; width: 130px; }
     h2 { font-size: 1.15rem; font-weight: 900; }
     .qty { align-items: center; display: flex; gap: .7rem; }
-    .qty button, .remove { background: #fff; border: 1px solid rgba(216,164,59,.55); border-radius: 0; color: #171717; font-weight: 900; min-width: 34px; padding: .35rem .6rem; }
+    .qty button, .remove { background: #fff; border: 1px solid rgba(216,164,59,.55); border-radius: 5%; color: #171717; font-weight: 900; min-width: 34px; padding: .35rem .6rem; }
     .remove { color: #c23a21; display: block; margin-top: .6rem; }
     .summary { padding: 1.25rem; position: sticky; top: 92px; }
     .summary p { border-bottom: 1px solid rgba(148,163,184,.15); display: flex; justify-content: space-between; padding: .7rem 0; }

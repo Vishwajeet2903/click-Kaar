@@ -93,16 +93,16 @@ export class AddedDialogComponent {}
   `,
   styles: [`
     .gallery { position: sticky; top: 92px; }
-    .main-img { aspect-ratio: 4/3; border-radius: 8px; object-fit: cover; transition: transform .25s ease; width: 100%; }
+    .main-img { aspect-ratio: 4/3; border-radius: 2.5%; object-fit: cover; transition: transform .25s ease; width: 100%; }
     .main-img:hover { transform: scale(1.015); }
     .thumbs { display: grid; gap: .7rem; grid-template-columns: repeat(4, 1fr); margin-top: .8rem; }
-    .thumbs button { background: transparent; border: 2px solid transparent; border-radius: 8px; overflow: hidden; padding: 0; }
+    .thumbs button { background: transparent; border: 2px solid transparent; border-radius: 5%; overflow: hidden; padding: 0; }
     .thumbs button.active { border-color: #ff9700; }
     .thumbs img { aspect-ratio: 1/1; object-fit: cover; width: 100%; }
     .details, .specs { padding: 1.3rem; }
     h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 950; }
     .price-row { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); margin: 1.2rem 0; }
-    .price-row div { background: #fff; border: 1px solid rgba(216,164,59,.42); border-radius: 0; padding: 1rem; }
+    .price-row div { background: #fff; border: 1px solid rgba(216,164,59,.42); border-radius: 2.5%; padding: 1rem; }
     .price-row strong { display: block; font-size: 1.4rem; }
     .price-row span { color: #777; }
     .availability { color: #18864b; font-weight: 900; margin-bottom: 1rem; }

@@ -65,7 +65,7 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
     .toggle { align-items: center; display: flex; gap: .5rem; }
     .empty { padding: 2rem; text-align: center; }
     .pagination-bar { align-items: center; display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
-    .pagination-bar button { background: #fff; border: 1px solid rgba(216,164,59,.65); border-radius: 0; color: #171717; font-weight: 800; padding: .6rem 1rem; }
+    .pagination-bar button { background: #fff; border: 1px solid rgba(216,164,59,.65); border-radius: 5%; color: #171717; font-weight: 800; padding: .6rem 1rem; }
     .pagination-bar button:disabled { opacity: .45; }
   `]
 })

@@ -42,7 +42,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   styles: [`
     .dashboard { display: grid; gap: 1.2rem; grid-template-columns: 240px 1fr; }
     .sidebar, .profile, .booking { padding: 1.2rem; }
-    .sidebar a { border-radius: 0; color: #555; display: block; font-weight: 800; padding: .75rem; }
+    .sidebar a { border-radius: 5%; color: #555; display: block; font-weight: 800; padding: .75rem; }
     .sidebar a:hover { background: rgba(255,151,0,.1); color: #ff9700; }
     .profile { margin-bottom: 1rem; }
     h2, h3 { font-weight: 900; }

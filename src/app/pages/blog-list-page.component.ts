@@ -38,7 +38,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   styles: [`
     .search { max-width: 320px; }
     .chips { display: flex; flex-wrap: wrap; gap: .7rem; margin-bottom: 1.4rem; }
-    .chips button { background: #fff; border: 1px solid rgba(216,164,59,.45); border-radius: 999px; color: #171717; font-weight: 800; padding: .55rem .9rem; }
+    .chips button { background: #fff; border: 1px solid rgba(216,164,59,.45); border-radius: 5%; color: #171717; font-weight: 800; padding: .55rem .9rem; }
     .chips button.active { background: #ff9700; color: #fff; }
     .post { height: 100%; overflow: hidden; }
     .post img { aspect-ratio: 16/10; width: 100%; }
