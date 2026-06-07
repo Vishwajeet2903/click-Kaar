@@ -4,7 +4,7 @@ import { Component, input } from '@angular/core';
   selector: 'app-button',
   standalone: true,
   template: `
-    <button [type]="type()" class="ck-btn" [class.secondary]="variant() === 'secondary'">
+    <button [type]="type()" class="ck-btn" [class.secondary]="variant() === 'secondary'" [disabled]="disabled()">
       <ng-content />
     </button>
   `,
@@ -25,10 +25,12 @@ import { Component, input } from '@angular/core';
       width: 100%;
     }
     .ck-btn:hover { box-shadow: 0 12px 22px rgba(255, 151, 0, .22); transform: translateY(-1px); }
+    .ck-btn:disabled { cursor: not-allowed; opacity: .68; transform: none; }
     .ck-btn.secondary { background: #fff; border: 1px solid #d8a43b; color: #171717; }
   `]
 })
 export class AppButtonComponent {
+  readonly disabled = input(false);
   readonly variant = input<'primary' | 'secondary'>('primary');
   readonly type = input<'button' | 'submit'>('button');
 }

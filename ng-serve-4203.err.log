@@ -1,0 +1,2433 @@
+[1m[33mComponent HMR has been enabled, see https://angular.dev/hmr for more info.[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../landing/about-vision-section.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/home-page.component.ts:2:44:
+[37m      2 │ ...ectionComponent } from [32m'../landing/about-vision-section.component'[37m;
+        ╵                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/home-page.component.ts:16:4:
+[37m      16 │     [32mAboutVisionSectionComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/pages/home-page.component.ts:16:4:
+[37m      16 │     [32mAboutVisionSectionComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../landing/about-vision-section.component"[0m
+
+    src/app/pages/home-page.component.ts:3:44:
+[37m      3 │ ...ectionComponent } from [32m'../landing/about-vision-section.component'[37m;
+        ╵                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../landing/about-vision-section.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/home-page.component.ts:2:44:
+[37m      2 │ ...ectionComponent } from [32m'../landing/about-vision-section.component'[37m;
+        ╵                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/home-page.component.ts:16:4:
+[37m      16 │     [32mAboutVisionSectionComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/pages/home-page.component.ts:16:4:
+[37m      16 │     [32mAboutVisionSectionComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../landing/about-vision-section.component"[0m
+
+    src/app/pages/home-page.component.ts:3:44:
+[37m      3 │ ...ectionComponent } from [32m'../landing/about-vision-section.component'[37m;
+        ╵                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './layouts/footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.ts:5:32:
+[37m      5 │ import { FooterComponent } from [32m'./layouts/footer.component'[37m;
+        ╵                                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.ts:12:43:
+[37m      12 │ ...utlet, NavbarComponent, [32mFooterComponent[37m, WhatsAppButtonComponent],
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/app.component.ts:12:43:
+[37m      12 │ ...utlet, NavbarComponent, [32mFooterComponent[37m, WhatsAppButtonComponent],
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./layouts/footer.component"[0m
+
+    src/app/app.component.ts:6:32:
+[37m      6 │ import { FooterComponent } from [32m'./layouts/footer.component'[37m;
+        ╵                                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './layouts/footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.ts:5:32:
+[37m      5 │ import { FooterComponent } from [32m'./layouts/footer.component'[37m;
+        ╵                                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.ts:12:43:
+[37m      12 │ ...utlet, NavbarComponent, [32mFooterComponent[37m, WhatsAppButtonComponent],
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/app.component.ts:12:43:
+[37m      12 │ ...utlet, NavbarComponent, [32mFooterComponent[37m, WhatsAppButtonComponent],
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./layouts/footer.component"[0m
+
+    src/app/app.component.ts:6:32:
+[37m      6 │ import { FooterComponent } from [32m'./layouts/footer.component'[37m;
+        ╵                                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/about-vision-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/gallery-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/hero-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/landing-footer-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/marketplace-section.component.ts:6:38:
+[37m      6 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/showcase-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/about-vision-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/gallery-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/hero-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/landing-footer-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/marketplace-section.component.ts:6:38:
+[37m      6 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/showcase-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/about-vision-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/gallery-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/hero-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/landing-footer-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/marketplace-section.component.ts:6:38:
+[37m      6 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/showcase-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/about-vision-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/gallery-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/hero-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/landing-footer-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/marketplace-section.component.ts:6:38:
+[37m      6 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/showcase-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/about-vision-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/gallery-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/hero-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/landing-footer-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/marketplace-section.component.ts:6:38:
+[37m      6 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/showcase-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/about-vision-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/gallery-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/hero-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/landing-footer-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/marketplace-section.component.ts:6:38:
+[37m      6 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../shared/directives/scroll-reveal.directive"[0m
+
+    src/app/landing/showcase-section.component.ts:4:38:
+[37m      4 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/about-vision-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:2:38:
+[37m      2 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/gallery-section.component.ts:7:12:
+[37m      7 │   imports: [[32mScrollRevealDirective[37m],
+        ╵             [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/hero-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/landing-footer-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:7:38:
+[37m      7 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/marketplace-section.component.ts:12:49:
+[37m      12 │ ...rts: [AsyncPipe, CurrencyPipe, RouterLink, [32mScrollRevealDirective[37m],
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../shared/directives/scroll-reveal.directive' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:3:38:
+[37m      3 │ ...ealDirective } from [32m'../shared/directives/scroll-reveal.directive'[37m;
+        ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/landing/showcase-section.component.ts:8:24:
+[37m      8 │   imports: [RouterLink, [32mScrollRevealDirective[37m],
+        ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'collageReady' does not exist on type 'HeroSectionComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:34:55:
+[37m      34 │       <div class="hero-collage" [class.collage-ready]="[32mcollageReady[37m">
+         ╵                                                        [32m~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'collageReady' does not exist on type 'HeroSectionComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:34:55:
+[37m      34 │       <div class="hero-collage" [class.collage-ready]="[32mcollageReady[37m">
+         ╵                                                        [32m~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2420: Class 'HeroSectionComponent' incorrectly implements interface 'AfterViewInit'.
+  Property 'ngAfterViewInit' is missing in type 'HeroSectionComponent' but required in type 'AfterViewInit'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/landing/hero-section.component.ts:113:13:
+[37m      113 │ export class [32mHeroSectionComponent[37m implements AfterViewInit {
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+  'ngAfterViewInit' is declared here.
+
+    node_modules/@angular/core/index.d.ts:6264:4:
+[37m      6264 │     [32mngAfterViewInit(): void;[37m
+           ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mExpected digit.
+  ╷
+5 │       padding: clamp(.rem, 1.2vw, 1rem) clamp(1rem, 2vw, 1.5rem) clamp(1rem, 2vw, 1.5rem);
+  │                       ^
+  ╵
+  src\app\pages\login-page.component.ts 5:23  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mExpected digit.
+  ╷
+5 │       padding: clamp(.rem, 1.2vw, 1rem) clamp(1rem, 2vw, 1.5rem) clamp(1rem, 2vw, 1.5rem);
+  │                       ^
+  ╵
+  src\app\pages\login-page.component.ts 5:23  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mExpected digit.
+  ╷
+5 │       padding: clamp(.rem, 1.2vw, 1rem) clamp(1rem, 2vw, 1.5rem) clamp(1rem, 2vw, 1.5rem);
+  │                       ^
+  ╵
+  src\app\pages\login-page.component.ts 5:23  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+[39m[22m
