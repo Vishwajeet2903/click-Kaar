@@ -44,8 +44,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .package-card img { aspect-ratio: 1.1; border-radius: 19px; object-fit: cover; width: 100%; }
     .listing-meta { align-items: center; background: #fff; border-radius: 999px; display: flex; justify-content: space-between; gap: .7rem; margin: .7rem .2rem .1rem; padding: .55rem .7rem; }
     .listing-meta b { color: #111; font-size: .8rem; font-weight: 950; }
-    .listing-meta small { color: #128172; font-size: .72rem; font-weight: 900; }
-    .package-card span { color: #7abfb4; display: block; font-size: .72rem; font-weight: 900; letter-spacing: .16em; margin: .9rem .3rem .35rem; text-transform: uppercase; }
+    .listing-meta small { color: #ff9700; font-size: .72rem; font-weight: 900; }
+    .package-card span { color: #ff9700; display: block; font-size: .72rem; font-weight: 900; letter-spacing: .16em; margin: .9rem .3rem .35rem; text-transform: uppercase; }
     .package-card h3 { color: #111; font-size: clamp(1.6rem, 2.4vw, 2.35rem); font-weight: 900; letter-spacing: -.055em; line-height: 1; margin: 0 .3rem .65rem; }
     .package-card p { color: #555; font-size: .92rem; line-height: 1.5; margin: 0 .3rem .5rem; }
     @media (max-width: 900px) {

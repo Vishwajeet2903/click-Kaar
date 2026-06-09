@@ -10,9 +10,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     <section class="landing-card hero-section" id="home">
       <div class="hero-copy">
         <p class="eyebrow" appScrollReveal="fade-up">Creative rental marketplace</p>
-        <h1 appScrollReveal="fade-up" [revealDelay]="90">Build a shoot that looks like a masterpiece.</h1>
+        <h1 appScrollReveal="fade-up" [revealDelay]="90">Build a shoot that looks like a <h1 class='mast'>MASTERPIECE.</h1> </h1>
         <p class="hero-subtitle" appScrollReveal="fade-up" [revealDelay]="180">
-          Rent premium gear, book studios, and connect with creators through one polished production workspace.
+          Rent the Right Gear, Right When You Need It.
         </p>
         <div class="hero-actions" appScrollReveal="fade-up" [revealDelay]="260">
           <a routerLink="/catalogue" class="btn-pill dark">Shop rental gear</a>
@@ -47,9 +47,11 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     </section>
   `,
   styles: [`
+  .mast{color: #ff9700;}
+  .eyebrow{color: #ff9700;}
     .hero-section { min-height: calc(100vh - 106px); padding: clamp(2.5rem, 6vw, 5.4rem) clamp(1.2rem, 4vw, 3.2rem) 3.5rem; text-align: center; }
     .hero-copy { margin: 0 auto; max-width: 850px; position: relative; z-index: 2; }
-    h1 { color: #111; font-size: clamp(3.3rem, 8vw, 7rem); font-weight: 900; letter-spacing: -.06em; line-height: .9; margin: .7rem auto 1rem; text-wrap: balance; }
+    h1 { color: #111; font-size: clamp(3.3rem, 8vw, 7rem); font-weight: 900; letter-spacing: -0.02em; line-height: .9; margin: .7rem auto 1rem; text-wrap: balance; }
     .hero-subtitle { color: #2e2e2c; font-size: clamp(1rem, 1.5vw, 1.18rem); line-height: 1.55; margin: 0 auto 1.45rem; max-width: 620px; }
     .hero-actions { align-items: center; display: flex; gap: .8rem; justify-content: center; }
     .market-search { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 999px; box-shadow: 0 18px 42px rgba(0,0,0,.08); display: grid; gap: .65rem; grid-template-columns: auto 1fr auto; margin: 1.35rem auto .8rem; max-width: 650px; padding: .55rem .65rem .55rem 1rem; }
@@ -63,7 +65,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .collage-card img { height: 100%; object-fit: cover; width: 100%; }
     .collage-card figcaption { align-items: center; background: rgba(255,255,255,.92); border-radius: 999px; bottom: .65rem; display: flex; gap: .5rem; justify-content: space-between; left: .65rem; padding: .45rem .6rem; position: absolute; right: .65rem; }
     .collage-card b { color: #111; font-size: .72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .collage-card small { color: #128172; font-size: .7rem; font-weight: 900; white-space: nowrap; }
+    .collage-card small { color: #ff9700; font-size: .7rem; font-weight: 900; white-space: nowrap; }
     .card-1 { --card-delay: .28s; --final-transform: translate(-210%, -23%) rotate(-13deg); transform: var(--final-transform); }
     .card-2 { --card-delay: .38s; --final-transform: translate(-142%, -43%) rotate(-7deg); transform: var(--final-transform); }
     .card-3 { --card-delay: .48s; --final-transform: translate(-70%, -50%) rotate(-2deg); transform: var(--final-transform); }
@@ -74,7 +76,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .hero-collage.collage-ready .collage-card { animation: fan-card-in .95s cubic-bezier(.2,.9,.2,1) var(--card-delay) both; }
     .handle { border-radius: 999px; color: #fff; font-size: .98rem; font-weight: 850; line-height: 1; padding: .62rem .82rem; position: absolute; z-index: 5; }
     .handle-blue { --handle-transform: rotate(-7deg); background: #2f6df2; left: 24%; top: 17%; transform: var(--handle-transform); }
-    .handle-green { --handle-transform: rotate(10deg); background: #6bb092; right: 9%; top: 24%; transform: var(--handle-transform); }
+    .handle-green { --handle-transform: rotate(10deg); background: #ff9700; right: 9%; top: 24%; transform: var(--handle-transform); }
     .hero-collage:not(.collage-ready) .handle { opacity: 0; transform: translateY(14px) scale(.82) !important; }
     .hero-collage.collage-ready .handle { animation: badge-pop .68s cubic-bezier(.2,.9,.2,1) .95s both; }
     .hero-collage.collage-ready .handle-green { animation-delay: 1.08s; }

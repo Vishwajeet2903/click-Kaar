@@ -89,7 +89,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
 
     .auth-shell::before {
-      background: radial-gradient(circle, rgba(128, 210, 198, .28), transparent 64%);
+      background: radial-gradient(circle, rgba(255, 151, 0, .28), transparent 64%);
       content: "";
       height: 420px;
       position: absolute;
@@ -200,7 +200,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
 
     .gear-card span {
-      color: #148f7b;
+      color: #ff9700;
       font-size: .8rem;
       font-weight: 800;
     }
@@ -286,8 +286,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
 
     .submit:hover {
-      background: #80d2c6;
-      box-shadow: 0 16px 34px rgba(20, 143, 123, .22);
+      background: #ff9700;
+      box-shadow: 0 16px 34px rgba(255, 151, 0, .22);
       color: #111;
     }
 
@@ -337,8 +337,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 
     input:focus {
       background: #fff;
-      border-color: rgba(128, 210, 198, .95);
-      box-shadow: 0 0 0 4px rgba(128, 210, 198, .18);
+      border-color: rgba(255, 151, 0, .95);
+      box-shadow: 0 0 0 4px rgba(255, 151, 0, .18);
     }
 
     input::placeholder {

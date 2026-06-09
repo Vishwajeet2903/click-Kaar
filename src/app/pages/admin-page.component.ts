@@ -81,11 +81,11 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     label { color: #111; display: block; font-size: .82rem; font-weight: 800; margin-bottom: 1rem; }
     label span { display: block; margin-bottom: .55rem; }
     input { background: #f7f7f5; border: 1px solid transparent; border-radius: 16px; color: #111; display: block; font: inherit; font-weight: 600; min-height: 50px; outline: 0; padding: .95rem 1rem; width: 100%; }
-    input:focus { background: #fff; border-color: rgba(128,210,198,.95); box-shadow: 0 0 0 4px rgba(128,210,198,.18); }
+    input:focus { background: #fff; border-color: rgba(255,151,0,.95); box-shadow: 0 0 0 4px rgba(255,151,0,.18); }
     button, .access-card a { align-items: center; background: #111; border: 0; border-radius: 999px; color: #fff; display: inline-flex; font-weight: 900; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; width: 100%; }
     button:disabled { cursor: not-allowed; opacity: .68; }
     .created-card { margin-top: 1rem; }
-    .created-card span { background: rgba(128,210,198,.2); border-radius: 999px; color: #148f7b; display: inline-flex; font-size: .78rem; font-weight: 900; padding: .4rem .7rem; }
+    .created-card span { background: rgba(255,151,0,.2); border-radius: 999px; color: #ff9700; display: inline-flex; font-size: .78rem; font-weight: 900; padding: .4rem .7rem; }
     .access-card { margin: 0 auto; max-width: 680px; text-align: center; }
     .access-card a { margin-top: 1rem; width: auto; }
     @media (max-width: 900px) {

@@ -62,11 +62,11 @@ import { RouterLink } from '@angular/router';
   styles: [`
     footer { background: #ececec; padding: 0 0 1.25rem; }
     .footer-shell { background: #fdfdfc; border-radius: 28px; box-shadow: 0 26px 70px rgba(0,0,0,.08); margin: 0 auto; max-width: min(1180px, calc(100vw - 48px)); overflow: hidden; padding: clamp(1.4rem, 4vw, 3rem); position: relative; }
-    .footer-shell::before { background: radial-gradient(circle at 20% 0%, rgba(0,0,0,.045), transparent 28%), radial-gradient(circle at 92% 12%, rgba(128,210,198,.22), transparent 32%); content: ""; inset: 0; pointer-events: none; position: absolute; }
+    .footer-shell::before { background: radial-gradient(circle at 20% 0%, rgba(0,0,0,.045), transparent 28%), radial-gradient(circle at 92% 12%, rgba(255,151,0,.22), transparent 32%); content: ""; inset: 0; pointer-events: none; position: absolute; }
     .footer-shell > * { position: relative; z-index: 1; }
     .footer-top { align-items: end; display: grid; gap: 2rem; grid-template-columns: 1.25fr .75fr; margin-bottom: 2.2rem; }
     .brand { align-items: center; color: #111; display: inline-flex; font-size: 1.05rem; font-weight: 900; gap: .7rem; margin-bottom: 1.2rem; }
-    .brand span { align-items: center; background: #80d2c6; border-radius: 6px; color: #fff; display: inline-flex; height: 24px; justify-content: center; transform: rotate(-18deg); width: 24px; }
+    .brand span { align-items: center; background: #ff9700; border-radius: 6px; color: #fff; display: inline-flex; height: 24px; justify-content: center; transform: rotate(-18deg); width: 24px; }
     h2 { color: #111; font-size: clamp(2.8rem, 6vw, 5.8rem); font-weight: 900; letter-spacing: -.065em; line-height: .88; margin: 0; max-width: 760px; }
     .footer-cta p { color: #444; line-height: 1.6; margin: 0 0 1rem; }
     .footer-cta a, .contact-card a { background: #111; border-radius: 999px; color: #fff; display: inline-flex; font-size: .84rem; font-weight: 900; padding: .86rem 1.1rem; }

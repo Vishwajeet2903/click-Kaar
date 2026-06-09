@@ -72,9 +72,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .product-media { border-radius: 19px; display: block; overflow: hidden; position: relative; }
     .product-media img { aspect-ratio: 4/3; object-fit: cover; transition: transform .35s ease; width: 100%; }
     .market-product:hover .product-media img { transform: scale(1.06); }
-    .product-media span { background: rgba(255,255,255,.93); border-radius: 999px; bottom: .65rem; color: #128172; font-size: .7rem; font-weight: 900; left: .65rem; padding: .42rem .58rem; position: absolute; }
+    .product-media span { background: rgba(255,255,255,.93); border-radius: 999px; bottom: .65rem; color: #ff9700; font-size: .7rem; font-weight: 900; left: .65rem; padding: .42rem .58rem; position: absolute; }
     .product-body { padding: .9rem .3rem .3rem; }
-    .product-body p { color: #128172; font-size: .72rem; font-weight: 900; letter-spacing: .18em; margin: 0 0 .45rem; text-transform: uppercase; }
+    .product-body p { color: #ff9700; font-size: .72rem; font-weight: 900; letter-spacing: .18em; margin: 0 0 .45rem; text-transform: uppercase; }
     .product-body h3 { color: #111; font-size: 1.04rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.15; margin: 0 0 .9rem; }
     .commerce-row { align-items: center; display: flex; justify-content: space-between; gap: .6rem; }
     .commerce-row strong { color: #111; font-size: 1rem; font-weight: 950; }
@@ -83,7 +83,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .feature-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .feature-card { background: #fff; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; min-height: 220px; padding: 1.4rem; transition: transform .28s ease, box-shadow .28s ease; }
     .feature-card:hover { box-shadow: 0 22px 45px rgba(0,0,0,.12); transform: translateY(-8px); }
-    .feature-card span { color: #80bfb6; font-size: .78rem; font-weight: 900; letter-spacing: .22em; }
+    .feature-card span { color: #ff9700; font-size: .78rem; font-weight: 900; letter-spacing: .22em; }
     .feature-card h3 { color: #111; font-size: 1.45rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.05; margin: 1.2rem 0 .8rem; }
     .feature-card p { color: #5e5e5a; line-height: 1.55; margin: 0; }
     @media (max-width: 980px) {

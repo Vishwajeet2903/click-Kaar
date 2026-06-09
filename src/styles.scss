@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 
-$primary: #80d2c6;
+$primary: #ff9700;
 $dark: #171717;
 $card: #ffffff;
 $text: #171717;
@@ -460,7 +460,7 @@ app-product-card.motion-item.motion-visible {
 .form-select:focus {
   background: #ffffff;
   border-color: $primary;
-  box-shadow: 0 0 0 0.16rem rgba(128, 210, 198, 0.22);
+  box-shadow: 0 0 0 0.16rem rgba(255, 151, 0, 0.22);
   color: $text;
 }
 

@@ -32,7 +32,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .why-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .why-card { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; min-height: 250px; padding: 1.4rem; transition: box-shadow .28s ease, transform .28s ease; }
     .why-card:hover { box-shadow: 0 22px 45px rgba(0,0,0,.12); transform: translateY(-8px); }
-    .why-card span { color: #80bfb6; font-size: .78rem; font-weight: 900; letter-spacing: .22em; }
+    .why-card span { color: #ff9700; font-size: .78rem; font-weight: 900; letter-spacing: .22em; }
     .why-card h3 { color: #111; font-size: 1.45rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.05; margin: 1.2rem 0 .8rem; }
     .why-card p { color: #5e5e5a; line-height: 1.55; margin: 0; }
     @media (max-width: 900px) {

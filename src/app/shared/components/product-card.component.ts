@@ -42,7 +42,7 @@ import { Product } from '../../models/product.model';
     .meta { font-size: .86rem; margin: .7rem 0 1rem; }
     .card-bottom { align-items: center; display: flex; gap: .85rem; justify-content: space-between; }
     strong { color: #171717; font-size: .96rem; }
-    .rating { align-items: center; background: #dcf2ee; border-radius: 999px; color: #126b66; display: inline-flex; flex: 0 0 auto; font-size: .82rem; font-weight: 950; min-height: 32px; padding: .3rem .6rem; }
+    .rating { align-items: center; background: rgba(255,151,0,.14); border-radius: 999px; color: #ff9700; display: inline-flex; flex: 0 0 auto; font-size: .82rem; font-weight: 950; min-height: 32px; padding: .3rem .6rem; }
     .details { background: #fff; border: 1px solid rgba(17,17,17,.1); border-radius: 999px; color: #171717; font-size: .84rem; font-weight: 900; padding: .45rem .8rem; white-space: nowrap; }
     .details:hover { background: #151515; color: #fff; }
   `]

@@ -74,7 +74,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     .profile h2 { margin-bottom: .35rem; }
     .profile-meta { align-items: flex-end; display: flex; flex-direction: column; gap: .55rem; text-align: right; }
     .profile-meta span { color: #777; font-size: .85rem; font-weight: 800; }
-    .profile-meta strong { background: rgba(128,210,198,.2); border-radius: 999px; color: #148f7b; font-size: .75rem; padding: .35rem .65rem; }
+    .profile-meta strong { background: rgba(255,151,0,.2); border-radius: 999px; color: #ff9700; font-size: .75rem; padding: .35rem .65rem; }
     .empty-state { margin: 0 auto; max-width: 680px; padding: 2rem; text-align: center; }
     .empty-state a { background: #111; border-radius: 999px; color: #fff; display: inline-flex; font-weight: 900; margin-top: 1rem; padding: .85rem 1.2rem; }
     h2, h3 { font-weight: 900; }
