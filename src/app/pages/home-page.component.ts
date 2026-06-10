@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AboutVisionSectionComponent } from '../landing/about-vision-section.component';
+import { CustomerReviewsSectionComponent } from '../landing/customer-reviews-section.component';
 import { GallerySectionComponent } from '../landing/gallery-section.component';
 import { HeroSectionComponent } from '../landing/hero-section.component';
 import { LandingFooterSectionComponent } from '../landing/landing-footer-section.component';
@@ -15,6 +16,7 @@ import { ShowcaseSectionComponent } from '../landing/showcase-section.component'
     MarketplaceSectionComponent,
     AboutVisionSectionComponent,
     GallerySectionComponent,
+    CustomerReviewsSectionComponent,
     LandingFooterSectionComponent
   ],
   template: `
@@ -24,6 +26,7 @@ import { ShowcaseSectionComponent } from '../landing/showcase-section.component'
       <app-marketplace-section />
       <app-about-vision-section />
       <app-gallery-section />
+      <app-customer-reviews-section />
       <app-landing-footer-section />
     </div>
   `,

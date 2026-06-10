@@ -1,7 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../models/product.model';
+import { WishlistService } from '../../services/wishlist.service';
 
 @Component({
   selector: 'app-product-card',
@@ -13,6 +14,18 @@ import { Product } from '../../models/product.model';
         <img class="product-image" [src]="product().image" [alt]="product().name">
         <span class="stock-chip">{{ product().stock }} available</span>
       </a>
+      <button
+        type="button"
+        class="wishlist-btn"
+        [class.active]="wishlist.has(product().id)"
+        [attr.aria-label]="wishlist.has(product().id) ? 'Remove from wishlist' : 'Add to wishlist'"
+        [attr.aria-pressed]="wishlist.has(product().id)"
+        (click)="toggleWishlist()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 20.4s-7.2-4.5-9.4-8.7C.8 8.2 2.8 4.4 6.6 4.1c2.1-.2 3.8.9 5.4 2.8 1.6-1.9 3.3-3 5.4-2.8 3.8.3 5.8 4.1 4 7.6-2.2 4.2-9.4 8.7-9.4 8.7Z" />
+        </svg>
+      </button>
       <div class="content">
         <div class="title-row">
           <div>
@@ -30,9 +43,14 @@ import { Product } from '../../models/product.model';
     </article>
   `,
   styles: [`
-    .product-card { background: #f7f7f5; border: 1px solid rgba(17,17,17,.08); border-radius: 20px; box-shadow: none; height: 100%; overflow: hidden; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .product-card { background: #f7f7f5; border: 1px solid rgba(17,17,17,.08); border-radius: 20px; box-shadow: none; height: 100%; overflow: hidden; position: relative; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
     .product-card:hover { border-color: rgba(17,17,17,.18); box-shadow: 0 20px 42px rgba(0,0,0,.12); transform: translateY(-5px) rotate(-.4deg); }
     .media-link { background: #ececea; border-radius: 18px; display: block; margin: .55rem; overflow: hidden; position: relative; }
+    .wishlist-btn { align-items: center; background: rgba(255,255,255,.94); border: 0; border-radius: 999px; box-shadow: 0 10px 24px rgba(0,0,0,.14); color: #111; display: inline-flex; height: 42px; justify-content: center; padding: 0; position: absolute; right: 1rem; top: 1rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 42px; z-index: 2; }
+    .wishlist-btn svg { fill: none; height: 21px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; width: 21px; }
+    .wishlist-btn:hover { background: #111; box-shadow: 0 14px 30px rgba(0,0,0,.18); color: #fff; transform: translateY(-2px); }
+    .wishlist-btn.active { background: #ff9700; color: #111; }
+    .wishlist-btn.active svg { fill: currentColor; }
     img { aspect-ratio: 4/3; height: auto; object-fit: cover; width: 100%; transition: transform .35s ease; }
     .product-card:hover img { transform: scale(1.04); }
     .stock-chip { background: rgba(17,17,17,.88); border-radius: 999px; bottom: .7rem; color: #fff; font-size: .68rem; font-weight: 900; left: .7rem; padding: .45rem .65rem; position: absolute; text-transform: uppercase; }
@@ -49,4 +67,9 @@ import { Product } from '../../models/product.model';
 })
 export class ProductCardComponent {
   readonly product = input.required<Product>();
+  readonly wishlist = inject(WishlistService);
+
+  toggleWishlist(): void {
+    this.wishlist.toggle(this.product());
+  }
 }

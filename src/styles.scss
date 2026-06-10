@@ -38,6 +38,7 @@ body {
   background: #ececec;
   color: $text;
   font-family: $app-font;
+  font-weight: 400;
   overflow-x: hidden;
 }
 
@@ -46,6 +47,66 @@ input,
 textarea,
 select {
   font-family: $app-font;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.section-title,
+.title,
+.card-title,
+strong {
+  font-weight: 900;
+}
+
+.landing-page p,
+.landing-page span,
+.landing-page small,
+.page-shell p,
+.page-shell span,
+.page-shell small,
+.page-shell label,
+.muted,
+.intro,
+.hero-subtitle,
+.form-copy,
+.meta,
+.footer-bottom,
+.product-body p,
+.package-card span,
+.feature-card p,
+.why-card p,
+.review-card p,
+.reviewer span,
+.listing-meta small,
+.price-card p {
+  font-weight: 400 !important;
+}
+
+.landing-page h1,
+.landing-page h2,
+.landing-page h3,
+.landing-page h4,
+.landing-page h5,
+.landing-page h6,
+.page-shell h1,
+.page-shell h2,
+.page-shell h3,
+.page-shell h4,
+.page-shell h5,
+.page-shell h6,
+.section-title,
+.product-card h3,
+.market-product h3,
+.package-card h3,
+.feature-card h3,
+.why-card h3,
+.reviewer strong,
+.listing-meta b {
+  font-weight: 900 !important;
 }
 
 a {

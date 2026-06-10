@@ -30,30 +30,45 @@ import { RouterLink } from '@angular/router';
           <nav aria-label="Company links">
             <h3>Company</h3>
             <a routerLink="/about">About us</a>
-            <a routerLink="/blog">Ideas</a>
+            <a routerLink="/blog">Blogs</a>
             <a routerLink="/faq">FAQ</a>
-            <a routerLink="/contact">Contact</a>
+            <a routerLink="/contact">Review</a>
           </nav>
           <nav aria-label="Support links">
             <h3>Support</h3>
-            <a routerLink="/cart">Rental cart</a>
-            <a routerLink="/wishlist">Wishlist</a>
             <a routerLink="/terms">Terms</a>
             <a routerLink="/privacy">Privacy</a>
+            <a routerLink="/contact">Contact number</a>
+            <a routerLink="/contact">Email</a>
+            <a routerLink="/contact">Address</a>
+            
           </nav>
-          <div class="contact-card">
-            <h3>Need a kit today?</h3>
-            <p>Tell us your shoot type and we will help you shortlist the right gear.</p>
-            <a routerLink="/contact">Plan my rental</a>
-          </div>
+          <!-- <div class="contact-card">
+            <h3>Connect with us on </h3>
+           
+            <a routerLink="/contact">facebook</a>
+            <a routerLink="/contact">Pinstagram</a>
+            <a routerLink="/contact">linkdin</a>
+            <a routerLink="/contact">Youtube</a>
+            <a routerLink="/contact">Youtube</a>
+          </div> -->
+          <nav aria-label="Support links">
+            <h3>Connect with us on</h3>
+            <a href="facebook.com">facebook</a>
+            <a href="instagaram.com">Instagram</a>
+            <a href="linkdin.com">linkdin</a>
+            <a href="youtube.com">Youtube</a>
+            <a href="pintrest.com">Pintrest</a>
+            
+          </nav>
+
         </div>
 
         <div class="footer-bottom">
-          <span>© 2026 ClickKar. Creative rental marketplace.</span>
+          <span>© 2026 CLICK-KAAR LLP.</span>
           <div>
-            <a href="#">Instagram</a>
-            <a href="#">Facebook</a>
-            <a href="#">Twitter</a>
+            <a href="#">Terms & Condition </a>
+            
           </div>
         </div>
       </div>

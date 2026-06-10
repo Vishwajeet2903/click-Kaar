@@ -45,17 +45,27 @@ import { ProductService } from '../services/product.service';
                 }
               </div>
             </li>
-            <li class="nav-item"><a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">wishlist</a></li>
+            <li class="nav-item"><a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Wishlist</a></li>
             @if (authService.isAdmin()) {
               <li class="nav-item"><a routerLink="/admin" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Admin</a></li>
             }
           </ul>
           <div class="actions">
             <a routerLink="/cart" class="cart-link" aria-label="Open cart" (click)="closeMenu()">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6.2 6h16l-1.7 9.2a2 2 0 0 1-2 1.7H9.3a2 2 0 0 1-2-1.6L5 3.8H2.7" />
-                <path d="M9.4 20.5h.1M18.1 20.5h.1" />
-              </svg>
+              @if (cart.count() > 0) {
+                <svg class="cart-full" viewBox="0 0 32 32" aria-hidden="true">
+                  <path class="basket-fill" d="M7.9 11.2h19.4l-1.9 10.2a2.8 2.8 0 0 1-2.8 2.3H11.3a2.8 2.8 0 0 1-2.8-2.3L6.6 6.8H3.3" />
+                  <path class="camera-body" d="M11.3 13.3h8.2l1.1 1.5h2.2a1.6 1.6 0 0 1 1.6 1.6v3.8a1.6 1.6 0 0 1-1.6 1.6H11.3a1.6 1.6 0 0 1-1.6-1.6v-5.3a1.6 1.6 0 0 1 1.6-1.6Z" />
+                  <circle class="camera-lens" cx="16.9" cy="18.2" r="2.4" />
+                  <path class="tripod" d="M22.8 12.6v9.8M20.5 25.2l2.3-2.8 2.3 2.8M20.9 12.6h3.8" />
+                  <path class="wheel" d="M11.2 27.4h.1M23.1 27.4h.1" />
+                </svg>
+              } @else {
+                <svg class="cart-empty" viewBox="0 0 32 32" aria-hidden="true">
+                  <path d="M7.9 11.2h19.4l-1.9 10.2a2.8 2.8 0 0 1-2.8 2.3H11.3a2.8 2.8 0 0 1-2.8-2.3L6.6 6.8H3.3" />
+                  <path d="M11.2 27.4h.1M23.1 27.4h.1" />
+                </svg>
+              }
               @if (cart.count() > 0) {
                 <b>{{ cart.count() }}</b>
               }
@@ -83,10 +93,19 @@ import { ProductService } from '../services/product.service';
     .nav-link.active, .nav-link:hover { color: #111; text-decoration: underline; text-underline-offset: .28rem; }
     .navbar-collapse { align-items: center; display: flex; flex-basis: auto; flex-grow: 1; }
     .actions { align-items: center; display: flex; gap: .8rem; }
-    .cart-link { align-items: center; background: #fff; border-radius: 999px; box-shadow: 0 8px 22px rgba(0,0,0,.06); color: #151515; display: inline-flex; height: 38px; justify-content: center; min-width: 38px; padding: .45rem .62rem; position: relative; }
-    .cart-link svg { fill: none; height: 20px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; width: 20px; }
+    .cart-link { align-items: center; background: #fff; border-radius: 999px; box-shadow: 0 8px 22px rgba(0,0,0,.06); color: #151515; display: inline-flex; height: 44px; justify-content: center; min-width: 44px; padding: .45rem .62rem; position: relative; }
+    .cart-link svg { fill: none; height: 27px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; width: 27px; }
+    .cart-link .cart-full { fill: none; stroke-width: 1.9; }
+    .basket-fill { fill: #ff9700; stroke: #111; }
+    .camera-body { fill: #111; stroke: #111; }
+    .camera-lens { fill: #ff9700; stroke: #fff; stroke-width: 1.3; }
+    .tripod, .wheel { fill: none; stroke: #111; }
     .cart-link b { align-items: center; background: #ff9700; border: 2px solid #fff; border-radius: 999px; color: #111; display: inline-flex; font-size: .66rem; font-weight: 950; height: 18px; justify-content: center; line-height: 1; min-width: 18px; padding: 0 .24rem; position: absolute; right: -4px; top: -5px; }
     .cart-link:hover { background: #111; color: #fff; transform: translateY(-1px); }
+    .cart-link:hover .basket-fill { fill: #ff9700; stroke: #fff; }
+    .cart-link:hover .camera-body { fill: #fff; stroke: #fff; }
+    .cart-link:hover .camera-lens { stroke: #111; }
+    .cart-link:hover .tripod, .cart-link:hover .wheel { stroke: #fff; }
     .login-link { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; }
     .login-link:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .avatar-link { align-items: center; background: #111; border: 2px solid #ff9700; border-radius: 50%; box-shadow: 0 10px 24px rgba(0,0,0,.12); color: #fff; display: inline-flex; font-size: .9rem; font-weight: 950; height: 38px; justify-content: center; line-height: 1; text-transform: uppercase; width: 38px; }
