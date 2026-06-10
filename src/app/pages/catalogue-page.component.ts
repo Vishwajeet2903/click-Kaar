@@ -65,8 +65,9 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
     .toggle { align-items: center; display: flex; gap: .5rem; }
     .empty { padding: 2rem; text-align: center; }
     .pagination-bar { align-items: center; display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
-    .pagination-bar button { background: #fff; border: 1px solid rgba(216,164,59,.65); border-radius: 5%; color: #171717; font-weight: 800; padding: .6rem 1rem; }
-    .pagination-bar button:disabled { opacity: .45; }
+    .pagination-bar button { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
+    .pagination-bar button:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .pagination-bar button:disabled, .pagination-bar button:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: not-allowed; opacity: .45; transform: none; }
   `]
 })
 export class CataloguePageComponent {

@@ -256,8 +256,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
 
     .google {
-      background: #f6f6f4;
-      color: #111;
+      background: #111;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .18);
+      color: #fff;
       margin-top: 1.5rem;
     }
 
@@ -267,11 +268,6 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       font-weight: 900;
     }
 
-    .google:hover,
-    .submit:hover {
-      transform: translateY(-2px);
-    }
-
     .submit {
       background: #111;
       box-shadow: 0 14px 28px rgba(0, 0, 0, .18);
@@ -279,16 +275,22 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       margin-top: 1rem;
     }
 
-    .submit:disabled {
-      cursor: not-allowed;
-      opacity: .68;
-      transform: none;
-    }
-
+    .google:hover,
     .submit:hover {
       background: #ff9700;
       box-shadow: 0 16px 34px rgba(255, 151, 0, .22);
       color: #111;
+      transform: translateY(-2px);
+    }
+
+    .submit:disabled,
+    .submit:disabled:hover {
+      background: #111;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .18);
+      color: #fff;
+      cursor: not-allowed;
+      opacity: .68;
+      transform: none;
     }
 
     .divider {

@@ -38,8 +38,8 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   styles: [`
     .search { max-width: 320px; }
     .chips { display: flex; flex-wrap: wrap; gap: .7rem; margin-bottom: 1.4rem; }
-    .chips button { background: #fff; border: 1px solid rgba(216,164,59,.45); border-radius: 5%; color: #171717; font-weight: 800; padding: .55rem .9rem; }
-    .chips button.active { background: #ff9700; color: #fff; }
+    .chips button { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
+    .chips button:hover, .chips button.active { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .post { height: 100%; overflow: hidden; }
     .post img { aspect-ratio: 16/10; width: 100%; }
     .post div { padding: 1rem; }

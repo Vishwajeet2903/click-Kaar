@@ -43,8 +43,8 @@ import { Product } from '../../models/product.model';
     .card-bottom { align-items: center; display: flex; gap: .85rem; justify-content: space-between; }
     strong { color: #171717; font-size: .96rem; }
     .rating { align-items: center; background: rgba(255,151,0,.14); border-radius: 999px; color: #ff9700; display: inline-flex; flex: 0 0 auto; font-size: .82rem; font-weight: 950; min-height: 32px; padding: .3rem .6rem; }
-    .details { background: #fff; border: 1px solid rgba(17,17,17,.1); border-radius: 999px; color: #171717; font-size: .84rem; font-weight: 900; padding: .45rem .8rem; white-space: nowrap; }
-    .details:hover { background: #151515; color: #fff; }
+    .details { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; white-space: nowrap; }
+    .details:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
   `]
 })
 export class ProductCardComponent {

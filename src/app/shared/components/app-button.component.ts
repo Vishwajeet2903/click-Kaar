@@ -11,22 +11,27 @@ import { Component, input } from '@angular/core';
   styles: [`
     .ck-btn {
       align-items: center;
-      background: linear-gradient(90deg, #ff9700, #ffc36d);
+      background: #111;
       border: 0;
-      border-radius: 5%;
-      color: #fff;
+      border-radius: 999px;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .18);
+      color: #ffffff;
       display: inline-flex;
-      font-weight: 700;
-      gap: .5rem;
+      cursor: pointer;
+      font-size: .96rem;
+      font-weight: 800;
+      gap: .7rem;
       justify-content: center;
-      min-height: 46px;
-      padding: .72rem 1.1rem;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      min-height: 50px;
+      padding: .85rem 1.25rem;
+      transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
       width: 100%;
     }
-    .ck-btn:hover { box-shadow: 0 12px 22px rgba(255, 151, 0, .22); transform: translateY(-1px); }
-    .ck-btn:disabled { cursor: not-allowed; opacity: .68; transform: none; }
-    .ck-btn.secondary { background: #fff; border: 1px solid #d8a43b; color: #171717; }
+    .ck-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255, 151, 0, .22); color: #111; transform: translateY(-2px); }
+    .ck-btn:disabled,
+    .ck-btn:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0, 0, 0, .18); color: #ffffff; cursor: not-allowed; opacity: .68; transform: none; }
+    .ck-btn.secondary { background: #111; color: #ffffff; }
+    .ck-btn.secondary:hover { background: #ff9700; color: #111; }
   `]
 })
 export class AppButtonComponent {

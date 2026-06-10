@@ -48,6 +48,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   `,
   styles: [`
   .mast{color: #ff9700;}
+  .hero-copy .eyebrow,
+  .hero-copy h1 { font-family: var(--display-font); }
   .eyebrow{color: #ff9700;}
     .hero-section { min-height: calc(100vh - 106px); padding: clamp(2.5rem, 6vw, 5.4rem) clamp(1.2rem, 4vw, 3.2rem) 3.5rem; text-align: center; }
     .hero-copy { margin: 0 auto; max-width: 850px; position: relative; z-index: 2; }
@@ -57,7 +59,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .market-search { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 999px; box-shadow: 0 18px 42px rgba(0,0,0,.08); display: grid; gap: .65rem; grid-template-columns: auto 1fr auto; margin: 1.35rem auto .8rem; max-width: 650px; padding: .55rem .65rem .55rem 1rem; }
     .market-search span { color: #111; font-size: 1.1rem; font-weight: 900; }
     .market-search input { border: 0; color: #111; font: inherit; min-width: 0; outline: 0; }
-    .market-search a { background: #111; border-radius: 999px; color: #fff; font-size: .78rem; font-weight: 900; padding: .72rem 1rem; white-space: nowrap; }
+    .market-search a { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; white-space: nowrap; }
+    .market-search a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .category-row { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; margin: 0 auto; max-width: 720px; }
     .category-row a { background: #f4f4f1; border: 1px solid rgba(17,17,17,.06); border-radius: 999px; color: #111; font-size: .76rem; font-weight: 900; padding: .56rem .78rem; }
     .hero-collage { height: clamp(300px, 38vw, 450px); margin: -.2rem auto 0; max-width: 1000px; position: relative; }

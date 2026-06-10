@@ -319,7 +319,11 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       transform: translateY(-2px);
     }
 
-    .submit:disabled {
+    .submit:disabled,
+    .submit:disabled:hover {
+      background: #111;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .18);
+      color: #fff;
       cursor: not-allowed;
       opacity: .68;
       transform: none;

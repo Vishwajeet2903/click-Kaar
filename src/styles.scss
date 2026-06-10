@@ -7,6 +7,13 @@ $text: #171717;
 $accent: #111111;
 $muted: #777777;
 $line: rgba(17, 17, 17, 0.08);
+$app-font: Outfit, Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+$display-font: Poppins, Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+
+:root {
+  --app-font: #{$app-font};
+  --display-font: #{$display-font};
+}
 
 html {
   color-scheme: light;
@@ -30,8 +37,15 @@ body {
   min-width: 320px;
   background: #ececec;
   color: $text;
-  font-family: Poppins, Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: $app-font;
   overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: $app-font;
 }
 
 a {
@@ -189,29 +203,39 @@ main.page-shell [data-aos].aos-init:not(.aos-animate) {
 }
 
 .btn-pill {
+  align-items: center;
+  background: #111111;
+  border: 0;
   border-radius: 999px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  color: #ffffff;
   display: inline-flex;
-  font-size: 0.84rem;
-  font-weight: 900;
+  font-size: 0.96rem;
+  font-weight: 800;
+  gap: 0.7rem;
   justify-content: center;
-  line-height: 1;
+  min-height: 50px;
   min-width: 126px;
-  padding: 0.9rem 1.25rem;
-  transition: box-shadow 240ms ease, transform 240ms ease;
+  padding: 0.85rem 1.25rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
 }
 
 .btn-pill:hover {
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.14);
-  transform: translateY(-3px);
+  background: #ff9700;
+  box-shadow: 0 16px 34px rgba(255, 151, 0, 0.22);
+  color: #111111;
+  transform: translateY(-2px);
 }
 
-.btn-pill.dark {
+.btn-pill.dark,
+.btn-pill.light {
   background: #111111;
   color: #ffffff;
 }
 
-.btn-pill.light {
-  background: #f4f4f1;
+.btn-pill.dark:hover,
+.btn-pill.light:hover {
+  background: #ff9700;
   color: #111111;
 }
 

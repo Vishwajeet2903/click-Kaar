@@ -12,7 +12,12 @@ import { ProductService } from '../services/product.service';
   template: `
     <nav class="navbar navbar-expand-lg">
       <div class="container">
-        <a routerLink="/" class="brand"><span class="mark">ck</span><span class="word">ClickKar</span></a>
+        <a routerLink="/" class="brand" aria-label="Click-Kaar home">
+          <span class="mark">
+            <img class="brand-mark" src="/Main logo Black .png" alt="" aria-hidden="true">
+          </span>
+          <span class="word">CLICK-KAAR</span>
+        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -29,9 +34,9 @@ import { ProductService } from '../services/product.service';
         <div class="navbar-collapse" [class.show]="menuOpen" id="navMenu">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item"><a routerLink="/" fragment="home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link" (click)="closeMenu()">Get Started</a></li>
-            <li class="nav-item"><a routerLink="/" fragment="marketplace" class="nav-link" (click)="closeMenu()">Marketplace</a></li>
+            <!-- <li class="nav-item"><a routerLink="/" fragment="marketplace" class="nav-link" (click)="closeMenu()">Marketplace</a></li> -->
             <li class="nav-item"><a routerLink="/catalogue" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Catalogue</a></li>
-            <li class="nav-item"><a routerLink="/" fragment="gallery" class="nav-link" (click)="closeMenu()">Gallery</a></li>
+            <li class="nav-item"><a routerLink="/blog" fragment="gallery" class="nav-link" (click)="closeMenu()">Blog</a></li>
             <li class="nav-item has-mega">
               <a routerLink="/catalogue" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Categories</a>
               <div class="mega surface">
@@ -40,7 +45,7 @@ import { ProductService } from '../services/product.service';
                 }
               </div>
             </li>
-            <li class="nav-item"><a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Projects</a></li>
+            <li class="nav-item"><a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">wishlist</a></li>
             @if (authService.isAdmin()) {
               <li class="nav-item"><a routerLink="/admin" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Admin</a></li>
             }
@@ -70,9 +75,10 @@ import { ProductService } from '../services/product.service';
   styles: [`
     .navbar { background: transparent; left: 0; padding: 1rem 0 .65rem; position: fixed; right: 0; top: 0; z-index: 1000; }
     .navbar > .container { background: rgba(253,253,252,.86); border: 1px solid rgba(17,17,17,.06); border-radius: 26px; box-shadow: 0 18px 42px rgba(0,0,0,.08); backdrop-filter: blur(18px); max-width: min(1180px, calc(100vw - 48px)); padding: .9rem 1.2rem; }
-    .brand { align-items: center; color: #151515; display: flex; font-size: 1.05rem; font-weight: 900; gap: .75rem; letter-spacing: -.03em; }
-    .mark { align-items: center; background: #ff9700; border-radius: 6px; color: #fff; display: inline-flex; font-size: .86rem; height: 24px; justify-content: center; letter-spacing: 0; transform: rotate(-18deg); width: 24px; }
-    .word { line-height: 1; }
+    .brand { align-items: center; display: inline-flex; flex: 0 0 auto; gap: .85rem; min-width: 0; }
+    .mark { align-items: center; background: #ff9700; border-radius: 6px; display: inline-flex; height: 42px; justify-content: center; overflow: hidden; transform: rotate(-18deg); width: 42px; }
+    .brand-mark { height: 36px; object-fit: contain; transform: rotate(18deg); width: 36px; }
+    .word { color: #151515; font-size: 1.05rem; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
     .nav-link { color: #111; font-size: .76rem; font-weight: 800; padding-left: .85rem !important; padding-right: .85rem !important; }
     .nav-link.active, .nav-link:hover { color: #111; text-decoration: underline; text-underline-offset: .28rem; }
     .navbar-collapse { align-items: center; display: flex; flex-basis: auto; flex-grow: 1; }
@@ -81,8 +87,8 @@ import { ProductService } from '../services/product.service';
     .cart-link svg { fill: none; height: 20px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; width: 20px; }
     .cart-link b { align-items: center; background: #ff9700; border: 2px solid #fff; border-radius: 999px; color: #111; display: inline-flex; font-size: .66rem; font-weight: 950; height: 18px; justify-content: center; line-height: 1; min-width: 18px; padding: 0 .24rem; position: absolute; right: -4px; top: -5px; }
     .cart-link:hover { background: #111; color: #fff; transform: translateY(-1px); }
-    .login-link { align-items: center; background: #111; border-radius: 999px; color: #fff; display: inline-flex; font-size: .78rem; font-weight: 900; justify-content: center; min-height: 36px; padding: .55rem 1rem; }
-    .login-link:hover { background: #ff9700; color: #111; transform: translateY(-1px); }
+    .login-link { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; }
+    .login-link:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .avatar-link { align-items: center; background: #111; border: 2px solid #ff9700; border-radius: 50%; box-shadow: 0 10px 24px rgba(0,0,0,.12); color: #fff; display: inline-flex; font-size: .9rem; font-weight: 950; height: 38px; justify-content: center; line-height: 1; text-transform: uppercase; width: 38px; }
     .avatar-link:hover { background: #ff9700; color: #111; transform: translateY(-1px); }
     .has-mega { position: relative; }
@@ -96,7 +102,10 @@ import { ProductService } from '../services/product.service';
     .navbar-toggler.is-open span:nth-child(2) { opacity: 0; }
     .navbar-toggler.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
     @media (max-width: 991px) {
-      .brand { letter-spacing: .12rem; }
+      .brand { gap: .65rem; }
+      .mark { height: 36px; width: 36px; }
+      .brand-mark { height: 31px; width: 31px; }
+      .word { font-size: 1rem; letter-spacing: .12rem; }
       .navbar-toggler { display: inline-flex; }
       .navbar-collapse { align-items: stretch; display: none; flex-basis: 100%; flex-direction: column; margin-top: 1rem; }
       .navbar-collapse.show { display: flex; }

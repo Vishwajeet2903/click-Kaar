@@ -79,7 +79,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .commerce-row { align-items: center; display: flex; justify-content: space-between; gap: .6rem; }
     .commerce-row strong { color: #111; font-size: 1rem; font-weight: 950; }
     .commerce-row small { color: #777; font-size: .75rem; font-weight: 800; }
-    .commerce-row a { background: #111; border-radius: 999px; color: #fff; font-size: .78rem; font-weight: 900; padding: .55rem .8rem; }
+    .commerce-row a { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
+    .commerce-row a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .feature-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .feature-card { background: #fff; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; min-height: 220px; padding: 1.4rem; transition: transform .28s ease, box-shadow .28s ease; }
     .feature-card:hover { box-shadow: 0 22px 45px rgba(0,0,0,.12); transform: translateY(-8px); }

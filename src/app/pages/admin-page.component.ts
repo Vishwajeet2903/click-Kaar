@@ -82,8 +82,9 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     label span { display: block; margin-bottom: .55rem; }
     input { background: #f7f7f5; border: 1px solid transparent; border-radius: 16px; color: #111; display: block; font: inherit; font-weight: 600; min-height: 50px; outline: 0; padding: .95rem 1rem; width: 100%; }
     input:focus { background: #fff; border-color: rgba(255,151,0,.95); box-shadow: 0 0 0 4px rgba(255,151,0,.18); }
-    button, .access-card a { align-items: center; background: #111; border: 0; border-radius: 999px; color: #fff; display: inline-flex; font-weight: 900; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; width: 100%; }
-    button:disabled { cursor: not-allowed; opacity: .68; }
+    button, .access-card a { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 100%; }
+    button:hover, .access-card a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    button:disabled, button:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: not-allowed; opacity: .68; transform: none; }
     .created-card { margin-top: 1rem; }
     .created-card span { background: rgba(255,151,0,.2); border-radius: 999px; color: #ff9700; display: inline-flex; font-size: .78rem; font-weight: 900; padding: .4rem .7rem; }
     .access-card { margin: 0 auto; max-width: 680px; text-align: center; }

@@ -69,14 +69,16 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     .sidebar, .profile, .booking { padding: 1.2rem; }
     .sidebar a { border-radius: 5%; color: #555; display: block; font-weight: 800; padding: .75rem; }
     .sidebar a:hover { background: rgba(255,151,0,.1); color: #ff9700; }
-    .sidebar button { background: #111; border: 0; border-radius: 999px; color: #fff; font-weight: 900; margin-top: .8rem; min-height: 42px; width: 100%; }
+    .sidebar button { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; margin-top: .8rem; min-height: 50px; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 100%; }
+    .sidebar button:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .profile { align-items: center; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1rem; }
     .profile h2 { margin-bottom: .35rem; }
     .profile-meta { align-items: flex-end; display: flex; flex-direction: column; gap: .55rem; text-align: right; }
     .profile-meta span { color: #777; font-size: .85rem; font-weight: 800; }
     .profile-meta strong { background: rgba(255,151,0,.2); border-radius: 999px; color: #ff9700; font-size: .75rem; padding: .35rem .65rem; }
     .empty-state { margin: 0 auto; max-width: 680px; padding: 2rem; text-align: center; }
-    .empty-state a { background: #111; border-radius: 999px; color: #fff; display: inline-flex; font-weight: 900; margin-top: 1rem; padding: .85rem 1.2rem; }
+    .empty-state a { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; margin-top: 1rem; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
+    .empty-state a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     h2, h3 { font-weight: 900; }
     .booking { height: 100%; }
     .booking span { border-radius: 999px; display: inline-block; font-size: .75rem; font-weight: 900; margin-bottom: .8rem; padding: .25rem .55rem; }
