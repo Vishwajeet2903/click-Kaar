@@ -14,7 +14,7 @@ import { ProductService } from '../services/product.service';
       <div class="container">
         <a routerLink="/" class="brand" aria-label="Click-Kaar home">
           <span class="mark">
-            <img class="brand-mark" src="/Main logo Black .png" alt="" aria-hidden="true">
+            <img class="brand-mark" src="/Main logo White.png" alt="" aria-hidden="true">
           </span>
           <span class="word">CLICK-KAAR</span>
         </a>
@@ -132,7 +132,7 @@ import { ProductService } from '../services/product.service';
       .actions { align-items: stretch; flex-direction: column; margin-top: 1rem; }
       .cart-link { align-self: flex-start; }
       .avatar-link { border-radius: 999px; height: 40px; width: 100%; }
-      .mega { display: grid; min-width: auto; position: static; }
+      .mega { min-width: auto; position: static; }
       .navbar > .container { border-radius: 18px; max-width: calc(100vw - 18px); padding: 1rem; }
     }
   `]
