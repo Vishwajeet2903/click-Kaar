@@ -520,6 +520,13 @@ app-product-card.motion-item.motion-visible {
   text-transform: uppercase;
 }
 
+.landing-card:not(.hero-section) .eyebrow {
+  color: #ff9700;
+  font-size: clamp(1.1rem, 2.1vw, 1.9rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
 .muted {
   color: $muted;
 }
