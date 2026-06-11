@@ -22,8 +22,25 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest extends LoginRequest {
-  fullName: string;
-  mobile: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  dob: string;
+  phoneNumber: string;
+  alternateContactNumber: string;
+  currentAddress: string;
+  city: string;
+  state: string;
+  pincode: string;
+  country: string;
+  residenceType: string;
+  occupation: string;
+  companyName: string;
+  socialMediaProfile: string;
+  photo: File;
+  drivingLicense: File;
+  electricityBill: File;
+  rentAgreement: File;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -40,7 +57,12 @@ export class AuthService {
   }
 
   register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${API_URL}/register`, request).pipe(
+    const formData = new FormData();
+    Object.entries(request).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    return this.http.post<AuthResponse>(`${API_URL}/register`, formData).pipe(
       tap((response) => this.saveSession(response))
     );
   }

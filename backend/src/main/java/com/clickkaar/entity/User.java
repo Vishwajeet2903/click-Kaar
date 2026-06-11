@@ -30,6 +30,28 @@ public class User extends AuditableEntity {
   @Column(unique = true)
   private String mobile;
 
+  private String firstName;
+  private String lastName;
+  private String gender;
+  private String dob;
+  private String alternateContactNumber;
+
+  @Column(length = 1000)
+  private String currentAddress;
+
+  private String city;
+  private String state;
+  private String pincode;
+  private String country;
+  private String residenceType;
+  private String occupation;
+  private String companyName;
+  private String socialMediaProfile;
+  private String photoDocumentName;
+  private String drivingLicenseDocumentName;
+  private String electricityBillDocumentName;
+  private String rentAgreementDocumentName;
+
   @Column(nullable = false)
   private String password;
 

@@ -20,9 +20,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,8 +55,26 @@ public class AuthService {
 
     User user = User.builder()
         .fullName(request.fullName())
+        .firstName(request.firstName())
+        .lastName(request.lastName())
         .email(request.email().toLowerCase())
         .mobile(request.mobile())
+        .gender(request.gender())
+        .dob(request.dob())
+        .alternateContactNumber(request.alternateContactNumber())
+        .currentAddress(request.currentAddress())
+        .city(request.city())
+        .state(request.state())
+        .pincode(request.pincode())
+        .country(request.country())
+        .residenceType(request.residenceType())
+        .occupation(request.occupation())
+        .companyName(request.companyName())
+        .socialMediaProfile(request.socialMediaProfile())
+        .photoDocumentName(saveDocument(request.photo()))
+        .drivingLicenseDocumentName(saveDocument(request.drivingLicense()))
+        .electricityBillDocumentName(saveDocument(request.electricityBill()))
+        .rentAgreementDocumentName(saveDocument(request.rentAgreement()))
         .password(passwordEncoder.encode(request.password()))
         .enabled(true)
         .mobileVerified(false)
@@ -115,5 +138,24 @@ public class AuthService {
     String token = jwtService.generateToken(new CustomUserDetails(user));
     Set<String> roles = user.getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet());
     return new AuthResponse(token, "Bearer", user.getId(), user.getFullName(), user.getEmail(), user.getMobile(), roles);
+  }
+
+  private String saveDocument(MultipartFile file) {
+    if (file == null || file.isEmpty()) {
+      return null;
+    }
+
+    String originalFilename = file.getOriginalFilename() == null ? "document" : file.getOriginalFilename();
+    String safeFilename = originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
+    Path uploadDirectory = Path.of("uploads", "registration-documents");
+    Path destination = uploadDirectory.resolve(UUID.randomUUID() + "-" + safeFilename).normalize();
+
+    try {
+      Files.createDirectories(uploadDirectory);
+      file.transferTo(destination);
+      return destination.toString();
+    } catch (IOException exception) {
+      throw new BadRequestException("Unable to save registration document");
+    }
   }
 }
