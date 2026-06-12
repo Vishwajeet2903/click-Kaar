@@ -1,1 +1,270 @@
 [1m[33mComponent HMR has been enabled, see https://angular.dev/hmr for more info.[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mExpected identifier.
+  ╷
+8 │     .hero-stats div { background: #; border-radius: 18px; color: #fff; padding: .85rem .95rem; }
+  │                                    ^
+  ╵
+  src\app\pages\product-details-page.component.ts 8:36  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mExpected expression.
+  ╷
+9 │     .hero-stats span { color: ; display: block; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
+  │                               ^
+  ╵
+  src\app\pages\product-details-page.component.ts 9:31  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mExpected hex digit.
+  ╷
+9 │     .hero-stats span { color: #00; display: block; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
+  │                                  ^
+  ╵
+  src\app\pages\product-details-page.component.ts 9:34  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'dateInputValue' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:91:48:
+[37m      91 │ ...t type="date" [ngModel]="[32mdateInputValue[37m(startDate())" (ngModelC...
+         ╵                             [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'setStartDate' does not exist on type 'ProductDetailsPageComponent'. Did you mean 'startDate'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:91:94:
+[37m      91 │ ...teInputValue(startDate())" (ngModelChange)="[32msetStartDate[37m($event)">
+         ╵                                                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'dateInputValue' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:95:44:
+[37m      95 │ ...input type="date" [min]="[32mdateInputValue[37m(startDate())" [ngModel]...
+         ╵                             [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'dateInputValue' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:95:84:
+[37m      95 │ ...startDate())" [ngModel]="[32mdateInputValue[37m(endDate())" (ngModelCha...
+         ╵                             [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'setEndDate' does not exist on type 'ProductDetailsPageComponent'. Did you mean 'endDate'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:95:128:
+[37m      95 │ ...="dateInputValue(endDate())" (ngModelChange)="[32msetEndDate[37m($event)">
+         ╵                                                  [32m~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'activeDateField' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:88:75:
+[37m      88 │ ...ontrol" [class.active]="[32mactiveDateField[37m() === 'start'" (click)=...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'openCalendar' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:88:115:
+[37m      88 │ ...]="activeDateField() === 'start'" (click)="[32mopenCalendar[37m('start')">
+         ╵                                               [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'displayDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:90:29:
+[37m      90 │                   <strong>{{ [32mdisplayDate[37m(startDate()) }}</strong>
+         ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'activeDateField' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:92:75:
+[37m      92 │ ...ontrol" [class.active]="[32mactiveDateField[37m() === 'end'" (click)="o...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'openCalendar' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:92:113:
+[37m      92 │ ...tive]="activeDateField() === 'end'" (click)="[32mopenCalendar[37m('end')">
+         ╵                                                 [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'displayDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:94:29:
+[37m      94 │                   <strong>{{ [32mdisplayDate[37m(endDate()) }}</strong>
+         ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'activeDateField' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:98:19:
+[37m      98 │               @if ([32mactiveDateField[37m()) {
+         ╵                    [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'changeCalendarMonth' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:101:79:
+[37m      101 │ ...="Previous month" (click)="[32mchangeCalendarMonth[37m(-1)">&lt;</button>
+          ╵                               [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'calendarTitle' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:102:31:
+[37m      102 │                     <strong>{{ [32mcalendarTitle[37m() }}</strong>
+          ╵                                [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'changeCalendarMonth' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:103:75:
+[37m      103 │ ...label="Next month" (click)="[32mchangeCalendarMonth[37m(1)">&gt;</button>
+          ╵                                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'weekDays' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:106:33:
+[37m      106 │                     @for (day of [32mweekDays[37m; track day) {
+          ╵                                  [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'calendarDays' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:111:33:
+[37m      111 │                     @for (day of [32mcalendarDays[37m(); track $index) {
+          ╵                                  [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'isSelectedCalendarDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:115:44:
+[37m      115 │ ...                   [class.selected]="[32misSelectedCalendarDate[37m(day)"
+          ╵                                         [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'isDisabledCalendarDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:116:38:
+[37m      116 │                           [disabled]="[32misDisabledCalendarDate[37m(day)"
+          ╵                                       [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'selectCalendarDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:117:35:
+[37m      117 │                           (click)="[32mselectCalendarDate[37m(day)"
+          ╵                                    [32m~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'activeDateField' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:88:75:
+[37m      88 │ ...ontrol" [class.active]="[32mactiveDateField[37m() === 'start'" (click)=...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'openCalendar' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:88:115:
+[37m      88 │ ...]="activeDateField() === 'start'" (click)="[32mopenCalendar[37m('start')">
+         ╵                                               [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'displayDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:90:29:
+[37m      90 │                   <strong>{{ [32mdisplayDate[37m(startDate()) }}</strong>
+         ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'activeDateField' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:92:75:
+[37m      92 │ ...ontrol" [class.active]="[32mactiveDateField[37m() === 'end'" (click)="o...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'openCalendar' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:92:113:
+[37m      92 │ ...tive]="activeDateField() === 'end'" (click)="[32mopenCalendar[37m('end')">
+         ╵                                                 [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'displayDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:94:29:
+[37m      94 │                   <strong>{{ [32mdisplayDate[37m(endDate()) }}</strong>
+         ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'activeDateField' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:98:19:
+[37m      98 │               @if ([32mactiveDateField[37m()) {
+         ╵                    [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'changeCalendarMonth' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:101:79:
+[37m      101 │ ...="Previous month" (click)="[32mchangeCalendarMonth[37m(-1)">&lt;</button>
+          ╵                               [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'calendarTitle' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:102:31:
+[37m      102 │                     <strong>{{ [32mcalendarTitle[37m() }}</strong>
+          ╵                                [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'changeCalendarMonth' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:103:75:
+[37m      103 │ ...label="Next month" (click)="[32mchangeCalendarMonth[37m(1)">&gt;</button>
+          ╵                                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'weekDays' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:106:33:
+[37m      106 │                     @for (day of [32mweekDays[37m; track day) {
+          ╵                                  [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'calendarDays' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:111:33:
+[37m      111 │                     @for (day of [32mcalendarDays[37m(); track $index) {
+          ╵                                  [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'isSelectedCalendarDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:115:44:
+[37m      115 │ ...                   [class.selected]="[32misSelectedCalendarDate[37m(day)"
+          ╵                                         [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'isDisabledCalendarDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:116:38:
+[37m      116 │                           [disabled]="[32misDisabledCalendarDate[37m(day)"
+          ╵                                       [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'selectCalendarDate' does not exist on type 'ProductDetailsPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/product-details-page.component.ts:117:35:
+[37m      117 │                           (click)="[32mselectCalendarDate[37m(day)"
+          ╵                                    [32m~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
