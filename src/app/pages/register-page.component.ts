@@ -281,8 +281,8 @@ export class RegisterPageComponent {
       }))
       .subscribe({
         next: () => {
-          this.snackBar.open('Registration successful', 'Close', { duration: 2400 });
-          void this.router.navigateByUrl('/dashboard');
+          this.snackBar.open('Registration submitted for admin verification', 'Close', { duration: 3200 });
+          void this.router.navigateByUrl('/login');
         },
         error: (error) => {
           this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });

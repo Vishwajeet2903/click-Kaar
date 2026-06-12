@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
-import { AdminService, EmployeeResponse } from '../services/admin.service';
+import { AdminService, CustomerVerificationResponse, EmployeeResponse } from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
@@ -18,8 +18,35 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
         <div class="admin-shell">
           <div class="admin-copy">
             <p class="eyebrow">Admin workspace</p>
-            <h1>Register employees</h1>
-            <p class="muted">Create staff accounts for team members who help manage rentals, catalogue work, and customer operations.</p>
+            <h1>Registration approvals</h1>
+            <p class="muted">Review customer registration requests and grant login access after verification.</p>
+          </div>
+
+          <div class="surface pending-card">
+            <h2>Pending registrations</h2>
+            @if (isLoadingPending) {
+              <p class="muted">Loading pending registrations...</p>
+            } @else if (pendingLoadError) {
+              <p class="error-text">{{ pendingLoadError }}</p>
+              <button type="button" class="retry-button" (click)="loadPendingCustomers()">Retry</button>
+            } @else if (pendingCustomers.length) {
+              <div class="pending-list">
+                @for (customer of pendingCustomers; track customer.requestId) {
+                  <article>
+                    <div>
+                      <strong>{{ customer.fullName }}</strong>
+                      <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
+                      <small>{{ customer.city || 'City not provided' }}{{ customer.state ? ', ' + customer.state : '' }}{{ customer.occupation ? ' - ' + customer.occupation : '' }}</small>
+                    </div>
+                    <button type="button" [disabled]="verifyingRequestId === customer.requestId" (click)="verifyCustomer(customer)">
+                      {{ verifyingRequestId === customer.requestId ? 'Granting...' : 'Grant login' }}
+                    </button>
+                  </article>
+                }
+              </div>
+            } @else {
+              <p class="muted">No customer registrations are waiting for approval.</p>
+            }
           </div>
 
           <form class="surface employee-form" [formGroup]="form" (ngSubmit)="submit()">
@@ -49,6 +76,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
             <button type="submit" [disabled]="isSubmitting">{{ isSubmitting ? 'Creating employee...' : 'Create employee' }}</button>
           </form>
+
         </div>
 
         @if (createdEmployee) {
@@ -62,7 +90,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
       } @else {
         <div class="surface access-card">
           <p class="eyebrow">Admin access</p>
-          <h1>Please log in as admin to register employees.</h1>
+          <h1>Please log in as admin to approve registrations.</h1>
           <a routerLink="/login">Go to login</a>
         </div>
       }
@@ -74,9 +102,19 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     .admin-copy { padding: clamp(1rem, 3vw, 2rem) 0; }
     .admin-copy h1 { font-size: clamp(3rem, 7vw, 6rem); font-weight: 950; letter-spacing: 0; line-height: .96; margin: 0 0 1rem; }
     .admin-copy p { max-width: 520px; }
-    .employee-form, .created-card, .access-card { padding: clamp(1.2rem, 3vw, 2rem); }
+    .employee-form, .pending-card, .created-card, .access-card { padding: clamp(1.2rem, 3vw, 2rem); }
     .employee-form { background: #fff; border-radius: 24px; box-shadow: 0 18px 60px rgba(0,0,0,.08); }
+    .pending-card { background: #fff; border-radius: 24px; box-shadow: 0 18px 60px rgba(0,0,0,.08); margin-bottom: 1rem; }
     h2 { font-weight: 950; margin: 0 0 1.25rem; }
+    .pending-list { display: grid; gap: .8rem; }
+    .pending-list article { align-items: center; background: #f7f7f5; border-radius: 18px; display: grid; gap: 1rem; grid-template-columns: 1fr auto; padding: 1rem; }
+    .pending-list strong, .pending-list span, .pending-list small { display: block; }
+    .pending-list strong { color: #111; font-weight: 950; }
+    .pending-list span { color: #555; font-size: .9rem; margin-top: .2rem; }
+    .pending-list small { color: #777; font-size: .8rem; margin-top: .25rem; }
+    .pending-list button { min-width: 116px; width: auto; }
+    .error-text { color: #b42318; font-weight: 800; line-height: 1.5; margin: 0 0 1rem; }
+    .retry-button { width: auto; }
     .field-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     label { color: #111; display: block; font-size: .82rem; font-weight: 800; margin-bottom: 1rem; }
     label span { display: block; margin-bottom: .55rem; }
@@ -94,10 +132,12 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     }
     @media (max-width: 620px) {
       .field-grid { gap: 0; grid-template-columns: 1fr; }
+      .pending-list article { grid-template-columns: 1fr; }
+      .pending-list button { width: 100%; }
     }
   `]
 })
-export class AdminPageComponent {
+export class AdminPageComponent implements OnInit {
   readonly authService = inject(AuthService);
 
   private readonly adminService = inject(AdminService);
@@ -105,7 +145,11 @@ export class AdminPageComponent {
   private readonly snackBar = inject(MatSnackBar);
 
   createdEmployee?: EmployeeResponse;
+  pendingCustomers: CustomerVerificationResponse[] = [];
+  pendingLoadError = '';
   isSubmitting = false;
+  isLoadingPending = false;
+  verifyingRequestId?: number;
 
   readonly form = this.fb.nonNullable.group({
     fullName: ['', Validators.required],
@@ -113,6 +157,33 @@ export class AdminPageComponent {
     mobile: ['', [Validators.required, Validators.minLength(10)]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
+
+  ngOnInit(): void {
+    if (this.authService.isAdmin()) {
+      this.loadPendingCustomers();
+    }
+  }
+
+  verifyCustomer(customer: CustomerVerificationResponse): void {
+    if (this.verifyingRequestId) {
+      return;
+    }
+
+    this.verifyingRequestId = customer.requestId;
+    this.adminService.verifyCustomer(customer.requestId)
+      .pipe(finalize(() => {
+        this.verifyingRequestId = undefined;
+      }))
+      .subscribe({
+        next: () => {
+          this.pendingCustomers = this.pendingCustomers.filter((item) => item.requestId !== customer.requestId);
+          this.snackBar.open('Login access granted. The customer can now log in.', 'Close', { duration: 2800 });
+        },
+        error: (error) => {
+          this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+        }
+      });
+  }
 
   submit(): void {
     if (this.form.invalid || this.isSubmitting) {
@@ -134,6 +205,24 @@ export class AdminPageComponent {
         },
         error: (error) => {
           this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+        }
+      });
+  }
+
+  loadPendingCustomers(): void {
+    this.isLoadingPending = true;
+    this.pendingLoadError = '';
+    this.adminService.getPendingCustomers()
+      .pipe(finalize(() => {
+        this.isLoadingPending = false;
+      }))
+      .subscribe({
+        next: (customers) => {
+          this.pendingCustomers = customers;
+        },
+        error: (error) => {
+          this.pendingLoadError = this.authService.getErrorMessage(error);
+          this.snackBar.open(this.pendingLoadError, 'Close', { duration: 3600 });
         }
       });
   }

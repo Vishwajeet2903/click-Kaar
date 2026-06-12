@@ -470,9 +470,9 @@ export class LoginPageComponent {
         this.isSubmitting = false;
       }))
       .subscribe({
-        next: () => {
+        next: (user) => {
           this.snackBar.open('Login successful', 'Close', { duration: 2200 });
-          void this.router.navigateByUrl('/dashboard');
+          void this.router.navigateByUrl(user.roles.includes('ADMIN') ? '/admin' : '/dashboard');
         },
         error: (error) => {
           this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3200 });

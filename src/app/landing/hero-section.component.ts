@@ -10,7 +10,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     <section class="landing-card hero-section" id="home">
       <div class="hero-copy">
         <p class="eyebrow" appScrollReveal="fade-up">Creative rental marketplace</p>
-        <h1 appScrollReveal="fade-up" [revealDelay]="90">Build a shoot that looks like a <h1 class='mast'>MASTERPIECE.</h1> </h1>
+        <h1 appScrollReveal="fade-up" [revealDelay]="90">Build a shoot that looks like a <h1 class="mast">MASTERPIECE.</h1></h1>
         <p class="hero-subtitle" appScrollReveal="fade-up" [revealDelay]="180">
           Rent the Right Gear, Right When You Need It.
         </p>
@@ -19,7 +19,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
         </div>
 
         <form class="market-search" appScrollReveal="fade-up" [revealDelay]="340">
-          <span aria-hidden="true">⌕</span>
+          <span aria-hidden="true"></span>
           <input type="search" placeholder="Search cameras, lenses, studios, editors">
           <a routerLink="/catalogue" aria-label="Search marketplace">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -52,7 +52,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     </section>
   `,
   styles: [`
-  .mast{color: #ff9700;}
+  .mast { color: #ff9700; display: inline; }
   .hero-copy .eyebrow,
   .hero-copy h1 { font-family: var(--display-font); }
   .eyebrow{color: #ff9700;}

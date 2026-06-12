@@ -2,13 +2,12 @@ package com.clickkaar.service;
 
 import com.clickkaar.dto.auth.*;
 import com.clickkaar.entity.OTP;
-import com.clickkaar.entity.Role;
+import com.clickkaar.entity.PendingRegistration;
 import com.clickkaar.entity.User;
 import com.clickkaar.enums.OtpPurpose;
-import com.clickkaar.enums.RoleName;
 import com.clickkaar.exception.BadRequestException;
 import com.clickkaar.repository.OtpRepository;
-import com.clickkaar.repository.RoleRepository;
+import com.clickkaar.repository.PendingRegistrationRepository;
 import com.clickkaar.repository.UserRepository;
 import com.clickkaar.security.CustomUserDetails;
 import com.clickkaar.security.JwtService;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthService {
   private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
+  private final PendingRegistrationRepository pendingRegistrationRepository;
   private final OtpRepository otpRepository;
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
@@ -42,22 +41,26 @@ public class AuthService {
   private final OtpGenerator otpGenerator;
 
   @Transactional
-  public AuthResponse register(RegisterRequest request) {
-    if (userRepository.existsByEmail(request.email())) {
+  public RegistrationResponse register(RegisterRequest request) {
+    String email = request.email().toLowerCase();
+    if (userRepository.existsByEmail(email)) {
       throw new BadRequestException("Email is already registered");
+    }
+    if (pendingRegistrationRepository.existsByEmail(email)) {
+      throw new BadRequestException("Email is already pending admin approval");
     }
     if (request.mobile() != null && userRepository.existsByMobile(request.mobile())) {
       throw new BadRequestException("Mobile is already registered");
     }
+    if (request.mobile() != null && pendingRegistrationRepository.existsByMobile(request.mobile())) {
+      throw new BadRequestException("Mobile is already pending admin approval");
+    }
 
-    Role customerRole = roleRepository.findByName(RoleName.CUSTOMER)
-        .orElseThrow(() -> new BadRequestException("Customer role is not configured"));
-
-    User user = User.builder()
+    PendingRegistration pendingRegistration = PendingRegistration.builder()
         .fullName(request.fullName())
         .firstName(request.firstName())
         .lastName(request.lastName())
-        .email(request.email().toLowerCase())
+        .email(email)
         .mobile(request.mobile())
         .gender(request.gender())
         .dob(request.dob())
@@ -76,19 +79,30 @@ public class AuthService {
         .electricityBillDocumentName(saveDocument(request.electricityBill()))
         .rentAgreementDocumentName(saveDocument(request.rentAgreement()))
         .password(passwordEncoder.encode(request.password()))
-        .enabled(true)
-        .mobileVerified(false)
-        .roles(Set.of(customerRole))
         .build();
 
-    userRepository.save(user);
-    return authResponse(user);
+    PendingRegistration saved = pendingRegistrationRepository.save(pendingRegistration);
+    return new RegistrationResponse(
+        saved.getId(),
+        saved.getFullName(),
+        saved.getEmail(),
+        saved.getMobile(),
+        "PENDING_VERIFICATION",
+        "Registration request submitted. You can log in after admin verification."
+    );
   }
 
   public AuthResponse login(LoginRequest request) {
-    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-    User user = userRepository.findByEmail(request.email())
+    String email = request.email().toLowerCase();
+    if (pendingRegistrationRepository.existsByEmail(email)) {
+      throw new BadRequestException("Your registration is pending admin verification.");
+    }
+    User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+    if (!user.isEnabled()) {
+      throw new BadRequestException("Your registration is pending admin verification.");
+    }
+    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
     return authResponse(user);
   }
 

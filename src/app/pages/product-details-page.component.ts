@@ -38,29 +38,58 @@ export class AddedDialogComponent {}
   template: `
     @if (product()) {
       <app-breadcrumb [label]="product()!.name" />
-      <section class="container pb-5">
-        <div class="row g-4">
-          <div class="col-lg-6">
-            <div class="gallery">
-              <img class="main-img" [src]="selectedImage()" [alt]="product()!.name">
-              <div class="thumbs">
-                @for (image of product()!.gallery; track image) {
-                  <button (click)="selectedImage.set(image)" [class.active]="image === selectedImage()"><img [src]="image" [alt]="product()!.name"></button>
+      <section class="container product-view pb-5">
+        <div class="detail-hero">
+          <div class="copy">
+            <p class="eyebrow">{{ product()!.category }} / {{ product()!.brand }}</p>
+            <h1>{{ product()!.name }}</h1>
+            <p class="intro">{{ product()!.description }}</p>
+          </div>
+          <div class="hero-stats" aria-label="Rental highlights">
+            <div><span>Rating</span><strong>{{ product()!.rating }}</strong></div>
+            <div><span>Stock</span><strong>{{ product()!.stock }}</strong></div>
+            <div><span>Weekly</span><strong>{{ product()!.weeklyPrice | currency:'INR':'symbol':'1.0-0' }}</strong></div>
+          </div>
+        </div>
+
+        <div class="row g-4 align-items-start">
+          <div class="col-lg-7">
+            <div class="gallery surface">
+              <div class="media-frame">
+                <img class="main-img" [src]="selectedImage()" [alt]="product()!.name">
+                <span class="stock-chip" [class.out]="!product()!.available">
+                  {{ product()!.available ? 'Available now' : 'Unavailable' }}
+                </span>
+                <button type="button" class="slide-btn prev" aria-label="Previous image" (click)="showPreviousImage()">‹</button>
+                <button type="button" class="slide-btn next" aria-label="Next image" (click)="showNextImage()">›</button>
+              </div>
+              <div class="slider-dots" aria-label="Product image slider">
+                @for (image of product()!.gallery; track image; let index = $index) {
+                  <button
+                    type="button"
+                    (click)="selectImage(index)"
+                    [class.active]="image === selectedImage()"
+                    [attr.aria-label]="'View product image ' + (index + 1)"
+                  ></button>
                 }
               </div>
             </div>
           </div>
-          <div class="col-lg-6">
-            <div class="surface details">
-              <p class="eyebrow">{{ product()!.category }} · {{ product()!.brand }}</p>
-              <h1>{{ product()!.name }}</h1>
-              <p class="muted">{{ product()!.description }}</p>
-              <div class="price-row">
-                <div><strong>{{ product()!.dailyPrice | currency:'INR':'symbol':'1.0-0' }}</strong><span>/ day</span></div>
-                <div><strong>{{ product()!.weeklyPrice | currency:'INR':'symbol':'1.0-0' }}</strong><span>/ week</span></div>
+
+          <div class="col-lg-5">
+            <aside class="surface booking-card">
+              <div class="booking-head">
+                <div>
+                  <span>From</span>
+                  <strong>{{ product()!.dailyPrice | currency:'INR':'symbol':'1.0-0' }}</strong>
+                  <small>per day</small>
+                </div>
+                <div class="availability" [class.out]="!product()!.available">
+                  {{ product()!.available ? product()!.stock + ' units ready' : 'Check back soon' }}
+                </div>
               </div>
-              <div class="availability" [class.out]="!product()!.available">{{ product()!.available ? 'Available now' : 'Currently unavailable' }} · {{ product()!.stock }} units</div>
-              <div class="booking">
+
+              <div class="date-grid">
                 <mat-form-field appearance="outline">
                   <mat-label>Start date</mat-label>
                   <input matInput [matDatepicker]="startPicker" [ngModel]="startDate()" (ngModelChange)="startDate.set($event)">
@@ -74,58 +103,134 @@ export class AddedDialogComponent {}
                   <mat-datepicker #endPicker />
                 </mat-form-field>
               </div>
-              <div class="total">Duration: {{ duration() }} days · Total: <strong>{{ total() | currency:'INR':'symbol':'1.0-0' }}</strong></div>
-              <div class="row g-2 mt-2">
-                <div class="col-sm-6"><app-button (click)="addToCart()">Add To Cart</app-button></div>
-                <div class="col-sm-6"><app-button variant="secondary" (click)="toggleWishlist()">Add To Wishlist</app-button></div>
+
+              <div class="duration-options" aria-label="Quick rental duration">
+                @for (days of rentalDurations; track days) {
+                  <button
+                    type="button"
+                    class="duration-card"
+                    [class.active]="duration() === days"
+                    (click)="selectDuration(days)"
+                  >
+                    <span>{{ days }} {{ days === 1 ? 'day' : 'days' }}</span>
+                    <strong>{{ rentalPrice(days) | currency:'INR':'symbol':'1.0-0' }}</strong>
+                  </button>
+                }
               </div>
-            </div>
-            <div class="surface specs">
-              <h2>Specifications</h2>
-              @for (entry of specEntries(); track entry[0]) {
-                <div><span>{{ entry[0] }}</span><strong>{{ entry[1] }}</strong></div>
-              }
-            </div>
+
+              <div class="total-panel">
+                <span>{{ duration() }} day rental</span>
+                <strong>{{ total() | currency:'INR':'symbol':'1.0-0' }}</strong>
+              </div>
+
+              <div class="action-grid">
+                <app-button (click)="addToCart()" [disabled]="!product()!.available">Add To Cart</app-button>
+                <app-button variant="secondary" (click)="toggleWishlist()">
+                  {{ wishlist.has(product()!.id) ? 'Saved' : 'Add To Wishlist' }}
+                </app-button>
+              </div>
+
+              <div class="trust-row">
+                <span>Verified gear</span>
+                <span>Cleaned before pickup</span>
+                <span>Flexible rentals</span>
+              </div>
+            </aside>
+
           </div>
+        </div>
+
+        <div class="detail-panels">
+          <section class="surface info-card description-card">
+            <h2>Description</h2>
+            <p>{{ product()!.description }}</p>
+          </section>
+
+          <section class="surface info-card specs-card">
+            <h2>Specifications</h2>
+            @for (entry of specEntries(); track entry[0]) {
+              <div><span>{{ entry[0] }}</span><strong>{{ entry[1] }}</strong></div>
+            }
+          </section>
         </div>
       </section>
     }
   `,
   styles: [`
-    .gallery { position: sticky; top: 92px; }
-    .main-img { aspect-ratio: 4/3; border-radius: 2.5%; object-fit: cover; transition: transform .25s ease; width: 100%; }
-    .main-img:hover { transform: scale(1.015); }
-    .thumbs { display: grid; gap: .7rem; grid-template-columns: repeat(4, 1fr); margin-top: .8rem; }
-    .thumbs button { background: transparent; border: 2px solid transparent; border-radius: 5%; overflow: hidden; padding: 0; }
-    .thumbs button.active { border-color: #ff9700; }
-    .thumbs img { aspect-ratio: 1/1; object-fit: cover; width: 100%; }
-    .details, .specs { padding: 1.3rem; }
-    h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 950; }
-    .price-row { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); margin: 1.2rem 0; }
-    .price-row div { background: #fff; border: 1px solid rgba(216,164,59,.42); border-radius: 2.5%; padding: 1rem; }
-    .price-row strong { display: block; font-size: 1.4rem; }
-    .price-row span { color: #777; }
-    .availability { color: #18864b; font-weight: 900; margin-bottom: 1rem; }
-    .availability.out { color: #c23a21; }
-    .booking { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); }
-    .total { color: #171717; font-weight: 800; margin: .5rem 0 1rem; }
-    .specs { margin-top: 1rem; }
-    .specs h2 { font-size: 1.2rem; font-weight: 900; }
-    .specs div { border-top: 1px solid rgba(148,163,184,.15); display: flex; justify-content: space-between; padding: .75rem 0; }
-    .specs span { color: #777; }
-    @media (max-width: 575px) { .booking, .price-row { grid-template-columns: 1fr; } }
+    .product-view { display: grid; gap: 1.35rem; }
+    .detail-hero { align-items: end; display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr) auto; }
+    .copy { max-width: 760px; }
+    h1 { color: #111; font-size: clamp(2.2rem, 6vw, 5.25rem); font-weight: 950; letter-spacing: 0; line-height: .92; margin: .35rem 0 .75rem; }
+    .intro { color: #575757; font-size: clamp(1rem, 1.7vw, 1.16rem); line-height: 1.65; margin: 0; max-width: 680px; }
+    .hero-stats { display: grid; gap: .65rem; grid-template-columns: repeat(3, minmax(86px, 1fr)); min-width: min(100%, 360px); }
+    .hero-stats div { background: #111; border-radius: 18px; color: #fff; padding: .85rem .95rem; }
+    .hero-stats span { color: rgba(255,255,255,.64); display: block; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
+    .hero-stats strong { color: #ff9700; display: block; font-size: clamp(1rem, 2vw, 1.28rem); line-height: 1.1; margin-top: .35rem; }
+    .gallery { overflow: visible; padding: .65rem; position: sticky; top: 92px; }
+    .media-frame { background: #ececea; border-radius: 18px; overflow: hidden; position: relative; }
+    .main-img { aspect-ratio: 4/3; height: auto; object-fit: cover; transition: transform .35s ease; width: 100%; }
+    .media-frame:hover .main-img { transform: scale(1.035); }
+    .stock-chip { background: #ff9700; border-radius: 999px; bottom: 1rem; color: #111; font-size: .75rem; font-weight: 950; left: 1rem; padding: .5rem .8rem; position: absolute; text-transform: uppercase; }
+    .stock-chip.out { background: #111; color: #fff; }
+    .slide-btn { align-items: center; background: rgba(255,255,255,.92); border: 1px solid rgba(255,151,0,.4); border-radius: 999px; color: #111; cursor: pointer; display: inline-flex; font-size: 2rem; font-weight: 700; height: 44px; justify-content: center; line-height: 1; padding: 0 0 .2rem; position: absolute; top: 50%; transform: translateY(-50%); transition: background .25s ease, color .25s ease, transform .25s ease; width: 44px; }
+    .slide-btn:hover { background: #ff9700; color: #111; transform: translateY(-50%) scale(1.04); }
+    .slide-btn.prev { left: .85rem; }
+    .slide-btn.next { right: .85rem; }
+    .slider-dots { align-items: center; display: flex; gap: .45rem; justify-content: center; margin-top: .75rem; min-height: 22px; }
+    .slider-dots button { background: rgba(255,151,0,.32); border: 0; border-radius: 999px; cursor: pointer; height: 8px; padding: 0; transition: background .25s ease, transform .25s ease, width .25s ease; width: 8px; }
+    .slider-dots button.active, .slider-dots button:hover { background: #ff9700; transform: translateY(-1px); width: 28px; }
+    .booking-card { padding: 1rem; position: sticky; top: 92px; }
+    .booking-head { align-items: start; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1rem; }
+    .booking-head span, .booking-head small { color: #777; display: block; font-size: .78rem; font-weight: 800; text-transform: uppercase; }
+    .booking-head strong { color: #111; display: block; font-size: 2rem; line-height: 1; margin: .2rem 0; }
+    .availability { background: rgba(24,134,75,.1); border-radius: 999px; color: #18864b; font-size: .78rem; font-weight: 950; padding: .55rem .75rem; text-align: center; white-space: nowrap; }
+    .availability.out { background: rgba(194,58,33,.1); color: #c23a21; }
+    .date-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); }
+    .duration-options { display: grid; gap: .5rem; grid-template-columns: repeat(4, 1fr); margin: 0 0 .85rem; }
+    .duration-card { background: #fff; border: 1px solid rgba(255,151,0,.42); border-radius: 14px; color: #111; cursor: pointer; min-height: 56px; padding: .55rem .45rem; text-align: center; transition: transform .25s ease, border-color .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease; }
+    .duration-card span { color: #ff9700; display: block; font-size: .68rem; font-weight: 950; line-height: 1.1; text-transform: uppercase; }
+    .duration-card strong { color: #111; display: block; font-size: .88rem; line-height: 1.1; margin-top: .25rem; white-space: nowrap; }
+    .duration-card:hover, .duration-card.active { background: #ff9700; border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.2); color: #111; transform: translateY(-2px); }
+    .duration-card:hover span, .duration-card.active span { color: #fff; }
+    .duration-card:hover strong, .duration-card.active strong { color: #111; }
+    .total-panel { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 18px; display: flex; justify-content: space-between; margin: .1rem 0 1rem; padding: .9rem 1rem; }
+    .total-panel span { color: #777; font-weight: 800; }
+    .total-panel strong { color: #111; font-size: 1.35rem; }
+    .action-grid { display: grid; gap: .7rem; grid-template-columns: repeat(2, 1fr); }
+    .trust-row { border-top: 1px solid rgba(17,17,17,.08); display: grid; gap: .55rem; grid-template-columns: repeat(3, 1fr); margin-top: 1rem; padding-top: 1rem; }
+    .trust-row span { color: #555; font-size: .76rem; font-weight: 800; line-height: 1.25; }
+    .detail-panels { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .info-card { min-height: 210px; padding: 1.1rem; }
+    .info-card h2 { color: #111; font-size: 1.12rem; font-weight: 950; margin: 0 0 .35rem; }
+    .description-card p { color: #575757; line-height: 1.7; margin: .75rem 0 0; }
+    .specs-card div { align-items: center; border-top: 1px solid rgba(17,17,17,.08); display: flex; gap: 1rem; justify-content: space-between; padding: .82rem 0; }
+    .specs-card span { color: #777; font-weight: 800; }
+    .specs-card strong { color: #111; text-align: right; }
+    @media (max-width: 991px) {
+      .detail-hero { grid-template-columns: 1fr; }
+      .detail-panels { grid-template-columns: 1fr; }
+      .gallery, .booking-card { position: static; }
+    }
+    @media (max-width: 575px) {
+      .hero-stats, .date-grid, .action-grid, .trust-row { grid-template-columns: 1fr; }
+      .duration-options { grid-template-columns: repeat(2, 1fr); }
+      .slide-btn { height: 38px; width: 38px; }
+      .booking-head { display: grid; }
+      .availability { justify-self: start; }
+    }
   `]
 })
 export class ProductDetailsPageComponent {
   private readonly productService = inject(ProductService);
   private readonly cart = inject(CartService);
-  private readonly wishlist = inject(WishlistService);
+  protected readonly wishlist = inject(WishlistService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   readonly product = signal<Product | undefined>(undefined);
   readonly selectedImage = signal('');
   readonly startDate = signal(new Date());
   readonly endDate = signal(new Date(Date.now() + 3 * 86_400_000));
+  protected readonly rentalDurations = [1, 2, 3, 4];
   readonly duration = computed(() => Math.max(1, Math.ceil((this.endDate().getTime() - this.startDate().getTime()) / 86_400_000)));
   readonly total = computed(() => (this.product()?.dailyPrice ?? 0) * this.duration());
   readonly specEntries = computed(() => Object.entries(this.product()?.specifications ?? {}));
@@ -136,6 +241,36 @@ export class ProductDetailsPageComponent {
       this.product.set(product);
       this.selectedImage.set(product?.image ?? '');
     });
+  }
+
+  rentalPrice(days: number): number {
+    return (this.product()?.dailyPrice ?? 0) * days;
+  }
+
+  selectDuration(days: number): void {
+    const start = this.startDate();
+    const nextEndDate = new Date(start);
+    nextEndDate.setDate(start.getDate() + days);
+    this.endDate.set(nextEndDate);
+  }
+
+  selectImage(index: number): void {
+    const image = this.product()?.gallery[index];
+    if (image) this.selectedImage.set(image);
+  }
+
+  showPreviousImage(): void {
+    const gallery = this.product()?.gallery ?? [];
+    if (!gallery.length) return;
+    const current = Math.max(0, gallery.indexOf(this.selectedImage()));
+    this.selectedImage.set(gallery[(current - 1 + gallery.length) % gallery.length]);
+  }
+
+  showNextImage(): void {
+    const gallery = this.product()?.gallery ?? [];
+    if (!gallery.length) return;
+    const current = Math.max(0, gallery.indexOf(this.selectedImage()));
+    this.selectedImage.set(gallery[(current + 1) % gallery.length]);
   }
 
   addToCart(): void {

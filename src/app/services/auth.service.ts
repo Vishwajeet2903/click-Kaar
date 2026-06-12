@@ -16,6 +16,15 @@ export interface AuthResponse {
   roles: string[];
 }
 
+export interface RegistrationResponse {
+  requestId: number;
+  fullName: string;
+  email: string;
+  mobile?: string;
+  status: string;
+  message: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -56,15 +65,13 @@ export class AuthService {
     );
   }
 
-  register(request: RegisterRequest): Observable<AuthResponse> {
+  register(request: RegisterRequest): Observable<RegistrationResponse> {
     const formData = new FormData();
     Object.entries(request).forEach(([key, value]) => {
       formData.append(key, value);
     });
 
-    return this.http.post<AuthResponse>(`${API_URL}/register`, formData).pipe(
-      tap((response) => this.saveSession(response))
-    );
+    return this.http.post<RegistrationResponse>(`${API_URL}/register`, formData);
   }
 
   logout(): void {

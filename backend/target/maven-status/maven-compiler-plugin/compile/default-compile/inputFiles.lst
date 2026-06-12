@@ -9,12 +9,14 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\BookingC
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\ContentController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\PaymentController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\ProductController.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\CustomerVerificationResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\EmployeeRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\EmployeeResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\AuthResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\LoginRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\OtpRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\RegisterRequest.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\RegistrationResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\VerifyOtpRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\blog\BlogPostRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\BookingItemRequest.java
@@ -40,6 +42,7 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\ContactMessa
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\Faq.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\OTP.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\Payment.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\PendingRegistration.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\Product.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\ProductImage.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\Refund.java
@@ -70,6 +73,7 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\ContactM
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\FaqRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\OtpRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\PaymentRepository.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\PendingRegistrationRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\ProductImageRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\ProductRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\RefundRepository.java
