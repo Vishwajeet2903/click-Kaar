@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/click-kaar/browser",
+    "public": "dist/clickkaar/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
