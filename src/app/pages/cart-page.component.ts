@@ -17,9 +17,11 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
         <div class="col-lg-8">
           @for (item of cart.items(); track item.product.id) {
             <article class="surface item">
-              <img [src]="item.product.image" [alt]="item.product.name">
+              <a class="item-media" [routerLink]="['/products', item.product.id]" [attr.aria-label]="'View ' + item.product.name">
+                <img [src]="item.product.image" [alt]="item.product.name">
+              </a>
               <div>
-                <h2>{{ item.product.name }}</h2>
+                <h2><a [routerLink]="['/products', item.product.id]">{{ item.product.name }}</a></h2>
                 <p class="muted">{{ item.startDate | date }} - {{ item.endDate | date }} · {{ cart.duration(item) }} days</p>
                 <div class="qty"><button (click)="cart.updateQuantity(item.product.id, item.quantity - 1)">-</button><span>{{ item.quantity }}</span><button (click)="cart.updateQuantity(item.product.id, item.quantity + 1)">+</button></div>
               </div>
@@ -47,8 +49,11 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   `,
   styles: [`
     .item { align-items: center; display: grid; gap: 1rem; grid-template-columns: 130px 1fr auto; margin-bottom: 1rem; padding: 1rem; }
-    .item img { aspect-ratio: 1/1; border-radius: 2.5%; object-fit: cover; width: 130px; }
+    .item-media { border-radius: 2.5%; display: block; overflow: hidden; width: 130px; }
+    .item img { aspect-ratio: 1/1; object-fit: cover; transition: transform .25s ease; width: 130px; }
+    .item-media:hover img { transform: scale(1.04); }
     h2 { font-size: 1.15rem; font-weight: 900; }
+    h2 a:hover { color: #ff9700; }
     .qty { align-items: center; display: flex; gap: .7rem; }
     .qty button, .remove { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-weight: 800; justify-content: center; min-height: 50px; min-width: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
     .qty button:hover, .remove:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
@@ -58,7 +63,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     .grand strong { color: #ff9700; font-size: 1.2rem; }
     .empty { padding: 2rem; }
     .empty a { color: #ff9700; font-weight: 900; }
-    @media (max-width: 575px) { .item { grid-template-columns: 1fr; } .item img { width: 100%; } .text-end { text-align: left !important; } }
+    @media (max-width: 575px) { .item { grid-template-columns: 1fr; } .item-media, .item img { width: 100%; } .text-end { text-align: left !important; } }
   `]
 })
 export class CartPageComponent {

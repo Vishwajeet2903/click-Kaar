@@ -29,7 +29,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     </div>
   `,
   styles: [`
-    .cart-dialog { background: #fff; border: 1px solid rgba(255,151,0,.22); border-radius: 24px; color: #111; font-family: var(--app-font); min-width: min(360px, calc(100vw - 48px)); padding: 1.35rem; text-align: center; }
+    .cart-dialog { background: #fff; border: 1px solid #ff9700(255,151,0,.22); border-radius: 24px; color: #111; font-family: var(--app-font); min-width: min(360px, calc(100vw - 48px)); padding: 1.35rem; text-align: center; }
     .dialog-mark { align-items: center; background: #ff9700; border-radius: 999px; color: #111; display: inline-flex; font-size: 1.35rem; font-weight: 950; height: 52px; justify-content: center; margin-bottom: .85rem; width: 52px; }
     h2 { color: #111; font-family: var(--display-font); font-size: 1.45rem; font-weight: 950; line-height: 1.05; margin: 0 0 .5rem; padding: 0; }
     mat-dialog-content { color: #666; display: block; font-family: var(--app-font); font-size: .98rem; font-weight: 500; line-height: 1.6; margin: 0; padding: 0; }
@@ -71,9 +71,9 @@ export class AddedDialogComponent {}
             <div class="gallery surface">
               <div class="media-frame">
                 <img class="main-img" [src]="selectedImage()" [alt]="product()!.name">
-                <span class="stock-chip" [class.out]="!product()!.available">
+                <!-- <span class="stock-chip" [class.out]="!product()!.available">
                   {{ product()!.available ? 'Available now' : 'Unavailable' }}
-                </span>
+                </span> -->
               </div>
               <div class="slider-dots" aria-label="Product image slider">
                 @for (image of product()!.gallery; track image; let index = $index) {
@@ -204,7 +204,7 @@ export class AddedDialogComponent {}
     .hero-stats { display: grid; gap: .65rem; grid-template-columns: repeat(3, minmax(86px, 1fr)); min-width: min(100%, 360px); }
     .hero-stats div { background: #fff; border-radius: 18px; color: #fff; padding: .85rem .95rem; }
     .hero-stats span { color: #000; display: block; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
-    .hero-stats strong { color: #ff9700; display: block; font-size: clamp(1rem, 2vw, 1.28rem); line-height: 1.1; margin-top: .35rem; }
+    .hero-stats strong { color: #000; display: block; font-size: clamp(1rem, 2vw, 1.28rem); line-height: 1.1; margin-top: .35rem; }
     .gallery { overflow: visible; padding: .65rem; position: sticky; top: 92px; }
     .media-frame { background: #ececea; border-radius: 18px; overflow: hidden; position: relative; }
     .main-img { aspect-ratio: 4/3; height: auto; object-fit: cover; transition: transform .35s ease; width: 100%; }

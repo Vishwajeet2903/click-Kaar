@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -9,7 +10,7 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
 @Component({
   selector: 'app-catalogue-page',
   standalone: true,
-  imports: [FormsModule, BreadcrumbComponent, ProductCardComponent],
+  imports: [CurrencyPipe, FormsModule, BreadcrumbComponent, ProductCardComponent],
   template: `
     <app-breadcrumb label="Catalogue" />
     <section class="container pb-5">
@@ -25,19 +26,39 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
       <div class="row g-4">
         <aside class="col-lg-3">
           <div class="surface filters">
-            <input class="form-control mb-3" placeholder="Search gear" [ngModel]="query()" (ngModelChange)="query.set($event); page.set(1)">
-            <label class="form-label">Category</label>
-            <select class="form-select mb-3" [ngModel]="category()" (ngModelChange)="category.set($event); page.set(1)">
-              <option value="">All categories</option>
-              @for (item of categories(); track item) { <option [value]="item">{{ item }}</option> }
-            </select>
-            <label class="form-label">Brand</label>
-            <select class="form-select mb-3" [ngModel]="brand()" (ngModelChange)="brand.set($event); page.set(1)">
-              <option value="">All brands</option>
-              @for (item of brands(); track item) { <option [value]="item">{{ item }}</option> }
-            </select>
-            <label class="form-label">Max daily price: ₹{{ maxPrice() }}</label>
-            <input class="form-range mb-3" type="range" min="500" max="5000" step="100" [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set(+$event); page.set(1)">
+            <div class="filter-head">
+              <div>
+                <p class="eyebrow mb-1">Filters</p>
+                <h2>Refine gear</h2>
+              </div>
+              <button type="button" class="reset" (click)="resetFilters()" [disabled]="activeFilters() === 0">Reset</button>
+            </div>
+            <p class="filter-count">{{ filtered().length }} items found</p>
+            <div class="filter-group">
+              <label class="form-label" for="catalogue-search">Search</label>
+              <input id="catalogue-search" class="form-control" placeholder="Search gear or brand" [ngModel]="query()" (ngModelChange)="query.set($event); page.set(1)">
+            </div>
+            <div class="filter-group">
+              <label class="form-label" for="catalogue-category">Category</label>
+              <select id="catalogue-category" class="form-select" [ngModel]="category()" (ngModelChange)="category.set($event); page.set(1)">
+                <option value="">All categories</option>
+                @for (item of categories(); track item) { <option [value]="item">{{ item }}</option> }
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="form-label" for="catalogue-brand">Brand</label>
+              <select id="catalogue-brand" class="form-select" [ngModel]="brand()" (ngModelChange)="brand.set($event); page.set(1)">
+                <option value="">All brands</option>
+                @for (item of brands(); track item) { <option [value]="item">{{ item }}</option> }
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="price-row">
+                <label class="form-label" for="catalogue-price">Max daily price</label>
+                <strong>{{ maxPrice() | currency:'INR':'symbol':'1.0-0' }}</strong>
+              </div>
+              <input id="catalogue-price" class="form-range" type="range" min="500" max="5000" step="100" [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set(+$event); page.set(1)">
+            </div>
             <label class="toggle"><input type="checkbox" [ngModel]="availableOnly()" (ngModelChange)="availableOnly.set($event); page.set(1)"> Available only</label>
           </div>
         </aside>
@@ -59,14 +80,26 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
     </section>
   `,
   styles: [`
+    .form-control::placeholder{color: #111}
     .sort { max-width: 230px; }
-    .filters { padding: 1rem; position: sticky; top: 92px; }
-    .form-label, .toggle { color: #171717; font-weight: 800; }
+    .filters { display: grid; gap: 1rem; padding: 1rem; position: sticky; top: 92px; }
+    .filter-head { align-items: center; display: flex; gap: 1rem; justify-content: space-between; }
+    .filter-head h2 { font-size: 1.15rem; line-height: 1.1; margin: 0; }
+    .reset { background: #fff; border: 1px solid rgba(17,17,17,.12); border-radius: 999px; color: #111; font-size: .82rem; font-weight: 900; min-height: 38px; padding: .45rem .8rem; transition: transform .25s ease, border-color .25s ease, background .25s ease, color .25s ease; }
+    .reset:hover:not(:disabled) { background: #111; border-color: #111; color: #fff; transform: translateY(-2px); }
+    .reset:disabled { cursor: not-allowed; opacity: .45; }
+    .filter-count { background: #fff; border-radius: 999px; color: #171717; font-size: .86rem; font-weight: 900; margin: 0; padding: .55rem .75rem; text-align: center; }
+    .filter-group { display: grid; gap: .45rem; }
+    .form-label, .toggle { color: #171717; font-weight: 800; margin: 0; }
+    .price-row { align-items: center; display: flex; gap: .75rem; justify-content: space-between; }
+    .price-row strong { color: #ff9700; font-size: .95rem; white-space: nowrap; }
+    .form-range { accent-color: #ff9700; }
     .toggle { align-items: center; display: flex; gap: .5rem; }
+    .toggle input { accent-color: #ff9700; height: 18px; width: 18px; }
     .empty { padding: 2rem; text-align: center; }
     .pagination-bar { align-items: center; display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
     .pagination-bar button { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
-    .pagination-bar button:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .pagination-bar button:hover { background: #ff9700; box-shadow: 0 16px 34px fff(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .pagination-bar button:disabled, .pagination-bar button:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: not-allowed; opacity: .45; transform: none; }
   `]
 })
@@ -94,8 +127,24 @@ export class CataloguePageComponent {
   });
   readonly totalPages = computed(() => Math.max(1, Math.ceil(this.filtered().length / 6)));
   readonly pageProducts = computed(() => this.filtered().slice((this.page() - 1) * 6, this.page() * 6));
+  readonly activeFilters = computed(() => [
+    this.query(),
+    this.category(),
+    this.brand(),
+    this.maxPrice() < 5000,
+    this.availableOnly()
+  ].filter(Boolean).length);
 
   constructor() {
     this.productService.getProducts().subscribe((products) => this.products.set(products));
+  }
+
+  resetFilters(): void {
+    this.query.set('');
+    this.category.set('');
+    this.brand.set('');
+    this.maxPrice.set(5000);
+    this.availableOnly.set(false);
+    this.page.set(1);
   }
 }

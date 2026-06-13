@@ -46,8 +46,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
           <!-- <p class="eyebrow">Account access</p> -->
           <h2>Log in</h2>
 
-          <button class="google" type="button"><span>G</span> Continue with Google</button>
-          <div class="divider"><span>or use email</span></div>
+          <!-- <button class="google" type="button"><span>G</span> Continue with Google</button>
+          <div class="divider"><span>or use email</span></div> -->
 
           <label>
             <span>Email</span>
