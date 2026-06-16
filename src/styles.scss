@@ -164,58 +164,6 @@ img {
   animation: page-settle 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.route-transition {
-  align-items: center;
-  background: #151515;
-  clip-path: inset(0 0 100% 0);
-  color: #ffffff;
-  display: flex;
-  inset: 0;
-  justify-content: center;
-  opacity: 0;
-  overflow: hidden;
-  pointer-events: none;
-  position: fixed;
-  transition: clip-path 560ms cubic-bezier(0.77, 0, 0.18, 1), opacity 220ms ease;
-  z-index: 2000;
-}
-
-.route-transition.active {
-  clip-path: inset(0);
-  opacity: 1;
-}
-
-.route-transition video {
-  height: 100%;
-  inset: 0;
-  object-fit: cover;
-  opacity: 0.38;
-  position: absolute;
-  transform: scale(1.04);
-  width: 100%;
-}
-
-.route-transition::after {
-  background:
-    linear-gradient(90deg, rgba(21, 21, 21, 0.92), rgba(21, 21, 21, 0.18), rgba(255, 151, 0, 0.45)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 9px);
-  content: "";
-  inset: 0;
-  mix-blend-mode: screen;
-  position: absolute;
-}
-
-.route-transition span {
-  color: #ffffff;
-  font-size: clamp(3.5rem, 12vw, 10rem);
-  font-weight: 950;
-  letter-spacing: 0;
-  line-height: 0.9;
-  position: relative;
-  text-transform: uppercase;
-  z-index: 1;
-}
-
 .motion-item {
   opacity: 0;
   transform: translateY(46px) scale(0.985);
@@ -612,8 +560,6 @@ button,
 @media (prefers-reduced-motion: reduce) {
   .page-shell,
   .page-shell.page-enter,
-  .route-transition,
-  .route-transition.active,
   .motion-item,
   .scroll-animate,
   .scroll-animate.in-view,
@@ -629,7 +575,4 @@ button,
     transition: none !important;
   }
 
-  .route-transition {
-    display: none;
-  }
 }

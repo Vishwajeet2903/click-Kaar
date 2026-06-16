@@ -1,139 +1,525 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
+import { Product } from '../models/product.model';
 import { AdminService, CustomerVerificationResponse, EmployeeResponse } from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
+import { ProductService } from '../services/product.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
+
+type AdminTab = 'dashboard' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'content' | 'reports' | 'roles' | 'settings';
+type BookingStatus = 'Upcoming' | 'Active' | 'Completed' | 'Cancelled' | 'Overdue';
+type PaymentStatus = 'Paid' | 'Pending' | 'Failed' | 'Refunded';
+type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
+
+interface AdminMetric {
+  label: string;
+  value: string;
+  note: string;
+  tone: 'dark' | 'orange' | 'green' | 'red';
+}
+
+interface AdminProduct extends Product {
+  status: ProductStatus;
+  maintenanceNote: string;
+}
+
+interface AdminBooking {
+  id: string;
+  customer: string;
+  phone: string;
+  products: string[];
+  startDate: string;
+  endDate: string;
+  status: BookingStatus;
+  paymentStatus: PaymentStatus;
+  returnStatus: 'Not due' | 'Due today' | 'Returned' | 'Late';
+  total: number;
+  notes: string;
+}
+
+interface AdminCustomer {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  verified: boolean;
+  blocked: boolean;
+  city: string;
+  wishlist: number;
+  activeBookings: number;
+  pastBookings: number;
+}
+
+interface AdminPayment {
+  id: string;
+  bookingId: string;
+  customer: string;
+  gateway: 'Razorpay' | 'PayU';
+  mode: 'Full payment' | 'Security deposit';
+  status: PaymentStatus;
+  amount: number;
+  paidAt: string;
+}
+
+interface BlogPostAdmin {
+  id: number;
+  title: string;
+  category: string;
+  author: string;
+  status: 'Draft' | 'Published';
+  publishDate: string;
+  seoTitle: string;
+  metaDescription: string;
+}
+
+interface StaticContentItem {
+  key: string;
+  title: string;
+  owner: string;
+  status: 'Current' | 'Needs review';
+  updatedAt: string;
+}
+
+interface RolePermission {
+  module: string;
+  superAdmin: string;
+  manager: string;
+  inventory: string;
+  content: string;
+}
 
 @Component({
   selector: 'app-admin-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, MatSnackBarModule, BreadcrumbComponent],
+  imports: [CurrencyPipe, DatePipe, PercentPipe, FormsModule, ReactiveFormsModule, RouterLink, MatSnackBarModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb label="Admin" />
     <section class="container admin-page">
       @if (authService.isAdmin()) {
-        <div class="admin-shell">
-          <div class="admin-copy">
-            <p class="eyebrow">Admin workspace</p>
-            <h1>Registration approvals</h1>
-            <p class="muted">Review customer registration requests and grant login access after verification.</p>
-          </div>
+        <div class="admin-layout">
+          <aside class="admin-sidebar surface">
+            <div>
+              <p class="eyebrow">Admin panel</p>
+              <h1>Clickkaar Ops</h1>
+            </div>
+            <nav aria-label="Admin sections">
+              @for (tab of tabs; track tab.id) {
+                <button type="button" [class.active]="activeTab() === tab.id" (click)="activeTab.set(tab.id)">
+                  <span>{{ tab.label }}</span>
+                  <small>{{ tab.count }}</small>
+                </button>
+              }
+            </nav>
+          </aside>
 
-          <div class="surface pending-card">
-            <h2>Pending registrations</h2>
-            @if (isLoadingPending) {
-              <p class="muted">Loading pending registrations...</p>
-            } @else if (pendingLoadError) {
-              <p class="error-text">{{ pendingLoadError }}</p>
-              <button type="button" class="retry-button" (click)="loadPendingCustomers()">Retry</button>
-            } @else if (pendingCustomers.length) {
-              <div class="pending-list">
-                @for (customer of pendingCustomers; track customer.requestId) {
-                  <article>
-                    <div>
-                      <strong>{{ customer.fullName }}</strong>
-                      <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
-                      <small>{{ customer.city || 'City not provided' }}{{ customer.state ? ', ' + customer.state : '' }}{{ customer.occupation ? ' - ' + customer.occupation : '' }}</small>
-                    </div>
-                    <button type="button" [disabled]="verifyingRequestId === customer.requestId" (click)="verifyCustomer(customer)">
-                      {{ verifyingRequestId === customer.requestId ? 'Granting...' : 'Grant login' }}
-                    </button>
-                  </article>
-                }
+          <div class="admin-workspace">
+            <header class="admin-topbar">
+              <div>
+                <p class="eyebrow">{{ activeTabLabel() }}</p>
+                <h2>{{ activeTitle() }}</h2>
               </div>
-            } @else {
-              <p class="muted">No customer registrations are waiting for approval.</p>
+              <div class="topbar-actions">
+                <button type="button" class="ghost-btn" (click)="exportActive()">Export</button>
+                <button type="button" class="primary-btn" (click)="openCreate()">Create</button>
+              </div>
+            </header>
+
+            @switch (activeTab()) {
+              @case ('dashboard') {
+                <div class="metric-grid">
+                  @for (metric of metrics(); track metric.label) {
+                    <article class="surface metric-card" [class]="metric.tone">
+                      <span>{{ metric.label }}</span>
+                      <strong>{{ metric.value }}</strong>
+                      <small>{{ metric.note }}</small>
+                    </article>
+                  }
+                </div>
+
+                <div class="split-grid">
+                  <section class="surface panel">
+                    <div class="panel-head">
+                      <h3>Recent bookings</h3>
+                      <button type="button" class="link-btn" (click)="activeTab.set('bookings')">View all</button>
+                    </div>
+                    <div class="dense-list">
+                      @for (booking of bookings().slice(0, 5); track booking.id) {
+                        <article>
+                          <div>
+                            <strong>{{ booking.id }}</strong>
+                            <span>{{ booking.customer }} - {{ booking.products.join(', ') }}</span>
+                          </div>
+                          <b class="status" [class]="statusClass(booking.status)">{{ booking.status }}</b>
+                        </article>
+                      }
+                    </div>
+                  </section>
+
+                  <section class="surface panel">
+                    <div class="panel-head">
+                      <h3>Pending registrations</h3>
+                      <button type="button" class="link-btn" (click)="loadPendingCustomers()">Refresh</button>
+                    </div>
+                    @if (isLoadingPending) {
+                      <p class="muted">Loading pending registrations...</p>
+                    } @else if (pendingLoadError) {
+                      <p class="error-text">{{ pendingLoadError }}</p>
+                    } @else if (pendingCustomers.length) {
+                      <div class="dense-list">
+                        @for (customer of pendingCustomers; track customer.requestId) {
+                          <article>
+                            <div>
+                              <strong>{{ customer.fullName }}</strong>
+                              <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
+                            </div>
+                            <button type="button" class="mini-btn" [disabled]="verifyingRequestId === customer.requestId" (click)="verifyCustomer(customer)">
+                              {{ verifyingRequestId === customer.requestId ? 'Granting' : 'Grant' }}
+                            </button>
+                          </article>
+                        }
+                      </div>
+                    } @else {
+                      <p class="muted">No customer registrations are waiting for approval.</p>
+                    }
+                  </section>
+                </div>
+              }
+
+              @case ('inventory') {
+                <div class="tool-row">
+                  <input class="search-input" placeholder="Search product, brand, category" [ngModel]="inventoryQuery()" (ngModelChange)="inventoryQuery.set($event)">
+                  <select [ngModel]="inventoryStatus()" (ngModelChange)="inventoryStatus.set($event)">
+                    <option value="">All statuses</option>
+                    <option value="Available">Available</option>
+                    <option value="Unavailable">Unavailable</option>
+                    <option value="Maintenance">Maintenance</option>
+                  </select>
+                </div>
+
+                <div class="surface table-panel">
+                  <table>
+                    <thead>
+                      <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Calendar</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                      @for (product of filteredProducts(); track product.id) {
+                        <tr>
+                          <td>
+                            <div class="product-cell">
+                              <img [src]="product.image" [alt]="product.name">
+                              <div><strong>{{ product.name }}</strong><span>{{ product.brand }}</span></div>
+                            </div>
+                          </td>
+                          <td>{{ product.category }}</td>
+                          <td>{{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }} / day</td>
+                          <td>{{ product.stock }}</td>
+                          <td><b class="status" [class]="statusClass(product.status)">{{ product.status }}</b></td>
+                          <td><span class="calendar-strip">{{ bookedDays(product.name) }} booked days</span></td>
+                          <td class="action-cell">
+                            <button type="button" class="mini-btn" (click)="editProduct(product)">Edit</button>
+                            <button type="button" class="danger-btn" (click)="markMaintenance(product)">Maintenance</button>
+                          </td>
+                        </tr>
+                      } @empty {
+                        <tr><td colspan="7" class="empty-cell">No inventory matches those filters.</td></tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+
+                <form class="surface editor-panel" [formGroup]="productForm" (ngSubmit)="saveProduct()">
+                  <div class="panel-head"><h3>{{ editingProductId ? 'Edit product' : 'Create product' }}</h3><button type="button" class="link-btn" (click)="resetProductForm()">Reset</button></div>
+                  <div class="form-grid">
+                    <label>Name<input formControlName="name"></label>
+                    <label>Brand<input formControlName="brand"></label>
+                    <label>Category<input formControlName="category"></label>
+                    <label>Status<select formControlName="status"><option>Available</option><option>Unavailable</option><option>Maintenance</option></select></label>
+                    <label>Daily price<input type="number" formControlName="dailyPrice"></label>
+                    <label>Weekly price<input type="number" formControlName="weeklyPrice"></label>
+                    <label>Stock<input type="number" formControlName="stock"></label>
+                    <label>Image URL<input formControlName="image"></label>
+                  </div>
+                  <label>Description<textarea formControlName="description"></textarea></label>
+                  <label>Specifications<textarea formControlName="specifications" placeholder="Sensor: 45MP, Video: 8K RAW"></textarea></label>
+                  <button type="submit" class="primary-btn wide">{{ editingProductId ? 'Save product' : 'Add product' }}</button>
+                </form>
+              }
+
+              @case ('bookings') {
+                <div class="tool-row">
+                  <input class="search-input" placeholder="Search booking, customer, product" [ngModel]="bookingQuery()" (ngModelChange)="bookingQuery.set($event)">
+                  <select [ngModel]="bookingStatusFilter()" (ngModelChange)="bookingStatusFilter.set($event)">
+                    <option value="">All booking statuses</option>
+                    <option>Upcoming</option><option>Active</option><option>Completed</option><option>Cancelled</option><option>Overdue</option>
+                  </select>
+                  <select [ngModel]="paymentStatusFilter()" (ngModelChange)="paymentStatusFilter.set($event)">
+                    <option value="">All payment statuses</option>
+                    <option>Paid</option><option>Pending</option><option>Failed</option><option>Refunded</option>
+                  </select>
+                </div>
+                <div class="surface table-panel">
+                  <table>
+                    <thead><tr><th>Booking</th><th>Rental window</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th><th>Return</th><th>Actions</th></tr></thead>
+                    <tbody>
+                      @for (booking of filteredBookings(); track booking.id) {
+                        <tr>
+                          <td><strong>{{ booking.id }}</strong><span>{{ booking.customer }} - {{ booking.phone }}</span></td>
+                          <td>{{ booking.startDate | date:'mediumDate' }} - {{ booking.endDate | date:'mediumDate' }}</td>
+                          <td>{{ booking.products.join(', ') }}</td>
+                          <td>{{ booking.total | currency:'INR':'symbol':'1.0-0' }}</td>
+                          <td><b class="status" [class]="statusClass(booking.status)">{{ booking.status }}</b></td>
+                          <td><b class="status" [class]="statusClass(booking.paymentStatus)">{{ booking.paymentStatus }}</b></td>
+                          <td>{{ booking.returnStatus }}</td>
+                          <td class="action-cell">
+                            <button type="button" class="mini-btn" (click)="advanceBooking(booking)">Advance</button>
+                            <button type="button" class="ghost-mini" (click)="addNote(booking)">Note</button>
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              }
+
+              @case ('customers') {
+                <div class="tool-row"><input class="search-input" placeholder="Search customer, email, city" [ngModel]="customerQuery()" (ngModelChange)="customerQuery.set($event)"></div>
+                <div class="card-grid">
+                  @for (customer of filteredCustomers(); track customer.id) {
+                    <article class="surface customer-card" [class.blocked]="customer.blocked">
+                      <div class="avatar">{{ customer.name.charAt(0) }}</div>
+                      <div>
+                        <h3>{{ customer.name }}</h3>
+                        <p>{{ customer.email }} - {{ customer.phone }}</p>
+                        <span>{{ customer.city }} / {{ customer.verified ? 'OTP verified' : 'OTP pending' }}</span>
+                      </div>
+                      <dl>
+                        <div><dt>Active</dt><dd>{{ customer.activeBookings }}</dd></div>
+                        <div><dt>Past</dt><dd>{{ customer.pastBookings }}</dd></div>
+                        <div><dt>Wishlist</dt><dd>{{ customer.wishlist }}</dd></div>
+                      </dl>
+                      <button type="button" [class.danger-btn]="!customer.blocked" [class.mini-btn]="customer.blocked" (click)="toggleCustomerBlock(customer)">
+                        {{ customer.blocked ? 'Unblock customer' : 'Block customer' }}
+                      </button>
+                    </article>
+                  }
+                </div>
+              }
+
+              @case ('payments') {
+                <div class="surface table-panel">
+                  <table>
+                    <thead><tr><th>Transaction</th><th>Booking</th><th>Customer</th><th>Gateway</th><th>Policy</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                      @for (payment of payments(); track payment.id) {
+                        <tr>
+                          <td><strong>{{ payment.id }}</strong><span>{{ payment.paidAt | date:'mediumDate' }}</span></td>
+                          <td>{{ payment.bookingId }}</td>
+                          <td>{{ payment.customer }}</td>
+                          <td>{{ payment.gateway }}</td>
+                          <td>{{ payment.mode }}</td>
+                          <td>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+                          <td><b class="status" [class]="statusClass(payment.status)">{{ payment.status }}</b></td>
+                          <td><button type="button" class="danger-btn" [disabled]="payment.status === 'Refunded'" (click)="refund(payment)">Refund</button></td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              }
+
+              @case ('content') {
+                <div class="split-grid">
+                  <section class="surface panel">
+                    <div class="panel-head"><h3>Blog & SEO</h3><button type="button" class="mini-btn" (click)="publishDraft()">Publish draft</button></div>
+                    <div class="dense-list">
+                      @for (post of blogPosts(); track post.id) {
+                        <article>
+                          <div><strong>{{ post.title }}</strong><span>{{ post.category }} - {{ post.author }} - {{ post.publishDate | date:'mediumDate' }}</span></div>
+                          <b class="status" [class]="statusClass(post.status)">{{ post.status }}</b>
+                        </article>
+                      }
+                    </div>
+                  </section>
+                  <section class="surface panel">
+                    <div class="panel-head"><h3>Static content</h3><button type="button" class="mini-btn" (click)="markContentReviewed()">Mark reviewed</button></div>
+                    <div class="dense-list">
+                      @for (item of staticContent(); track item.key) {
+                        <article>
+                          <div><strong>{{ item.title }}</strong><span>{{ item.owner }} - {{ item.updatedAt | date:'mediumDate' }}</span></div>
+                          <b class="status" [class]="statusClass(item.status)">{{ item.status }}</b>
+                        </article>
+                      }
+                    </div>
+                  </section>
+                </div>
+              }
+
+              @case ('reports') {
+                <div class="metric-grid reports">
+                  <article class="surface metric-card"><span>Revenue growth</span><strong>{{ .18 | percent }}</strong><small>Compared with last month</small></article>
+                  <article class="surface metric-card"><span>Cancellation rate</span><strong>{{ .06 | percent }}</strong><small>4 cancelled bookings</small></article>
+                  <article class="surface metric-card"><span>Most rented</span><strong>Canon R5</strong><small>12 rental days this month</small></article>
+                  <article class="surface metric-card"><span>Customer growth</span><strong>{{ .24 | percent }}</strong><small>New verified accounts</small></article>
+                </div>
+                <section class="surface panel">
+                  <h3>Category performance</h3>
+                  <div class="bar-list">
+                    @for (item of categoryReports; track item.name) {
+                      <div><span>{{ item.name }}</span><b [style.width.%]="item.value"></b><strong>{{ item.value }}%</strong></div>
+                    }
+                  </div>
+                </section>
+              }
+
+              @case ('roles') {
+                <section class="surface table-panel">
+                  <table>
+                    <thead><tr><th>Module</th><th>Super Admin</th><th>Manager</th><th>Inventory Staff</th><th>Content Editor</th></tr></thead>
+                    <tbody>
+                      @for (permission of rolePermissions; track permission.module) {
+                        <tr><td><strong>{{ permission.module }}</strong></td><td>{{ permission.superAdmin }}</td><td>{{ permission.manager }}</td><td>{{ permission.inventory }}</td><td>{{ permission.content }}</td></tr>
+                      }
+                    </tbody>
+                  </table>
+                </section>
+
+                <form class="surface employee-form" [formGroup]="employeeForm" (ngSubmit)="submitEmployee()">
+                  <div class="panel-head"><h3>Create employee</h3><span>Manager or staff access</span></div>
+                  <div class="form-grid">
+                    <label>Full name<input formControlName="fullName"></label>
+                    <label>Email<input formControlName="email"></label>
+                    <label>Mobile<input formControlName="mobile"></label>
+                    <label>Temporary password<input type="password" formControlName="password"></label>
+                  </div>
+                  <button type="submit" class="primary-btn wide" [disabled]="isSubmitting">{{ isSubmitting ? 'Creating...' : 'Create employee' }}</button>
+                  @if (createdEmployee) {
+                    <p class="success-text">{{ createdEmployee.fullName }} created with {{ createdEmployee.roles.join(', ') }} access.</p>
+                  }
+                </form>
+              }
+
+              @case ('settings') {
+                <form class="surface editor-panel" [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+                  <div class="panel-head"><h3>Platform settings</h3><span>Super admin only</span></div>
+                  <div class="form-grid">
+                    <label>Payment gateway<select formControlName="gateway"><option>Razorpay</option><option>PayU</option></select></label>
+                    <label>Payment policy<select formControlName="paymentPolicy"><option>Full payment</option><option>Security deposit</option><option>Customer choice</option></select></label>
+                    <label>Deposit percent<input type="number" formControlName="depositPercent"></label>
+                    <label>GST percent<input type="number" formControlName="gstPercent"></label>
+                    <label>Notification email<input formControlName="notificationEmail"></label>
+                    <label>WhatsApp number<input formControlName="whatsappNumber"></label>
+                    <label>reCAPTCHA site key<input formControlName="recaptchaKey"></label>
+                    <label>Analytics ID<input formControlName="analyticsId"></label>
+                  </div>
+                  <button type="submit" class="primary-btn wide">Save settings</button>
+                </form>
+              }
             }
           </div>
-
-          <form class="surface employee-form" [formGroup]="form" (ngSubmit)="submit()">
-            <h2>Employee details</h2>
-
-            <label>
-              <span>Full name</span>
-              <input placeholder="Employee name" formControlName="fullName">
-            </label>
-
-            <div class="field-grid">
-              <label>
-                <span>Email</span>
-                <input placeholder="employee@clickkar.com" formControlName="email">
-              </label>
-
-              <label>
-                <span>Mobile</span>
-                <input placeholder="10-digit mobile" formControlName="mobile">
-              </label>
-            </div>
-
-            <label>
-              <span>Temporary password</span>
-              <input type="password" placeholder="Minimum 6 characters" formControlName="password">
-            </label>
-
-            <button type="submit" [disabled]="isSubmitting">{{ isSubmitting ? 'Creating employee...' : 'Create employee' }}</button>
-          </form>
-
         </div>
-
-        @if (createdEmployee) {
-          <article class="surface created-card">
-            <p class="eyebrow">Created</p>
-            <h2>{{ createdEmployee.fullName }}</h2>
-            <p class="muted">{{ createdEmployee.email }} - {{ createdEmployee.mobile }}</p>
-            <span>{{ createdEmployee.roles.join(', ') }}</span>
-          </article>
-        }
       } @else {
         <div class="surface access-card">
           <p class="eyebrow">Admin access</p>
-          <h1>Please log in as admin to approve registrations.</h1>
-          <a routerLink="/login">Go to login</a>
+          <h1>Please log in as admin to manage Clickkaar operations.</h1>
+          <a routerLink="/login" class="primary-btn">Go to login</a>
         </div>
       }
     </section>
   `,
   styles: [`
     .admin-page { padding-bottom: 4rem; }
-    .admin-shell { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: minmax(0, .9fr) minmax(420px, 1fr); }
-    .admin-copy { padding: clamp(1rem, 3vw, 2rem) 0; }
-    .admin-copy h1 { font-size: clamp(3rem, 7vw, 6rem); font-weight: 950; letter-spacing: 0; line-height: .96; margin: 0 0 1rem; }
-    .admin-copy p { max-width: 520px; }
-    .employee-form, .pending-card, .created-card, .access-card { padding: clamp(1.2rem, 3vw, 2rem); }
-    .employee-form { background: #fff; border-radius: 24px; box-shadow: 0 18px 60px rgba(0,0,0,.08); }
-    .pending-card { background: #fff; border-radius: 24px; box-shadow: 0 18px 60px rgba(0,0,0,.08); margin-bottom: 1rem; }
-    h2 { font-weight: 950; margin: 0 0 1.25rem; }
-    .pending-list { display: grid; gap: .8rem; }
-    .pending-list article { align-items: center; background: #f7f7f5; border-radius: 18px; display: grid; gap: 1rem; grid-template-columns: 1fr auto; padding: 1rem; }
-    .pending-list strong, .pending-list span, .pending-list small { display: block; }
-    .pending-list strong { color: #111; font-weight: 950; }
-    .pending-list span { color: #555; font-size: .9rem; margin-top: .2rem; }
-    .pending-list small { color: #777; font-size: .8rem; margin-top: .25rem; }
-    .pending-list button { min-width: 116px; width: auto; }
-    .error-text { color: #b42318; font-weight: 800; line-height: 1.5; margin: 0 0 1rem; }
-    .retry-button { width: auto; }
-    .field-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    label { color: #111; display: block; font-size: .82rem; font-weight: 800; margin-bottom: 1rem; }
-    label span { display: block; margin-bottom: .55rem; }
-    input { background: #f7f7f5; border: 1px solid transparent; border-radius: 16px; color: #111; display: block; font: inherit; font-weight: 600; min-height: 50px; outline: 0; padding: .95rem 1rem; width: 100%; }
-    input:focus { background: #fff; border-color: rgba(255,151,0,.95); box-shadow: 0 0 0 4px rgba(255,151,0,.18); }
-    button, .access-card a { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 100%; }
-    button:hover, .access-card a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
-    button:disabled, button:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: not-allowed; opacity: .68; transform: none; }
-    .created-card { margin-top: 1rem; }
-    .created-card span { background: rgba(255,151,0,.2); border-radius: 999px; color: #ff9700; display: inline-flex; font-size: .78rem; font-weight: 900; padding: .4rem .7rem; }
+    .admin-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 250px minmax(0, 1fr); }
+    .admin-sidebar { padding: 1rem; position: sticky; top: 92px; }
+    .admin-sidebar h1 { font-size: 1.55rem; line-height: 1; margin: 0 0 1.1rem; }
+    nav { display: grid; gap: .35rem; }
+    nav button { align-items: center; background: transparent; border: 0; border-radius: 14px; color: #171717; display: flex; font-weight: 900; justify-content: space-between; min-height: 44px; padding: .7rem .8rem; text-align: left; }
+    nav button small { background: #fff; border-radius: 999px; color: #777; font-size: .68rem; min-width: 26px; padding: .2rem .45rem; text-align: center; }
+    nav button.active, nav button:hover { background: #111; color: #fff; }
+    nav button.active small, nav button:hover small { background: #ff9700; color: #111; }
+    .admin-workspace { display: grid; gap: 1.1rem; min-width: 0; }
+    .admin-topbar { align-items: center; display: flex; gap: 1rem; justify-content: space-between; }
+    .admin-topbar h2 { font-size: clamp(2rem, 4vw, 3.6rem); line-height: .94; margin: 0; }
+    .topbar-actions, .tool-row, .action-cell { align-items: center; display: flex; flex-wrap: wrap; gap: .65rem; }
+    .tool-row { justify-content: space-between; }
+    .search-input { flex: 1 1 260px; }
+    input, select, textarea { background: #fff; border: 1px solid rgba(17,17,17,.1); border-radius: 16px; color: #111; font: inherit; min-height: 44px; outline: 0; padding: .75rem .9rem; width: 100%; }
+    textarea { min-height: 92px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: #ff9700; box-shadow: 0 0 0 4px rgba(255,151,0,.16); }
+    button, .primary-btn, .ghost-btn, .mini-btn, .danger-btn, .ghost-mini, .link-btn { align-items: center; border: 0; border-radius: 999px; display: inline-flex; font-weight: 900; justify-content: center; transition: transform .24s ease, background .24s ease, color .24s ease, border-color .24s ease; white-space: nowrap; }
+    .primary-btn { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; min-height: 48px; padding: .8rem 1.2rem; }
+    .primary-btn:hover { background: #ff9700; color: #111; transform: translateY(-2px); }
+    .ghost-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; min-height: 48px; padding: .8rem 1.2rem; }
+    .mini-btn, .danger-btn, .ghost-mini, .link-btn { font-size: .78rem; min-height: 34px; padding: .45rem .7rem; }
+    .mini-btn { background: #111; color: #fff; }
+    .danger-btn { background: #fff1f1; color: #b42318; }
+    .ghost-mini, .link-btn { background: #fff; border: 1px solid rgba(17,17,17,.1); color: #111; }
+    button:disabled { cursor: not-allowed; opacity: .55; transform: none !important; }
+    .metric-grid { display: grid; gap: .9rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .metric-card { display: grid; gap: .45rem; min-height: 142px; padding: 1rem; }
+    .metric-card span { color: #777; font-size: .76rem; font-weight: 900; text-transform: uppercase; }
+    .metric-card strong { color: #111; font-size: clamp(1.55rem, 3vw, 2.4rem); line-height: 1; }
+    .metric-card small { color: #777; font-weight: 700; }
+    .metric-card.orange { background: #fff5e8; border-color: rgba(255,151,0,.28); }
+    .metric-card.green { background: #effaf3; border-color: rgba(34,197,94,.2); }
+    .metric-card.red { background: #fff1f1; border-color: rgba(244,63,94,.18); }
+    .split-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .panel, .table-panel, .editor-panel, .employee-form, .access-card { padding: 1rem; }
+    .panel-head { align-items: center; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: .9rem; }
+    .panel-head h3, .customer-card h3 { font-size: 1.05rem; line-height: 1.1; margin: 0; }
+    .panel-head span { color: #777; font-size: .82rem; font-weight: 800; }
+    .dense-list { display: grid; gap: .55rem; }
+    .dense-list article { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.07); border-radius: 16px; display: flex; gap: .8rem; justify-content: space-between; padding: .8rem; }
+    .dense-list strong, td strong { display: block; }
+    .dense-list span, td span { color: #777; display: block; font-size: .8rem; margin-top: .18rem; }
+    .table-panel { overflow-x: auto; }
+    table { border-collapse: separate; border-spacing: 0 .55rem; min-width: 920px; width: 100%; }
+    th { color: #777; font-size: .72rem; letter-spacing: .08em; padding: 0 .75rem; text-align: left; text-transform: uppercase; }
+    td { background: #fff; border-bottom: 1px solid rgba(17,17,17,.06); border-top: 1px solid rgba(17,17,17,.06); padding: .75rem; vertical-align: middle; }
+    td:first-child { border-left: 1px solid rgba(17,17,17,.06); border-radius: 16px 0 0 16px; }
+    td:last-child { border-radius: 0 16px 16px 0; border-right: 1px solid rgba(17,17,17,.06); }
+    .product-cell { align-items: center; display: flex; gap: .7rem; min-width: 230px; }
+    .product-cell img { aspect-ratio: 1; border-radius: 12px; object-fit: cover; width: 54px; }
+    .status { border-radius: 999px; display: inline-flex; font-size: .72rem; padding: .32rem .55rem; }
+    .status-ok { background: #ecfdf3; color: #027a48; }
+    .status-warn { background: #fff7e6; color: #b35a00; }
+    .status-bad { background: #fff1f1; color: #b42318; }
+    .status-info { background: #eef4ff; color: #2447a8; }
+    .calendar-strip { background: #f7f7f5; border-radius: 999px; color: #555; padding: .35rem .55rem; }
+    .empty-cell { color: #777; text-align: center; }
+    .form-grid { display: grid; gap: .85rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    label { color: #111; display: grid; font-size: .78rem; font-weight: 900; gap: .4rem; }
+    .wide { margin-top: .85rem; width: 100%; }
+    .card-grid { display: grid; gap: .9rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .customer-card { display: grid; gap: .75rem; padding: 1rem; }
+    .customer-card.blocked { opacity: .68; }
+    .customer-card p, .customer-card span { color: #777; font-size: .84rem; margin: 0; }
+    .avatar { align-items: center; background: #111; border-radius: 50%; color: #ff9700; display: inline-flex; font-weight: 950; height: 42px; justify-content: center; width: 42px; }
+    dl { display: grid; gap: .5rem; grid-template-columns: repeat(3, 1fr); margin: 0; }
+    dt { color: #777; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
+    dd { color: #111; font-size: 1.15rem; font-weight: 950; margin: 0; }
+    .bar-list { display: grid; gap: .75rem; }
+    .bar-list div { align-items: center; display: grid; gap: .75rem; grid-template-columns: 140px 1fr 44px; }
+    .bar-list b { background: #ff9700; border-radius: 999px; display: block; height: 12px; }
+    .error-text { color: #b42318; font-weight: 800; }
+    .success-text { color: #027a48; font-weight: 900; margin: .8rem 0 0; }
     .access-card { margin: 0 auto; max-width: 680px; text-align: center; }
-    .access-card a { margin-top: 1rem; width: auto; }
-    @media (max-width: 900px) {
-      .admin-shell { grid-template-columns: 1fr; }
+    .access-card h1 { font-size: clamp(2rem, 5vw, 4rem); line-height: .96; }
+    @media (max-width: 1100px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .admin-sidebar { position: static; }
+      nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .metric-grid, .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-    @media (max-width: 620px) {
-      .field-grid { gap: 0; grid-template-columns: 1fr; }
-      .pending-list article { grid-template-columns: 1fr; }
-      .pending-list button { width: 100%; }
+    @media (max-width: 760px) {
+      .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
+      .split-grid, .metric-grid, .card-grid, .form-grid, nav { grid-template-columns: 1fr; }
+      .topbar-actions { align-items: stretch; flex-direction: column; }
+      .topbar-actions button { width: 100%; }
     }
   `]
 })
@@ -141,9 +527,45 @@ export class AdminPageComponent implements OnInit {
   readonly authService = inject(AuthService);
 
   private readonly adminService = inject(AdminService);
+  private readonly productService = inject(ProductService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
 
+  readonly activeTab = signal<AdminTab>('dashboard');
+  readonly products = signal<AdminProduct[]>([]);
+  readonly bookings = signal<AdminBooking[]>([
+    { id: 'CKB-1048', customer: 'Aarav Mehta', phone: '9876543210', products: ['Canon EOS R5 Cinema Kit', 'Aputure LS 600D Pro'], startDate: '2026-06-19', endDate: '2026-06-22', status: 'Upcoming', paymentStatus: 'Paid', returnStatus: 'Not due', total: 13400, notes: 'Delivery to Baner studio.' },
+    { id: 'CKB-1047', customer: 'Neha Sharma', phone: '9898989898', products: ['Sony Alpha A7S III'], startDate: '2026-06-14', endDate: '2026-06-17', status: 'Active', paymentStatus: 'Paid', returnStatus: 'Due today', total: 11700, notes: 'Security deposit collected.' },
+    { id: 'CKB-1046', customer: 'Kabir Khan', phone: '9765432109', products: ['Sigma 85mm f/1.4 Art'], startDate: '2026-06-10', endDate: '2026-06-12', status: 'Overdue', paymentStatus: 'Pending', returnStatus: 'Late', total: 3600, notes: 'Call customer before refund processing.' },
+    { id: 'CKB-1045', customer: 'Riya Patel', phone: '9988776655', products: ['Rode Wireless PRO Kit'], startDate: '2026-06-02', endDate: '2026-06-05', status: 'Completed', paymentStatus: 'Paid', returnStatus: 'Returned', total: 2700, notes: 'Returned in good condition.' }
+  ]);
+  readonly customers = signal<AdminCustomer[]>([
+    { id: 1, name: 'Aarav Mehta', email: 'aarav@example.com', phone: '9876543210', verified: true, blocked: false, city: 'Pune', wishlist: 4, activeBookings: 0, pastBookings: 8 },
+    { id: 2, name: 'Neha Sharma', email: 'neha@example.com', phone: '9898989898', verified: true, blocked: false, city: 'Mumbai', wishlist: 2, activeBookings: 1, pastBookings: 3 },
+    { id: 3, name: 'Kabir Khan', email: 'kabir@example.com', phone: '9765432109', verified: false, blocked: false, city: 'Pune', wishlist: 1, activeBookings: 1, pastBookings: 1 }
+  ]);
+  readonly payments = signal<AdminPayment[]>([
+    { id: 'pay_RZP_8012', bookingId: 'CKB-1048', customer: 'Aarav Mehta', gateway: 'Razorpay', mode: 'Full payment', status: 'Paid', amount: 13400, paidAt: '2026-06-16' },
+    { id: 'pay_RZP_8011', bookingId: 'CKB-1047', customer: 'Neha Sharma', gateway: 'Razorpay', mode: 'Security deposit', status: 'Paid', amount: 5000, paidAt: '2026-06-14' },
+    { id: 'pay_RZP_8010', bookingId: 'CKB-1046', customer: 'Kabir Khan', gateway: 'Razorpay', mode: 'Security deposit', status: 'Pending', amount: 2000, paidAt: '2026-06-10' }
+  ]);
+  readonly blogPosts = signal<BlogPostAdmin[]>([
+    { id: 1, title: 'Best lenses for Pune wedding films', category: 'Gear guide', author: 'Clickkaar Team', status: 'Published', publishDate: '2026-06-02', seoTitle: 'Best Wedding Film Lenses in Pune', metaDescription: 'A practical lens rental guide for wedding filmmakers.' },
+    { id: 2, title: 'How to choose a wireless mic kit', category: 'Audio', author: 'Clickkaar Team', status: 'Draft', publishDate: '2026-06-20', seoTitle: 'Wireless Mic Rental Guide', metaDescription: 'Compare creator-friendly wireless microphones.' }
+  ]);
+  readonly staticContent = signal<StaticContentItem[]>([
+    { key: 'faq', title: 'FAQ', owner: 'Support', status: 'Needs review', updatedAt: '2026-06-01' },
+    { key: 'terms', title: 'Terms & Conditions', owner: 'Legal', status: 'Current', updatedAt: '2026-05-22' },
+    { key: 'home', title: 'Homepage featured gear', owner: 'Marketing', status: 'Needs review', updatedAt: '2026-06-09' }
+  ]);
+
+  readonly inventoryQuery = signal('');
+  readonly inventoryStatus = signal('');
+  readonly bookingQuery = signal('');
+  readonly bookingStatusFilter = signal('');
+  readonly paymentStatusFilter = signal('');
+  readonly customerQuery = signal('');
+  editingProductId?: number;
   createdEmployee?: EmployeeResponse;
   pendingCustomers: CustomerVerificationResponse[] = [];
   pendingLoadError = '';
@@ -151,14 +573,122 @@ export class AdminPageComponent implements OnInit {
   isLoadingPending = false;
   verifyingRequestId?: number;
 
-  readonly form = this.fb.nonNullable.group({
+  readonly tabs: { id: AdminTab; label: string; count: string }[] = [
+    { id: 'dashboard', label: 'Dashboard', count: 'Live' },
+    { id: 'inventory', label: 'Inventory', count: '8' },
+    { id: 'bookings', label: 'Bookings', count: '4' },
+    { id: 'customers', label: 'Customers', count: '3' },
+    { id: 'payments', label: 'Payments', count: '3' },
+    { id: 'content', label: 'Content', count: '5' },
+    { id: 'reports', label: 'Reports', count: 'CSV' },
+    { id: 'roles', label: 'Roles', count: 'RBAC' },
+    { id: 'settings', label: 'Settings', count: 'Ops' }
+  ];
+
+  readonly categoryReports = [
+    { name: 'Cameras', value: 86 },
+    { name: 'Lenses', value: 74 },
+    { name: 'Lighting', value: 58 },
+    { name: 'Audio', value: 42 }
+  ];
+
+  readonly rolePermissions: RolePermission[] = [
+    { module: 'Dashboard', superAdmin: 'View', manager: 'View', inventory: 'View', content: 'View' },
+    { module: 'Inventory', superAdmin: 'CRUD', manager: 'CRUD', inventory: 'CRUD', content: 'View' },
+    { module: 'Bookings', superAdmin: 'CRUD + cancel', manager: 'CRUD', inventory: 'Update returns', content: 'View' },
+    { module: 'Payments & refunds', superAdmin: 'Refund + export', manager: 'View + export', inventory: 'No access', content: 'No access' },
+    { module: 'Customers', superAdmin: 'Block + edit', manager: 'View + edit', inventory: 'View', content: 'No access' },
+    { module: 'Content', superAdmin: 'CRUD', manager: 'Approve', inventory: 'No access', content: 'CRUD drafts' },
+    { module: 'Settings & roles', superAdmin: 'CRUD', manager: 'No access', inventory: 'No access', content: 'No access' }
+  ];
+
+  readonly productForm = this.fb.nonNullable.group({
+    name: ['', Validators.required],
+    brand: ['', Validators.required],
+    category: ['', Validators.required],
+    status: ['Available' as ProductStatus, Validators.required],
+    dailyPrice: [0, [Validators.required, Validators.min(1)]],
+    weeklyPrice: [0, [Validators.required, Validators.min(1)]],
+    stock: [1, [Validators.required, Validators.min(0)]],
+    image: ['', Validators.required],
+    description: ['', Validators.required],
+    specifications: ['']
+  });
+
+  readonly employeeForm = this.fb.nonNullable.group({
     fullName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     mobile: ['', [Validators.required, Validators.minLength(10)]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
+  readonly settingsForm = this.fb.nonNullable.group({
+    gateway: ['Razorpay'],
+    paymentPolicy: ['Security deposit'],
+    depositPercent: [30],
+    gstPercent: [18],
+    notificationEmail: ['ops@clickkaar.in'],
+    whatsappNumber: ['+919876543210'],
+    recaptchaKey: [''],
+    analyticsId: ['G-CLICKKAAR']
+  });
+
+  readonly activeTabLabel = computed(() => this.tabs.find((tab) => tab.id === this.activeTab())?.label ?? 'Admin');
+  readonly activeTitle = computed(() => {
+    const titles: Record<AdminTab, string> = {
+      dashboard: 'Operations dashboard',
+      inventory: 'Inventory management',
+      bookings: 'Booking management',
+      customers: 'Customer management',
+      payments: 'Payments & refunds',
+      content: 'Blog & content',
+      reports: 'Reports & analytics',
+      roles: 'Roles & permissions',
+      settings: 'Platform settings'
+    };
+    return titles[this.activeTab()];
+  });
+  readonly metrics = computed<AdminMetric[]>(() => [
+    { label: 'Bookings this month', value: String(this.bookings().length), note: 'Includes walk-in and online bookings', tone: 'dark' },
+    { label: 'Revenue this month', value: this.formatCurrency(this.payments().filter((item) => item.status === 'Paid').reduce((sum, item) => sum + item.amount, 0)), note: 'Paid transactions only', tone: 'green' },
+    { label: 'Items out on rent', value: String(this.bookings().filter((item) => item.status === 'Active' || item.status === 'Overdue').length), note: 'Active rentals requiring tracking', tone: 'orange' },
+    { label: 'Overdue returns', value: String(this.bookings().filter((item) => item.status === 'Overdue').length), note: 'Needs immediate follow-up', tone: 'red' },
+    { label: 'Pending payments', value: String(this.payments().filter((item) => item.status === 'Pending').length), note: 'Collect before release', tone: 'orange' },
+    { label: 'Unavailable inventory', value: String(this.products().filter((item) => item.status !== 'Available').length), note: 'Maintenance or blocked gear', tone: 'red' },
+    { label: 'Verified customers', value: String(this.customers().filter((item) => item.verified).length), note: 'OTP approved accounts', tone: 'green' },
+    { label: 'Pending approvals', value: String(this.pendingCustomers.length), note: 'Registration review queue', tone: 'orange' }
+  ]);
+
+  readonly filteredProducts = computed(() => {
+    const query = this.inventoryQuery().trim().toLowerCase();
+    return this.products()
+      .filter((item) => !this.inventoryStatus() || item.status === this.inventoryStatus())
+      .filter((item) => !query || [item.name, item.brand, item.category].some((value) => value.toLowerCase().includes(query)));
+  });
+
+  readonly filteredBookings = computed(() => {
+    const query = this.bookingQuery().trim().toLowerCase();
+    return this.bookings()
+      .filter((item) => !this.bookingStatusFilter() || item.status === this.bookingStatusFilter())
+      .filter((item) => !this.paymentStatusFilter() || item.paymentStatus === this.paymentStatusFilter())
+      .filter((item) => !query || [item.id, item.customer, ...item.products].some((value) => value.toLowerCase().includes(query)));
+  });
+
+  readonly filteredCustomers = computed(() => {
+    const query = this.customerQuery().trim().toLowerCase();
+    return this.customers().filter((item) => !query || [item.name, item.email, item.city, item.phone].some((value) => value.toLowerCase().includes(query)));
+  });
+
   ngOnInit(): void {
+    this.productService.getProducts().subscribe((products) => {
+      this.products.set(products.map((product) => ({
+        ...product,
+        status: product.available ? 'Available' : 'Unavailable',
+        maintenanceNote: ''
+      })));
+      this.updateTabCount('inventory', String(products.length));
+    });
+
     if (this.authService.isAdmin()) {
       this.loadPendingCustomers();
     }
@@ -185,30 +715,6 @@ export class AdminPageComponent implements OnInit {
       });
   }
 
-  submit(): void {
-    if (this.form.invalid || this.isSubmitting) {
-      this.form.markAllAsTouched();
-      this.snackBar.open('Please complete valid employee details', 'Close', { duration: 2400 });
-      return;
-    }
-
-    this.isSubmitting = true;
-    this.adminService.createEmployee(this.form.getRawValue())
-      .pipe(finalize(() => {
-        this.isSubmitting = false;
-      }))
-      .subscribe({
-        next: (employee) => {
-          this.createdEmployee = employee;
-          this.form.reset();
-          this.snackBar.open('Employee account created', 'Close', { duration: 2600 });
-        },
-        error: (error) => {
-          this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
-        }
-      });
-  }
-
   loadPendingCustomers(): void {
     this.isLoadingPending = true;
     this.pendingLoadError = '';
@@ -225,5 +731,257 @@ export class AdminPageComponent implements OnInit {
           this.snackBar.open(this.pendingLoadError, 'Close', { duration: 3600 });
         }
       });
+  }
+
+  saveProduct(): void {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      this.snackBar.open('Complete all required product fields.', 'Close', { duration: 2400 });
+      return;
+    }
+
+    const value = this.productForm.getRawValue();
+    const specs = this.parseSpecifications(value.specifications);
+    if (this.editingProductId) {
+      this.products.update((items) => items.map((item) => item.id === this.editingProductId ? {
+        ...item,
+        ...value,
+        available: value.status === 'Available',
+        gallery: item.gallery?.length ? item.gallery : [value.image],
+        specifications: specs
+      } : item));
+      this.snackBar.open('Product updated. Connect this action to PUT /api/admin/products when the endpoint is added.', 'Close', { duration: 3200 });
+    } else {
+      const nextId = Math.max(...this.products().map((item) => item.id), 0) + 1;
+      this.products.update((items) => [...items, {
+        id: nextId,
+        name: value.name,
+        brand: value.brand,
+        category: value.category,
+        image: value.image,
+        gallery: [value.image],
+        description: value.description,
+        specifications: specs,
+        dailyPrice: value.dailyPrice,
+        weeklyPrice: value.weeklyPrice,
+        available: value.status === 'Available',
+        rating: 0,
+        stock: value.stock,
+        popularity: 0,
+        createdAt: new Date().toISOString().slice(0, 10),
+        status: value.status,
+        maintenanceNote: ''
+      }]);
+      this.snackBar.open('Product added to the admin workspace.', 'Close', { duration: 2600 });
+    }
+    this.resetProductForm();
+    this.updateTabCount('inventory', String(this.products().length));
+  }
+
+  editProduct(product: AdminProduct): void {
+    this.editingProductId = product.id;
+    this.productForm.setValue({
+      name: product.name,
+      brand: product.brand,
+      category: product.category,
+      status: product.status,
+      dailyPrice: product.dailyPrice,
+      weeklyPrice: product.weeklyPrice,
+      stock: product.stock,
+      image: product.image,
+      description: product.description,
+      specifications: Object.entries(product.specifications).map(([key, value]) => `${key}: ${value}`).join(', ')
+    });
+  }
+
+  resetProductForm(): void {
+    this.editingProductId = undefined;
+    this.productForm.reset({
+      name: '',
+      brand: '',
+      category: '',
+      status: 'Available',
+      dailyPrice: 0,
+      weeklyPrice: 0,
+      stock: 1,
+      image: '',
+      description: '',
+      specifications: ''
+    });
+  }
+
+  markMaintenance(product: AdminProduct): void {
+    if (!confirm(`Mark ${product.name} as under maintenance?`)) {
+      return;
+    }
+    this.products.update((items) => items.map((item) => item.id === product.id ? { ...item, status: 'Maintenance', available: false, maintenanceNote: 'Marked from admin panel' } : item));
+  }
+
+  advanceBooking(booking: AdminBooking): void {
+    const next: Record<BookingStatus, BookingStatus> = {
+      Upcoming: 'Active',
+      Active: 'Completed',
+      Completed: 'Completed',
+      Cancelled: 'Cancelled',
+      Overdue: 'Completed'
+    };
+    this.bookings.update((items) => items.map((item) => item.id === booking.id ? { ...item, status: next[item.status], returnStatus: next[item.status] === 'Completed' ? 'Returned' : item.returnStatus } : item));
+  }
+
+  addNote(booking: AdminBooking): void {
+    const note = prompt('Internal note', booking.notes);
+    if (note === null) {
+      return;
+    }
+    this.bookings.update((items) => items.map((item) => item.id === booking.id ? { ...item, notes: note } : item));
+  }
+
+  toggleCustomerBlock(customer: AdminCustomer): void {
+    const action = customer.blocked ? 'unblock' : 'block';
+    if (!confirm(`Are you sure you want to ${action} ${customer.name}?`)) {
+      return;
+    }
+    this.customers.update((items) => items.map((item) => item.id === customer.id ? { ...item, blocked: !item.blocked } : item));
+  }
+
+  refund(payment: AdminPayment): void {
+    if (!confirm(`Initiate refund for ${payment.id}?`)) {
+      return;
+    }
+    this.payments.update((items) => items.map((item) => item.id === payment.id ? { ...item, status: 'Refunded' } : item));
+    this.snackBar.open('Refund marked. Wire this to the payment gateway refund API before launch.', 'Close', { duration: 3200 });
+  }
+
+  publishDraft(): void {
+    this.blogPosts.update((items) => items.map((item) => item.status === 'Draft' ? { ...item, status: 'Published' } : item));
+  }
+
+  markContentReviewed(): void {
+    this.staticContent.update((items) => items.map((item) => ({ ...item, status: 'Current' })));
+  }
+
+  submitEmployee(): void {
+    if (this.employeeForm.invalid || this.isSubmitting) {
+      this.employeeForm.markAllAsTouched();
+      this.snackBar.open('Please complete valid employee details.', 'Close', { duration: 2400 });
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.adminService.createEmployee(this.employeeForm.getRawValue())
+      .pipe(finalize(() => {
+        this.isSubmitting = false;
+      }))
+      .subscribe({
+        next: (employee) => {
+          this.createdEmployee = employee;
+          this.employeeForm.reset();
+          this.snackBar.open('Employee account created.', 'Close', { duration: 2600 });
+        },
+        error: (error) => {
+          this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+        }
+      });
+  }
+
+  saveSettings(): void {
+    this.snackBar.open('Settings saved in workspace. Persist via /api/admin/settings before production launch.', 'Close', { duration: 3200 });
+  }
+
+  openCreate(): void {
+    if (this.activeTab() === 'inventory') {
+      this.resetProductForm();
+      document.querySelector('.editor-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    this.snackBar.open(`Create action ready for ${this.activeTabLabel()}.`, 'Close', { duration: 2200 });
+  }
+
+  exportActive(): void {
+    const tab = this.activeTab();
+    const rows = tab === 'inventory'
+      ? this.products()
+      : tab === 'bookings'
+        ? this.bookings()
+        : tab === 'customers'
+          ? this.customers()
+          : tab === 'payments'
+            ? this.payments()
+            : this.metrics();
+    this.downloadCsv(`clickkaar-${tab}.csv`, rows);
+  }
+
+  bookedDays(productName: string): number {
+    return this.bookings()
+      .filter((booking) => booking.products.includes(productName) && booking.status !== 'Cancelled')
+      .reduce((sum, booking) => sum + this.daysBetween(booking.startDate, booking.endDate), 0);
+  }
+
+  statusClass(status: string): string {
+    if (['Available', 'Paid', 'Completed', 'Published', 'Current'].includes(status)) {
+      return 'status-ok';
+    }
+    if (['Upcoming', 'Active', 'Pending', 'Draft', 'Needs review'].includes(status)) {
+      return 'status-warn';
+    }
+    if (['Unavailable', 'Maintenance', 'Overdue', 'Failed', 'Refunded', 'Cancelled'].includes(status)) {
+      return 'status-bad';
+    }
+    return 'status-info';
+  }
+
+  private parseSpecifications(value: string): Record<string, string> {
+    return value.split(',')
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .reduce<Record<string, string>>((specs, item) => {
+        const [key, ...rest] = item.split(':');
+        if (key && rest.length) {
+          specs[key.trim()] = rest.join(':').trim();
+        }
+        return specs;
+      }, {});
+  }
+
+  private daysBetween(startDate: string, endDate: string): number {
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+    return Math.max(1, Math.round((end - start) / 86400000) + 1);
+  }
+
+  private formatCurrency(value: number): string {
+    return new Intl.NumberFormat('en-IN', { currency: 'INR', maximumFractionDigits: 0, style: 'currency' }).format(value);
+  }
+
+  private downloadCsv(filename: string, rows: unknown[]): void {
+    if (!rows.length) {
+      this.snackBar.open('No rows available to export.', 'Close', { duration: 2200 });
+      return;
+    }
+
+    const records = rows as Record<string, unknown>[];
+    const headers = Object.keys(records[0]);
+    const csvRows = [
+      headers.join(','),
+      ...records.map((row) => headers.map((header) => this.csvCell(row[header])).join(','))
+    ];
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  private csvCell(value: unknown): string {
+    const text = Array.isArray(value) ? value.join('|') : typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value ?? '');
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  private updateTabCount(id: AdminTab, count: string): void {
+    const tab = this.tabs.find((item) => item.id === id);
+    if (tab) {
+      tab.count = count;
+    }
   }
 }

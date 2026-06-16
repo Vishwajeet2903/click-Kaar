@@ -14,4 +14,8 @@ export class WishlistService {
   has(id: number): boolean {
     return this.products().some((item) => item.id === id);
   }
+
+  clear(): void {
+    this.products.set([]);
+  }
 }

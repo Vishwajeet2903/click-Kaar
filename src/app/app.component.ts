@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
-import { NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import AOS from 'aos';
 import { Subscription, filter } from 'rxjs';
 import { FooterComponent } from './layouts/footer.component';
@@ -12,10 +12,6 @@ import { WhatsAppButtonComponent } from './shared/components/whatsapp-button.com
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, FooterComponent, WhatsAppButtonComponent],
   template: `
-    <div class="route-transition" [class.active]="transitionActive" aria-hidden="true">
-      <video src="/reference-motion.mp4" autoplay muted loop playsinline></video>
-      <span>ClickKar</span>
-    </div>
     <app-navbar />
     <main class="page-shell">
       <router-outlet />
@@ -25,14 +21,11 @@ import { WhatsAppButtonComponent } from './shared/components/whatsapp-button.com
   `
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
-  transitionActive = false;
-
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
   private readonly subscriptions = new Subscription();
   private aosObserver?: IntersectionObserver;
-  private transitionTimer?: number;
   private aosTimer?: number;
 
   constructor() {
@@ -41,17 +34,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
 
     this.subscriptions.add(
-      this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => {
-        this.transitionActive = true;
-      })
-    );
-
-    this.subscriptions.add(
       this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
-        window.clearTimeout(this.transitionTimer);
-        this.transitionTimer = window.setTimeout(() => {
-          this.transitionActive = false;
-        }, 560);
         this.refreshAnimations();
       })
     );
@@ -80,7 +63,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
     this.aosObserver?.disconnect();
-    window.clearTimeout(this.transitionTimer);
     window.clearTimeout(this.aosTimer);
   }
 
@@ -122,7 +104,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     ].join(',');
 
     pageShell.querySelectorAll<HTMLElement>(selector).forEach((element, index) => {
-      if (element.hasAttribute('data-aos') || element.closest('app-navbar') || element.closest('.route-transition') || element.closest('.hero-collage')) {
+      if (element.hasAttribute('data-aos') || element.closest('app-navbar') || element.closest('.hero-collage')) {
         return;
       }
 

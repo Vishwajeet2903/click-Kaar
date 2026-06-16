@@ -45,7 +45,7 @@ import { ProductService } from '../services/product.service';
                 }
               </div>
             </li>
-            <li class="nav-item"><a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Wishlist</a></li>
+            <li class="nav-item"><a routerLink="/wishlist" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Wishlist</a></li>
             @if (authService.isAdmin()) {
               <li class="nav-item"><a routerLink="/admin" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Admin</a></li>
             }
@@ -71,7 +71,7 @@ import { ProductService } from '../services/product.service';
               }
             </a>
             @if (currentUser(); as user) {
-              <a routerLink="/dashboard" class="avatar-link" [attr.aria-label]="'Open profile for ' + user.fullName" [title]="user.fullName" (click)="closeMenu()">
+              <a [routerLink]="accountLink()" class="avatar-link" [attr.aria-label]="accountLabel(user.fullName)" [title]="accountLabel(user.fullName)" (click)="closeMenu()">
                 {{ getInitial(user.fullName) }}
               </a>
             } @else {
@@ -170,5 +170,13 @@ export class NavbarComponent implements OnDestroy {
 
   getInitial(name: string): string {
     return name.trim().charAt(0) || 'U';
+  }
+
+  accountLink(): string {
+    return this.authService.isAdmin() ? '/admin' : '/dashboard';
+  }
+
+  accountLabel(name: string): string {
+    return this.authService.isAdmin() ? `Open admin panel for ${name}` : `Open profile for ${name}`;
   }
 }
