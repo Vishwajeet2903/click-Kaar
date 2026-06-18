@@ -14,6 +14,8 @@ import com.clickkaar.exception.ResourceNotFoundException;
 import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PaymentRepository;
 import com.clickkaar.repository.RefundRepository;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
 import com.razorpay.Utils;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.math.RoundingMode;
 
 @Service
 @RequiredArgsConstructor
@@ -30,20 +33,24 @@ public class PaymentService {
   private final PaymentRepository paymentRepository;
   private final RefundRepository refundRepository;
 
+  @Value("${app.razorpay.key-id:}")
+  private String razorpayKeyId;
+
   @Value("${app.razorpay.key-secret:}")
   private String razorpaySecret;
 
   @Transactional
   public PaymentOrderResponse createOrder(CreatePaymentOrderRequest request) {
     Booking booking = bookingRepository.findById(request.bookingId()).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    String razorpayOrderId = createRazorpayOrderId(booking, request);
     Payment payment = paymentRepository.save(Payment.builder()
         .booking(booking)
         .amount(request.amount())
         .type(request.type())
         .status(PaymentStatus.PENDING)
-        .razorpayOrderId("order_dev_" + UUID.randomUUID().toString().replace("-", ""))
+        .razorpayOrderId(razorpayOrderId)
         .build());
-    return new PaymentOrderResponse(payment.getId(), payment.getRazorpayOrderId(), payment.getAmount(), payment.getStatus());
+    return paymentOrderResponse(payment);
   }
 
   @Transactional
@@ -54,7 +61,7 @@ public class PaymentService {
     payment.setRazorpayPaymentId(request.razorpayPaymentId());
     payment.setRazorpaySignature(request.razorpaySignature());
     payment.setStatus(PaymentStatus.PAID);
-    return new PaymentOrderResponse(payment.getId(), payment.getRazorpayOrderId(), payment.getAmount(), payment.getStatus());
+    return paymentOrderResponse(payment);
   }
 
   @Transactional
@@ -82,5 +89,27 @@ public class PaymentService {
     } catch (Exception ex) {
       throw new BadRequestException("Invalid Razorpay payment signature");
     }
+  }
+
+  private String createRazorpayOrderId(Booking booking, CreatePaymentOrderRequest request) {
+    if (razorpayKeyId == null || razorpayKeyId.isBlank() || razorpaySecret == null || razorpaySecret.isBlank()) {
+      throw new BadRequestException("Razorpay credentials are not configured");
+    }
+
+    try {
+      RazorpayClient razorpayClient = new RazorpayClient(razorpayKeyId, razorpaySecret);
+      JSONObject orderRequest = new JSONObject();
+      orderRequest.put("amount", request.amount().multiply(java.math.BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).longValueExact());
+      orderRequest.put("currency", "INR");
+      orderRequest.put("receipt", booking.getBookingNumber() + "-" + UUID.randomUUID().toString().substring(0, 8));
+      Order order = razorpayClient.orders.create(orderRequest);
+      return order.get("id");
+    } catch (Exception exception) {
+      throw new BadRequestException("Unable to create Razorpay order");
+    }
+  }
+
+  private PaymentOrderResponse paymentOrderResponse(Payment payment) {
+    return new PaymentOrderResponse(payment.getId(), razorpayKeyId, payment.getRazorpayOrderId(), payment.getAmount(), "INR", payment.getStatus());
   }
 }

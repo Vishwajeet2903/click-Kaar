@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 import { AuthService } from '../services/auth.service';
@@ -449,6 +449,7 @@ export class LoginPageComponent {
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
   isSubmitting = false;
 
@@ -472,7 +473,8 @@ export class LoginPageComponent {
       .subscribe({
         next: (user) => {
           this.snackBar.open('Login successful', 'Close', { duration: 2200 });
-          void this.router.navigateByUrl(user.roles.includes('ADMIN') ? '/admin' : '/dashboard');
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+          void this.router.navigateByUrl(returnUrl || (user.roles.includes('ADMIN') ? '/admin' : '/dashboard'));
         },
         error: (error) => {
           this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3200 });

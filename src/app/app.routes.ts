@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AboutPageComponent } from './pages/about-page.component';
 import { AdminPageComponent } from './pages/admin-page.component';
 import { BlogDetailPageComponent } from './pages/blog-detail-page.component';
@@ -16,13 +18,20 @@ import { PolicyPageComponent } from './pages/policy-page.component';
 import { ProductDetailsPageComponent } from './pages/product-details-page.component';
 import { RegisterPageComponent } from './pages/register-page.component';
 import { WishlistPageComponent } from './pages/wishlist-page.component';
+import { AuthService } from './services/auth.service';
+
+const requireLoginForCheckout = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  return authService.currentUser() ? true : router.createUrlTree(['/login'], { queryParams: { returnUrl: '/checkout' } });
+};
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, title: 'Clickkaar' },
   { path: 'catalogue', component: CataloguePageComponent, title: 'Catalogue | Clickkaar' },
   { path: 'products/:id', component: ProductDetailsPageComponent, title: 'Equipment Details | Clickkaar' },
   { path: 'cart', component: CartPageComponent, title: 'Booking Cart | Clickkaar' },
-  { path: 'checkout', component: CheckoutPageComponent, title: 'Checkout | Clickkaar' },
+  { path: 'checkout', component: CheckoutPageComponent, canActivate: [requireLoginForCheckout], title: 'Checkout | Clickkaar' },
   { path: 'login', component: LoginPageComponent, title: 'Login | Clickkaar' },
   { path: 'register', component: RegisterPageComponent, title: 'Register | Clickkaar' },
   { path: 'dashboard', component: DashboardPageComponent, title: 'Dashboard | Clickkaar' },
