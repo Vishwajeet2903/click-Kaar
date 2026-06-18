@@ -12,6 +12,7 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\ProductC
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\CustomerVerificationResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\EmployeeRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\EmployeeResponse.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\RegistrationDocumentResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\AuthResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\LoginRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\OtpRequest.java

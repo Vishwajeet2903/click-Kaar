@@ -41,7 +41,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .reviews-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .reviews-top { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.4rem; }
     .section-heading { margin-bottom: 1.4rem; max-width: 760px; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: -.055em; line-height: .98; margin: 0; }
+    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: 0; line-height: .98; margin: 0; word-spacing: .08em; }
     .carousel-controls { display: flex; gap: .65rem; }
     .carousel-controls button { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: 1.45rem; font-weight: 800; height: 50px; justify-content: center; line-height: 1; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 50px; }
     .carousel-controls button:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
@@ -51,10 +51,10 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .review-card { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; display: flex; flex: 0 0 calc((100% - 2rem) / 3); flex-direction: column; min-height: 310px; padding: 1.35rem; transition: box-shadow .28s ease, transform .28s ease; }
     .review-card:hover { box-shadow: 0 24px 48px rgba(0,0,0,.14); transform: translateY(-8px); }
     .rating { color: #ff9700; font-size: 1rem; font-weight: 900; letter-spacing: .14em; margin-bottom: 1rem; }
-    p { color: #222; flex: 1; font-size: clamp(1.1rem, 1.8vw, 1.35rem); font-weight: 800; letter-spacing: -.025em; line-height: 1.25; margin: 0 0 1.4rem; }
+    p { color: #222; flex: 1; font-size: clamp(1.1rem, 1.8vw, 1.35rem); font-weight: 800; letter-spacing: 0; line-height: 1.25; margin: 0 0 1.4rem; word-spacing: .06em; }
     .reviewer { align-items: center; display: flex; gap: .8rem; }
     img { border-radius: 50%; height: 52px; object-fit: cover; width: 52px; }
-    strong { color: #111; display: block; font-size: .95rem; font-weight: 900; }
+    strong { color: #111; display: block; font-size: .95rem; font-weight: 900; word-spacing: .08em; }
     span { color: #666; display: block; font-size: .82rem; font-weight: 800; margin-top: .15rem; }
     @media (max-width: 900px) {
       .reviews-top { align-items: flex-start; flex-direction: column; }

@@ -18,7 +18,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   `,
   styles: [`
     .landing-footer { align-items: center; display: flex; flex-direction: column; min-height: 430px; justify-content: center; padding: clamp(2rem, 6vw, 4.8rem); text-align: center; }
-    h2 { color: #111; font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 900; letter-spacing: -.06em; line-height: .9; margin: .8rem auto 1.6rem; max-width: 900px; }
+    .eyebrow { word-spacing: .08em; }
+    h2 { color: #111; font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 900; letter-spacing: 0; line-height: .9; margin: .8rem auto 1.6rem; max-width: 900px; word-spacing: .08em; }
     .footer-actions { display: flex; gap: .8rem; justify-content: center; }
     @media (max-width: 560px) {
       .landing-footer { min-height: 360px; padding: 1.25rem; }

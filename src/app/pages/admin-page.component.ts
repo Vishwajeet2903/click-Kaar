@@ -1,16 +1,16 @@
 import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 import { Product } from '../models/product.model';
-import { AdminService, CustomerVerificationResponse, EmployeeResponse } from '../services/admin.service';
+import { AdminService, CustomerVerificationResponse, EmployeeResponse, RegistrationDocumentResponse } from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
 import { ProductService } from '../services/product.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
-type AdminTab = 'dashboard' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'content' | 'reports' | 'roles' | 'settings';
+type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'content' | 'reports' | 'roles' | 'settings';
 type BookingStatus = 'Upcoming' | 'Active' | 'Completed' | 'Cancelled' | 'Overdue';
 type PaymentStatus = 'Paid' | 'Pending' | 'Failed' | 'Refunded';
 type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
@@ -92,6 +92,13 @@ interface RolePermission {
   content: string;
 }
 
+interface DocumentPreview {
+  label: string;
+  fileName: string;
+  url: string;
+  isImage: boolean;
+}
+
 @Component({
   selector: 'app-admin-page',
   standalone: true,
@@ -125,6 +132,7 @@ interface RolePermission {
               <div class="topbar-actions">
                 <button type="button" class="ghost-btn" (click)="exportActive()">Export</button>
                 <button type="button" class="primary-btn" (click)="openCreate()">Create</button>
+                <button type="button" class="danger-btn topbar-logout" (click)="logout()">Logout</button>
               </div>
             </header>
 
@@ -162,7 +170,7 @@ interface RolePermission {
                   <section class="surface panel">
                     <div class="panel-head">
                       <h3>Pending registrations</h3>
-                      <button type="button" class="link-btn" (click)="loadPendingCustomers()">Refresh</button>
+                      <button type="button" class="link-btn" (click)="activeTab.set('registrations')">View requests</button>
                     </div>
                     @if (isLoadingPending) {
                       <p class="muted">Loading pending registrations...</p>
@@ -176,14 +184,122 @@ interface RolePermission {
                               <strong>{{ customer.fullName }}</strong>
                               <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
                             </div>
-                            <button type="button" class="mini-btn" [disabled]="verifyingRequestId === customer.requestId" (click)="verifyCustomer(customer)">
-                              {{ verifyingRequestId === customer.requestId ? 'Granting' : 'Grant' }}
-                            </button>
+                            <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">Open</button>
                           </article>
                         }
                       </div>
                     } @else {
                       <p class="muted">No customer registrations are waiting for approval.</p>
+                    }
+                  </section>
+                </div>
+              }
+
+              @case ('registrations') {
+                <div class="split-grid registration-grid">
+                  <section class="surface panel">
+                    <div class="panel-head">
+                      <h3>Pending registration requests</h3>
+                      <button type="button" class="link-btn" (click)="loadPendingCustomers()">Refresh</button>
+                    </div>
+                    @if (isLoadingPending) {
+                      <p class="muted">Loading pending registrations...</p>
+                    } @else if (pendingLoadError) {
+                      <p class="error-text">{{ pendingLoadError }}</p>
+                    } @else if (pendingCustomers.length) {
+                      <div class="dense-list request-list">
+                        @for (customer of pendingCustomers; track customer.requestId) {
+                          <article [class.active]="selectedPendingCustomer?.requestId === customer.requestId">
+                            <button type="button" class="request-summary" (click)="openPendingDetails(customer)">
+                              <strong>{{ customer.fullName }}</strong>
+                              <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
+                              <small>{{ customer.city || 'City not added' }}{{ customer.state ? ', ' + customer.state : '' }}</small>
+                            </button>
+                            <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">Open</button>
+                          </article>
+                        }
+                      </div>
+                    } @else {
+                      <p class="muted">No customer registrations are waiting for approval.</p>
+                    }
+                  </section>
+
+                  <section class="surface panel registration-detail">
+                    @if (selectedPendingCustomer) {
+                      <div class="panel-head">
+                        <div>
+                          <h3>{{ selectedPendingCustomer.fullName }}</h3>
+                          <span>{{ selectedPendingCustomer.status }}</span>
+                        </div>
+                        <button type="button" class="primary-btn" [disabled]="verifyingRequestId === selectedPendingCustomer.requestId" (click)="verifyCustomer(selectedPendingCustomer)">
+                          {{ verifyingRequestId === selectedPendingCustomer.requestId ? 'Granting...' : 'Grant login access' }}
+                        </button>
+                      </div>
+
+                      <div class="detail-section">
+                        <h4>Personal details</h4>
+                        <dl class="detail-grid">
+                          <div><dt>First name</dt><dd>{{ selectedPendingCustomer.firstName || '-' }}</dd></div>
+                          <div><dt>Last name</dt><dd>{{ selectedPendingCustomer.lastName || '-' }}</dd></div>
+                          <div><dt>Email</dt><dd>{{ selectedPendingCustomer.email }}</dd></div>
+                          <div><dt>Mobile</dt><dd>{{ selectedPendingCustomer.mobile || '-' }}</dd></div>
+                          <div><dt>Gender</dt><dd>{{ selectedPendingCustomer.gender || '-' }}</dd></div>
+                          <div><dt>Date of birth</dt><dd>{{ selectedPendingCustomer.dob || '-' }}</dd></div>
+                          <div><dt>Alternate contact</dt><dd>{{ selectedPendingCustomer.alternateContactNumber || '-' }}</dd></div>
+                          <div><dt>Occupation</dt><dd>{{ selectedPendingCustomer.occupation || '-' }}</dd></div>
+                        </dl>
+                      </div>
+
+                      <div class="detail-section">
+                        <h4>Address & work</h4>
+                        <dl class="detail-grid">
+                          <div><dt>Address</dt><dd>{{ selectedPendingCustomer.currentAddress || '-' }}</dd></div>
+                          <div><dt>City</dt><dd>{{ selectedPendingCustomer.city || '-' }}</dd></div>
+                          <div><dt>State</dt><dd>{{ selectedPendingCustomer.state || '-' }}</dd></div>
+                          <div><dt>Pincode</dt><dd>{{ selectedPendingCustomer.pincode || '-' }}</dd></div>
+                          <div><dt>Country</dt><dd>{{ selectedPendingCustomer.country || '-' }}</dd></div>
+                          <div><dt>Residence type</dt><dd>{{ selectedPendingCustomer.residenceType || '-' }}</dd></div>
+                          <div><dt>Company</dt><dd>{{ selectedPendingCustomer.companyName || '-' }}</dd></div>
+                          <div><dt>Social profile</dt><dd>{{ selectedPendingCustomer.socialMediaProfile || '-' }}</dd></div>
+                        </dl>
+                      </div>
+
+                      <div class="detail-section">
+                        <h4>Uploaded images</h4>
+                        @if (documentPreviewError) {
+                          <p class="error-text">{{ documentPreviewError }}</p>
+                        }
+                        @if (selectedPendingCustomer.documents.length) {
+                          <div class="document-grid">
+                            @for (document of selectedPendingCustomer.documents; track document.type) {
+                              <article>
+                                <div class="document-frame">
+                                  @if (documentPreviews[document.type]) {
+                                    @if (documentPreviews[document.type].isImage) {
+                                      <button type="button" class="document-preview-btn" (click)="openDocumentPreview(documentPreviews[document.type])">
+                                        <img [src]="documentPreviews[document.type].url" [alt]="document.label">
+                                      </button>
+                                    } @else {
+                                      <a [href]="documentPreviews[document.type].url" target="_blank" rel="noreferrer">Open file</a>
+                                    }
+                                  } @else {
+                                    <span>{{ isLoadingDocuments ? 'Loading...' : 'Preview unavailable' }}</span>
+                                  }
+                                </div>
+                                <strong>{{ document.label }}</strong>
+                                <span>{{ document.fileName }}</span>
+                              </article>
+                            }
+                          </div>
+                        } @else {
+                          <p class="muted">No documents were uploaded with this request.</p>
+                        }
+                      </div>
+                    } @else {
+                      <div class="empty-detail">
+                        <h3>Select a registration request</h3>
+                        <p class="muted">Open a pending request to review the full details and uploaded images.</p>
+                      </div>
                     }
                   </section>
                 </div>
@@ -421,6 +537,28 @@ interface RolePermission {
             }
           </div>
         </div>
+        @if (activeDocumentPreview) {
+          <div class="document-lightbox" role="dialog" aria-modal="true" [attr.aria-label]="activeDocumentPreview.label" (click)="closeDocumentPreview()">
+            <div class="document-lightbox-content" (click)="$event.stopPropagation()">
+              <div class="lightbox-head">
+                <div>
+                  <h3>{{ activeDocumentPreview.label }}</h3>
+                  <span>{{ activeDocumentPreview.fileName }}</span>
+                </div>
+                <button type="button" class="lightbox-close" aria-label="Close image preview" (click)="closeDocumentPreview()">Close</button>
+              </div>
+              <div class="lightbox-image-row">
+                <button type="button" class="slide-btn" aria-label="Previous image" [disabled]="imagePreviews().length < 2" (click)="showPreviousDocumentPreview()">‹</button>
+                <img [src]="activeDocumentPreview.url" [alt]="activeDocumentPreview.label">
+                <button type="button" class="slide-btn" aria-label="Next image" [disabled]="imagePreviews().length < 2" (click)="showNextDocumentPreview()">›</button>
+              </div>
+              <div class="lightbox-foot">
+                <span>{{ activeDocumentIndex() + 1 }} / {{ imagePreviews().length }}</span>
+                <button type="button" class="ghost-mini" [disabled]="imagePreviews().length < 2" (click)="showNextDocumentPreview()">Slide image</button>
+              </div>
+            </div>
+          </div>
+        }
       } @else {
         <div class="surface access-card">
           <p class="eyebrow">Admin access</p>
@@ -456,6 +594,7 @@ interface RolePermission {
     .mini-btn, .danger-btn, .ghost-mini, .link-btn { font-size: .78rem; min-height: 34px; padding: .45rem .7rem; }
     .mini-btn { background: #111; color: #fff; }
     .danger-btn { background: #fff1f1; color: #b42318; }
+    .topbar-logout { min-height: 48px; padding: .8rem 1.2rem; }
     .ghost-mini, .link-btn { background: #fff; border: 1px solid rgba(17,17,17,.1); color: #111; }
     button:disabled { cursor: not-allowed; opacity: .55; transform: none !important; }
     .metric-grid { display: grid; gap: .9rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -473,8 +612,44 @@ interface RolePermission {
     .panel-head span { color: #777; font-size: .82rem; font-weight: 800; }
     .dense-list { display: grid; gap: .55rem; }
     .dense-list article { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.07); border-radius: 16px; display: flex; gap: .8rem; justify-content: space-between; padding: .8rem; }
+    .dense-list article.active { border-color: #ff9700; box-shadow: 0 12px 28px rgba(255,151,0,.12); }
     .dense-list strong, td strong { display: block; }
     .dense-list span, td span { color: #777; display: block; font-size: .8rem; margin-top: .18rem; }
+    .request-list article { align-items: stretch; }
+    .request-summary { align-items: start; background: transparent; border: 0; color: #111; display: grid; flex: 1; font: inherit; justify-content: stretch; min-width: 0; padding: 0; text-align: left; white-space: normal; }
+    .request-summary small { color: #9a6a00; font-size: .72rem; font-weight: 900; margin-top: .25rem; }
+    .registration-grid { align-items: start; grid-template-columns: minmax(300px, .72fr) minmax(0, 1.28fr); }
+    .registration-detail { display: grid; gap: 1rem; min-height: 520px; }
+    .registration-detail .panel-head { background: #fff; border: 1px solid rgba(17,17,17,.07); border-radius: 14px; margin-bottom: 0; padding: .85rem; }
+    .detail-section { background: #fffdfa; border: 1px solid rgba(17,17,17,.07); border-radius: 14px; padding: 1rem; }
+    .detail-section + .detail-section { margin-top: 0; }
+    .detail-section h4 { color: #9a6a00; font-size: .78rem; letter-spacing: .08em; margin: 0 0 .8rem; text-transform: uppercase; }
+    .detail-grid { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+    .detail-grid div { background: #fff; border: 1px solid rgba(17,17,17,.06); border-radius: 12px; min-width: 0; padding: .75rem; }
+    .detail-grid dt { color: #777; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
+    .detail-grid dd { color: #111; font-weight: 800; margin: .25rem 0 0; overflow-wrap: anywhere; }
+    .document-grid { display: grid; gap: .85rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .document-grid article { background: #fff; border: 1px solid rgba(17,17,17,.07); border-radius: 14px; box-shadow: 0 10px 26px rgba(17,17,17,.04); min-width: 0; padding: .75rem; }
+    .document-frame { align-items: center; aspect-ratio: 4 / 3; background: #f6f4f0; border-radius: 10px; display: flex; justify-content: center; margin-bottom: .65rem; overflow: hidden; }
+    .document-frame img { height: 100%; object-fit: contain; width: 100%; }
+    .document-preview-btn { background: transparent; border: 0; border-radius: 10px; cursor: zoom-in; height: 100%; padding: 0; width: 100%; }
+    .document-preview-btn:hover { transform: none; }
+    .document-frame span, .document-frame a { color: #777; font-size: .82rem; font-weight: 900; }
+    .document-grid strong, .document-grid span { display: block; overflow-wrap: anywhere; }
+    .document-grid span { color: #777; font-size: .76rem; margin-top: .2rem; }
+    .empty-detail { align-content: center; display: grid; min-height: 420px; text-align: center; }
+    .document-lightbox { align-items: center; background: rgba(17,17,17,.78); display: flex; inset: 0; justify-content: center; padding: 1.25rem; position: fixed; z-index: 1000; }
+    .document-lightbox-content { background: #fff; border-radius: 18px; box-shadow: 0 24px 80px rgba(0,0,0,.32); display: grid; gap: .9rem; max-height: 92vh; max-width: min(980px, 96vw); overflow: hidden; padding: 1rem; width: 100%; }
+    .lightbox-head, .lightbox-foot { align-items: center; display: flex; gap: 1rem; justify-content: space-between; }
+    .lightbox-head { border-bottom: 1px solid rgba(17,17,17,.08); padding-bottom: .8rem; }
+    .lightbox-head h3 { font-size: 1.08rem; line-height: 1.15; margin: 0; }
+    .lightbox-head span, .lightbox-foot span { color: #777; display: block; font-size: .8rem; font-weight: 800; margin-top: .2rem; overflow-wrap: anywhere; }
+    .lightbox-close { background: #fff1f1; color: #b42318; min-height: 40px; padding: .55rem .9rem; }
+    .lightbox-image-row { align-items: center; background: #f6f4f0; border-radius: 14px; display: grid; gap: .75rem; grid-template-columns: 46px minmax(0, 1fr) 46px; min-height: 360px; padding: .8rem; }
+    .lightbox-image-row img { border-radius: 10px; display: block; margin: 0 auto; max-height: 66vh; object-fit: contain; width: 100%; }
+    .slide-btn { background: #111; border-radius: 50%; color: #fff; font-size: 1.5rem; height: 46px; padding: 0; width: 46px; }
+    .slide-btn:not(:disabled):hover, .lightbox-close:hover { transform: translateY(-1px); }
+    .lightbox-foot { border-top: 1px solid rgba(17,17,17,.08); padding-top: .8rem; }
     .table-panel { overflow-x: auto; }
     table { border-collapse: separate; border-spacing: 0 .55rem; min-width: 920px; width: 100%; }
     th { color: #777; font-size: .72rem; letter-spacing: .08em; padding: 0 .75rem; text-align: left; text-transform: uppercase; }
@@ -517,19 +692,25 @@ interface RolePermission {
     }
     @media (max-width: 760px) {
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
-      .split-grid, .metric-grid, .card-grid, .form-grid, nav { grid-template-columns: 1fr; }
+      .split-grid, .metric-grid, .card-grid, .form-grid, .detail-grid, .document-grid, nav { grid-template-columns: 1fr; }
       .topbar-actions { align-items: stretch; flex-direction: column; }
       .topbar-actions button { width: 100%; }
+      .document-lightbox { padding: .7rem; }
+      .document-lightbox-content { max-height: 94vh; padding: .75rem; }
+      .lightbox-head, .lightbox-foot { align-items: stretch; flex-direction: column; }
+      .lightbox-image-row { grid-template-columns: 38px minmax(0, 1fr) 38px; min-height: 260px; padding: .5rem; }
+      .slide-btn { height: 38px; width: 38px; }
     }
   `]
 })
-export class AdminPageComponent implements OnInit {
+export class AdminPageComponent implements OnInit, OnDestroy {
   readonly authService = inject(AuthService);
 
   private readonly adminService = inject(AdminService);
   private readonly productService = inject(ProductService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
 
   readonly activeTab = signal<AdminTab>('dashboard');
   readonly products = signal<AdminProduct[]>([]);
@@ -572,9 +753,15 @@ export class AdminPageComponent implements OnInit {
   isSubmitting = false;
   isLoadingPending = false;
   verifyingRequestId?: number;
+  selectedPendingCustomer?: CustomerVerificationResponse;
+  documentPreviews: Record<string, DocumentPreview> = {};
+  documentPreviewError = '';
+  isLoadingDocuments = false;
+  activeDocumentPreview?: DocumentPreview;
 
   readonly tabs: { id: AdminTab; label: string; count: string }[] = [
     { id: 'dashboard', label: 'Dashboard', count: 'Live' },
+    { id: 'registrations', label: 'Registrations', count: '0' },
     { id: 'inventory', label: 'Inventory', count: '8' },
     { id: 'bookings', label: 'Bookings', count: '4' },
     { id: 'customers', label: 'Customers', count: '3' },
@@ -637,6 +824,7 @@ export class AdminPageComponent implements OnInit {
   readonly activeTitle = computed(() => {
     const titles: Record<AdminTab, string> = {
       dashboard: 'Operations dashboard',
+      registrations: 'Pending registration requests',
       inventory: 'Inventory management',
       bookings: 'Booking management',
       customers: 'Customer management',
@@ -694,6 +882,10 @@ export class AdminPageComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.clearDocumentPreviews();
+  }
+
   verifyCustomer(customer: CustomerVerificationResponse): void {
     if (this.verifyingRequestId) {
       return;
@@ -707,6 +899,14 @@ export class AdminPageComponent implements OnInit {
       .subscribe({
         next: () => {
           this.pendingCustomers = this.pendingCustomers.filter((item) => item.requestId !== customer.requestId);
+          if (this.selectedPendingCustomer?.requestId === customer.requestId) {
+            this.clearDocumentPreviews();
+            this.selectedPendingCustomer = this.pendingCustomers[0];
+            if (this.selectedPendingCustomer) {
+              this.loadDocumentPreviews(this.selectedPendingCustomer);
+            }
+          }
+          this.updateTabCount('registrations', String(this.pendingCustomers.length));
           this.snackBar.open('Login access granted. The customer can now log in.', 'Close', { duration: 2800 });
         },
         error: (error) => {
@@ -725,12 +925,46 @@ export class AdminPageComponent implements OnInit {
       .subscribe({
         next: (customers) => {
           this.pendingCustomers = customers;
+          this.updateTabCount('registrations', String(customers.length));
+          if (this.selectedPendingCustomer && !customers.some((customer) => customer.requestId === this.selectedPendingCustomer?.requestId)) {
+            this.clearDocumentPreviews();
+            this.selectedPendingCustomer = undefined;
+          }
         },
         error: (error) => {
           this.pendingLoadError = this.authService.getErrorMessage(error);
           this.snackBar.open(this.pendingLoadError, 'Close', { duration: 3600 });
         }
       });
+  }
+
+  openPendingDetails(customer: CustomerVerificationResponse): void {
+    this.selectedPendingCustomer = customer;
+    this.activeTab.set('registrations');
+    this.loadDocumentPreviews(customer);
+  }
+
+  logout(): void {
+    this.clearDocumentPreviews();
+    this.authService.logout();
+    this.snackBar.open('Logged out from admin.', 'Close', { duration: 2200 });
+    this.router.navigateByUrl('/login');
+  }
+
+  openDocumentPreview(preview: DocumentPreview): void {
+    this.activeDocumentPreview = preview;
+  }
+
+  closeDocumentPreview(): void {
+    this.activeDocumentPreview = undefined;
+  }
+
+  showPreviousDocumentPreview(): void {
+    this.showDocumentPreviewAt(this.activeDocumentIndex() - 1);
+  }
+
+  showNextDocumentPreview(): void {
+    this.showDocumentPreviewAt(this.activeDocumentIndex() + 1);
   }
 
   saveProduct(): void {
@@ -905,9 +1139,11 @@ export class AdminPageComponent implements OnInit {
         ? this.bookings()
         : tab === 'customers'
           ? this.customers()
-          : tab === 'payments'
-            ? this.payments()
-            : this.metrics();
+          : tab === 'registrations'
+            ? this.pendingCustomers
+            : tab === 'payments'
+              ? this.payments()
+              : this.metrics();
     this.downloadCsv(`clickkaar-${tab}.csv`, rows);
   }
 
@@ -951,6 +1187,83 @@ export class AdminPageComponent implements OnInit {
 
   private formatCurrency(value: number): string {
     return new Intl.NumberFormat('en-IN', { currency: 'INR', maximumFractionDigits: 0, style: 'currency' }).format(value);
+  }
+
+  private loadDocumentPreviews(customer: CustomerVerificationResponse): void {
+    this.clearDocumentPreviews();
+    this.documentPreviewError = '';
+    this.isLoadingDocuments = customer.documents.length > 0;
+
+    if (!customer.documents.length) {
+      return;
+    }
+
+    let completed = 0;
+    const markComplete = () => {
+      completed += 1;
+      if (completed === customer.documents.length && this.selectedPendingCustomer?.requestId === customer.requestId) {
+        this.isLoadingDocuments = false;
+      }
+    };
+    customer.documents.forEach((document) => {
+      this.adminService.getPendingCustomerDocument(customer.requestId, document.type).subscribe({
+        next: (blob) => {
+          if (this.selectedPendingCustomer?.requestId !== customer.requestId) {
+            return;
+          }
+          this.documentPreviews = {
+            ...this.documentPreviews,
+            [document.type]: this.createDocumentPreview(document, blob)
+          };
+        },
+        error: (error) => {
+          if (this.selectedPendingCustomer?.requestId === customer.requestId) {
+            this.documentPreviewError = this.authService.getErrorMessage(error);
+          }
+          markComplete();
+        },
+        complete: () => {
+          markComplete();
+        }
+      });
+    });
+  }
+
+  private createDocumentPreview(document: RegistrationDocumentResponse, blob: Blob): DocumentPreview {
+    return {
+      label: document.label,
+      fileName: document.fileName,
+      url: URL.createObjectURL(blob),
+      isImage: blob.type.startsWith('image/')
+    };
+  }
+
+  imagePreviews(): DocumentPreview[] {
+    return Object.values(this.documentPreviews).filter((preview) => preview.isImage);
+  }
+
+  activeDocumentIndex(): number {
+    const previews = this.imagePreviews();
+    const index = previews.findIndex((preview) => preview.url === this.activeDocumentPreview?.url);
+    return index >= 0 ? index : 0;
+  }
+
+  private showDocumentPreviewAt(index: number): void {
+    const previews = this.imagePreviews();
+    if (!previews.length) {
+      return;
+    }
+
+    const nextIndex = (index + previews.length) % previews.length;
+    this.activeDocumentPreview = previews[nextIndex];
+  }
+
+  private clearDocumentPreviews(): void {
+    this.activeDocumentPreview = undefined;
+    Object.values(this.documentPreviews).forEach((preview) => URL.revokeObjectURL(preview.url));
+    this.documentPreviews = {};
+    this.documentPreviewError = '';
+    this.isLoadingDocuments = false;
   }
 
   private downloadCsv(filename: string, rows: unknown[]): void {

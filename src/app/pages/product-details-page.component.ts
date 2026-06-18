@@ -60,7 +60,7 @@ export class AddedDialogComponent {}
             <p class="intro">{{ product()!.description }}</p>
           </div>
           <div class="hero-stats" aria-label="Rental highlights">
-            <div><span>Rating</span><strong>{{ product()!.rating }}</strong></div>
+            <div><span>Rating</span><strong class="rating-value">{{ product()!.rating }}</strong></div>
             <div><span>Stock</span><strong>{{ product()!.stock }}</strong></div>
             <div><span>Weekly</span><strong>{{ product()!.weeklyPrice | currency:'INR':'symbol':'1.0-0' }}</strong></div>
           </div>
@@ -69,7 +69,7 @@ export class AddedDialogComponent {}
         <div class="row g-4 align-items-start">
           <div class="col-lg-7">
             <div class="gallery surface">
-              <div class="media-frame">
+              <div class="media-frame" (touchstart)="onGalleryTouchStart($event)" (touchend)="onGalleryTouchEnd($event)">
                 <img class="main-img" [src]="selectedImage()" [alt]="product()!.name">
                 <!-- <span class="stock-chip" [class.out]="!product()!.available">
                   {{ product()!.available ? 'Available now' : 'Unavailable' }}
@@ -205,10 +205,10 @@ export class AddedDialogComponent {}
     .hero-stats div { background: #fff; border-radius: 18px; color: #fff; padding: .85rem .95rem; }
     .hero-stats span { color: #000; display: block; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
     .hero-stats strong { color: #000; display: block; font-size: clamp(1rem, 2vw, 1.28rem); line-height: 1.1; margin-top: .35rem; }
+    .hero-stats strong.rating-value { color: #008000; }
     .gallery { overflow: visible; padding: .65rem; position: sticky; top: 92px; }
-    .media-frame { background: #ececea; border-radius: 18px; overflow: hidden; position: relative; }
-    .main-img { aspect-ratio: 4/3; height: auto; object-fit: cover; transition: transform .35s ease; width: 100%; }
-    .media-frame:hover .main-img { transform: scale(1.035); }
+    .media-frame { background: #ececea; border-radius: 18px; overflow: hidden; position: relative; touch-action: pan-y; }
+    .main-img { aspect-ratio: 4/3; display: block; height: auto; object-fit: cover; width: 100%; }
     .stock-chip { background: #ff9700; border-radius: 999px; bottom: 1rem; color: #111; font-size: .75rem; font-weight: 950; left: 1rem; padding: .5rem .8rem; position: absolute; text-transform: uppercase; }
     .stock-chip.out { background: #111; color: #fff; }
     .slider-dots { align-items: center; display: flex; gap: .45rem; justify-content: center; margin-top: .75rem; min-height: 22px; }
@@ -220,8 +220,8 @@ export class AddedDialogComponent {}
     .booking-head strong { color: #111; display: block; font-size: 2rem; line-height: 1; margin: .2rem 0; }
     .availability { background: rgba(24,134,75,.1); border-radius: 999px; color: #18864b; font-size: .78rem; font-weight: 950; padding: .55rem .75rem; text-align: center; white-space: nowrap; }
     .availability.out { background: rgba(194,58,33,.1); color: #c23a21; }
-    .date-grid { display: grid; gap: .9rem; grid-template-columns: repeat(2, 1fr); margin-bottom: .15rem; }
-    .date-control { background: #fff; border: 1px solid rgba(255,151,0,.36); border-radius: 18px; cursor: pointer; display: grid; gap: .45rem; padding: .9rem 1rem; text-align: left; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
+    .date-grid { display: grid; column-gap: 1.15rem; row-gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: .55rem; }
+    .date-control { background: #fff; border: 1px solid rgba(255,151,0,.36); border-radius: 18px; cursor: pointer; display: grid; gap: .5rem; min-width: 0; padding: 1rem 1.05rem; text-align: left; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
     .date-control:hover, .date-control.active { border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.13); transform: translateY(-1px); }
     .date-control span { color: #ff9700; font-size: .72rem; font-weight: 950; text-transform: uppercase; }
     .date-control strong { color: #111; font-size: 1rem; line-height: 1.1; }
@@ -263,9 +263,13 @@ export class AddedDialogComponent {}
     }
     @media (max-width: 575px) {
       .hero-stats, .date-grid, .action-grid, .trust-row { grid-template-columns: 1fr; }
+      .date-grid { row-gap: .85rem; }
       .duration-options { grid-template-columns: repeat(2, 1fr); }
       .booking-head { display: grid; }
       .availability { justify-self: start; }
+      .gallery { padding: .45rem; }
+      .media-frame { cursor: grab; }
+      .main-img { min-height: 280px; }
     }
   `]
 })
@@ -284,6 +288,7 @@ export class ProductDetailsPageComponent {
   protected readonly rentalDurations = [1, 2, 3, 4];
   protected readonly weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   private readonly monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  private galleryTouchStartX = 0;
   readonly duration = computed(() => Math.max(1, Math.ceil((this.endDate().getTime() - this.startDate().getTime()) / 86_400_000)));
   readonly total = computed(() => (this.product()?.dailyPrice ?? 0) * this.duration());
   readonly specEntries = computed(() => Object.entries(this.product()?.specifications ?? {}));
@@ -388,6 +393,28 @@ export class ProductDetailsPageComponent {
     if (image) this.selectedImage.set(image);
   }
 
+  showPreviousImage(): void {
+    this.showImageAtOffset(-1);
+  }
+
+  showNextImage(): void {
+    this.showImageAtOffset(1);
+  }
+
+  onGalleryTouchStart(event: TouchEvent): void {
+    this.galleryTouchStartX = event.changedTouches[0]?.clientX ?? 0;
+  }
+
+  onGalleryTouchEnd(event: TouchEvent): void {
+    const endX = event.changedTouches[0]?.clientX ?? this.galleryTouchStartX;
+    const deltaX = endX - this.galleryTouchStartX;
+    if (Math.abs(deltaX) < 40) {
+      return;
+    }
+
+    deltaX > 0 ? this.showPreviousImage() : this.showNextImage();
+  }
+
   addToCart(): void {
     const product = this.product();
     if (!product) return;
@@ -406,5 +433,15 @@ export class ProductDetailsPageComponent {
     const [year, month, day] = value.split('-').map(Number);
     return new Date(year, month - 1, day);
   }
-}
 
+  private showImageAtOffset(offset: number): void {
+    const gallery = this.product()?.gallery ?? [];
+    if (gallery.length < 2) {
+      return;
+    }
+
+    const currentIndex = Math.max(0, gallery.findIndex((image) => image === this.selectedImage()));
+    const nextIndex = (currentIndex + offset + gallery.length) % gallery.length;
+    this.selectedImage.set(gallery[nextIndex]);
+  }
+}

@@ -61,7 +61,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   styles: [`
     .marketplace-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .section-heading { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.25rem; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: -.055em; line-height: .98; margin: 0; }
+    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: 0; line-height: .98; margin: 0; word-spacing: .08em; }
     .shop-toolbar { align-items: center; background: #f6f6f4; border-radius: 999px; display: flex; flex-wrap: wrap; gap: .55rem; margin-bottom: 1.1rem; padding: .55rem; width: max-content; max-width: 100%; }
     .shop-toolbar span, .shop-toolbar a { border-radius: 999px; color: #111; font-size: .76rem; font-weight: 900; padding: .55rem .78rem; }
     .shop-toolbar span { background: #111; color: #fff; }
@@ -75,9 +75,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .product-media span { background: rgba(255,255,255,.93); border-radius: 999px; bottom: .65rem; color: #ff9700; font-size: .7rem; font-weight: 900; left: .65rem; padding: .42rem .58rem; position: absolute; }
     .product-body { padding: .9rem .3rem .3rem; }
     .product-body p { color: #ff9700; font-size: .72rem; font-weight: 900; letter-spacing: .18em; margin: 0 0 .45rem; text-transform: uppercase; }
-    .product-body h3 { color: #111; font-size: 1.04rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.15; margin: 0 0 .9rem; }
+    .product-body h3 { color: #111; font-size: 1.04rem; font-weight: 900; letter-spacing: 0; line-height: 1.15; margin: 0 0 .9rem; word-spacing: .08em; }
     .commerce-row { align-items: center; display: flex; justify-content: space-between; gap: .6rem; }
-    .commerce-row strong { color: #111; font-size: 1rem; font-weight: 950; }
+    .commerce-row strong { color: #111; font-size: 1rem; font-weight: 950; word-spacing: .08em; }
     .commerce-row small { color: #777; font-size: .75rem; font-weight: 800; }
     .commerce-row a { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
     .commerce-row a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
@@ -85,7 +85,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .feature-card { background: #fff; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; min-height: 220px; padding: 1.4rem; transition: transform .28s ease, box-shadow .28s ease; }
     .feature-card:hover { box-shadow: 0 22px 45px rgba(0,0,0,.12); transform: translateY(-8px); }
     .feature-card span { color: #ff9700; font-size: .78rem; font-weight: 900; letter-spacing: .22em; }
-    .feature-card h3 { color: #111; font-size: 1.45rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.05; margin: 1.2rem 0 .8rem; }
+    .feature-card h3 { color: #111; font-size: 1.45rem; font-weight: 900; letter-spacing: 0; line-height: 1.05; margin: 1.2rem 0 .8rem; word-spacing: .08em; }
     .feature-card p { color: #5e5e5a; line-height: 1.55; margin: 0; }
     @media (max-width: 980px) {
       .section-heading { align-items: flex-start; flex-direction: column; }

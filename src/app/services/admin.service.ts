@@ -23,12 +23,30 @@ export interface EmployeeResponse {
 export interface CustomerVerificationResponse {
   requestId: number;
   fullName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   mobile?: string;
+  gender?: string;
+  dob?: string;
+  alternateContactNumber?: string;
+  currentAddress?: string;
   city?: string;
   state?: string;
+  pincode?: string;
+  country?: string;
+  residenceType?: string;
   occupation?: string;
+  companyName?: string;
+  socialMediaProfile?: string;
   status: string;
+  documents: RegistrationDocumentResponse[];
+}
+
+export interface RegistrationDocumentResponse {
+  type: string;
+  label: string;
+  fileName: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -51,6 +69,13 @@ export class AdminService {
   verifyCustomer(requestId: number): Observable<CustomerVerificationResponse> {
     return this.http.patch<CustomerVerificationResponse>(`${API_URL}/customers/${requestId}/verify`, null, {
       headers: this.authHeaders()
+    });
+  }
+
+  getPendingCustomerDocument(requestId: number, documentType: string): Observable<Blob> {
+    return this.http.get(`${API_URL}/customers/${requestId}/documents/${documentType}`, {
+      headers: this.authHeaders(),
+      responseType: 'blob'
     });
   }
 
