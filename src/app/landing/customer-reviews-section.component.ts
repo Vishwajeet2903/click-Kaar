@@ -14,7 +14,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
         </div>
         <div class="carousel-controls" aria-label="Customer review slider controls">
           <button type="button" class="theme-arrow-button previous" (click)="slide(-1)" aria-label="Previous reviews">
-            <span class="theme-arrow-icon" aria-hidden="true"></span>
+            <span style="color=primary"; class="theme-arrow-icon" aria-hidden="true"></span>
           </button>
           <button type="button" class="theme-arrow-button" (click)="slide(1)" aria-label="Next reviews">
             <span class="theme-arrow-icon" aria-hidden="true"></span>
@@ -42,6 +42,11 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     </section>
   `,
   styles: [`
+  .theme-arrow-icon {
+  color: white;
+  
+}
+theme-arrow-icon:hover{color: #111}
     .reviews-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .reviews-top { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.4rem; }
     .section-heading { margin-bottom: 1.4rem; max-width: 760px; }
