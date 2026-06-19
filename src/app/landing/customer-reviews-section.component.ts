@@ -46,7 +46,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .reviews-top { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.4rem; }
     .section-heading { margin-bottom: 1.4rem; max-width: 760px; }
     h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: 0; line-height: .98; margin: 0; word-spacing: .08em; }
-    .carousel-controls { display: flex; gap: .65rem; }
+    .carousel-controls { display: flex; gap: .5rem; }
     .reviews-window { --review-step: calc((-100% - 1rem) / 3); overflow: hidden; }
     .reviews-track { display: flex; gap: 1rem; transform: translateX(calc(var(--review-index) * var(--review-step))); transition: transform .62s cubic-bezier(.22, 1, .36, 1); }
     .reviews-track.no-transition { transition: none; }

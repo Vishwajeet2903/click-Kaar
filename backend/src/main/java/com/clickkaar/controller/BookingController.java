@@ -1,5 +1,6 @@
 package com.clickkaar.controller;
 
+import com.clickkaar.dto.booking.AvailabilityResponse;
 import com.clickkaar.dto.booking.BookingRequest;
 import com.clickkaar.dto.booking.BookingResponse;
 import com.clickkaar.enums.BookingStatus;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,6 +22,15 @@ public class BookingController {
   @PostMapping
   public BookingResponse create(@Valid @RequestBody BookingRequest request) {
     return bookingService.create(request);
+  }
+
+  @GetMapping("/availability")
+  public AvailabilityResponse availability(
+      @RequestParam Long productId,
+      @RequestParam LocalDate startDate,
+      @RequestParam LocalDate endDate
+  ) {
+    return bookingService.availability(productId, startDate, endDate);
   }
 
   @GetMapping("/customer/{customerId}")

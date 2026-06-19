@@ -1,6 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { finalize, map, switchMap } from 'rxjs';
@@ -52,7 +51,7 @@ declare global {
 @Component({
   selector: 'app-checkout-page',
   standalone: true,
-  imports: [CurrencyPipe, ReactiveFormsModule, MatSnackBarModule, AppButtonComponent, BreadcrumbComponent],
+  imports: [CurrencyPipe, MatSnackBarModule, AppButtonComponent, BreadcrumbComponent],
   template: `
     <app-breadcrumb label="Checkout" />
     <section class="container pb-5">
@@ -60,20 +59,8 @@ declare global {
         <div class="surface success"><h1>Booking confirmed</h1><p class="muted">Your mock rental order has been placed successfully.</p><a href="/dashboard">Go to dashboard</a></div>
       } @else {
         <h1 class="section-title">Checkout</h1>
-        <form class="row g-4" [formGroup]="form" (ngSubmit)="placeOrder()">
+        <div class="row g-4">
           <div class="col-lg-7">
-            <div class="surface panel">
-              <h2>Customer Information</h2>
-              @if (formError) {
-                <p class="form-alert" role="alert">{{ formError }}</p>
-              }
-              <div class="row g-3">
-                <div class="col-md-6"><input class="form-control" placeholder="Name" formControlName="name"></div>
-                <div class="col-md-6"><input class="form-control" placeholder="Email" formControlName="email"></div>
-                <div class="col-md-6"><input class="form-control" placeholder="Mobile" formControlName="mobile"></div>
-                <div class="col-md-6"><input class="form-control" placeholder="Address" formControlName="address"></div>
-              </div>
-            </div>
             <div class="surface panel">
               <h2>Payment Method</h2>
               <div class="razorpay-box">
@@ -87,17 +74,15 @@ declare global {
               <h2>Order Summary</h2>
               @for (item of cart.items(); track item.product.id) { <p><span>{{ item.product.name }} x {{ item.quantity }}</span><strong>{{ cart.itemTotal(item) | currency:'INR':'symbol':'1.0-0' }}</strong></p> }
               <p class="grand"><span>Total</span><strong>{{ cart.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
-              <app-button type="submit" [disabled]="isPaying() || cart.count() === 0">{{ isPaying() ? 'Opening Razorpay...' : 'Pay with Razorpay' }}</app-button>
+              <app-button type="button" [disabled]="isPaying() || cart.count() === 0" (click)="placeOrder()">{{ isPaying() ? 'Opening Razorpay...' : 'Pay with Razorpay' }}</app-button>
             </div>
           </div>
-        </form>
+        </div>
       }
     </section>
   `,
   styles: [`
     .panel, .success { padding: 1.25rem; margin-bottom: 1rem; }
-    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 14px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
-    .form-control::placeholder { color: #8a8a86; opacity: 1; }
     h2 { font-size: 1.2rem; font-weight: 900; margin-bottom: 1rem; }
     .razorpay-box { background: #fff; border: 1px solid rgba(255,151,0,.28); border-radius: 18px; display: grid; gap: .35rem; padding: 1rem; }
     .razorpay-box strong { color: #111; font-size: 1.02rem; }
@@ -115,25 +100,14 @@ export class CheckoutPageComponent {
   readonly cart = inject(CartService);
   readonly success = signal(false);
   readonly isPaying = signal(false);
-  private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly bookingService = inject(BookingService);
   private readonly paymentService = inject(PaymentService);
-  formError = '';
-  readonly form = this.fb.nonNullable.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    mobile: ['', [Validators.required, Validators.minLength(10)]],
-    address: ['', Validators.required]
-  });
 
   placeOrder(): void {
-    this.formError = '';
-    if (this.form.invalid || this.isPaying()) {
-      this.form.markAllAsTouched();
-      this.formError = 'Please complete the required checkout fields.';
+    if (this.isPaying()) {
       return;
     }
 
@@ -177,7 +151,7 @@ export class CheckoutPageComponent {
         return;
       }
 
-      const value = this.form.getRawValue();
+      const user = this.authService.currentUser();
       const razorpay = new window.Razorpay({
         key: order.razorpayKeyId,
         amount: Math.round(order.amount * 100),
@@ -186,9 +160,9 @@ export class CheckoutPageComponent {
         description: 'Equipment rental booking',
         order_id: order.razorpayOrderId,
         prefill: {
-          name: value.name,
-          email: value.email,
-          contact: value.mobile
+          name: user?.fullName ?? '',
+          email: user?.email ?? '',
+          contact: user?.mobile ?? ''
         },
         theme: {
           color: '#ff9700'

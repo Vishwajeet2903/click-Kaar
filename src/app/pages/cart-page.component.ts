@@ -39,7 +39,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
             <h2>Booking Summary</h2>
             <p><span>Subtotal</span><strong>{{ cart.subtotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
             <p><span>Security Deposit</span><strong>{{ cart.securityDeposit() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
-            <p><span>Tax</span><strong>{{ cart.tax() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+            <p><span>GST</span><strong>{{ cart.tax() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
             <p class="grand"><span>Grand Total</span><strong>{{ cart.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
             <a routerLink="/checkout"><app-button>Checkout</app-button></a>
           </div>

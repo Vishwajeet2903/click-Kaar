@@ -2,6 +2,7 @@ package com.clickkaar.service;
 
 import com.clickkaar.dto.booking.BookingRequest;
 import com.clickkaar.dto.booking.BookingResponse;
+import com.clickkaar.dto.booking.AvailabilityResponse;
 import com.clickkaar.entity.Booking;
 import com.clickkaar.entity.BookingItem;
 import com.clickkaar.entity.Product;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +30,7 @@ public class BookingService {
   private final BookingRepository bookingRepository;
   private final ProductRepository productRepository;
   private final UserRepository userRepository;
+  private static final DateTimeFormatter DISPLAY_DATE = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
   @Transactional
   public BookingResponse create(BookingRequest request) {
@@ -47,10 +51,10 @@ public class BookingService {
 
     BigDecimal total = BigDecimal.ZERO;
     for (var item : request.items()) {
-      if (bookingRepository.existsOverlappingBooking(item.productId(), request.rentalStartDate(), request.rentalEndDate())) {
-        throw new BadRequestException("Product " + item.productId() + " is already booked for selected dates");
-      }
       Product product = productRepository.findById(item.productId()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+      if (bookingRepository.existsOverlappingBooking(item.productId(), request.rentalStartDate(), request.rentalEndDate())) {
+        throw new BadRequestException(unavailableMessage(product.getName(), request.rentalStartDate(), request.rentalEndDate()));
+      }
       BigDecimal lineTotal = product.getDailyPrice().multiply(BigDecimal.valueOf(days));
       booking.getItems().add(BookingItem.builder()
           .booking(booking)
@@ -62,6 +66,20 @@ public class BookingService {
     }
     booking.setTotalAmount(total);
     return toResponse(bookingRepository.save(booking));
+  }
+
+  public AvailabilityResponse availability(Long productId, LocalDate startDate, LocalDate endDate) {
+    if (endDate.isBefore(startDate)) {
+      throw new BadRequestException("Rental end date must be after start date");
+    }
+
+    Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    boolean booked = bookingRepository.existsOverlappingBooking(productId, startDate, endDate);
+    if (booked) {
+      return new AvailabilityResponse(false, unavailableMessage(product.getName(), startDate, endDate));
+    }
+
+    return new AvailabilityResponse(true, product.getName() + " is available for " + dateRange(startDate, endDate) + ".");
   }
 
   public List<BookingResponse> all() {
@@ -91,5 +109,13 @@ public class BookingService {
         booking.getStatus(),
         booking.getItems().stream().map(item -> item.getProduct().getName()).toList()
     );
+  }
+
+  private String unavailableMessage(String productName, LocalDate startDate, LocalDate endDate) {
+    return productName + " is already booked between " + dateRange(startDate, endDate) + ". Please choose another date range.";
+  }
+
+  private String dateRange(LocalDate startDate, LocalDate endDate) {
+    return startDate.format(DISPLAY_DATE) + " and " + endDate.format(DISPLAY_DATE);
   }
 }

@@ -249,31 +249,35 @@ main.page-shell [data-aos].aos-init:not(.aos-animate) {
 }
 
 .theme-arrow-button {
-  --arrow-button-size: 50px;
-  --arrow-button-bg: #ff9700;
+  --arrow-button-size: 42px;
+  --arrow-button-bg: #fff;
   --arrow-button-fg: #ffffff;
-  --arrow-button-hover-bg: #ffffff;
-  --arrow-button-hover-fg: #ff9700;
+  --arrow-button-hover-bg: #ff9700;
+  --arrow-button-hover-fg: #111111;
   align-items: center;
   background: var(--arrow-button-bg);
   border: 0;
   border-radius: 999px;
-  box-shadow: 0 16px 34px rgba(255, 151, 0, 0.24), 0 6px 14px rgba(17, 17, 17, 0.12);
+  box-shadow: 0 12px 24px rgba(255, 151, 0, 0.2), 0 4px 10px rgba(17, 17, 17, 0.1);
   color: var(--arrow-button-fg);
   cursor: pointer;
   display: inline-flex;
   height: var(--arrow-button-size);
   justify-content: center;
   padding: 0;
-  transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  transition:
+    background 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
   width: var(--arrow-button-size);
 }
 
 .theme-arrow-button:hover {
   background: var(--arrow-button-hover-bg);
-  box-shadow: 0 18px 38px rgba(17, 17, 17, 0.16), 0 0 0 1px rgba(255, 151, 0, 0.12);
+  box-shadow: 0 14px 28px rgba(17, 17, 17, 0.14), 0 0 0 1px rgba(255, 151, 0, 0.12);
   color: var(--arrow-button-hover-fg);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .theme-arrow-button:disabled,
@@ -287,15 +291,15 @@ main.page-shell [data-aos].aos-init:not(.aos-animate) {
 }
 
 .theme-arrow-icon {
-  --arrow-head-size: 13px;
-  --arrow-head-stroke: 5px;
-  --arrow-icon-height: 20px;
-  --arrow-icon-width: 22px;
-  --arrow-line-stroke: 5px;
+  --arrow-head-size: 10px;
+  --arrow-head-stroke: 4px;
+  --arrow-icon-height: 16px;
+  --arrow-icon-width: 18px;
+  --arrow-line-stroke: 4px;
   display: block;
   height: var(--arrow-icon-height);
   position: relative;
-  transition: transform 0.25s ease;
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
   width: var(--arrow-icon-width);
 }
 
@@ -327,7 +331,7 @@ main.page-shell [data-aos].aos-init:not(.aos-animate) {
 }
 
 .theme-arrow-button:hover .theme-arrow-icon {
-  transform: translateX(2px);
+  transform: translateX(1px);
 }
 
 .theme-arrow-button.previous .theme-arrow-icon {
@@ -335,7 +339,7 @@ main.page-shell [data-aos].aos-init:not(.aos-animate) {
 }
 
 .theme-arrow-button.previous:hover .theme-arrow-icon {
-  transform: rotate(180deg) translateX(2px);
+  transform: rotate(180deg) translateX(1px);
 }
 
 .reveal-ready {

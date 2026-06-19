@@ -20,6 +20,7 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\RegisterRe
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\RegistrationResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\VerifyOtpRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\blog\BlogPostRequest.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\AvailabilityResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\BookingItemRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\BookingRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\BookingResponse.java

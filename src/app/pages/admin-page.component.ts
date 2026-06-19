@@ -655,9 +655,9 @@ interface DocumentPreview {
     .lightbox-head h3 { font-size: 1.08rem; line-height: 1.15; margin: 0; }
     .lightbox-head span, .lightbox-foot span { color: #777; display: block; font-size: .8rem; font-weight: 800; margin-top: .2rem; overflow-wrap: anywhere; }
     .lightbox-close { background: #fff1f1; color: #b42318; min-height: 40px; padding: .55rem .9rem; }
-    .lightbox-image-row { align-items: center; background: #f6f4f0; border-radius: 14px; display: grid; gap: .75rem; grid-template-columns: 46px minmax(0, 1fr) 46px; min-height: 360px; padding: .8rem; }
+    .lightbox-image-row { align-items: center; background: #f6f4f0; border-radius: 14px; display: grid; gap: .75rem; grid-template-columns: 40px minmax(0, 1fr) 40px; min-height: 360px; padding: .8rem; }
     .lightbox-image-row img { border-radius: 10px; display: block; margin: 0 auto; max-height: 66vh; object-fit: contain; width: 100%; }
-    .slide-btn { --arrow-button-size: 46px; }
+    .slide-btn { --arrow-button-size: 40px; }
     .lightbox-close:hover { transform: translateY(-1px); }
     .lightbox-foot { border-top: 1px solid rgba(17,17,17,.08); padding-top: .8rem; }
     .table-panel { overflow-x: auto; }
@@ -709,8 +709,8 @@ interface DocumentPreview {
       .document-lightbox { padding: .7rem; }
       .document-lightbox-content { max-height: 94vh; padding: .75rem; }
       .lightbox-head, .lightbox-foot { align-items: stretch; flex-direction: column; }
-      .lightbox-image-row { grid-template-columns: 38px minmax(0, 1fr) 38px; min-height: 260px; padding: .5rem; }
-      .slide-btn { height: 38px; width: 38px; }
+      .lightbox-image-row { grid-template-columns: 34px minmax(0, 1fr) 34px; min-height: 260px; padding: .5rem; }
+      .slide-btn { --arrow-button-size: 34px; }
     }
   `]
 })

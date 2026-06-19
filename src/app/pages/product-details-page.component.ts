@@ -5,6 +5,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Product } from '../models/product.model';
+import { AuthService } from '../services/auth.service';
+import { BookingService } from '../services/booking.service';
 import { CartService } from '../services/cart.service';
 import { ProductService } from '../services/product.service';
 import { WishlistService } from '../services/wishlist.service';
@@ -166,7 +168,9 @@ export class AddedDialogComponent {}
               </div>
 
               <div class="action-grid">
-                <app-button (click)="addToCart()" [disabled]="!product()!.available">Add To Cart</app-button>
+                <app-button (click)="addToCart()" [disabled]="!product()!.available || isCheckingAvailability()">
+                  {{ isCheckingAvailability() ? 'Checking dates...' : 'Add To Cart' }}
+                </app-button>
                 <app-button variant="secondary" (click)="toggleWishlist()">
                   {{ wishlist.has(product()!.id) ? 'Saved' : 'Add To Wishlist' }}
                 </app-button>
@@ -231,13 +235,13 @@ export class AddedDialogComponent {}
     .calendar-popover { background: #fff; border: 1px solid rgba(255,151,0,.36); border-radius: 22px; box-shadow: 0 18px 38px rgba(17,17,17,.1); margin: 1rem 0 1.2rem; padding: 1.1rem; }
     .calendar-head { align-items: center; display: flex; justify-content: space-between; margin-bottom: 1rem; }
     .calendar-head strong { color: #111; font-size: .96rem; }
-    .calendar-head .calendar-arrow { --arrow-button-size: 34px; }
+    .calendar-head .calendar-arrow { --arrow-button-size: 30px; }
     .calendar-head .calendar-arrow .theme-arrow-icon {
-      --arrow-head-size: 10px;
-      --arrow-head-stroke: 4px;
-      --arrow-icon-height: 14px;
-      --arrow-icon-width: 16px;
-      --arrow-line-stroke: 4px;
+      --arrow-head-size: 8px;
+      --arrow-head-stroke: 3px;
+      --arrow-icon-height: 12px;
+      --arrow-icon-width: 14px;
+      --arrow-line-stroke: 3px;
     }
     .calendar-weekdays, .calendar-days { display: grid; gap: .45rem; grid-template-columns: repeat(7, 1fr); }
     .calendar-weekdays span { color: #ff9700; font-size: .66rem; font-weight: 950; text-align: center; text-transform: uppercase; }
@@ -284,6 +288,8 @@ export class AddedDialogComponent {}
 })
 export class ProductDetailsPageComponent {
   private readonly productService = inject(ProductService);
+  private readonly bookingService = inject(BookingService);
+  private readonly authService = inject(AuthService);
   private readonly cart = inject(CartService);
   protected readonly wishlist = inject(WishlistService);
   private readonly dialog = inject(MatDialog);
@@ -292,6 +298,7 @@ export class ProductDetailsPageComponent {
   readonly selectedImage = signal('');
   readonly startDate = signal(new Date());
   readonly endDate = signal(new Date(Date.now() + 3 * 86_400_000));
+  readonly isCheckingAvailability = signal(false);
   protected readonly activeDateField = signal<'start' | 'end' | undefined>(undefined);
   protected readonly calendarMonth = signal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   protected readonly rentalDurations = [1, 2, 3, 4];
@@ -426,9 +433,26 @@ export class ProductDetailsPageComponent {
 
   addToCart(): void {
     const product = this.product();
-    if (!product) return;
-    this.cart.add(product, this.startDate(), this.endDate());
-    this.dialog.open(AddedDialogComponent);
+    if (!product || this.isCheckingAvailability()) return;
+
+    this.isCheckingAvailability.set(true);
+    this.bookingService.checkAvailability(product.id, this.dateInputValue(this.startDate()), this.dateInputValue(this.endDate()))
+      .subscribe({
+        next: (availability) => {
+          this.isCheckingAvailability.set(false);
+          if (!availability.available) {
+            this.showTopMessage(availability.message, 3800);
+            return;
+          }
+
+          this.cart.add(product, this.startDate(), this.endDate());
+          this.dialog.open(AddedDialogComponent);
+        },
+        error: (error) => {
+          this.isCheckingAvailability.set(false);
+          this.showTopMessage(this.authService.getErrorMessage(error), 3600);
+        }
+      });
   }
 
   toggleWishlist(): void {
@@ -437,6 +461,15 @@ export class ProductDetailsPageComponent {
     const added = this.wishlist.toggle(product);
     this.snackBar.open(added ? 'Added to wishlist' : 'Removed from wishlist', 'Close', {
       duration: 2200,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success-top']
+    });
+  }
+
+  private showTopMessage(message: string, duration: number): void {
+    this.snackBar.open(message, 'Close', {
+      duration,
       horizontalPosition: 'center',
       verticalPosition: 'top',
       panelClass: ['snackbar-success-top']

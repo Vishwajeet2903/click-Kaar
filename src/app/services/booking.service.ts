@@ -29,6 +29,11 @@ export interface BookingResponse {
   products: string[];
 }
 
+export interface AvailabilityResponse {
+  available: boolean;
+  message: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BookingService {
   private readonly authService = inject(AuthService);
@@ -37,6 +42,12 @@ export class BookingService {
   createBooking(request: BookingRequest): Observable<BookingResponse> {
     return this.http.post<BookingResponse>(API_URL, request, {
       headers: this.authHeaders()
+    });
+  }
+
+  checkAvailability(productId: number, startDate: string, endDate: string): Observable<AvailabilityResponse> {
+    return this.http.get<AvailabilityResponse>(`${API_URL}/availability`, {
+      params: { productId, startDate, endDate }
     });
   }
 
