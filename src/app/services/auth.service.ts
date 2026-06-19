@@ -48,8 +48,9 @@ export interface RegisterRequest extends LoginRequest {
   socialMediaProfile: string;
   photo: File;
   drivingLicense: File;
-  electricityBill: File;
-  rentAgreement: File;
+  electricityBill?: File;
+  rentAgreement?: File;
+  companyBonafideLetter?: File;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -68,7 +69,9 @@ export class AuthService {
   register(request: RegisterRequest): Observable<RegistrationResponse> {
     const formData = new FormData();
     Object.entries(request).forEach(([key, value]) => {
-      formData.append(key, value);
+      if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
     });
 
     return this.http.post<RegistrationResponse>(`${API_URL}/register`, formData);
@@ -96,6 +99,14 @@ export class AuthService {
       }
 
       if (error.error && typeof error.error === 'object' && 'message' in error.error) {
+        if ('errors' in error.error && error.error.errors && typeof error.error.errors === 'object') {
+          const messages = Object.values(error.error.errors);
+          const firstMessage = messages.find((message) => typeof message === 'string' && message.trim());
+          if (firstMessage) {
+            return String(firstMessage);
+          }
+        }
+
         return String(error.error.message);
       }
 

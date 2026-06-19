@@ -349,6 +349,9 @@ interface DocumentPreview {
 
                 <form class="surface editor-panel" [formGroup]="productForm" (ngSubmit)="saveProduct()">
                   <div class="panel-head"><h3>{{ editingProductId ? 'Edit product' : 'Create product' }}</h3><button type="button" class="link-btn" (click)="resetProductForm()">Reset</button></div>
+                  @if (productFormError) {
+                    <p class="form-alert" role="alert">{{ productFormError }}</p>
+                  }
                   <div class="form-grid">
                     <label>Name<input formControlName="name"></label>
                     <label>Brand<input formControlName="brand"></label>
@@ -505,6 +508,9 @@ interface DocumentPreview {
 
                 <form class="surface employee-form" [formGroup]="employeeForm" (ngSubmit)="submitEmployee()">
                   <div class="panel-head"><h3>Create employee</h3><span>Manager or staff access</span></div>
+                  @if (employeeFormError) {
+                    <p class="form-alert" role="alert">{{ employeeFormError }}</p>
+                  }
                   <div class="form-grid">
                     <label>Full name<input formControlName="fullName"></label>
                     <label>Email<input formControlName="email"></label>
@@ -548,9 +554,13 @@ interface DocumentPreview {
                 <button type="button" class="lightbox-close" aria-label="Close image preview" (click)="closeDocumentPreview()">Close</button>
               </div>
               <div class="lightbox-image-row">
-                <button type="button" class="slide-btn" aria-label="Previous image" [disabled]="imagePreviews().length < 2" (click)="showPreviousDocumentPreview()">‹</button>
+                <button type="button" class="slide-btn theme-arrow-button previous" aria-label="Previous image" [disabled]="imagePreviews().length < 2" (click)="showPreviousDocumentPreview()">
+                  <span class="theme-arrow-icon" aria-hidden="true"></span>
+                </button>
                 <img [src]="activeDocumentPreview.url" [alt]="activeDocumentPreview.label">
-                <button type="button" class="slide-btn" aria-label="Next image" [disabled]="imagePreviews().length < 2" (click)="showNextDocumentPreview()">›</button>
+                <button type="button" class="slide-btn theme-arrow-button" aria-label="Next image" [disabled]="imagePreviews().length < 2" (click)="showNextDocumentPreview()">
+                  <span class="theme-arrow-icon" aria-hidden="true"></span>
+                </button>
               </div>
               <div class="lightbox-foot">
                 <span>{{ activeDocumentIndex() + 1 }} / {{ imagePreviews().length }}</span>
@@ -647,8 +657,8 @@ interface DocumentPreview {
     .lightbox-close { background: #fff1f1; color: #b42318; min-height: 40px; padding: .55rem .9rem; }
     .lightbox-image-row { align-items: center; background: #f6f4f0; border-radius: 14px; display: grid; gap: .75rem; grid-template-columns: 46px minmax(0, 1fr) 46px; min-height: 360px; padding: .8rem; }
     .lightbox-image-row img { border-radius: 10px; display: block; margin: 0 auto; max-height: 66vh; object-fit: contain; width: 100%; }
-    .slide-btn { background: #111; border-radius: 50%; color: #fff; font-size: 1.5rem; height: 46px; padding: 0; width: 46px; }
-    .slide-btn:not(:disabled):hover, .lightbox-close:hover { transform: translateY(-1px); }
+    .slide-btn { --arrow-button-size: 46px; }
+    .lightbox-close:hover { transform: translateY(-1px); }
     .lightbox-foot { border-top: 1px solid rgba(17,17,17,.08); padding-top: .8rem; }
     .table-panel { overflow-x: auto; }
     table { border-collapse: separate; border-spacing: 0 .55rem; min-width: 920px; width: 100%; }
@@ -665,6 +675,7 @@ interface DocumentPreview {
     .status-info { background: #eef4ff; color: #2447a8; }
     .calendar-strip { background: #f7f7f5; border-radius: 999px; color: #555; padding: .35rem .55rem; }
     .empty-cell { color: #777; text-align: center; }
+    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 14px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
     .form-grid { display: grid; gap: .85rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     label { color: #111; display: grid; font-size: .78rem; font-weight: 900; gap: .4rem; }
     .wide { margin-top: .85rem; width: 100%; }
@@ -748,6 +759,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly customerQuery = signal('');
   editingProductId?: number;
   createdEmployee?: EmployeeResponse;
+  productFormError = '';
+  employeeFormError = '';
   pendingCustomers: CustomerVerificationResponse[] = [];
   pendingLoadError = '';
   isSubmitting = false;
@@ -907,7 +920,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
             }
           }
           this.updateTabCount('registrations', String(this.pendingCustomers.length));
-          this.snackBar.open('Login access granted. The customer can now log in.', 'Close', { duration: 2800 });
+          this.showTopMessage('Login access granted. The customer can now log in.', 2800);
         },
         error: (error) => {
           this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
@@ -947,7 +960,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   logout(): void {
     this.clearDocumentPreviews();
     this.authService.logout();
-    this.snackBar.open('Logged out from admin.', 'Close', { duration: 2200 });
+    this.showTopMessage('Logged out from admin.', 2200);
     this.router.navigateByUrl('/login');
   }
 
@@ -968,9 +981,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   saveProduct(): void {
+    this.productFormError = '';
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
-      this.snackBar.open('Complete all required product fields.', 'Close', { duration: 2400 });
+      this.productFormError = 'Complete all required product fields.';
       return;
     }
 
@@ -984,7 +998,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         gallery: item.gallery?.length ? item.gallery : [value.image],
         specifications: specs
       } : item));
-      this.snackBar.open('Product updated. Connect this action to PUT /api/admin/products when the endpoint is added.', 'Close', { duration: 3200 });
+      this.showTopMessage('Product updated. Connect this action to PUT /api/admin/products when the endpoint is added.', 3200);
     } else {
       const nextId = Math.max(...this.products().map((item) => item.id), 0) + 1;
       this.products.update((items) => [...items, {
@@ -1006,7 +1020,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         status: value.status,
         maintenanceNote: ''
       }]);
-      this.snackBar.open('Product added to the admin workspace.', 'Close', { duration: 2600 });
+      this.showTopMessage('Product added to the admin workspace.', 2600);
     }
     this.resetProductForm();
     this.updateTabCount('inventory', String(this.products().length));
@@ -1029,6 +1043,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   resetProductForm(): void {
+    this.productFormError = '';
     this.editingProductId = undefined;
     this.productForm.reset({
       name: '',
@@ -1083,7 +1098,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       return;
     }
     this.payments.update((items) => items.map((item) => item.id === payment.id ? { ...item, status: 'Refunded' } : item));
-    this.snackBar.open('Refund marked. Wire this to the payment gateway refund API before launch.', 'Close', { duration: 3200 });
+    this.showTopMessage('Refund marked. Wire this to the payment gateway refund API before launch.', 3200);
   }
 
   publishDraft(): void {
@@ -1095,9 +1110,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   submitEmployee(): void {
+    this.employeeFormError = '';
     if (this.employeeForm.invalid || this.isSubmitting) {
       this.employeeForm.markAllAsTouched();
-      this.snackBar.open('Please complete valid employee details.', 'Close', { duration: 2400 });
+      this.employeeFormError = 'Please complete valid employee details.';
       return;
     }
 
@@ -1110,7 +1126,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         next: (employee) => {
           this.createdEmployee = employee;
           this.employeeForm.reset();
-          this.snackBar.open('Employee account created.', 'Close', { duration: 2600 });
+          this.showTopMessage('Employee account created.', 2600);
         },
         error: (error) => {
           this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
@@ -1119,7 +1135,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   saveSettings(): void {
-    this.snackBar.open('Settings saved in workspace. Persist via /api/admin/settings before production launch.', 'Close', { duration: 3200 });
+    this.showTopMessage('Settings saved in workspace. Persist via /api/admin/settings before production launch.', 3200);
   }
 
   openCreate(): void {
@@ -1128,7 +1144,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       document.querySelector('.editor-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
-    this.snackBar.open(`Create action ready for ${this.activeTabLabel()}.`, 'Close', { duration: 2200 });
+    this.showTopMessage(`Create action ready for ${this.activeTabLabel()}.`, 2200);
   }
 
   exportActive(): void {
@@ -1268,7 +1284,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   private downloadCsv(filename: string, rows: unknown[]): void {
     if (!rows.length) {
-      this.snackBar.open('No rows available to export.', 'Close', { duration: 2200 });
+      this.showTopMessage('No rows available to export.', 2200);
       return;
     }
 
@@ -1296,5 +1312,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     if (tab) {
       tab.count = count;
     }
+  }
+
+  private showTopMessage(message: string, duration: number): void {
+    this.snackBar.open(message, 'Close', {
+      duration,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success-top']
+    });
   }
 }

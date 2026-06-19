@@ -176,6 +176,7 @@ public class AdminController {
         .drivingLicenseDocumentName(pendingRegistration.getDrivingLicenseDocumentName())
         .electricityBillDocumentName(pendingRegistration.getElectricityBillDocumentName())
         .rentAgreementDocumentName(pendingRegistration.getRentAgreementDocumentName())
+        .companyBonafideLetterDocumentName(pendingRegistration.getCompanyBonafideLetterDocumentName())
         .password(pendingRegistration.getPassword())
         .enabled(true)
         .mobileVerified(false)
@@ -240,6 +241,7 @@ public class AdminController {
     addDocument(documents, "drivingLicense", "Driving license", pendingRegistration.getDrivingLicenseDocumentName());
     addDocument(documents, "electricityBill", "Electricity bill", pendingRegistration.getElectricityBillDocumentName());
     addDocument(documents, "rentAgreement", "Rent agreement", pendingRegistration.getRentAgreementDocumentName());
+    addDocument(documents, "companyBonafideLetter", "Company bonafide letter", pendingRegistration.getCompanyBonafideLetterDocumentName());
     return documents;
   }
 
@@ -255,6 +257,7 @@ public class AdminController {
       case "drivingLicense" -> pendingRegistration.getDrivingLicenseDocumentName();
       case "electricityBill" -> pendingRegistration.getElectricityBillDocumentName();
       case "rentAgreement" -> pendingRegistration.getRentAgreementDocumentName();
+      case "companyBonafideLetter" -> pendingRegistration.getCompanyBonafideLetterDocumentName();
       default -> null;
     };
   }

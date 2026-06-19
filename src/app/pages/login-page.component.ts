@@ -49,6 +49,10 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
           <!-- <button class="google" type="button"><span>G</span> Continue with Google</button>
           <div class="divider"><span>or use email</span></div> -->
 
+          @if (formError) {
+            <p class="form-alert" role="alert">{{ formError }}</p>
+          }
+
           <label>
             <span>Email</span>
             <input placeholder="you@example.com" formControlName="email">
@@ -101,7 +105,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .auth-copy,
     .login-form {
       position: relative;
-      z-index: 1;
+      z-index: -1;
     }
 
     .auth-copy {
@@ -140,6 +144,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 
     .intro,
     .form-copy,
+    .form-alert,
     .signup {
       color: #5e5e5a;
       font-size: 1rem;
@@ -150,6 +155,18 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .intro {
       margin-top: 1.25rem;
       max-width: 540px;
+    }
+
+    .form-alert {
+      background: #fff4f2;
+      border: 1px solid rgba(180, 35, 24, .24);
+      border-radius: 14px;
+      color: #b42318;
+      font-size: .9rem;
+      font-weight: 800 !important;
+      line-height: 1.45;
+      margin: 0 0 1rem;
+      padding: .85rem 1rem;
     }
 
     .market-strip {
@@ -452,6 +469,7 @@ export class LoginPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
   isSubmitting = false;
+  formError = '';
 
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -459,9 +477,10 @@ export class LoginPageComponent {
   });
 
   submit(): void {
+    this.formError = '';
     if (this.form.invalid || this.isSubmitting) {
       this.form.markAllAsTouched();
-      this.snackBar.open('Please enter valid login details', 'Close', { duration: 2200 });
+      this.formError = 'Please enter valid login details.';
       return;
     }
 
@@ -472,12 +491,22 @@ export class LoginPageComponent {
       }))
       .subscribe({
         next: (user) => {
-          this.snackBar.open('Login successful', 'Close', { duration: 2200 });
+          this.snackBar.open('Login successful', 'Close', {
+            duration: 2200,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-success-top']
+          });
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
           void this.router.navigateByUrl(returnUrl || (user.roles.includes('ADMIN') ? '/admin' : '/dashboard'));
         },
         error: (error) => {
-          this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3200 });
+          this.snackBar.open(this.authService.getErrorMessage(error), 'Close', {
+            duration: 3200,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-screen-center']
+          });
         }
       });
   }

@@ -13,8 +13,12 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
           <h2>Trusted by creators who cannot miss the shot.</h2>
         </div>
         <div class="carousel-controls" aria-label="Customer review slider controls">
-          <button type="button" (click)="slide(-1)" aria-label="Previous reviews">‹</button>
-          <button type="button" (click)="slide(1)" aria-label="Next reviews">›</button>
+          <button type="button" class="theme-arrow-button previous" (click)="slide(-1)" aria-label="Previous reviews">
+            <span class="theme-arrow-icon" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="theme-arrow-button" (click)="slide(1)" aria-label="Next reviews">
+            <span class="theme-arrow-icon" aria-hidden="true"></span>
+          </button>
         </div>
       </div>
 
@@ -43,8 +47,6 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .section-heading { margin-bottom: 1.4rem; max-width: 760px; }
     h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: 0; line-height: .98; margin: 0; word-spacing: .08em; }
     .carousel-controls { display: flex; gap: .65rem; }
-    .carousel-controls button { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: 1.45rem; font-weight: 800; height: 50px; justify-content: center; line-height: 1; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 50px; }
-    .carousel-controls button:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .reviews-window { --review-step: calc((-100% - 1rem) / 3); overflow: hidden; }
     .reviews-track { display: flex; gap: 1rem; transform: translateX(calc(var(--review-index) * var(--review-step))); transition: transform .62s cubic-bezier(.22, 1, .36, 1); }
     .reviews-track.no-transition { transition: none; }

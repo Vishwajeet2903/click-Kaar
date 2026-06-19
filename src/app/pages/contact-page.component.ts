@@ -58,6 +58,9 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
             <span>Rental enquiry</span>
             <h2>Share your shoot details</h2>
           </div>
+          @if (formError) {
+            <p class="form-alert" role="alert">{{ formError }}</p>
+          }
           <div class="form-grid">
             <label>
               Name
@@ -106,6 +109,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     .contact-form { display: grid; gap: 1rem; padding: clamp(1rem, 2.4vw, 1.5rem); }
     .form-head { margin-bottom: .1rem; }
     .form-head h2 { color: #111; font-size: clamp(1.8rem, 3.2vw, 3rem); font-weight: 950; line-height: 1; margin: .35rem 0 0; word-spacing: .06em; }
+    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 14px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0; padding: .85rem 1rem; }
     .form-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     label { color: #111; display: grid; font-size: .8rem; font-weight: 900; gap: .42rem; }
     .form-control { border-radius: 16px; font-weight: 700; min-height: 52px; padding: .9rem 1rem; }
@@ -127,6 +131,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 export class ContactPageComponent {
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
+  formError = '';
   readonly form = this.fb.nonNullable.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -135,6 +140,18 @@ export class ContactPageComponent {
   });
 
   submit(): void {
-    this.snackBar.open(this.form.valid ? 'Message received in mock mode' : 'Please complete the form', 'Close', { duration: 2200 });
+    this.formError = '';
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.formError = 'Please complete the form.';
+      return;
+    }
+
+    this.snackBar.open('Message received in mock mode', 'Close', {
+      duration: 2200,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success-top']
+    });
   }
 }

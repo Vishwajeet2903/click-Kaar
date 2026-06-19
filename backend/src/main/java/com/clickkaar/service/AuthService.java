@@ -55,6 +55,7 @@ public class AuthService {
     if (request.mobile() != null && pendingRegistrationRepository.existsByMobile(request.mobile())) {
       throw new BadRequestException("Mobile is already pending admin approval");
     }
+    validateRequiredDocuments(request);
 
     PendingRegistration pendingRegistration = PendingRegistration.builder()
         .fullName(request.fullName())
@@ -78,6 +79,7 @@ public class AuthService {
         .drivingLicenseDocumentName(saveDocument(request.drivingLicense()))
         .electricityBillDocumentName(saveDocument(request.electricityBill()))
         .rentAgreementDocumentName(saveDocument(request.rentAgreement()))
+        .companyBonafideLetterDocumentName(saveDocument(request.companyBonafideLetter()))
         .password(passwordEncoder.encode(request.password()))
         .build();
 
@@ -152,6 +154,25 @@ public class AuthService {
     String token = jwtService.generateToken(new CustomUserDetails(user));
     Set<String> roles = user.getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet());
     return new AuthResponse(token, "Bearer", user.getId(), user.getFullName(), user.getEmail(), user.getMobile(), roles);
+  }
+
+  private void validateRequiredDocuments(RegisterRequest request) {
+    requireDocument(request.photo(), "Photo");
+    requireDocument(request.drivingLicense(), "Driving license");
+
+    String residenceType = request.residenceType() == null ? "" : request.residenceType().trim().toLowerCase();
+    switch (residenceType) {
+      case "rented" -> requireDocument(request.rentAgreement(), "Rent agreement");
+      case "owned", "family owned", "family home" -> requireDocument(request.electricityBill(), "Electricity bill");
+      case "company provided" -> requireDocument(request.companyBonafideLetter(), "Company bonafide letter");
+      default -> throw new BadRequestException("Select a valid residence type");
+    }
+  }
+
+  private void requireDocument(MultipartFile file, String label) {
+    if (file == null || file.isEmpty()) {
+      throw new BadRequestException(label + " is required");
+    }
   }
 
   private String saveDocument(MultipartFile file) {

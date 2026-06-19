@@ -23,21 +23,20 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
         Your selected gear and rental dates are ready for checkout.
       </mat-dialog-content>
       <mat-dialog-actions>
-        <button mat-button mat-dialog-close>Keep browsing</button>
-        <a mat-flat-button routerLink="/cart" mat-dialog-close>View cart</a>
+        <button mat-button class="dialog-action" mat-dialog-close>Keep browsing</button>
+        <a mat-flat-button class="dialog-action" routerLink="/cart" mat-dialog-close>View cart</a>
       </mat-dialog-actions>
     </div>
   `,
   styles: [`
-    .cart-dialog { background: #fff; border: 1px solid #ff9700(255,151,0,.22); border-radius: 24px; color: #111; font-family: var(--app-font); min-width: min(360px, calc(100vw - 48px)); padding: 1.35rem; text-align: center; }
+    .cart-dialog { background: #fff; border: 1px solid rgba(255,151,0,.22); border-radius: 24px; color: #111; font-family: var(--app-font); min-width: min(360px, calc(100vw - 48px)); padding: 1.35rem; text-align: center; }
+    .cart-dialog, .cart-dialog * { font-family: var(--app-font) !important; letter-spacing: 0; }
     .dialog-mark { align-items: center; background: #ff9700; border-radius: 999px; color: #111; display: inline-flex; font-size: 1.35rem; font-weight: 950; height: 52px; justify-content: center; margin-bottom: .85rem; width: 52px; }
-    h2 { color: #111; font-family: var(--display-font); font-size: 1.45rem; font-weight: 950; line-height: 1.05; margin: 0 0 .5rem; padding: 0; }
-    mat-dialog-content { color: #666; display: block; font-family: var(--app-font); font-size: .98rem; font-weight: 500; line-height: 1.6; margin: 0; padding: 0; }
+    h2 { color: #111; font-family: var(--display-font) !important; font-size: 1.48rem; font-weight: 950; line-height: 1.05; margin: 0 0 .5rem; padding: 0; }
+    mat-dialog-content { color: #666; display: block; font-size: .98rem; font-weight: 700; line-height: 1.6; margin: 0; padding: 0; }
     mat-dialog-actions { display: grid; gap: .7rem; grid-template-columns: 1fr 1fr; margin: 1.2rem 0 0; padding: 0; }
-    button, a { align-items: center; border-radius: 999px; display: inline-flex; font-family: var(--app-font); font-weight: 900; justify-content: center; min-height: 46px; }
-    button { background: #fff7ec; color: #111; }
-    a { background: #111 !important; color: #fff !important; }
-    button:hover, a:hover { background: #ff9700 !important; color: #111 !important; }
+    .dialog-action { --mdc-text-button-label-text-color: #fff; --mdc-filled-button-container-color: #111; --mdc-filled-button-label-text-color: #fff; align-items: center; background: #111 !important; border-radius: 999px !important; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff !important; display: inline-flex; font-size: .92rem; font-weight: 950; justify-content: center; min-height: 46px; padding: .75rem 1rem; text-transform: none; width: 100%; }
+    .dialog-action:hover { --mdc-text-button-label-text-color: #111; --mdc-filled-button-container-color: #ff9700; --mdc-filled-button-label-text-color: #111; background: #ff9700 !important; color: #111 !important; transform: translateY(-1px); }
     @media (max-width: 420px) {
       mat-dialog-actions { grid-template-columns: 1fr; }
     }
@@ -115,9 +114,13 @@ export class AddedDialogComponent {}
               @if (activeDateField()) {
                 <div class="calendar-popover" aria-label="Rental calendar">
                   <div class="calendar-head">
-                    <button type="button" aria-label="Previous month" (click)="changeCalendarMonth(-1)">&lt;</button>
+                    <button type="button" class="calendar-arrow theme-arrow-button previous" aria-label="Previous month" (click)="changeCalendarMonth(-1)">
+                      <span class="theme-arrow-icon" aria-hidden="true"></span>
+                    </button>
                     <strong>{{ calendarTitle() }}</strong>
-                    <button type="button" aria-label="Next month" (click)="changeCalendarMonth(1)">&gt;</button>
+                    <button type="button" class="calendar-arrow theme-arrow-button" aria-label="Next month" (click)="changeCalendarMonth(1)">
+                      <span class="theme-arrow-icon" aria-hidden="true"></span>
+                    </button>
                   </div>
                   <div class="calendar-weekdays">
                     @for (day of weekDays; track day) {
@@ -228,8 +231,14 @@ export class AddedDialogComponent {}
     .calendar-popover { background: #fff; border: 1px solid rgba(255,151,0,.36); border-radius: 22px; box-shadow: 0 18px 38px rgba(17,17,17,.1); margin: 1rem 0 1.2rem; padding: 1.1rem; }
     .calendar-head { align-items: center; display: flex; justify-content: space-between; margin-bottom: 1rem; }
     .calendar-head strong { color: #111; font-size: .96rem; }
-    .calendar-head button { align-items: center; background: #fff7ec; border: 1px solid rgba(255,151,0,.35); border-radius: 999px; color: #ff9700; cursor: pointer; display: inline-flex; font-weight: 950; height: 32px; justify-content: center; width: 32px; }
-    .calendar-head button:hover { background: #ff9700; color: #111; }
+    .calendar-head .calendar-arrow { --arrow-button-size: 34px; }
+    .calendar-head .calendar-arrow .theme-arrow-icon {
+      --arrow-head-size: 10px;
+      --arrow-head-stroke: 4px;
+      --arrow-icon-height: 14px;
+      --arrow-icon-width: 16px;
+      --arrow-line-stroke: 4px;
+    }
     .calendar-weekdays, .calendar-days { display: grid; gap: .45rem; grid-template-columns: repeat(7, 1fr); }
     .calendar-weekdays span { color: #ff9700; font-size: .66rem; font-weight: 950; text-align: center; text-transform: uppercase; }
     .calendar-days button, .calendar-days span { align-items: center; aspect-ratio: 1; border-radius: 999px; display: inline-flex; font-size: .82rem; justify-content: center; }
@@ -426,7 +435,12 @@ export class ProductDetailsPageComponent {
     const product = this.product();
     if (!product) return;
     const added = this.wishlist.toggle(product);
-    this.snackBar.open(added ? 'Added to wishlist' : 'Removed from wishlist', 'Close', { duration: 2200 });
+    this.snackBar.open(added ? 'Added to wishlist' : 'Removed from wishlist', 'Close', {
+      duration: 2200,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success-top']
+    });
   }
 
   private parseDateInput(value: string): Date {

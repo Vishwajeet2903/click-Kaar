@@ -248,6 +248,96 @@ main.page-shell [data-aos].aos-init:not(.aos-animate) {
   color: #111111;
 }
 
+.theme-arrow-button {
+  --arrow-button-size: 50px;
+  --arrow-button-bg: #ff9700;
+  --arrow-button-fg: #ffffff;
+  --arrow-button-hover-bg: #ffffff;
+  --arrow-button-hover-fg: #ff9700;
+  align-items: center;
+  background: var(--arrow-button-bg);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: 0 16px 34px rgba(255, 151, 0, 0.24), 0 6px 14px rgba(17, 17, 17, 0.12);
+  color: var(--arrow-button-fg);
+  cursor: pointer;
+  display: inline-flex;
+  height: var(--arrow-button-size);
+  justify-content: center;
+  padding: 0;
+  transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  width: var(--arrow-button-size);
+}
+
+.theme-arrow-button:hover {
+  background: var(--arrow-button-hover-bg);
+  box-shadow: 0 18px 38px rgba(17, 17, 17, 0.16), 0 0 0 1px rgba(255, 151, 0, 0.12);
+  color: var(--arrow-button-hover-fg);
+  transform: translateY(-2px);
+}
+
+.theme-arrow-button:disabled,
+.theme-arrow-button:disabled:hover {
+  background: #e4e4df;
+  box-shadow: none;
+  color: #aaa49a;
+  cursor: not-allowed;
+  opacity: 0.72;
+  transform: none;
+}
+
+.theme-arrow-icon {
+  --arrow-head-size: 13px;
+  --arrow-head-stroke: 5px;
+  --arrow-icon-height: 20px;
+  --arrow-icon-width: 22px;
+  --arrow-line-stroke: 5px;
+  display: block;
+  height: var(--arrow-icon-height);
+  position: relative;
+  transition: transform 0.25s ease;
+  width: var(--arrow-icon-width);
+}
+
+.theme-arrow-icon::before,
+.theme-arrow-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+}
+
+.theme-arrow-icon::before {
+  background: currentColor;
+  border-radius: 999px;
+  height: var(--arrow-line-stroke);
+  right: 1px;
+  transform: translateY(-50%);
+  width: var(--arrow-icon-width);
+}
+
+.theme-arrow-icon::after {
+  background: transparent;
+  border-right: var(--arrow-head-stroke) solid currentColor;
+  border-top: var(--arrow-head-stroke) solid currentColor;
+  height: var(--arrow-head-size);
+  right: 0;
+  transform: translateY(-50%) rotate(45deg);
+  transform-origin: center;
+  width: var(--arrow-head-size);
+}
+
+.theme-arrow-button:hover .theme-arrow-icon {
+  transform: translateX(2px);
+}
+
+.theme-arrow-button.previous .theme-arrow-icon {
+  transform: rotate(180deg);
+}
+
+.theme-arrow-button.previous:hover .theme-arrow-icon {
+  transform: rotate(180deg) translateX(2px);
+}
+
 .reveal-ready {
   opacity: 0;
   backface-visibility: hidden;
@@ -517,6 +607,72 @@ app-product-card.motion-item.motion-visible {
 .mat-mdc-snack-bar-container .mdc-snackbar__surface {
   background: #111111 !important;
   color: #ffffff !important;
+}
+
+.mat-mdc-snack-bar-container.snackbar-success-top {
+  margin-top: 14px !important;
+}
+
+.mat-mdc-snack-bar-container.snackbar-screen-center {
+  margin-top: 42vh !important;
+  position: relative;
+  z-index: 1;
+}
+
+.mat-mdc-snack-bar-container.snackbar-screen-center::before {
+  backdrop-filter: blur(50px);
+  // background: rgba(17, 17, 17, 0.32);
+  content: "";
+  inset: 0;
+  min-height: 100vh;
+  min-width: 100vw;
+  pointer-events: none;
+  position: fixed;
+  transform: translate(-50%, -42vh);
+  z-index: -1;
+}
+
+.mat-mdc-snack-bar-container.snackbar-screen-center .mdc-snackbar__surface {
+  background: #fdfdfc !important;
+  border: 1px solid rgba(255, 151, 0, 0.34);
+  border-radius: 24px !important;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.26);
+  color: #111111 !important;
+  min-width: min(420px, calc(100vw - 40px));
+  overflow: hidden;
+  padding: 0 !important;
+  position: relative;
+}
+
+.mat-mdc-snack-bar-container.snackbar-screen-center .mdc-snackbar__surface::before {
+  background: #ff9700;
+  content: "";
+  height: 5px;
+  inset: 0 0 auto;
+  position: absolute;
+}
+
+.mat-mdc-snack-bar-container.snackbar-screen-center .mat-mdc-snack-bar-label {
+  color: #111111 !important;
+  font-family: var(--app-font);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.45;
+  padding: 1.25rem 1.25rem 1.25rem 1.35rem;
+}
+
+.mat-mdc-snack-bar-container.snackbar-screen-center .mat-mdc-snack-bar-actions {
+  padding: 0 1rem 0 0;
+}
+
+.mat-mdc-snack-bar-container.snackbar-screen-center .mat-mdc-button {
+  color: #ff9700 !important;
+  font-family: var(--app-font);
+  font-weight: 950;
+}
+
+.mat-mdc-snack-bar-container.snackbar-screen-center .mat-mdc-button:hover {
+  background: rgba(255, 151, 0, 0.12) !important;
 }
 
 .hero-media,

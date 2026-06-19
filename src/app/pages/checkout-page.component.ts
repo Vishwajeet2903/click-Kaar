@@ -64,6 +64,9 @@ declare global {
           <div class="col-lg-7">
             <div class="surface panel">
               <h2>Customer Information</h2>
+              @if (formError) {
+                <p class="form-alert" role="alert">{{ formError }}</p>
+              }
               <div class="row g-3">
                 <div class="col-md-6"><input class="form-control" placeholder="Name" formControlName="name"></div>
                 <div class="col-md-6"><input class="form-control" placeholder="Email" formControlName="email"></div>
@@ -93,6 +96,7 @@ declare global {
   `,
   styles: [`
     .panel, .success { padding: 1.25rem; margin-bottom: 1rem; }
+    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 14px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
     .form-control::placeholder { color: #8a8a86; opacity: 1; }
     h2 { font-size: 1.2rem; font-weight: 900; margin-bottom: 1rem; }
     .razorpay-box { background: #fff; border: 1px solid rgba(255,151,0,.28); border-radius: 18px; display: grid; gap: .35rem; padding: 1rem; }
@@ -117,6 +121,7 @@ export class CheckoutPageComponent {
   private readonly authService = inject(AuthService);
   private readonly bookingService = inject(BookingService);
   private readonly paymentService = inject(PaymentService);
+  formError = '';
   readonly form = this.fb.nonNullable.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -125,9 +130,10 @@ export class CheckoutPageComponent {
   });
 
   placeOrder(): void {
+    this.formError = '';
     if (this.form.invalid || this.isPaying()) {
       this.form.markAllAsTouched();
-      this.snackBar.open('Please complete the required checkout fields', 'Close', { duration: 2400 });
+      this.formError = 'Please complete the required checkout fields.';
       return;
     }
 
@@ -217,7 +223,12 @@ export class CheckoutPageComponent {
       next: () => {
         this.cart.clear();
         this.success.set(true);
-        this.snackBar.open('Payment successful. Booking confirmed.', 'Close', { duration: 2600 });
+        this.snackBar.open('Payment successful. Booking confirmed.', 'Close', {
+          duration: 2600,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-success-top']
+        });
         setTimeout(() => void this.router.navigateByUrl('/dashboard'), 1800);
       },
       error: (error) => {

@@ -51,6 +51,7 @@ public class User extends AuditableEntity {
   private String drivingLicenseDocumentName;
   private String electricityBillDocumentName;
   private String rentAgreementDocumentName;
+  private String companyBonafideLetterDocumentName;
 
   @Column(nullable = false)
   private String password;
