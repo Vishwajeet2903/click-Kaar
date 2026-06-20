@@ -8,7 +8,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   imports: [RouterLink, ScrollRevealDirective],
   template: `
     <section class="landing-card landing-footer" id="contact" appScrollReveal="fade-up">
-      <p class="eyebrow">ClickKar</p>
+      <p class="eyebrow">Click-Kaar</p>
       <h2>Ready to plan your next visual story?</h2>
       <div class="footer-actions">
         <a routerLink="/catalogue" class="btn-pill dark">Start browsing</a>

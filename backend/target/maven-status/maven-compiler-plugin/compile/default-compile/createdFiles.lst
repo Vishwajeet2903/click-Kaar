@@ -49,6 +49,7 @@ com\clickkaar\entity\User$UserBuilder.class
 com\clickkaar\exception\GlobalExceptionHandler.class
 com\clickkaar\config\SecurityConfig.class
 com\clickkaar\dto\auth\OtpRequest.class
+com\clickkaar\config\DataSeeder$1.class
 com\clickkaar\dto\booking\BookingRequest.class
 com\clickkaar\entity\User.class
 com\clickkaar\entity\Payment$PaymentBuilder.class

@@ -8,4 +8,4 @@ public class ClickkaarBackendApplication {
   public static void main(String[] args) {
     SpringApplication.run(ClickkaarBackendApplication.class, args);
   }
-}
+} 

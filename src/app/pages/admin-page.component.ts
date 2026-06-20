@@ -5,9 +5,18 @@ import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 import { Product } from '../models/product.model';
-import { AdminService, CustomerVerificationResponse, EmployeeResponse, RegistrationDocumentResponse } from '../services/admin.service';
+import {
+  AdminBookingResponse,
+  AdminContentResponse,
+  AdminPaymentResponse,
+  AdminProductRequest,
+  AdminProductResponse,
+  AdminService,
+  CustomerVerificationResponse,
+  EmployeeResponse,
+  RegistrationDocumentResponse
+} from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
-import { ProductService } from '../services/product.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
 type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'content' | 'reports' | 'roles' | 'settings';
@@ -28,6 +37,7 @@ interface AdminProduct extends Product {
 }
 
 interface AdminBooking {
+  backendId: number;
   id: string;
   customer: string;
   phone: string;
@@ -55,6 +65,7 @@ interface AdminCustomer {
 }
 
 interface AdminPayment {
+  backendId: number;
   id: string;
   bookingId: string;
   customer: string;
@@ -205,7 +216,7 @@ interface DocumentPreview {
                     @if (isLoadingPending) {
                       <p class="muted">Loading pending registrations...</p>
                     } @else if (pendingLoadError) {
-                      <p class="error-text">{{ pendingLoadError }}</p>
+                      <p class="error-text">{{ pendingLoadError }}</p> 
                     } @else if (pendingCustomers.length) {
                       <div class="dense-list request-list">
                         @for (customer of pendingCustomers; track customer.requestId) {
@@ -215,7 +226,7 @@ interface DocumentPreview {
                               <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
                               <small>{{ customer.city || 'City not added' }}{{ customer.state ? ', ' + customer.state : '' }}</small>
                             </button>
-                            <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">Open</button>
+                            <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">View Details</button>
                           </article>
                         }
                       </div>
@@ -487,7 +498,7 @@ interface DocumentPreview {
                 <section class="surface panel">
                   <h3>Category performance</h3>
                   <div class="bar-list">
-                    @for (item of categoryReports; track item.name) {
+                    @for (item of categoryReports(); track item.name) {
                       <div><span>{{ item.name }}</span><b [style.width.%]="item.value"></b><strong>{{ item.value }}%</strong></div>
                     }
                   </div>
@@ -499,7 +510,7 @@ interface DocumentPreview {
                   <table>
                     <thead><tr><th>Module</th><th>Super Admin</th><th>Manager</th><th>Inventory Staff</th><th>Content Editor</th></tr></thead>
                     <tbody>
-                      @for (permission of rolePermissions; track permission.module) {
+                      @for (permission of rolePermissions(); track permission.module) {
                         <tr><td><strong>{{ permission.module }}</strong></td><td>{{ permission.superAdmin }}</td><td>{{ permission.manager }}</td><td>{{ permission.inventory }}</td><td>{{ permission.content }}</td></tr>
                       }
                     </tbody>
@@ -718,38 +729,17 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly authService = inject(AuthService);
 
   private readonly adminService = inject(AdminService);
-  private readonly productService = inject(ProductService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
 
   readonly activeTab = signal<AdminTab>('dashboard');
   readonly products = signal<AdminProduct[]>([]);
-  readonly bookings = signal<AdminBooking[]>([
-    { id: 'CKB-1048', customer: 'Aarav Mehta', phone: '9876543210', products: ['Canon EOS R5 Cinema Kit', 'Aputure LS 600D Pro'], startDate: '2026-06-19', endDate: '2026-06-22', status: 'Upcoming', paymentStatus: 'Paid', returnStatus: 'Not due', total: 13400, notes: 'Delivery to Baner studio.' },
-    { id: 'CKB-1047', customer: 'Neha Sharma', phone: '9898989898', products: ['Sony Alpha A7S III'], startDate: '2026-06-14', endDate: '2026-06-17', status: 'Active', paymentStatus: 'Paid', returnStatus: 'Due today', total: 11700, notes: 'Security deposit collected.' },
-    { id: 'CKB-1046', customer: 'Kabir Khan', phone: '9765432109', products: ['Sigma 85mm f/1.4 Art'], startDate: '2026-06-10', endDate: '2026-06-12', status: 'Overdue', paymentStatus: 'Pending', returnStatus: 'Late', total: 3600, notes: 'Call customer before refund processing.' },
-    { id: 'CKB-1045', customer: 'Riya Patel', phone: '9988776655', products: ['Rode Wireless PRO Kit'], startDate: '2026-06-02', endDate: '2026-06-05', status: 'Completed', paymentStatus: 'Paid', returnStatus: 'Returned', total: 2700, notes: 'Returned in good condition.' }
-  ]);
-  readonly customers = signal<AdminCustomer[]>([
-    { id: 1, name: 'Aarav Mehta', email: 'aarav@example.com', phone: '9876543210', verified: true, blocked: false, city: 'Pune', wishlist: 4, activeBookings: 0, pastBookings: 8 },
-    { id: 2, name: 'Neha Sharma', email: 'neha@example.com', phone: '9898989898', verified: true, blocked: false, city: 'Mumbai', wishlist: 2, activeBookings: 1, pastBookings: 3 },
-    { id: 3, name: 'Kabir Khan', email: 'kabir@example.com', phone: '9765432109', verified: false, blocked: false, city: 'Pune', wishlist: 1, activeBookings: 1, pastBookings: 1 }
-  ]);
-  readonly payments = signal<AdminPayment[]>([
-    { id: 'pay_RZP_8012', bookingId: 'CKB-1048', customer: 'Aarav Mehta', gateway: 'Razorpay', mode: 'Full payment', status: 'Paid', amount: 13400, paidAt: '2026-06-16' },
-    { id: 'pay_RZP_8011', bookingId: 'CKB-1047', customer: 'Neha Sharma', gateway: 'Razorpay', mode: 'Security deposit', status: 'Paid', amount: 5000, paidAt: '2026-06-14' },
-    { id: 'pay_RZP_8010', bookingId: 'CKB-1046', customer: 'Kabir Khan', gateway: 'Razorpay', mode: 'Security deposit', status: 'Pending', amount: 2000, paidAt: '2026-06-10' }
-  ]);
-  readonly blogPosts = signal<BlogPostAdmin[]>([
-    { id: 1, title: 'Best lenses for Pune wedding films', category: 'Gear guide', author: 'Clickkaar Team', status: 'Published', publishDate: '2026-06-02', seoTitle: 'Best Wedding Film Lenses in Pune', metaDescription: 'A practical lens rental guide for wedding filmmakers.' },
-    { id: 2, title: 'How to choose a wireless mic kit', category: 'Audio', author: 'Clickkaar Team', status: 'Draft', publishDate: '2026-06-20', seoTitle: 'Wireless Mic Rental Guide', metaDescription: 'Compare creator-friendly wireless microphones.' }
-  ]);
-  readonly staticContent = signal<StaticContentItem[]>([
-    { key: 'faq', title: 'FAQ', owner: 'Support', status: 'Needs review', updatedAt: '2026-06-01' },
-    { key: 'terms', title: 'Terms & Conditions', owner: 'Legal', status: 'Current', updatedAt: '2026-05-22' },
-    { key: 'home', title: 'Homepage featured gear', owner: 'Marketing', status: 'Needs review', updatedAt: '2026-06-09' }
-  ]);
+  readonly bookings = signal<AdminBooking[]>([]);
+  readonly customers = signal<AdminCustomer[]>([]);
+  readonly payments = signal<AdminPayment[]>([]);
+  readonly blogPosts = signal<BlogPostAdmin[]>([]);
+  readonly staticContent = signal<StaticContentItem[]>([]);
 
   readonly inventoryQuery = signal('');
   readonly inventoryStatus = signal('');
@@ -785,22 +775,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     { id: 'settings', label: 'Settings', count: 'Ops' }
   ];
 
-  readonly categoryReports = [
-    { name: 'Cameras', value: 86 },
-    { name: 'Lenses', value: 74 },
-    { name: 'Lighting', value: 58 },
-    { name: 'Audio', value: 42 }
-  ];
-
-  readonly rolePermissions: RolePermission[] = [
-    { module: 'Dashboard', superAdmin: 'View', manager: 'View', inventory: 'View', content: 'View' },
-    { module: 'Inventory', superAdmin: 'CRUD', manager: 'CRUD', inventory: 'CRUD', content: 'View' },
-    { module: 'Bookings', superAdmin: 'CRUD + cancel', manager: 'CRUD', inventory: 'Update returns', content: 'View' },
-    { module: 'Payments & refunds', superAdmin: 'Refund + export', manager: 'View + export', inventory: 'No access', content: 'No access' },
-    { module: 'Customers', superAdmin: 'Block + edit', manager: 'View + edit', inventory: 'View', content: 'No access' },
-    { module: 'Content', superAdmin: 'CRUD', manager: 'Approve', inventory: 'No access', content: 'CRUD drafts' },
-    { module: 'Settings & roles', superAdmin: 'CRUD', manager: 'No access', inventory: 'No access', content: 'No access' }
-  ];
+  readonly categoryReports = signal<Array<{ name: string; value: number }>>([]);
+  readonly rolePermissions = signal<RolePermission[]>([]);
 
   readonly productForm = this.fb.nonNullable.group({
     name: ['', Validators.required],
@@ -881,22 +857,93 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe((products) => {
-      this.products.set(products.map((product) => ({
-        ...product,
-        status: product.available ? 'Available' : 'Unavailable',
-        maintenanceNote: ''
-      })));
-      this.updateTabCount('inventory', String(products.length));
-    });
-
     if (this.authService.isAdmin()) {
+      this.loadAdminData();
       this.loadPendingCustomers();
     }
   }
 
   ngOnDestroy(): void {
     this.clearDocumentPreviews();
+  }
+
+  private loadAdminData(): void {
+    this.loadInventory();
+    this.loadBookings();
+    this.loadCustomers();
+    this.loadPayments();
+    this.loadContent();
+    this.loadCategoryReports();
+    this.loadRolePermissions();
+    this.loadSettings();
+  }
+
+  private loadInventory(): void {
+    this.adminService.getInventory().subscribe({
+      next: (products) => {
+        this.products.set(products.map((product) => this.mapProduct(product)));
+        this.updateTabCount('inventory', String(products.length));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  private loadBookings(): void {
+    this.adminService.getBookings().subscribe({
+      next: (bookings) => {
+        this.bookings.set(bookings.map((booking) => this.mapBooking(booking)));
+        this.updateTabCount('bookings', String(bookings.length));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  private loadCustomers(): void {
+    this.adminService.getCustomers().subscribe({
+      next: (customers) => {
+        this.customers.set(customers.map((customer) => this.mapCustomer(customer)));
+        this.updateTabCount('customers', String(customers.length));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  private loadPayments(): void {
+    this.adminService.getPayments().subscribe({
+      next: (payments) => {
+        this.payments.set(payments.map((payment) => this.mapPayment(payment)));
+        this.updateTabCount('payments', String(payments.length));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  private loadContent(): void {
+    this.adminService.getContent().subscribe({
+      next: (content) => this.applyContent(content),
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  private loadCategoryReports(): void {
+    this.adminService.getCategoryReports().subscribe({
+      next: (reports) => this.categoryReports.set(reports),
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  private loadRolePermissions(): void {
+    this.adminService.getRolePermissions().subscribe({
+      next: (permissions) => this.rolePermissions.set(permissions),
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  private loadSettings(): void {
+    this.adminService.getSettings().subscribe({
+      next: (settings) => this.settingsForm.patchValue(settings),
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
   }
 
   verifyCustomer(customer: CustomerVerificationResponse): void {
@@ -988,42 +1035,31 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const value = this.productForm.getRawValue();
-    const specs = this.parseSpecifications(value.specifications);
+    const request = this.productRequestFromForm();
     if (this.editingProductId) {
-      this.products.update((items) => items.map((item) => item.id === this.editingProductId ? {
-        ...item,
-        ...value,
-        available: value.status === 'Available',
-        gallery: item.gallery?.length ? item.gallery : [value.image],
-        specifications: specs
-      } : item));
-      this.showTopMessage('Product updated. Connect this action to PUT /api/admin/products when the endpoint is added.', 3200);
+      this.adminService.updateProduct(this.editingProductId, request).subscribe({
+        next: (product) => {
+          this.products.update((items) => items.map((item) => item.id === product.id ? this.mapProduct(product) : item));
+          this.resetProductForm();
+          this.showTopMessage('Product updated.', 2600);
+        },
+        error: (error) => {
+          this.productFormError = this.authService.getErrorMessage(error);
+        }
+      });
     } else {
-      const nextId = Math.max(...this.products().map((item) => item.id), 0) + 1;
-      this.products.update((items) => [...items, {
-        id: nextId,
-        name: value.name,
-        brand: value.brand,
-        category: value.category,
-        image: value.image,
-        gallery: [value.image],
-        description: value.description,
-        specifications: specs,
-        dailyPrice: value.dailyPrice,
-        weeklyPrice: value.weeklyPrice,
-        available: value.status === 'Available',
-        rating: 0,
-        stock: value.stock,
-        popularity: 0,
-        createdAt: new Date().toISOString().slice(0, 10),
-        status: value.status,
-        maintenanceNote: ''
-      }]);
-      this.showTopMessage('Product added to the admin workspace.', 2600);
+      this.adminService.createProduct(request).subscribe({
+        next: (product) => {
+          this.products.update((items) => [...items, this.mapProduct(product)]);
+          this.resetProductForm();
+          this.updateTabCount('inventory', String(this.products().length));
+          this.showTopMessage('Product added.', 2600);
+        },
+        error: (error) => {
+          this.productFormError = this.authService.getErrorMessage(error);
+        }
+      });
     }
-    this.resetProductForm();
-    this.updateTabCount('inventory', String(this.products().length));
   }
 
   editProduct(product: AdminProduct): void {
@@ -1063,7 +1099,12 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     if (!confirm(`Mark ${product.name} as under maintenance?`)) {
       return;
     }
-    this.products.update((items) => items.map((item) => item.id === product.id ? { ...item, status: 'Maintenance', available: false, maintenanceNote: 'Marked from admin panel' } : item));
+    this.adminService.markProductMaintenance(product.id).subscribe({
+      next: (updatedProduct) => {
+        this.products.update((items) => items.map((item) => item.id === updatedProduct.id ? this.mapProduct(updatedProduct) : item));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
   }
 
   advanceBooking(booking: AdminBooking): void {
@@ -1074,7 +1115,12 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       Cancelled: 'Cancelled',
       Overdue: 'Completed'
     };
-    this.bookings.update((items) => items.map((item) => item.id === booking.id ? { ...item, status: next[item.status], returnStatus: next[item.status] === 'Completed' ? 'Returned' : item.returnStatus } : item));
+    this.adminService.updateBookingStatus(booking.backendId, this.bookingStatusToApi(next[booking.status])).subscribe({
+      next: (updatedBooking) => {
+        this.bookings.update((items) => items.map((item) => item.backendId === updatedBooking.id ? this.mapBooking(updatedBooking) : item));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
   }
 
   addNote(booking: AdminBooking): void {
@@ -1082,7 +1128,12 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     if (note === null) {
       return;
     }
-    this.bookings.update((items) => items.map((item) => item.id === booking.id ? { ...item, notes: note } : item));
+    this.adminService.addBookingNote(booking.backendId, note).subscribe({
+      next: (updatedBooking) => {
+        this.bookings.update((items) => items.map((item) => item.backendId === updatedBooking.id ? this.mapBooking(updatedBooking) : item));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
   }
 
   toggleCustomerBlock(customer: AdminCustomer): void {
@@ -1090,15 +1141,25 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     if (!confirm(`Are you sure you want to ${action} ${customer.name}?`)) {
       return;
     }
-    this.customers.update((items) => items.map((item) => item.id === customer.id ? { ...item, blocked: !item.blocked } : item));
+    this.adminService.setCustomerBlocked(customer.id, !customer.blocked).subscribe({
+      next: (updatedCustomer) => {
+        this.customers.update((items) => items.map((item) => item.id === updatedCustomer.id ? this.mapCustomer(updatedCustomer) : item));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
   }
 
   refund(payment: AdminPayment): void {
     if (!confirm(`Initiate refund for ${payment.id}?`)) {
       return;
     }
-    this.payments.update((items) => items.map((item) => item.id === payment.id ? { ...item, status: 'Refunded' } : item));
-    this.showTopMessage('Refund marked. Wire this to the payment gateway refund API before launch.', 3200);
+    this.adminService.refundPayment(payment.backendId, payment.amount, 'Admin refund').subscribe({
+      next: (updatedPayment) => {
+        this.payments.update((items) => items.map((item) => item.backendId === updatedPayment.id ? this.mapPayment(updatedPayment) : item));
+        this.showTopMessage('Refund marked.', 2600);
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
   }
 
   publishDraft(): void {
@@ -1135,7 +1196,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   saveSettings(): void {
-    this.showTopMessage('Settings saved in workspace. Persist via /api/admin/settings before production launch.', 3200);
+    this.adminService.saveSettings(this.settingsForm.getRawValue()).subscribe({
+      next: () => this.showTopMessage('Settings saved.', 2600),
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
   }
 
   openCreate(): void {
@@ -1180,6 +1244,197 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       return 'status-bad';
     }
     return 'status-info';
+  }
+
+  private mapProduct(product: AdminProductResponse): AdminProduct {
+    const status = this.productStatusFromApi(product.availabilityStatus);
+    const image = product.images?.[0] ?? '';
+    return {
+      id: product.id,
+      name: product.name,
+      brand: product.brand,
+      category: this.categoryFromApi(product.category),
+      image,
+      gallery: product.images?.length ? product.images : image ? [image] : [],
+      description: product.fullDescription || product.shortDescription || '',
+      specifications: this.parseSpecifications(product.specs ?? ''),
+      dailyPrice: Number(product.dailyPrice),
+      weeklyPrice: Number(product.weeklyPrice),
+      available: status === 'Available',
+      rating: 0,
+      stock: status === 'Available' ? 1 : 0,
+      popularity: 0,
+      createdAt: '',
+      status,
+      maintenanceNote: status === 'Maintenance' ? 'Marked from admin panel' : ''
+    };
+  }
+
+  private mapBooking(booking: AdminBookingResponse): AdminBooking {
+    return {
+      backendId: booking.id,
+      id: booking.bookingNumber,
+      customer: booking.customer,
+      phone: booking.phone ?? '',
+      products: booking.products,
+      startDate: booking.startDate,
+      endDate: booking.endDate,
+      status: this.bookingStatusFromApi(booking.status),
+      paymentStatus: this.paymentStatusFromApi(booking.paymentStatus),
+      returnStatus: this.returnStatusFromApi(booking.returnStatus),
+      total: Number(booking.total),
+      notes: booking.notes?.join('\n') ?? ''
+    };
+  }
+
+  private mapCustomer(customer: { id: number; name: string; email: string; phone?: string; verified: boolean; blocked: boolean; city?: string; wishlist: number; activeBookings: number; pastBookings: number }): AdminCustomer {
+    return {
+      id: customer.id,
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone ?? '',
+      verified: customer.verified,
+      blocked: customer.blocked,
+      city: customer.city ?? '',
+      wishlist: customer.wishlist,
+      activeBookings: customer.activeBookings,
+      pastBookings: customer.pastBookings
+    };
+  }
+
+  private mapPayment(payment: AdminPaymentResponse): AdminPayment {
+    return {
+      backendId: payment.id,
+      id: String(payment.id),
+      bookingId: payment.bookingId,
+      customer: payment.customer,
+      gateway: payment.gateway,
+      mode: this.paymentModeFromApi(payment.mode),
+      status: this.paymentStatusFromApi(payment.status),
+      amount: Number(payment.amount),
+      paidAt: payment.paidAt
+    };
+  }
+
+  private applyContent(content: AdminContentResponse): void {
+    this.blogPosts.set(content.blogPosts.map((post) => ({
+      id: post.id,
+      title: post.title,
+      category: post.category ?? '',
+      author: post.author ?? '',
+      status: post.status === 'PUBLISHED' ? 'Published' : 'Draft',
+      publishDate: post.publishDate ?? '',
+      seoTitle: post.seoTitle ?? '',
+      metaDescription: post.metaDescription ?? ''
+    })));
+    this.staticContent.set(content.staticContent.map((item) => ({
+      key: item.key,
+      title: item.title,
+      owner: 'Admin',
+      status: item.status === 'CURRENT' ? 'Current' : 'Needs review',
+      updatedAt: item.updatedAt
+    })));
+    this.updateTabCount('content', String(content.blogPosts.length + content.staticContent.length));
+  }
+
+  private productRequestFromForm(): AdminProductRequest {
+    const value = this.productForm.getRawValue();
+    return {
+      name: value.name,
+      brand: value.brand,
+      category: this.categoryToApi(value.category),
+      shortDescription: value.description,
+      fullDescription: value.description,
+      specs: value.specifications,
+      dailyPrice: value.dailyPrice,
+      weeklyPrice: value.weeklyPrice,
+      availabilityStatus: this.productStatusToApi(value.status),
+      images: value.image ? [value.image] : []
+    };
+  }
+
+  private categoryFromApi(category: string): string {
+    const labels: Record<string, string> = {
+      CAMERAS: 'Cameras',
+      LENSES: 'Lenses',
+      LIGHTING: 'Lighting',
+      AUDIO: 'Audio Equipment',
+      TRIPODS_SUPPORT: 'Tripods',
+      ACCESSORIES: 'Accessories'
+    };
+    return labels[category] ?? category;
+  }
+
+  private categoryToApi(category: string): string {
+    const labels: Record<string, string> = {
+      Cameras: 'CAMERAS',
+      Lenses: 'LENSES',
+      Lighting: 'LIGHTING',
+      'Audio Equipment': 'AUDIO',
+      Audio: 'AUDIO',
+      Tripods: 'TRIPODS_SUPPORT',
+      Accessories: 'ACCESSORIES'
+    };
+    return labels[category] ?? category.trim().toUpperCase().replace(/\s+/g, '_');
+  }
+
+  private productStatusFromApi(status: string): ProductStatus {
+    if (status === 'MAINTENANCE') return 'Maintenance';
+    if (status === 'AVAILABLE') return 'Available';
+    return 'Unavailable';
+  }
+
+  private productStatusToApi(status: ProductStatus): string {
+    if (status === 'Maintenance') return 'MAINTENANCE';
+    if (status === 'Available') return 'AVAILABLE';
+    return 'UNAVAILABLE';
+  }
+
+  private bookingStatusFromApi(status: string): BookingStatus {
+    const labels: Record<string, BookingStatus> = {
+      PENDING: 'Upcoming',
+      CONFIRMED: 'Upcoming',
+      ACTIVE: 'Active',
+      COMPLETED: 'Completed',
+      CANCELLED: 'Cancelled',
+      OVERDUE: 'Overdue'
+    };
+    return labels[status] ?? 'Upcoming';
+  }
+
+  private bookingStatusToApi(status: BookingStatus): string {
+    const labels: Record<BookingStatus, string> = {
+      Upcoming: 'CONFIRMED',
+      Active: 'ACTIVE',
+      Completed: 'COMPLETED',
+      Cancelled: 'CANCELLED',
+      Overdue: 'OVERDUE'
+    };
+    return labels[status];
+  }
+
+  private paymentStatusFromApi(status: string): PaymentStatus {
+    const labels: Record<string, PaymentStatus> = {
+      PAID: 'Paid',
+      PENDING: 'Pending',
+      FAILED: 'Failed',
+      REFUNDED: 'Refunded'
+    };
+    return labels[status] ?? 'Pending';
+  }
+
+  private paymentModeFromApi(mode: string): 'Full payment' | 'Security deposit' {
+    return mode === 'SECURITY_DEPOSIT' ? 'Security deposit' : 'Full payment';
+  }
+
+  private returnStatusFromApi(status: string): 'Not due' | 'Due today' | 'Returned' | 'Late' {
+    const labels: Record<string, 'Not due' | 'Due today' | 'Returned' | 'Late'> = {
+      NOT_DUE: 'Not due',
+      DUE_TODAY: 'Due today',
+      RETURNED: 'Returned',
+      LATE: 'Late'
+    };
+    return labels[status] ?? 'Not due';
   }
 
   private parseSpecifications(value: string): Record<string, string> {

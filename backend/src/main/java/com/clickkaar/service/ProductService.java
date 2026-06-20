@@ -83,6 +83,14 @@ public class ProductService {
     product.setDailyPrice(request.dailyPrice());
     product.setWeeklyPrice(request.weeklyPrice());
     product.setAvailabilityStatus(request.availabilityStatus() == null ? product.getAvailabilityStatus() : request.availabilityStatus());
+    if (request.images() != null) {
+      product.getImages().clear();
+      request.images().forEach(url -> product.getImages().add(ProductImage.builder()
+          .imageUrl(url)
+          .primaryImage(product.getImages().isEmpty())
+          .product(product)
+          .build()));
+    }
     return toResponse(product);
   }
 

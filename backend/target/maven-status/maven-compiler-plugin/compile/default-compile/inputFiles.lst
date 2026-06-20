@@ -7,8 +7,10 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\AuthCont
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\BlogController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\BookingController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\ContentController.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\CustomerDashboardController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\PaymentController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\ProductController.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\WishlistController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\CustomerVerificationResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\EmployeeRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\EmployeeResponse.java

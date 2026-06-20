@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Booking } from '../models/product.model';
 import { AuthService } from './auth.service';
 
 const API_URL = 'http://localhost:8080/api/bookings';
+const DASHBOARD_API_URL = 'http://localhost:8080/api/dashboard';
 
 export interface BookingItemRequest {
   productId: number;
@@ -34,6 +35,56 @@ export interface AvailabilityResponse {
   message: string;
 }
 
+export interface CustomerDashboardResponse {
+  profile: CustomerDashboardProfile;
+  summary: CustomerDashboardSummary;
+  bookings: CustomerDashboardBooking[];
+  payments: CustomerDashboardPayment[];
+}
+
+export interface CustomerDashboardProfile {
+  id: number;
+  fullName: string;
+  email: string;
+  mobile?: string;
+  mobileVerified: boolean;
+  city?: string;
+  roles: string[];
+}
+
+export interface CustomerDashboardSummary {
+  activeBookings: number;
+  pastBookings: number;
+  upcomingReturns: number;
+  wishlistCount: number;
+  totalSpent: number;
+  pendingPayments: number;
+}
+
+export interface CustomerDashboardBooking {
+  id: number;
+  bookingNumber: string;
+  products: string[];
+  productName: string;
+  startDate: string;
+  endDate: string;
+  dateRange: string;
+  rentalDays: number;
+  status: string;
+  group: 'Active' | 'Past' | 'Upcoming';
+  returnStatus: string;
+  total: number;
+}
+
+export interface CustomerDashboardPayment {
+  id: number;
+  bookingNumber: string;
+  type: string;
+  status: string;
+  amount: number;
+  paidAt: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BookingService {
   private readonly authService = inject(AuthService);
@@ -52,11 +103,21 @@ export class BookingService {
   }
 
   getBookings(): Observable<Booking[]> {
-    return of([
-      { id: 'CK-2048', productName: 'Canon EOS R5 Cinema Kit', dateRange: 'Jun 3 - Jun 7, 2026', status: 'Active', total: 19824 },
-      { id: 'CK-1981', productName: 'Aputure LS 600D Pro', dateRange: 'May 10 - May 12, 2026', status: 'Past', total: 7670 },
-      { id: 'CK-2077', productName: 'DJI RS 4 Pro Gimbal', dateRange: 'Jun 12 - Jun 15, 2026', status: 'Upcoming', total: 8496 }
-    ]);
+    return this.getCustomerDashboard().pipe(
+      map((dashboard) => dashboard.bookings.map((booking) => ({
+        id: booking.bookingNumber,
+        productName: booking.productName,
+        dateRange: booking.dateRange,
+        status: booking.group,
+        total: booking.total
+      })))
+    );
+  }
+
+  getCustomerDashboard(): Observable<CustomerDashboardResponse> {
+    return this.http.get<CustomerDashboardResponse>(`${DASHBOARD_API_URL}/customer`, {
+      headers: this.authHeaders()
+    });
   }
 
   private authHeaders(): HttpHeaders {

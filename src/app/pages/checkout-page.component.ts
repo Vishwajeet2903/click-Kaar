@@ -2,13 +2,15 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { finalize, map, switchMap } from 'rxjs';
+import { finalize } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { BookingService } from '../services/booking.service';
 import { CartService } from '../services/cart.service';
 import { PaymentOrderResponse, PaymentService } from '../services/payment.service';
 import { AppButtonComponent } from '../shared/components/app-button.component';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
+
+type PaymentMethod = 'razorpay' | 'cash';
 
 interface RazorpayPaymentResponse {
   razorpay_order_id: string;
@@ -63,10 +65,14 @@ declare global {
           <div class="col-lg-7">
             <div class="surface panel">
               <h2>Payment Method</h2>
-              <div class="razorpay-box">
+              <button type="button" class="payment-option" [class.active]="paymentMethod() === 'razorpay'" (click)="paymentMethod.set('razorpay')" [attr.aria-pressed]="paymentMethod() === 'razorpay'">
                 <strong>Razorpay secure checkout</strong>
                 <span>Pay with UPI, card, net banking, or wallet in the Razorpay popup.</span>
-              </div>
+              </button>
+              <button type="button" class="payment-option" [class.active]="paymentMethod() === 'cash'" (click)="paymentMethod.set('cash')" [attr.aria-pressed]="paymentMethod() === 'cash'">
+                <strong>Pay In Cash</strong>
+                <span>Pay At the time of delivery</span>
+              </button>
             </div>
           </div>
           <div class="col-lg-5">
@@ -74,7 +80,7 @@ declare global {
               <h2>Order Summary</h2>
               @for (item of cart.items(); track item.product.id) { <p><span>{{ item.product.name }} x {{ item.quantity }}</span><strong>{{ cart.itemTotal(item) | currency:'INR':'symbol':'1.0-0' }}</strong></p> }
               <p class="grand"><span>Total</span><strong>{{ cart.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
-              <app-button type="button" [disabled]="isPaying() || cart.count() === 0" (click)="placeOrder()">{{ isPaying() ? 'Opening Razorpay...' : 'Pay with Razorpay' }}</app-button>
+              <app-button type="button" [disabled]="isPaying() || cart.count() === 0" (click)="placeOrder()">{{ actionLabel() }}</app-button>
             </div>
           </div>
         </div>
@@ -84,9 +90,11 @@ declare global {
   styles: [`
     .panel, .success { padding: 1.25rem; margin-bottom: 1rem; }
     h2 { font-size: 1.2rem; font-weight: 900; margin-bottom: 1rem; }
-    .razorpay-box { background: #fff; border: 1px solid rgba(255,151,0,.28); border-radius: 18px; display: grid; gap: .35rem; padding: 1rem; }
-    .razorpay-box strong { color: #111; font-size: 1.02rem; }
-    .razorpay-box span { color: #777; line-height: 1.45; }
+    .payment-option { background: #fff; border: 1px solid rgba(255,151,0,.28); border-radius: 18px; cursor: pointer; display: grid; gap: .35rem; margin-bottom: .85rem; padding: 1rem; text-align: left; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; width: 100%; }
+    .payment-option:hover, .payment-option.active { border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.14); transform: translateY(-1px); }
+    .payment-option.active { background: rgba(255,151,0,.08); }
+    .payment-option strong { color: #111; font-size: 1.02rem; }
+    .payment-option span { color: #777; line-height: 1.45; }
     .panel p { display: flex; justify-content: space-between; gap: 1rem; }
     .grand { border-top: 1px solid rgba(148,163,184,.16); padding-top: 1rem; }
     .grand strong { color: #ff9700; }
@@ -100,11 +108,20 @@ export class CheckoutPageComponent {
   readonly cart = inject(CartService);
   readonly success = signal(false);
   readonly isPaying = signal(false);
+  readonly paymentMethod = signal<PaymentMethod>('razorpay');
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly bookingService = inject(BookingService);
   private readonly paymentService = inject(PaymentService);
+
+  actionLabel(): string {
+    if (this.isPaying()) {
+      return this.paymentMethod() === 'razorpay' ? 'Opening Razorpay...' : 'Processing...';
+    }
+
+    return this.paymentMethod() === 'razorpay' ? 'Pay with Razorpay' : 'Proceed';
+  }
 
   placeOrder(): void {
     if (this.isPaying()) {
@@ -128,19 +145,46 @@ export class CheckoutPageComponent {
       rentalStartDate: this.dateInputValue(this.earliestStartDate()),
       rentalEndDate: this.dateInputValue(this.latestEndDate()),
       items: this.cart.items().flatMap((item) => Array.from({ length: item.quantity }, () => ({ productId: item.product.id })))
-    }).pipe(
-      switchMap((booking) => this.paymentService.createOrder({
-        bookingId: booking.id,
-        amount: this.cart.grandTotal(),
-        type: 'FULL_PAYMENT'
-      }).pipe(map((order) => ({ booking, order }))))
-    ).subscribe({
-      next: ({ order }) => this.openRazorpay(order),
+    }).pipe(finalize(() => {
+      if (this.paymentMethod() === 'cash') {
+        this.isPaying.set(false);
+      }
+    })).subscribe({
+      next: (booking) => {
+        if (this.paymentMethod() === 'cash') {
+          this.confirmCashBooking();
+          return;
+        }
+
+        this.paymentService.createOrder({
+          bookingId: booking.id,
+          amount: this.cart.grandTotal(),
+          type: 'FULL_PAYMENT'
+        }).subscribe({
+          next: (order) => this.openRazorpay(order),
+          error: (error) => {
+            this.isPaying.set(false);
+            this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+          }
+        });
+      },
       error: (error) => {
         this.isPaying.set(false);
         this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
       }
     });
+  }
+
+  private confirmCashBooking(): void {
+    this.cart.clear();
+    this.success.set(true);
+    this.snackBar.open('Booking confirmed. Please pay in cash at delivery.', 'Close', {
+      duration: 2600,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success-top']
+    });
+    setTimeout(() => void this.router.navigateByUrl('/dashboard'), 1800);
   }
 
   private openRazorpay(order: PaymentOrderResponse): void {

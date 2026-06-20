@@ -25,7 +25,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
             <article class="surface post">
               <img class="blog-cover" [src]="post.cover" [alt]="post.title">
               <div>
-                <p class="eyebrow">{{ post.category }}</p>
+                <p  class="eyebrow">{{ post.category }}</p>
                 <h2><a [routerLink]="['/blog', post.slug]">{{ post.title }}</a></h2>
                 <p class="muted">{{ post.excerpt }}</p>
               </div>
@@ -36,6 +36,9 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     </section>
   `,
   styles: [`
+  .form-control.search::placeholder{color: gray;}
+  .section-title{letter-spacing: 1px;}
+  .eyebrow{color: #ff9700;}
     .search { max-width: 320px; }
     .chips { display: flex; flex-wrap: wrap; gap: .7rem; margin-bottom: 1.4rem; }
     .chips button { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }

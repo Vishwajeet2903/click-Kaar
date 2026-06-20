@@ -27,7 +27,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   styles: [`
     .why-us-section { display: grid; gap: clamp(1.5rem, 4vw, 3rem); grid-template-columns: .9fr 1.35fr; padding: clamp(2rem, 6vw, 4.8rem); }
     .why-heading { align-self: center; }
-    h2 { color: #111; font-size: clamp(2.8rem, 5.8vw, 5.5rem); font-weight: 900; letter-spacing: 0; line-height: .94; margin: 0 0 1.2rem; max-width: 600px; word-spacing: .08em; }
+    h2 { color: #111; font-size: clamp(2.8rem, 5.8vw, 5.5rem); font-weight: 900; letter-spacing: 0.2; line-height: .94; margin: 0 0 1.2rem; max-width: 600px; word-spacing: .08em; }
     .why-heading p:not(.eyebrow) { color: #444; font-size: 1.05rem; line-height: 1.65; margin: 0; max-width: 420px; }
     .why-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .why-card { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; min-height: 250px; padding: 1.4rem; transition: box-shadow .28s ease, transform .28s ease; }

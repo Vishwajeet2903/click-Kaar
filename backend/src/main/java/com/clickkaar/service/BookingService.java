@@ -82,10 +82,12 @@ public class BookingService {
     return new AvailabilityResponse(true, product.getName() + " is available for " + dateRange(startDate, endDate) + ".");
   }
 
+  @Transactional(readOnly = true)
   public List<BookingResponse> all() {
     return bookingRepository.findAll().stream().map(this::toResponse).toList();
   }
 
+  @Transactional(readOnly = true)
   public List<BookingResponse> byCustomer(Long customerId) {
     return bookingRepository.findByCustomerId(customerId).stream().map(this::toResponse).toList();
   }

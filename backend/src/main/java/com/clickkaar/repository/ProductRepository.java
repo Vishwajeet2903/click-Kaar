@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+  Optional<Product> findByNameIgnoreCase(String name);
   List<Product> findByNameContainingIgnoreCaseOrBrandContainingIgnoreCase(String name, String brand);
   List<Product> findByCategoryName(ProductCategory category);
   List<Product> findByBrandIgnoreCase(String brand);

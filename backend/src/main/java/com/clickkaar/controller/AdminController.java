@@ -1,20 +1,43 @@
 package com.clickkaar.controller;
 
+import com.clickkaar.dto.payment.RefundRequest;
 import com.clickkaar.dto.admin.EmployeeRequest;
 import com.clickkaar.dto.admin.EmployeeResponse;
 import com.clickkaar.dto.admin.CustomerVerificationResponse;
 import com.clickkaar.dto.admin.RegistrationDocumentResponse;
+import com.clickkaar.dto.product.ProductRequest;
+import com.clickkaar.dto.product.ProductResponse;
+import com.clickkaar.entity.AdminNote;
+import com.clickkaar.entity.Booking;
 import com.clickkaar.entity.PendingRegistration;
+import com.clickkaar.entity.Payment;
+import com.clickkaar.entity.Product;
+import com.clickkaar.entity.Refund;
 import com.clickkaar.entity.Role;
+import com.clickkaar.entity.StaticContent;
 import com.clickkaar.entity.User;
+import com.clickkaar.enums.AvailabilityStatus;
+import com.clickkaar.enums.BlogStatus;
+import com.clickkaar.enums.BookingStatus;
+import com.clickkaar.enums.PaymentStatus;
+import com.clickkaar.enums.RefundStatus;
 import com.clickkaar.enums.RoleName;
 import com.clickkaar.exception.BadRequestException;
+import com.clickkaar.exception.ResourceNotFoundException;
+import com.clickkaar.repository.AdminNoteRepository;
+import com.clickkaar.repository.BlogPostRepository;
 import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PendingRegistrationRepository;
 import com.clickkaar.repository.PaymentRepository;
 import com.clickkaar.repository.ProductRepository;
+import com.clickkaar.repository.RefundRepository;
 import com.clickkaar.repository.RoleRepository;
+import com.clickkaar.repository.StaticContentRepository;
 import com.clickkaar.repository.UserRepository;
+import com.clickkaar.repository.WishlistRepository;
+import com.clickkaar.service.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -24,12 +47,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,10 +64,13 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,7 +85,14 @@ public class AdminController {
   private final UserRepository userRepository;
   private final PendingRegistrationRepository pendingRegistrationRepository;
   private final RoleRepository roleRepository;
+  private final AdminNoteRepository adminNoteRepository;
+  private final WishlistRepository wishlistRepository;
+  private final RefundRepository refundRepository;
+  private final BlogPostRepository blogPostRepository;
+  private final StaticContentRepository staticContentRepository;
   private final PasswordEncoder passwordEncoder;
+  private final ProductService productService;
+  private final ObjectMapper objectMapper;
 
   @GetMapping("/dashboard")
   public Map<String, Object> dashboard() {
@@ -71,6 +106,170 @@ public class AdminController {
         "itemsInCatalogue", productRepository.count(),
         "overdueReturns", 0
     );
+  }
+
+  @GetMapping("/inventory")
+  public List<ProductResponse> inventory() {
+    return productService.findAll();
+  }
+
+  @PostMapping("/inventory")
+  @ResponseStatus(HttpStatus.CREATED)
+  public ProductResponse createInventoryProduct(@Valid @RequestBody ProductRequest request) {
+    return productService.create(request);
+  }
+
+  @PutMapping("/inventory/{productId}")
+  public ProductResponse updateInventoryProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequest request) {
+    return productService.update(productId, request);
+  }
+
+  @PatchMapping("/inventory/{productId}/maintenance")
+  @Transactional
+  public ProductResponse markProductMaintenance(@PathVariable Long productId) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    product.setAvailabilityStatus(AvailabilityStatus.MAINTENANCE);
+    return productService.findById(productId);
+  }
+
+  @GetMapping("/bookings")
+  @Transactional(readOnly = true)
+  public List<AdminBookingResponse> bookings() {
+    return bookingRepository.findAll().stream().map(this::adminBookingResponse).toList();
+  }
+
+  @PatchMapping("/bookings/{bookingId}/status")
+  @Transactional
+  public AdminBookingResponse updateBookingStatus(@PathVariable Long bookingId, @RequestBody BookingStatusRequest request) {
+    Booking booking = bookingRepository.findById(bookingId)
+        .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    booking.setStatus(request.status());
+    return adminBookingResponse(booking);
+  }
+
+  @PostMapping("/bookings/{bookingId}/notes")
+  @Transactional
+  public AdminBookingResponse addBookingNote(@PathVariable Long bookingId, @RequestBody BookingNoteRequest request) {
+    Booking booking = bookingRepository.findById(bookingId)
+        .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    adminNoteRepository.save(AdminNote.builder()
+        .booking(booking)
+        .admin(currentAdmin())
+        .note(request.note())
+        .build());
+    return adminBookingResponse(booking);
+  }
+
+  @GetMapping("/customers")
+  public List<AdminCustomerResponse> customers() {
+    return userRepository.findAll().stream()
+        .filter(user -> user.getRoles().stream().anyMatch(role -> role.getName() == RoleName.CUSTOMER))
+        .map(this::adminCustomerResponse)
+        .toList();
+  }
+
+  @PatchMapping("/customers/{customerId}/blocked")
+  @Transactional
+  public AdminCustomerResponse setCustomerBlocked(@PathVariable Long customerId, @RequestBody CustomerBlockRequest request) {
+    User customer = userRepository.findById(customerId)
+        .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    customer.setEnabled(!request.blocked());
+    return adminCustomerResponse(customer);
+  }
+
+  @GetMapping("/payments")
+  public List<AdminPaymentResponse> payments() {
+    return paymentRepository.findAll().stream().map(this::adminPaymentResponse).toList();
+  }
+
+  @PostMapping("/payments/{paymentId}/refunds")
+  @Transactional
+  public AdminPaymentResponse refundPayment(@PathVariable Long paymentId, @RequestBody AdminRefundRequest request) {
+    Payment payment = paymentRepository.findById(paymentId)
+        .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+    refundRepository.save(Refund.builder()
+        .payment(payment)
+        .amount(request.amount() == null ? payment.getAmount() : request.amount())
+        .reason(request.reason())
+        .status(RefundStatus.REQUESTED)
+        .build());
+    payment.setStatus(PaymentStatus.REFUNDED);
+    return adminPaymentResponse(payment);
+  }
+
+  @GetMapping("/content")
+  public AdminContentResponse content() {
+    List<AdminBlogPostResponse> posts = blogPostRepository.findAll().stream()
+        .map(post -> new AdminBlogPostResponse(
+            post.getId(),
+            post.getTitle(),
+            post.getCategory(),
+            post.getAuthorName(),
+            post.getStatus(),
+            post.getPublishDate(),
+            post.getSeoTitle(),
+            post.getSeoDescription()
+        ))
+        .toList();
+    List<AdminStaticContentResponse> staticPages = staticContentRepository.findAll().stream()
+        .map(content -> new AdminStaticContentResponse(
+            content.getPageKey(),
+            content.getPageKey(),
+            content.getUpdatedAt(),
+            content.getContent() == null || content.getContent().isBlank() ? "NEEDS_REVIEW" : "CURRENT"
+        ))
+        .toList();
+    return new AdminContentResponse(posts, staticPages);
+  }
+
+  @GetMapping("/reports/categories")
+  public List<CategoryReportResponse> categoryReports() {
+    return productRepository.findAll().stream()
+        .collect(Collectors.groupingBy(product -> product.getCategory().getDisplayName(), Collectors.counting()))
+        .entrySet().stream()
+        .map(entry -> new CategoryReportResponse(entry.getKey(), entry.getValue()))
+        .toList();
+  }
+
+  @GetMapping("/roles/permissions")
+  public List<RolePermissionResponse> rolePermissions() {
+    return List.of(
+        new RolePermissionResponse("Dashboard", "View", "View", "View", "View"),
+        new RolePermissionResponse("Inventory", "CRUD", "CRUD", "CRUD", "View"),
+        new RolePermissionResponse("Bookings", "CRUD + cancel", "CRUD", "Update returns", "View"),
+        new RolePermissionResponse("Payments & refunds", "Refund + export", "View + export", "No access", "No access"),
+        new RolePermissionResponse("Customers", "Block + edit", "View + edit", "View", "No access"),
+        new RolePermissionResponse("Content", "CRUD", "Approve", "No access", "CRUD drafts"),
+        new RolePermissionResponse("Settings & roles", "CRUD", "No access", "No access", "No access")
+    );
+  }
+
+  @GetMapping("/settings")
+  public AdminSettingsRequest settings() {
+    return staticContentRepository.findByPageKey("admin-settings")
+        .map(content -> {
+          try {
+            return objectMapper.readValue(content.getContent(), AdminSettingsRequest.class);
+          } catch (JsonProcessingException exception) {
+            throw new BadRequestException("Admin settings are not valid JSON");
+          }
+        })
+        .orElseGet(() -> new AdminSettingsRequest("Razorpay", "Security deposit", 30, 18, "", "", "", ""));
+  }
+
+  @PutMapping("/settings")
+  @Transactional
+  public AdminSettingsRequest saveSettings(@RequestBody AdminSettingsRequest request) {
+    try {
+      StaticContent content = staticContentRepository.findByPageKey("admin-settings").orElseGet(StaticContent::new);
+      content.setPageKey("admin-settings");
+      content.setContent(objectMapper.writeValueAsString(request));
+      staticContentRepository.save(content);
+      return request;
+    } catch (JsonProcessingException exception) {
+      throw new BadRequestException("Unable to save admin settings");
+    }
   }
 
   @PostMapping("/employees")
@@ -261,4 +460,99 @@ public class AdminController {
       default -> null;
     };
   }
+
+  private AdminBookingResponse adminBookingResponse(Booking booking) {
+    List<Payment> payments = paymentRepository.findAll().stream()
+        .filter(payment -> Objects.equals(payment.getBooking().getId(), booking.getId()))
+        .toList();
+    PaymentStatus paymentStatus = payments.stream()
+        .map(Payment::getStatus)
+        .filter(status -> status == PaymentStatus.PAID || status == PaymentStatus.REFUNDED)
+        .findFirst()
+        .orElse(payments.isEmpty() ? PaymentStatus.PENDING : payments.get(payments.size() - 1).getStatus());
+    String returnStatus = returnStatusFor(booking);
+    List<String> notes = adminNoteRepository.findByBookingId(booking.getId()).stream().map(AdminNote::getNote).toList();
+    return new AdminBookingResponse(
+        booking.getId(),
+        booking.getBookingNumber(),
+        booking.getCustomer().getFullName(),
+        booking.getCustomer().getMobile(),
+        booking.getItems().stream().map(item -> item.getProduct().getName()).toList(),
+        booking.getRentalStartDate(),
+        booking.getRentalEndDate(),
+        booking.getStatus(),
+        paymentStatus,
+        returnStatus,
+        booking.getTotalAmount(),
+        notes
+    );
+  }
+
+  private AdminCustomerResponse adminCustomerResponse(User customer) {
+    List<Booking> bookings = bookingRepository.findByCustomerId(customer.getId());
+    long activeBookings = bookings.stream()
+        .filter(booking -> booking.getStatus() == BookingStatus.ACTIVE || booking.getStatus() == BookingStatus.CONFIRMED || booking.getStatus() == BookingStatus.OVERDUE)
+        .count();
+    long pastBookings = bookings.stream()
+        .filter(booking -> booking.getStatus() == BookingStatus.COMPLETED)
+        .count();
+    return new AdminCustomerResponse(
+        customer.getId(),
+        customer.getFullName(),
+        customer.getEmail(),
+        customer.getMobile(),
+        customer.isMobileVerified(),
+        !customer.isEnabled(),
+        customer.getCity(),
+        wishlistRepository.findByUserId(customer.getId()).size(),
+        activeBookings,
+        pastBookings
+    );
+  }
+
+  private AdminPaymentResponse adminPaymentResponse(Payment payment) {
+    return new AdminPaymentResponse(
+        payment.getId(),
+        payment.getBooking().getBookingNumber(),
+        payment.getBooking().getCustomer().getFullName(),
+        "Razorpay",
+        payment.getType().name(),
+        payment.getStatus(),
+        payment.getAmount(),
+        payment.getUpdatedAt()
+    );
+  }
+
+  private User currentAdmin() {
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    return userRepository.findByEmail(email)
+        .orElseThrow(() -> new BadRequestException("Admin user not found"));
+  }
+
+  private String returnStatusFor(Booking booking) {
+    if (booking.getStatus() == BookingStatus.COMPLETED) {
+      return "RETURNED";
+    }
+    if (booking.getStatus() == BookingStatus.OVERDUE || (booking.getRentalEndDate().isBefore(LocalDate.now()) && booking.getStatus() != BookingStatus.CANCELLED)) {
+      return "LATE";
+    }
+    if (booking.getRentalEndDate().isEqual(LocalDate.now())) {
+      return "DUE_TODAY";
+    }
+    return "NOT_DUE";
+  }
+
+  public record BookingStatusRequest(BookingStatus status) {}
+  public record BookingNoteRequest(String note) {}
+  public record CustomerBlockRequest(boolean blocked) {}
+  public record AdminRefundRequest(BigDecimal amount, String reason) {}
+  public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes) {}
+  public record AdminCustomerResponse(Long id, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}
+  public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt) {}
+  public record AdminBlogPostResponse(Long id, String title, String category, String author, BlogStatus status, LocalDate publishDate, String seoTitle, String metaDescription) {}
+  public record AdminStaticContentResponse(String key, String title, LocalDateTime updatedAt, String status) {}
+  public record AdminContentResponse(List<AdminBlogPostResponse> blogPosts, List<AdminStaticContentResponse> staticContent) {}
+  public record CategoryReportResponse(String name, long value) {}
+  public record RolePermissionResponse(String module, String superAdmin, String manager, String inventory, String content) {}
+  public record AdminSettingsRequest(String gateway, String paymentPolicy, Integer depositPercent, Integer gstPercent, String notificationEmail, String whatsappNumber, String recaptchaKey, String analyticsId) {}
 }
