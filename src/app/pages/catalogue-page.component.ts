@@ -59,7 +59,7 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
               </div>
               <input id="catalogue-price" class="form-range" type="range" min="500" max="5000" step="100" [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set(+$event); page.set(1)">
             </div>
-            <label class="toggle"><input type="checkbox" [ngModel]="availableOnly()" (ngModelChange)="availableOnly.set($event); page.set(1)"> Available only</label>
+            <!-- <label class="toggle"><input type="checkbox" [ngModel]="availableOnly()" (ngModelChange)="availableOnly.set($event); page.set(1)"> Available only</label> -->
           </div>
         </aside>
         <div class="col-lg-9">

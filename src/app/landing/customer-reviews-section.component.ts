@@ -14,10 +14,10 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
         </div>
         <div class="carousel-controls" aria-label="Customer review slider controls">
           <button type="button" class="theme-arrow-button previous" (click)="slide(-1)" aria-label="Previous reviews">
-            <span style="color=primary"; class="theme-arrow-icon" aria-hidden="true"></span>
+            <i class="fa-solid fa-angle-right theme-arrow-icon" style="color: rgb(255, 255, 255);" aria-hidden="true"></i>
           </button>
           <button type="button" class="theme-arrow-button" (click)="slide(1)" aria-label="Next reviews">
-            <span class="theme-arrow-icon" aria-hidden="true"></span>
+            <i class="fa-solid fa-angle-right theme-arrow-icon" style="color: rgb(255, 255, 255);" aria-hidden="true"></i>
           </button>
         </div>
       </div>
@@ -42,11 +42,32 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     </section>
   `,
   styles: [`
-  .theme-arrow-icon {
-  color: white;
-  
-}
-theme-arrow-icon:hover{color: #111}
+    .carousel-controls .theme-arrow-button { --arrow-button-size: 28px; }
+    .carousel-controls .theme-arrow-icon {
+      color: #fff !important;
+      display: block;
+      font-size: 0;
+      height: 16px;
+      line-height: 1;
+      position: relative;
+      width: 14px;
+    }
+    .carousel-controls .theme-arrow-icon::before,
+    .carousel-controls .theme-arrow-icon::after {
+      background: currentColor;
+      border: 0;
+      border-radius: 999px;
+      content: "";
+      height: 5px;
+      left: 0;
+      position: absolute;
+      top: 50%;
+      transform-origin: calc(100% - 2.5px) 50%;
+      width: 15px;
+    }
+    .carousel-controls .theme-arrow-icon::before { transform: translateY(-50%) rotate(45deg); }
+    .carousel-controls .theme-arrow-icon::after { transform: translateY(-50%) rotate(-45deg); }
+    .carousel-controls .theme-arrow-button.previous .theme-arrow-icon { transform: rotate(180deg); }
     .reviews-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .reviews-top { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.4rem; }
     .section-heading { margin-bottom: 1.4rem; max-width: 760px; }

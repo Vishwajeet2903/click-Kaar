@@ -37,14 +37,14 @@ import { ProductService } from '../services/product.service';
             <!-- <li class="nav-item"><a routerLink="/" fragment="marketplace" class="nav-link" (click)="closeMenu()">Marketplace</a></li> -->
             <li class="nav-item"><a routerLink="/catalogue" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Catalogue</a></li>
             <li class="nav-item"><a routerLink="/blog" fragment="gallery" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Blog</a></li>
-            <li class="nav-item has-mega">
+            <!-- <li class="nav-item has-mega">
               <a routerLink="/catalogue" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Categories</a>
               <div class="mega surface">
                 @for (category of productService.categories(); track category) {
                   <a routerLink="/catalogue" [queryParams]="{ category }" (click)="closeMenu()">{{ category }}</a>
                 }
               </div>
-            </li>
+            </li> -->
             <li class="nav-item"><a routerLink="/wishlist" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Wishlist</a></li>
             @if (authService.isAdmin()) {
               <li class="nav-item"><a routerLink="/admin" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Admin</a></li>

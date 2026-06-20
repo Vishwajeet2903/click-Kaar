@@ -116,12 +116,12 @@ export class AddedDialogComponent {}
               @if (activeDateField()) {
                 <div class="calendar-popover" aria-label="Rental calendar">
                   <div class="calendar-head">
-                    <button type="button" class="calendar-arrow theme-arrow-button previous" aria-label="Previous month" (click)="changeCalendarMonth(-1)">
-                      <span class="theme-arrow-icon" aria-hidden="true"></span>
+                    <button type="button" class="calendar-arrow theme-arrow-button previous" aria-label="Previous month" [disabled]="isPreviousCalendarMonthDisabled()" (click)="changeCalendarMonth(-1)">
+                      <i class="fa-solid fa-angle-right theme-arrow-icon" style="color: rgb(255, 255, 255);" aria-hidden="true"></i>
                     </button>
                     <strong>{{ calendarTitle() }}</strong>
                     <button type="button" class="calendar-arrow theme-arrow-button" aria-label="Next month" (click)="changeCalendarMonth(1)">
-                      <span class="theme-arrow-icon" aria-hidden="true"></span>
+                      <i class="fa-solid fa-angle-right theme-arrow-icon" style="color: rgb(255, 255, 255);" aria-hidden="true"></i>
                     </button>
                   </div>
                   <div class="calendar-weekdays">
@@ -235,14 +235,33 @@ export class AddedDialogComponent {}
     .calendar-popover { background: #fff; border: 1px solid rgba(255,151,0,.36); border-radius: 22px; box-shadow: 0 18px 38px rgba(17,17,17,.1); margin: 1rem 0 1.2rem; padding: 1.1rem; }
     .calendar-head { align-items: center; display: flex; justify-content: space-between; margin-bottom: 1rem; }
     .calendar-head strong { color: #111; font-size: .96rem; }
-    .calendar-head .calendar-arrow { --arrow-button-size: 30px; }
+    .calendar-head .calendar-arrow { --arrow-button-size: 28px; }
     .calendar-head .calendar-arrow .theme-arrow-icon {
-      --arrow-head-size: 8px;
-      --arrow-head-stroke: 3px;
-      --arrow-icon-height: 12px;
-      --arrow-icon-width: 14px;
-      --arrow-line-stroke: 3px;
+      color: #fff !important;
+      display: block;
+      font-size: 0;
+      height: 16px;
+      line-height: 1;
+      position: relative;
+      width: 14px;
     }
+    .calendar-head .calendar-arrow .theme-arrow-icon::before,
+    .calendar-head .calendar-arrow .theme-arrow-icon::after {
+      background: currentColor;
+      border: 0;
+      border-radius: 999px;
+      content: "";
+      height: 5px;
+      left: 0;
+      position: absolute;
+      top: 50%;
+      transform-origin: calc(100% - 2.5px) 50%;
+      width: 15px;
+    }
+    .calendar-head .calendar-arrow .theme-arrow-icon::before { transform: translateY(-50%) rotate(45deg); }
+    .calendar-head .calendar-arrow .theme-arrow-icon::after { transform: translateY(-50%) rotate(-45deg); }
+    .calendar-head .calendar-arrow.previous .theme-arrow-icon,
+    .calendar-head .calendar-arrow.previous:hover .theme-arrow-icon { transform: rotate(180deg); }
     .calendar-weekdays, .calendar-days { display: grid; gap: .45rem; grid-template-columns: repeat(7, 1fr); }
     .calendar-weekdays span { color: #ff9700; font-size: .66rem; font-weight: 950; text-align: center; text-transform: uppercase; }
     .calendar-days button, .calendar-days span { align-items: center; aspect-ratio: 1; border-radius: 999px; display: inline-flex; font-size: .82rem; justify-content: center; }
@@ -334,7 +353,9 @@ export class ProductDetailsPageComponent {
 
   setStartDate(value: string): void {
     const currentDuration = this.duration();
-    const nextStart = this.parseDateInput(value);
+    const selectedStart = this.parseDateInput(value);
+    const today = this.today();
+    const nextStart = selectedStart < today ? today : selectedStart;
     this.startDate.set(nextStart);
 
     const nextEnd = new Date(nextStart);
@@ -344,7 +365,8 @@ export class ProductDetailsPageComponent {
 
   setEndDate(value: string): void {
     const nextEnd = this.parseDateInput(value);
-    this.endDate.set(nextEnd < this.startDate() ? this.startDate() : nextEnd);
+    const minEndDate = this.startDate() < this.today() ? this.today() : this.startDate();
+    this.endDate.set(nextEnd < minEndDate ? minEndDate : nextEnd);
   }
 
   openCalendar(field: 'start' | 'end'): void {
@@ -376,10 +398,14 @@ export class ProductDetailsPageComponent {
 
   changeCalendarMonth(offset: number): void {
     const month = this.calendarMonth();
-    this.calendarMonth.set(new Date(month.getFullYear(), month.getMonth() + offset, 1));
+    const nextMonth = new Date(month.getFullYear(), month.getMonth() + offset, 1);
+    const currentMonth = this.currentCalendarMonth();
+    this.calendarMonth.set(nextMonth < currentMonth ? currentMonth : nextMonth);
   }
 
   selectCalendarDate(day: Date): void {
+    if (this.isDisabledCalendarDate(day)) return;
+
     if (this.activeDateField() === 'start') {
       this.setStartDate(this.dateInputValue(day));
     } else {
@@ -394,7 +420,13 @@ export class ProductDetailsPageComponent {
   }
 
   isDisabledCalendarDate(day: Date): boolean {
+    if (day < this.today()) return true;
+
     return this.activeDateField() === 'end' && this.dateInputValue(day) < this.dateInputValue(this.startDate());
+  }
+
+  isPreviousCalendarMonthDisabled(): boolean {
+    return this.calendarMonth() <= this.currentCalendarMonth();
   }
 
   selectDuration(days: number): void {
@@ -434,6 +466,11 @@ export class ProductDetailsPageComponent {
   addToCart(): void {
     const product = this.product();
     if (!product || this.isCheckingAvailability()) return;
+    if (this.startDate() < this.today() || this.endDate() < this.today()) {
+      this.showTopMessage('Choose today or a future date for booking.', 3200);
+      this.setStartDate(this.dateInputValue(this.today()));
+      return;
+    }
 
     this.isCheckingAvailability.set(true);
     this.bookingService.checkAvailability(product.id, this.dateInputValue(this.startDate()), this.dateInputValue(this.endDate()))
@@ -479,6 +516,16 @@ export class ProductDetailsPageComponent {
   private parseDateInput(value: string): Date {
     const [year, month, day] = value.split('-').map(Number);
     return new Date(year, month - 1, day);
+  }
+
+  private today(): Date {
+    const today = new Date();
+    return new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  }
+
+  private currentCalendarMonth(): Date {
+    const today = this.today();
+    return new Date(today.getFullYear(), today.getMonth(), 1);
   }
 
   private showImageAtOffset(offset: number): void {

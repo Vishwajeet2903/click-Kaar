@@ -33,7 +33,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
           <article class="market-product" appScrollReveal="fade-up" [revealStagger]="index * 95">
             <a [routerLink]="['/products', product.id]" class="product-media">
               <img [src]="product.image" [alt]="product.name">
-              <span>{{ product.available ? 'Available now' : 'Waitlist' }}</span>
+              <!-- <span>{{ product.available ? 'Available now' : 'Waitlist' }}</span> -->
             </a>
             <div class="product-body">
               <p>{{ product.category }}</p>
@@ -67,16 +67,16 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .shop-toolbar span { background: #111; color: #fff; }
     .shop-toolbar a { background: #fff; }
     .product-market-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 1.2rem; }
-    .market-product { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; overflow: hidden; padding: .65rem; transition: box-shadow .28s ease, transform .28s ease; }
+    .market-product { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: .65rem; transition: box-shadow .28s ease, transform .28s ease; }
     .market-product:hover { box-shadow: 0 24px 48px rgba(0,0,0,.14); transform: translateY(-8px); }
     .product-media { border-radius: 19px; display: block; overflow: hidden; position: relative; }
-    .product-media img { aspect-ratio: 4/3; object-fit: cover; transition: transform .35s ease; width: 100%; }
+    .product-media img { aspect-ratio: 4/3; display: block; object-fit: cover; transition: transform .35s ease; width: 100%; }
     .market-product:hover .product-media img { transform: scale(1.06); }
     .product-media span { background: rgba(255,255,255,.93); border-radius: 999px; bottom: .65rem; color: #ff9700; font-size: .7rem; font-weight: 900; left: .65rem; padding: .42rem .58rem; position: absolute; }
-    .product-body { padding: .9rem .3rem .3rem; }
+    .product-body { display: flex; flex: 1; flex-direction: column; padding: .9rem .3rem .3rem; }
     .product-body p { color: #ff9700; font-size: .72rem; font-weight: 900; letter-spacing: .18em; margin: 0 0 .45rem; text-transform: uppercase; }
-    .product-body h3 { color: #111; font-size: 1.04rem; font-weight: 900; letter-spacing: 0; line-height: 1.15; margin: 0 0 .9rem; word-spacing: .08em; }
-    .commerce-row { align-items: center; display: flex; justify-content: space-between; gap: .6rem; }
+    .product-body h3 { color: #111; font-size: 1.04rem; font-weight: 900; letter-spacing: 0; line-height: 1.15; margin: 0 0 .9rem; min-height: 2.4em; word-spacing: .08em; }
+    .commerce-row { align-items: center; display: flex; gap: .6rem; justify-content: space-between; margin-top: auto; min-height: 50px; }
     .commerce-row strong { color: #111; font-size: 1rem; font-weight: 950; word-spacing: .08em; }
     .commerce-row small { color: #777; font-size: .75rem; font-weight: 800; }
     .commerce-row a { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
