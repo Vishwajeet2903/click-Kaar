@@ -63,7 +63,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
             <input type="password" placeholder="Enter password" formControlName="password">
           </label>
 
-          <a class="forgot" routerLink="/faq">Forgot password?</a>
+          <a class="forgot" routerLink="/forgot-password" [queryParams]="{ email: form.controls.email.value }">Forgot password?</a>
           <button class="submit" type="submit" [disabled]="isSubmitting">{{ isSubmitting ? 'Logging in...' : 'Log in' }}</button>
           <p class="signup">New to ClickKar? <a routerLink="/register">Create an account</a></p>
         </form>

@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +30,24 @@ public class AuthController {
   @PostMapping("/admin/login")
   public AuthResponse adminLogin(@Valid @RequestBody LoginRequest request) {
     return authService.adminLogin(request);
+  }
+
+  @PostMapping("/forgot-password")
+  public String forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+    return authService.requestPasswordReset(request);
+  }
+
+  @PostMapping("/reset-password")
+  public String resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    return authService.resetPassword(request);
+  }
+
+  @PostMapping("/change-password")
+  public String changePassword(@Valid @RequestBody ChangePasswordRequest request, Authentication authentication) {
+    if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+      throw new org.springframework.security.authentication.BadCredentialsException("Login required");
+    }
+    return authService.changePassword(authentication.getName(), request);
   }
 
   @PostMapping("/otp/request")

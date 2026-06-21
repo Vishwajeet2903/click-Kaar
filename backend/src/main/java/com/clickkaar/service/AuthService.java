@@ -13,6 +13,12 @@ import com.clickkaar.security.CustomUserDetails;
 import com.clickkaar.security.JwtService;
 import com.clickkaar.util.OtpGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +37,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
   private final UserRepository userRepository;
   private final PendingRegistrationRepository pendingRegistrationRepository;
@@ -39,6 +46,13 @@ public class AuthService {
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
   private final OtpGenerator otpGenerator;
+  private final JavaMailSender mailSender;
+
+  @Value("${spring.mail.username:}")
+  private String mailUsername;
+
+  @Value("${spring.mail.password:}")
+  private String mailPassword;
 
   @Transactional
   public RegistrationResponse register(RegisterRequest request) {
@@ -84,13 +98,14 @@ public class AuthService {
         .build();
 
     PendingRegistration saved = pendingRegistrationRepository.save(pendingRegistration);
+    sendRegistrationSubmittedEmail(saved);
     return new RegistrationResponse(
         saved.getId(),
         saved.getFullName(),
         saved.getEmail(),
         saved.getMobile(),
         "PENDING_VERIFICATION",
-        "Registration request submitted. You can log in after admin verification."
+        "Thank you for choosing Click-Kaar. Your profile is under scrutiny."
     );
   }
 
@@ -114,6 +129,71 @@ public class AuthService {
       throw new BadCredentialsException("Admin access required");
     }
     return response;
+  }
+
+  @Transactional
+  public String requestPasswordReset(ForgotPasswordRequest request) {
+    String email = request.email().toLowerCase();
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new BadRequestException("No active account found for this email"));
+    if (!user.isEnabled()) {
+      throw new BadRequestException("Your registration is pending admin verification.");
+    }
+
+    String code = otpGenerator.generate();
+    otpRepository.save(OTP.builder()
+        .email(email)
+        .code(code)
+        .purpose(OtpPurpose.PASSWORD_RESET)
+        .expiresAt(LocalDateTime.now().plusMinutes(10))
+        .used(false)
+        .build());
+
+    if (!isMailConfigured()) {
+      return "Password reset code generated for development: " + code;
+    }
+    sendPasswordResetEmail(email, code);
+    return "Password reset code sent to your email.";
+  }
+
+  @Transactional
+  public String resetPassword(ResetPasswordRequest request) {
+    String email = request.email().toLowerCase();
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new BadRequestException("No active account found for this email"));
+    if (!user.isEnabled()) {
+      throw new BadRequestException("Your registration is pending admin verification.");
+    }
+
+    OTP otp = otpRepository.findTopByEmailAndPurposeAndUsedFalseOrderByCreatedAtDesc(email, OtpPurpose.PASSWORD_RESET)
+        .orElseThrow(() -> new BadRequestException("Reset code not found"));
+    if (otp.getExpiresAt().isBefore(LocalDateTime.now())) {
+      throw new BadRequestException("Reset code expired");
+    }
+    if (!otp.getCode().equals(request.code())) {
+      throw new BadRequestException("Invalid reset code");
+    }
+
+    user.setPassword(passwordEncoder.encode(request.newPassword()));
+    otp.setUsed(true);
+    userRepository.save(user);
+    return "Password reset successfully. You can now log in.";
+  }
+
+  @Transactional
+  public String changePassword(String email, ChangePasswordRequest request) {
+    User user = userRepository.findByEmail(email.toLowerCase())
+        .orElseThrow(() -> new BadRequestException("User not found"));
+    if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+      throw new BadRequestException("Current password is incorrect");
+    }
+    if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
+      throw new BadRequestException("New password must be different from current password");
+    }
+
+    user.setPassword(passwordEncoder.encode(request.newPassword()));
+    userRepository.save(user);
+    return "Password changed successfully.";
   }
 
   @Transactional
@@ -154,6 +234,61 @@ public class AuthService {
     String token = jwtService.generateToken(new CustomUserDetails(user));
     Set<String> roles = user.getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet());
     return new AuthResponse(token, "Bearer", user.getId(), user.getFullName(), user.getEmail(), user.getMobile(), roles);
+  }
+
+  private void sendPasswordResetEmail(String email, String code) {
+    try {
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setFrom(configuredMailUsername());
+      message.setTo(email);
+      message.setSubject("Clickkaar password reset code");
+      message.setText("Use this code to reset your Clickkaar password: " + code + "\n\nThis code expires in 10 minutes.");
+      mailSender.send(message);
+      log.info("Password reset email sent to {}", email);
+    } catch (MailAuthenticationException exception) {
+      log.warn("Unable to send password reset email to {} because SMTP authentication failed for {}", email, configuredMailUsername());
+      throw new BadRequestException("Mail authentication failed. Please check SMTP username and password.");
+    } catch (MailException exception) {
+      log.warn("Unable to send password reset email to {}", email, exception);
+      throw new BadRequestException("Unable to send password reset email. Please try again later.");
+    }
+  }
+
+  private void sendRegistrationSubmittedEmail(PendingRegistration registration) {
+    if (!isMailConfigured()) {
+      log.warn("Skipping registration email for {} because MAIL_USERNAME or MAIL_PASSWORD is not configured", registration.getEmail());
+      return;
+    }
+
+    try {
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setFrom(configuredMailUsername());
+      message.setTo(registration.getEmail());
+      message.setSubject("Click-Kaar registration received");
+      message.setText(
+          "Hi " + registration.getFullName() + ",\n\n"
+              + "Thank you for choosing Click-Kaar. Your profile is under scrutiny.\n\n"
+              + "We will notify you once admin verification is complete."
+      );
+      mailSender.send(message);
+      log.info("Registration email sent to {}", registration.getEmail());
+    } catch (MailAuthenticationException exception) {
+      log.warn("Unable to send registration email to {} because SMTP authentication failed for {}", registration.getEmail(), configuredMailUsername());
+    } catch (MailException exception) {
+      log.warn("Unable to send registration email to {}", registration.getEmail(), exception);
+    }
+  }
+
+  private boolean isMailConfigured() {
+    return !configuredMailUsername().isBlank() && !configuredMailPassword().isBlank();
+  }
+
+  private String configuredMailUsername() {
+    return mailUsername == null ? "" : mailUsername.trim();
+  }
+
+  private String configuredMailPassword() {
+    return mailPassword == null ? "" : mailPassword.trim();
   }
 
   private void validateRequiredDocuments(RegisterRequest request) {

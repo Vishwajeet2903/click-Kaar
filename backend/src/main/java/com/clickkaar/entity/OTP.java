@@ -18,8 +18,11 @@ public class OTP extends AuditableEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String mobile;
+
+  @Column(nullable = true)
+  private String email;
 
   @Column(nullable = false)
   private String code;

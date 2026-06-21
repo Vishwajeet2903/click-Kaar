@@ -10,16 +10,18 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\ContentC
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\CustomerDashboardController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\PaymentController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\ProductController.java
-C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\controller\WishlistController.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\CustomerVerificationResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\EmployeeRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\EmployeeResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\admin\RegistrationDocumentResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\AuthResponse.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\ChangePasswordRequest.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\ForgotPasswordRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\LoginRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\OtpRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\RegisterRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\RegistrationResponse.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\ResetPasswordRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\auth\VerifyOtpRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\blog\BlogPostRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\AvailabilityResponse.java
@@ -27,6 +29,8 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\Booking
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\BookingRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\booking\BookingResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\content\ContactMessageRequest.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\content\CustomerReviewRequest.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\content\CustomerReviewResponse.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\content\FaqRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\content\StaticContentRequest.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\dto\payment\CreatePaymentOrderRequest.java
@@ -43,6 +47,7 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\Booking.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\BookingItem.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\Category.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\ContactMessage.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\CustomerReview.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\Faq.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\OTP.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\entity\Payment.java
@@ -74,6 +79,7 @@ C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\BookingI
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\BookingRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\CategoryRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\ContactMessageRepository.java
+C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\CustomerReviewRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\FaqRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\OtpRepository.java
 C:\click-Kaar\click-Kaar\backend\src\main\java\com\clickkaar\repository\PaymentRepository.java

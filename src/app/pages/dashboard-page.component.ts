@@ -1,17 +1,21 @@
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { BookingService, CustomerDashboardBooking, CustomerDashboardResponse } from '../services/booking.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
-type DashboardSection = 'profile' | 'active' | 'past' | 'returns' | 'wishlist';
+type DashboardSection = 'profile' | 'active' | 'past' | 'returns' | 'wishlist' | 'security';
+type PasswordField = 'currentPassword' | 'newPassword' | 'confirmPassword';
+const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,64}$/;
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [AsyncPipe, CurrencyPipe, RouterLink, BreadcrumbComponent],
+  imports: [AsyncPipe, CurrencyPipe, ReactiveFormsModule, RouterLink, MatSnackBarModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb label="Dashboard" />
     <section class="container pb-5">
@@ -77,7 +81,43 @@ type DashboardSection = 'profile' | 'active' | 'past' | 'returns' | 'wishlist';
                 </article>
               </div>
 
-              @if (activeSection() === 'wishlist') {
+              @if (activeSection() === 'security') {
+                <div class="surface password-panel">
+                  <h2>Change password</h2>
+                  <p class="muted">Update your password using your current password for verification.</p>
+
+                  @if (passwordError) {
+                    <p class="form-alert" role="alert">{{ passwordError }}</p>
+                  }
+
+                  <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+                    <label>
+                      <span>Current password</span>
+                      <input type="password" placeholder="Enter current password" formControlName="currentPassword">
+                      @if (passwordFieldError('currentPassword')) {
+                        <small class="field-error">{{ passwordFieldError('currentPassword') }}</small>
+                      }
+                    </label>
+                    <label>
+                      <span>New password</span>
+                      <input type="password" placeholder="8+ chars with A-z, 0-9, symbol" formControlName="newPassword">
+                      @if (passwordFieldError('newPassword')) {
+                        <small class="field-error">{{ passwordFieldError('newPassword') }}</small>
+                      }
+                    </label>
+                    <label [class.password-mismatch]="passwordSubmitted && !passwordsMatch()">
+                      <span>Confirm password</span>
+                      <input type="password" placeholder="Re-enter new password" formControlName="confirmPassword">
+                      @if (passwordFieldError('confirmPassword') || passwordMismatchError()) {
+                        <small class="field-error">{{ passwordFieldError('confirmPassword') || passwordMismatchError() }}</small>
+                      }
+                    </label>
+                    <button class="save-btn" type="submit" [disabled]="isChangingPassword">
+                      {{ isChangingPassword ? 'Updating...' : 'Update password' }}
+                    </button>
+                  </form>
+                </div>
+              } @else if (activeSection() === 'wishlist') {
                 <div class="surface empty-panel">
                   <h2>Wishlist</h2>
                   <p class="muted">You have {{ dashboard.summary.wishlistCount }} item{{ dashboard.summary.wishlistCount === 1 ? '' : 's' }} saved for later.</p>
@@ -161,7 +201,7 @@ type DashboardSection = 'profile' | 'active' | 'past' | 'returns' | 'wishlist';
   `,
   styles: [`
     .dashboard { display: grid; gap: 1.2rem; grid-template-columns: 240px 1fr; }
-    .sidebar, .profile, .booking, .stat, .payment-list, .empty-panel { padding: 1.2rem; }
+    .sidebar, .profile, .booking, .stat, .payment-list, .empty-panel, .password-panel { padding: 1.2rem; }
     .menu-btn { background: transparent; border: 0; border-radius: 8px; color: #555; display: block; font-weight: 800; padding: .75rem; text-align: left; width: 100%; }
     .menu-btn:hover, .menu-btn.active-menu { background: rgba(255,151,0,.1); color: #ff9700; }
     .logout-btn { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; margin-top: .8rem; min-height: 50px; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 100%; }
@@ -183,6 +223,20 @@ type DashboardSection = 'profile' | 'active' | 'past' | 'returns' | 'wishlist';
     .empty-state a:hover, .empty-panel a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .empty-panel h2 { font-size: 1.15rem; margin: 0 0 .35rem; }
     .empty-panel.compact { margin-bottom: 0; }
+    .password-panel { max-width: 620px; }
+    .password-panel h2 { font-size: 1.15rem; margin: 0 0 .35rem; }
+    .password-panel form { display: grid; gap: 1rem; margin-top: 1.1rem; }
+    .password-panel label { color: #111; display: block; font-size: .82rem; font-weight: 800; }
+    .password-panel label span { display: block; margin-bottom: .55rem; }
+    .password-panel input { background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 16px; color: #111; display: block; font: inherit; font-weight: 600; outline: 0; padding: .95rem 1rem; transition: border-color .25s ease, box-shadow .25s ease; width: 100%; }
+    .password-panel input:focus { border-color: rgba(255,151,0,.95); box-shadow: 0 0 0 4px rgba(255,151,0,.18); }
+    .password-panel input.ng-invalid.ng-touched, .password-mismatch input { background: #fff4f2; border-color: rgba(180,35,24,.72); box-shadow: 0 0 0 4px rgba(180,35,24,.12); }
+    .password-panel label:has(input.ng-invalid.ng-touched) span, .password-mismatch span { color: #b42318; }
+    .field-error { color: #b42318; display: block; font-size: .78rem; font-weight: 850; line-height: 1.35; margin-top: .45rem; }
+    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 14px; color: #b42318; font-size: .9rem; font-weight: 800 !important; line-height: 1.45; margin: 1rem 0 0; padding: .85rem 1rem; }
+    .save-btn { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: pointer; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: min(220px, 100%); }
+    .save-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .save-btn:disabled, .save-btn:disabled:hover { background: #111; color: #fff; cursor: not-allowed; opacity: .68; transform: none; }
     h2, h3 { font-weight: 900; }
     .booking { height: 100%; }
     .booking span { border-radius: 999px; display: inline-block; font-size: .75rem; font-weight: 900; margin-bottom: .8rem; padding: .25rem .55rem; }
@@ -219,18 +273,30 @@ type DashboardSection = 'profile' | 'active' | 'past' | 'returns' | 'wishlist';
 export class DashboardPageComponent {
   private readonly authService = inject(AuthService);
   private readonly bookingService = inject(BookingService);
+  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly dashboard$: Observable<CustomerDashboardResponse> = this.bookingService.getCustomerDashboard();
   readonly currentUser = this.authService.currentUser;
   readonly activeSection = signal<DashboardSection>('profile');
+  isChangingPassword = false;
+  passwordSubmitted = false;
+  passwordError = '';
   readonly nav: { id: DashboardSection; label: string }[] = [
     { id: 'profile', label: 'Profile' },
     { id: 'active', label: 'Active Bookings' },
     { id: 'past', label: 'Past Bookings' },
     { id: 'returns', label: 'Upcoming Returns' },
-    { id: 'wishlist', label: 'Wishlist' }
+    { id: 'wishlist', label: 'Wishlist' },
+    { id: 'security', label: 'Security' }
   ];
+
+  readonly passwordForm = this.fb.nonNullable.group({
+    currentPassword: ['', [Validators.required]],
+    newPassword: ['', [Validators.required, Validators.pattern(passwordPattern)]],
+    confirmPassword: ['', [Validators.required]]
+  });
 
   setSection(section: DashboardSection): void {
     this.activeSection.set(section);
@@ -264,6 +330,77 @@ export class DashboardPageComponent {
 
   formatReturnStatus(value: string): string {
     return value.toLowerCase().replaceAll('_', ' ');
+  }
+
+  passwordFieldError(field: PasswordField): string {
+    const control = this.passwordForm.controls[field];
+    if (!control || (!control.touched && !this.passwordSubmitted) || control.valid) {
+      return '';
+    }
+
+    if (control.hasError('required')) {
+      return field === 'currentPassword' ? 'Current password is required.' : `${this.passwordFieldLabel(field)} is required.`;
+    }
+
+    if (control.hasError('pattern')) {
+      return 'Password must be 8-64 characters and include uppercase, lowercase, number, and special character.';
+    }
+
+    return '';
+  }
+
+  passwordsMatch(): boolean {
+    return this.passwordForm.controls.newPassword.value === this.passwordForm.controls.confirmPassword.value;
+  }
+
+  passwordMismatchError(): string {
+    return this.passwordSubmitted && this.passwordForm.controls.confirmPassword.valid && !this.passwordsMatch()
+      ? 'Passwords must match.'
+      : '';
+  }
+
+  changePassword(): void {
+    this.passwordSubmitted = true;
+    this.passwordError = '';
+    const values = this.passwordForm.getRawValue();
+    const passwordsMatch = values.newPassword === values.confirmPassword;
+    if (this.passwordForm.invalid || !passwordsMatch || this.isChangingPassword) {
+      this.passwordForm.markAllAsTouched();
+      this.passwordError = passwordsMatch ? 'Please enter your current password and a valid new password.' : 'New password and confirm password must match.';
+      return;
+    }
+
+    this.isChangingPassword = true;
+    this.authService.changePassword({ currentPassword: values.currentPassword, newPassword: values.newPassword })
+      .pipe(finalize(() => {
+        this.isChangingPassword = false;
+      }))
+      .subscribe({
+        next: (message) => {
+          this.passwordForm.reset();
+          this.passwordSubmitted = false;
+          this.snackBar.open(message, 'Close', {
+            duration: 2600,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-success-top']
+          });
+        },
+        error: (error) => {
+          const message = this.authService.getErrorMessage(error);
+          this.passwordError = message;
+          this.snackBar.open(message, 'Close', {
+            duration: 3400,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-screen-center']
+          });
+        }
+      });
+  }
+
+  private passwordFieldLabel(field: PasswordField): string {
+    return field === 'newPassword' ? 'New password' : 'Confirm password';
   }
 
   logout(): void {

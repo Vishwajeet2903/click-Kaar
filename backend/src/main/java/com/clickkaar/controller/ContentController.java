@@ -1,6 +1,8 @@
 package com.clickkaar.controller;
 
 import com.clickkaar.dto.content.ContactMessageRequest;
+import com.clickkaar.dto.content.CustomerReviewRequest;
+import com.clickkaar.dto.content.CustomerReviewResponse;
 import com.clickkaar.dto.content.FaqRequest;
 import com.clickkaar.dto.content.StaticContentRequest;
 import com.clickkaar.entity.ContactMessage;
@@ -28,6 +30,16 @@ public class ContentController {
   @GetMapping("/faqs")
   public List<Faq> faqs() {
     return contentService.faqs();
+  }
+
+  @GetMapping("/reviews")
+  public List<CustomerReviewResponse> reviews() {
+    return contentService.reviews();
+  }
+
+  @PostMapping("/reviews")
+  public CustomerReviewResponse createReview(@Valid @RequestBody CustomerReviewRequest request) {
+    return contentService.createReview(request);
   }
 
   @PostMapping("/faqs")

@@ -16,13 +16,25 @@ spring:
       hibernate:
         format_sql: true
   mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
+    host: ${MAIL_HOST:smtp.titan.email}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:}
-    password: ${MAIL_PASSWORD:}
+    username: ${MAIL_USERNAME:'info@click-kaar.com'}
+    password: ${MAIL_PASSWORD:OjasKharche}
+    protocol: smtp
+    test-connection: false
     properties:
+      mail.debug: true
+      mail.debug.auth: true
       mail.smtp.auth: true
+      mail.smtp.connectiontimeout: 10000
+      mail.smtp.timeout: 10000
+      mail.smtp.writetimeout: 10000
+      mail.smtp.ssl.protocols: TLSv1.2
       mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.ssl.trust: ${MAIL_HOST:smtp.titan.email}
+      
+  
 
 app:
   jwt:

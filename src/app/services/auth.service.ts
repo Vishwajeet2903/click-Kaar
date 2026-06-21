@@ -53,6 +53,20 @@ export interface RegisterRequest extends LoginRequest {
   companyBonafideLetter?: File;
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest extends ForgotPasswordRequest {
+  code: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -75,6 +89,20 @@ export class AuthService {
     });
 
     return this.http.post<RegistrationResponse>(`${API_URL}/register`, formData);
+  }
+
+  requestPasswordReset(request: ForgotPasswordRequest): Observable<string> {
+    return this.http.post(`${API_URL}/forgot-password`, request, { responseType: 'text' });
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<string> {
+    return this.http.post(`${API_URL}/reset-password`, request, { responseType: 'text' });
+  }
+
+  changePassword(request: ChangePasswordRequest): Observable<string> {
+    const token = this.getToken();
+    const options = token ? { headers: { Authorization: `Bearer ${token}` }, responseType: 'text' as const } : { responseType: 'text' as const };
+    return this.http.post(`${API_URL}/change-password`, request, options);
   }
 
   logout(): void {

@@ -23,6 +23,7 @@ public class DataSeeder {
   private final ProductRepository productRepository;
   private final BlogPostRepository blogPostRepository;
   private final FaqRepository faqRepository;
+  private final CustomerReviewRepository customerReviewRepository;
   private final StaticContentRepository staticContentRepository;
   private final BookingRepository bookingRepository;
   private final PaymentRepository paymentRepository;
@@ -45,6 +46,7 @@ public class DataSeeder {
       seedProducts();
       seedBlogs();
       seedFaqs();
+      seedCustomerReviews();
       seedStaticContent();
 
       User aarav = seedUser("Aarav Mehta", "aarav@example.com", "9876543210", Set.of(customer), true);
@@ -191,6 +193,53 @@ public class DataSeeder {
     faqRepository.save(Faq.builder().question("Can I choose rental dates?").answer("Yes. Product details include datepickers and automatic duration pricing.").active(true).displayOrder(2).build());
     faqRepository.save(Faq.builder().question("Are payments real?").answer("Razorpay integration is available when credentials are configured; cash booking is also supported.").active(true).displayOrder(3).build());
     faqRepository.save(Faq.builder().question("Can products be filtered?").answer("Yes. Catalogue supports category, brand, price, availability, search, sorting, and pagination.").active(true).displayOrder(4).build());
+  }
+
+  private void seedCustomerReviews() {
+    seedCustomerReview(
+        "Aarav Mehta",
+        "Product photographer",
+        "The kit arrived clean, charged, and exactly matched the booking. We finished a two-day product shoot without chasing backups.",
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80");
+    seedCustomerReview(
+        "Nisha Rao",
+        "Brand filmmaker",
+        "Click-Kaar helped us pick lenses, lights, and audio in one call. The pricing was clear and pickup was smooth.",
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80");
+    seedCustomerReview(
+        "Kabir Sethi",
+        "Wedding creator",
+        "I booked a mirrorless body and primes for a wedding reel at the last minute. Everything was ready before call time.",
+        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=160&q=80");
+    seedCustomerReview(
+        "Meera Iyer",
+        "Studio producer",
+        "The studio lighting kit was packed beautifully and the team explained every modifier before handoff.",
+        "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=160&q=80");
+    seedCustomerReview(
+        "Rohan Dutta",
+        "Commercial director",
+        "We rented audio and gimbal gear for a food campaign. The booking stayed simple even when our dates changed.",
+        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=160&q=80");
+    seedCustomerReview(
+        "Tara Shah",
+        "Content creator",
+        "Great recommendations, quick confirmation, and no surprises on deposit or daily pricing.",
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=160&q=80");
+  }
+
+  private void seedCustomerReview(String name, String role, String quote, String avatar) {
+    if (customerReviewRepository.existsByNameIgnoreCaseAndQuoteIgnoreCase(name, quote)) {
+      return;
+    }
+
+    customerReviewRepository.save(CustomerReview.builder()
+        .name(name)
+        .role(role)
+        .rating(5)
+        .quote(quote)
+        .avatar(avatar)
+        .build());
   }
 
   private void seedStaticContent() {

@@ -1,13 +1,17 @@
 package com.clickkaar.service;
 
 import com.clickkaar.dto.content.ContactMessageRequest;
+import com.clickkaar.dto.content.CustomerReviewRequest;
+import com.clickkaar.dto.content.CustomerReviewResponse;
 import com.clickkaar.dto.content.FaqRequest;
 import com.clickkaar.dto.content.StaticContentRequest;
 import com.clickkaar.entity.ContactMessage;
+import com.clickkaar.entity.CustomerReview;
 import com.clickkaar.entity.Faq;
 import com.clickkaar.entity.StaticContent;
 import com.clickkaar.exception.ResourceNotFoundException;
 import com.clickkaar.repository.ContactMessageRepository;
+import com.clickkaar.repository.CustomerReviewRepository;
 import com.clickkaar.repository.FaqRepository;
 import com.clickkaar.repository.StaticContentRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContentService {
   private final ContactMessageRepository contactMessageRepository;
+  private final CustomerReviewRepository customerReviewRepository;
   private final FaqRepository faqRepository;
   private final StaticContentRepository staticContentRepository;
 
@@ -36,6 +41,22 @@ public class ContentService {
 
   public List<Faq> faqs() {
     return faqRepository.findByActiveTrueOrderByDisplayOrderAsc();
+  }
+
+  public List<CustomerReviewResponse> reviews() {
+    return customerReviewRepository.findAllByOrderByCreatedAtDesc().stream()
+        .map(this::toReviewResponse)
+        .toList();
+  }
+
+  public CustomerReviewResponse createReview(CustomerReviewRequest request) {
+    CustomerReview review = customerReviewRepository.save(CustomerReview.builder()
+        .name(request.name().trim())
+        .role(request.role().trim())
+        .rating(request.rating())
+        .quote(request.quote().trim())
+        .build());
+    return toReviewResponse(review);
   }
 
   public Faq createFaq(FaqRequest request) {
@@ -57,5 +78,17 @@ public class ContentService {
     content.setPageKey(request.pageKey());
     content.setContent(request.content());
     return staticContentRepository.save(content);
+  }
+
+  private CustomerReviewResponse toReviewResponse(CustomerReview review) {
+    return new CustomerReviewResponse(
+        review.getId(),
+        review.getName(),
+        review.getRole(),
+        review.getRating(),
+        review.getQuote(),
+        review.getAvatar(),
+        review.getCreatedAt()
+    );
   }
 }

@@ -11,6 +11,7 @@ import { CheckoutPageComponent } from './pages/checkout-page.component';
 import { ContactPageComponent } from './pages/contact-page.component';
 import { DashboardPageComponent } from './pages/dashboard-page.component';
 import { FaqPageComponent } from './pages/faq-page.component';
+import { ForgotPasswordPageComponent } from './pages/forgot-password-page.component';
 import { HomePageComponent } from './pages/home-page.component';
 import { LoginPageComponent } from './pages/login-page.component';
 import { NotFoundPageComponent } from './pages/not-found-page.component';
@@ -33,6 +34,7 @@ export const routes: Routes = [
   { path: 'cart', component: CartPageComponent, title: 'Booking Cart | Clickkaar' },
   { path: 'checkout', component: CheckoutPageComponent, canActivate: [requireLoginForCheckout], title: 'Checkout | Clickkaar' },
   { path: 'login', component: LoginPageComponent, title: 'Login | Clickkaar' },
+  { path: 'forgot-password', component: ForgotPasswordPageComponent, title: 'Forgot Password | Clickkaar' },
   { path: 'register', component: RegisterPageComponent, title: 'Register | Clickkaar' },
   { path: 'dashboard', component: DashboardPageComponent, title: 'Dashboard | Clickkaar' },
   { path: 'admin', component: AdminPageComponent, title: 'Admin | Clickkaar' },
