@@ -14,6 +14,12 @@ import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.ProductRepository;
 import com.clickkaar.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +29,26 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingService {
   private final BookingRepository bookingRepository;
   private final ProductRepository productRepository;
   private final UserRepository userRepository;
+  private final JavaMailSender mailSender;
   private static final DateTimeFormatter DISPLAY_DATE = DateTimeFormatter.ofPattern("dd MMM yyyy");
+
+  @Value("${spring.mail.username:}")
+  private String mailUsername;
+
+  @Value("${spring.mail.password:}")
+  private String mailPassword;
+
+  @Value("${app.frontend.login-url:https://clickkaar.com/login}")
+  private String loginUrl;
 
   @Transactional
   public BookingResponse create(BookingRequest request) {
@@ -65,7 +83,9 @@ public class BookingService {
       total = total.add(lineTotal);
     }
     booking.setTotalAmount(total);
-    return toResponse(bookingRepository.save(booking));
+    Booking saved = bookingRepository.save(booking);
+    sendBookingConfirmationEmail(saved);
+    return toResponse(saved);
   }
 
   public AvailabilityResponse availability(Long productId, LocalDate startDate, LocalDate endDate) {
@@ -119,5 +139,67 @@ public class BookingService {
 
   private String dateRange(LocalDate startDate, LocalDate endDate) {
     return startDate.format(DISPLAY_DATE) + " and " + endDate.format(DISPLAY_DATE);
+  }
+
+  private void sendBookingConfirmationEmail(Booking booking) {
+    if (!isMailConfigured()) {
+      log.warn("Skipping booking confirmation email for {} because MAIL_USERNAME or MAIL_PASSWORD is not configured", booking.getCustomer().getEmail());
+      return;
+    }
+
+    try {
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setFrom(configuredMailUsername());
+      message.setTo(booking.getCustomer().getEmail());
+      message.setSubject("Your ClickKaar Booking Has Been Received");
+      message.setText(
+          "Dear " + booking.getCustomer().getFullName() + ",\n\n"
+              + "Thank you for booking with ClickKaar.\n\n"
+              + "We have successfully received your booking request. Our team will review the booking details and keep you updated on the next steps.\n\n"
+              + "Booking Details:\n\n"
+              + "- Booking Number: " + booking.getBookingNumber() + "\n"
+              + "- Rental Period: " + dateRange(booking.getRentalStartDate(), booking.getRentalEndDate()) + "\n"
+              + "- Rental Days: " + booking.getRentalDays() + "\n"
+              + "- Items: " + bookedItems(booking) + "\n"
+              + "- Total Amount: Rs. " + booking.getTotalAmount().toPlainString() + "\n"
+              + "- Status: " + booking.getStatus() + "\n\n"
+              + "You can log in to your ClickKaar account to view your booking details.\n\n"
+              + "Login URL: " + configuredLoginUrl() + "\n\n"
+              + "If you have any questions or need assistance, please contact our support team.\n\n"
+              + "Best Regards,\n"
+              + "The ClickKaar Team\n"
+              + "ClickKaar Support\n"
+              + "Email: support@clickkaar.com\n"
+              + "Website: https://clickkaar.com"
+      );
+      mailSender.send(message);
+      log.info("Booking confirmation email sent to {} for {}", booking.getCustomer().getEmail(), booking.getBookingNumber());
+    } catch (MailAuthenticationException exception) {
+      log.warn("Unable to send booking confirmation email to {} because SMTP authentication failed for {}", booking.getCustomer().getEmail(), configuredMailUsername());
+    } catch (MailException exception) {
+      log.warn("Unable to send booking confirmation email to {}", booking.getCustomer().getEmail(), exception);
+    }
+  }
+
+  private String bookedItems(Booking booking) {
+    return booking.getItems().stream()
+        .map(item -> item.getProduct().getName())
+        .collect(Collectors.joining(", "));
+  }
+
+  private boolean isMailConfigured() {
+    return !configuredMailUsername().isBlank() && !configuredMailPassword().isBlank();
+  }
+
+  private String configuredMailUsername() {
+    return mailUsername == null ? "" : mailUsername.trim();
+  }
+
+  private String configuredMailPassword() {
+    return mailPassword == null ? "" : mailPassword.trim();
+  }
+
+  private String configuredLoginUrl() {
+    return loginUrl == null || loginUrl.isBlank() ? "https://clickkaar.com/login" : loginUrl.trim();
   }
 }

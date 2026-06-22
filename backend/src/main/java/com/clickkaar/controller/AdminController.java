@@ -40,12 +40,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -78,6 +84,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
+@Slf4j
 public class AdminController {
   private final BookingRepository bookingRepository;
   private final ProductRepository productRepository;
@@ -93,6 +100,16 @@ public class AdminController {
   private final PasswordEncoder passwordEncoder;
   private final ProductService productService;
   private final ObjectMapper objectMapper;
+  private final JavaMailSender mailSender;
+
+  @Value("${spring.mail.username:}")
+  private String mailUsername;
+
+  @Value("${spring.mail.password:}")
+  private String mailPassword;
+
+  @Value("${app.frontend.login-url:https://clickkaar.com/login}")
+  private String loginUrl;
 
   @GetMapping("/dashboard")
   public Map<String, Object> dashboard() {
@@ -382,7 +399,8 @@ public class AdminController {
         .roles(Set.of(customerRole))
         .build();
 
-    userRepository.save(customer);
+    User savedCustomer = userRepository.save(customer);
+    sendCustomerApprovedEmail(savedCustomer);
     CustomerVerificationResponse response = customerVerificationResponse(pendingRegistration);
     pendingRegistrationRepository.delete(pendingRegistration);
     return new CustomerVerificationResponse(
@@ -432,6 +450,57 @@ public class AdminController {
         "PENDING_VERIFICATION",
         documentsFor(pendingRegistration)
     );
+  }
+
+  private void sendCustomerApprovedEmail(User customer) {
+    if (!isMailConfigured()) {
+      log.warn("Skipping account approval email for {} because MAIL_USERNAME or MAIL_PASSWORD is not configured", customer.getEmail());
+      return;
+    }
+
+    try {
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setFrom(configuredMailUsername());
+      message.setTo(customer.getEmail());
+      message.setSubject("Your ClickKaar Account Has Been Approved");
+      message.setText(
+          "Dear " + customer.getFullName() + ",\n\n"
+              + "Congratulations! Your account has been successfully verified and approved by the ClickKaar team.\n\n"
+              + "You can now log in to your ClickKaar account and start exploring all the features and services available on our platform.\n\n"
+              + "Login Details:\n\n"
+              + "- Email: " + customer.getEmail() + "\n"
+              + "- Login URL: " + configuredLoginUrl() + "\n\n"
+              + "We are excited to have you as part of the ClickKaar community and look forward to supporting your journey with us.\n\n"
+              + "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n"
+              + "Best Regards,\n"
+              + "The ClickKaar Team\n"
+              + "ClickKaar Support\n"
+              + "Email: support@clickkaar.com\n"
+              + "Website: https://clickkaar.com"
+      );
+      mailSender.send(message);
+      log.info("Account approval email sent to {}", customer.getEmail());
+    } catch (MailAuthenticationException exception) {
+      log.warn("Unable to send account approval email to {} because SMTP authentication failed for {}", customer.getEmail(), configuredMailUsername());
+    } catch (MailException exception) {
+      log.warn("Unable to send account approval email to {}", customer.getEmail(), exception);
+    }
+  }
+
+  private boolean isMailConfigured() {
+    return !configuredMailUsername().isBlank() && !configuredMailPassword().isBlank();
+  }
+
+  private String configuredMailUsername() {
+    return mailUsername == null ? "" : mailUsername.trim();
+  }
+
+  private String configuredMailPassword() {
+    return mailPassword == null ? "" : mailPassword.trim();
+  }
+
+  private String configuredLoginUrl() {
+    return loginUrl == null || loginUrl.isBlank() ? "https://clickkaar.com/login" : loginUrl.trim();
   }
 
   private List<RegistrationDocumentResponse> documentsFor(PendingRegistration pendingRegistration) {

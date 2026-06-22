@@ -16,27 +16,30 @@ spring:
       hibernate:
         format_sql: true
   mail:
-    host: ${MAIL_HOST:smtp.titan.email}
+    host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:'info@click-kaar.com'}
-    password: ${MAIL_PASSWORD:OjasKharche}
+    username: ${MAIL_USERNAME:clickkaar@gmail.com}
+    password: ${MAIL_PASSWORD:vucl ccxd pvcz ymnm}
     protocol: smtp
     test-connection: false
     properties:
-      mail.debug: true
-      mail.debug.auth: true
+      mail.debug: false
+      mail.debug.auth: false
       mail.smtp.auth: true
       mail.smtp.connectiontimeout: 10000
       mail.smtp.timeout: 10000
       mail.smtp.writetimeout: 10000
+      mail.smtp.ssl.enable: false
       mail.smtp.ssl.protocols: TLSv1.2
       mail.smtp.starttls.enable: true
       mail.smtp.starttls.required: true
-      mail.smtp.ssl.trust: ${MAIL_HOST:smtp.titan.email}
+      mail.smtp.ssl.trust: ${MAIL_HOST:smtp.gmail.com}
       
   
 
 app:
+  frontend:
+    login-url: ${FRONTEND_LOGIN_URL:https://clickkaar.com/login}
   jwt:
     secret: ${JWT_SECRET:replace-this-with-a-very-long-secret-key-for-dev-only}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}

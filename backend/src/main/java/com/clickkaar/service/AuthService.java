@@ -264,11 +264,23 @@ public class AuthService {
       SimpleMailMessage message = new SimpleMailMessage();
       message.setFrom(configuredMailUsername());
       message.setTo(registration.getEmail());
-      message.setSubject("Click-Kaar registration received");
+      message.setSubject("Welcome to ClickKaar - Account Verification in Progress");
       message.setText(
-          "Hi " + registration.getFullName() + ",\n\n"
-              + "Thank you for choosing Click-Kaar. Your profile is under scrutiny.\n\n"
-              + "We will notify you once admin verification is complete."
+          "Dear " + registration.getFullName() + ",\n\n"
+              + "Thank you for registering with ClickKaar.\n\n"
+              + "We have successfully received your registration request. Your account is currently under review by the ClickKaar verification team to ensure the authenticity and quality of our platform.\n\n"
+              + "What happens next?\n\n"
+              + "- Our team will review your submitted details.\n"
+              + "- Once your account is verified and approved, you will receive a confirmation email.\n"
+              + "- If any additional information is required, our team will contact you.\n\n"
+              + "The verification process may take 24-48 business hours.\n\n"
+              + "We appreciate your patience and look forward to having you as a part of the ClickKaar community.\n\n"
+              + "If you have any questions or need assistance, please feel free to contact our support team.\n\n"
+              + "Best Regards,\n"
+              + "The ClickKaar Team\n"
+              + "ClickKaar Support\n"
+              + "Email: support@clickkaar.com\n"
+              + "Website: https://clickkaar.com"
       );
       mailSender.send(message);
       log.info("Registration email sent to {}", registration.getEmail());
