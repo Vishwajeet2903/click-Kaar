@@ -141,7 +141,7 @@ interface DocumentPreview {
                 <h2>{{ activeTitle() }}</h2>
               </div>
               <div class="topbar-actions">
-                <button type="button" class="ghost-btn" (click)="exportActive()">Export</button>
+                <!-- <button type="button" class="ghost-btn" (click)="exportActive()">Export</button> -->
                 <button type="button" class="primary-btn" (click)="openCreate()">Create</button>
                 <button type="button" class="danger-btn topbar-logout" (click)="logout()">Logout</button>
               </div>
@@ -219,16 +219,23 @@ interface DocumentPreview {
                       <p class="error-text">{{ pendingLoadError }}</p> 
                     } @else if (pendingCustomers.length) {
                       <div class="dense-list request-list">
-                        @for (customer of pendingCustomers; track customer.requestId) {
+                        @for (customer of pendingPageItems(); track customer.requestId) {
                           <article [class.active]="selectedPendingCustomer?.requestId === customer.requestId">
                             <button type="button" class="request-summary" (click)="openPendingDetails(customer)">
                               <strong>{{ customer.fullName }}</strong>
                               <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
                               <small>{{ customer.city || 'City not added' }}{{ customer.state ? ', ' + customer.state : '' }}</small>
                             </button>
-                            <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">View Details</button>
+                            <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">View</button>
                           </article>
                         }
+                      </div>
+                      <div class="pagination-row">
+                        <span>{{ pendingPageSummary() }}</span>
+                        <div>
+                          <button type="button" class="ghost-mini" [disabled]="pendingPage === 1" (click)="changePendingPage(-1)">Previous</button>
+                          <button type="button" class="mini-btn" [disabled]="pendingPage === pendingPageCount()" (click)="changePendingPage(1)">Next</button>
+                        </div>
                       </div>
                     } @else {
                       <p class="muted">No customer registrations are waiting for approval.</p>
@@ -242,68 +249,89 @@ interface DocumentPreview {
                           <h3>{{ selectedPendingCustomer.fullName }}</h3>
                           <span>{{ selectedPendingCustomer.status }}</span>
                         </div>
-                        <button type="button" class="primary-btn" [disabled]="verifyingRequestId === selectedPendingCustomer.requestId" (click)="verifyCustomer(selectedPendingCustomer)">
-                          {{ verifyingRequestId === selectedPendingCustomer.requestId ? 'Granting...' : 'Grant login access' }}
-                        </button>
+                        <span class="detail-page-count">Page {{ registrationDetailPage }} of 3</span>
                       </div>
 
-                      <div class="detail-section">
-                        <h4>Personal details</h4>
-                        <dl class="detail-grid">
-                          <div><dt>First name</dt><dd>{{ selectedPendingCustomer.firstName || '-' }}</dd></div>
-                          <div><dt>Last name</dt><dd>{{ selectedPendingCustomer.lastName || '-' }}</dd></div>
-                          <div><dt>Email</dt><dd>{{ selectedPendingCustomer.email }}</dd></div>
-                          <div><dt>Mobile</dt><dd>{{ selectedPendingCustomer.mobile || '-' }}</dd></div>
-                          <div><dt>Gender</dt><dd>{{ selectedPendingCustomer.gender || '-' }}</dd></div>
-                          <div><dt>Date of birth</dt><dd>{{ selectedPendingCustomer.dob || '-' }}</dd></div>
-                          <div><dt>Alternate contact</dt><dd>{{ selectedPendingCustomer.alternateContactNumber || '-' }}</dd></div>
-                          <div><dt>Occupation</dt><dd>{{ selectedPendingCustomer.occupation || '-' }}</dd></div>
-                        </dl>
+                      <div class="detail-stepper" aria-label="Registration review pages">
+                        <button type="button" [class.active]="registrationDetailPage === 1" (click)="setRegistrationDetailPage(1)">Personal</button>
+                        <button type="button" [class.active]="registrationDetailPage === 2" (click)="setRegistrationDetailPage(2)">Address</button>
+                        <button type="button" [class.active]="registrationDetailPage === 3" (click)="setRegistrationDetailPage(3)">Documents</button>
                       </div>
 
-                      <div class="detail-section">
-                        <h4>Address & work</h4>
-                        <dl class="detail-grid">
-                          <div><dt>Address</dt><dd>{{ selectedPendingCustomer.currentAddress || '-' }}</dd></div>
-                          <div><dt>City</dt><dd>{{ selectedPendingCustomer.city || '-' }}</dd></div>
-                          <div><dt>State</dt><dd>{{ selectedPendingCustomer.state || '-' }}</dd></div>
-                          <div><dt>Pincode</dt><dd>{{ selectedPendingCustomer.pincode || '-' }}</dd></div>
-                          <div><dt>Country</dt><dd>{{ selectedPendingCustomer.country || '-' }}</dd></div>
-                          <div><dt>Residence type</dt><dd>{{ selectedPendingCustomer.residenceType || '-' }}</dd></div>
-                          <div><dt>Company</dt><dd>{{ selectedPendingCustomer.companyName || '-' }}</dd></div>
-                          <div><dt>Social profile</dt><dd>{{ selectedPendingCustomer.socialMediaProfile || '-' }}</dd></div>
-                        </dl>
-                      </div>
+                      @if (registrationDetailPage === 1) {
+                        <div class="detail-section">
+                          <h4>Personal details</h4>
+                          <dl class="detail-grid">
+                            <div><dt>First name</dt><dd>{{ selectedPendingCustomer.firstName || '-' }}</dd></div>
+                            <div><dt>Last name</dt><dd>{{ selectedPendingCustomer.lastName || '-' }}</dd></div>
+                            <div><dt>Email</dt><dd>{{ selectedPendingCustomer.email }}</dd></div>
+                            <div><dt>Mobile</dt><dd>{{ selectedPendingCustomer.mobile || '-' }}</dd></div>
+                            <div><dt>Gender</dt><dd>{{ selectedPendingCustomer.gender || '-' }}</dd></div>
+                            <div><dt>Date of birth</dt><dd>{{ selectedPendingCustomer.dob || '-' }}</dd></div>
+                            <div><dt>Alternate contact</dt><dd>{{ selectedPendingCustomer.alternateContactNumber || '-' }}</dd></div>
+                            <div><dt>Occupation</dt><dd>{{ selectedPendingCustomer.occupation || '-' }}</dd></div>
+                          </dl>
+                        </div>
+                      }
 
-                      <div class="detail-section">
-                        <h4>Uploaded images</h4>
-                        @if (documentPreviewError) {
-                          <p class="error-text">{{ documentPreviewError }}</p>
-                        }
-                        @if (selectedPendingCustomer.documents.length) {
-                          <div class="document-grid">
-                            @for (document of selectedPendingCustomer.documents; track document.type) {
-                              <article>
-                                <div class="document-frame">
-                                  @if (documentPreviews[document.type]) {
-                                    @if (documentPreviews[document.type].isImage) {
-                                      <button type="button" class="document-preview-btn" (click)="openDocumentPreview(documentPreviews[document.type])">
-                                        <img [src]="documentPreviews[document.type].url" [alt]="document.label">
-                                      </button>
+                      @if (registrationDetailPage === 2) {
+                        <div class="detail-section">
+                          <h4>Address & work</h4>
+                          <dl class="detail-grid">
+                            <div><dt>Address</dt><dd>{{ selectedPendingCustomer.currentAddress || '-' }}</dd></div>
+                            <div><dt>City</dt><dd>{{ selectedPendingCustomer.city || '-' }}</dd></div>
+                            <div><dt>State</dt><dd>{{ selectedPendingCustomer.state || '-' }}</dd></div>
+                            <div><dt>Pincode</dt><dd>{{ selectedPendingCustomer.pincode || '-' }}</dd></div>
+                            <div><dt>Country</dt><dd>{{ selectedPendingCustomer.country || '-' }}</dd></div>
+                            <div><dt>Residence type</dt><dd>{{ selectedPendingCustomer.residenceType || '-' }}</dd></div>
+                            <div><dt>Company</dt><dd>{{ selectedPendingCustomer.companyName || '-' }}</dd></div>
+                            <div><dt>Social profile</dt><dd>{{ selectedPendingCustomer.socialMediaProfile || '-' }}</dd></div>
+                          </dl>
+                        </div>
+                      }
+
+                      @if (registrationDetailPage === 3) {
+                        <div class="detail-section">
+                          <h4>Uploaded images</h4>
+                          @if (documentPreviewError) {
+                            <p class="error-text">{{ documentPreviewError }}</p>
+                          }
+                          @if (selectedPendingCustomer.documents.length) {
+                            <div class="document-grid">
+                              @for (document of selectedPendingCustomer.documents; track document.type) {
+                                <article>
+                                  <div class="document-frame">
+                                    @if (documentPreviews[document.type]) {
+                                      @if (documentPreviews[document.type].isImage) {
+                                        <button type="button" class="document-preview-btn" (click)="openDocumentPreview(documentPreviews[document.type])">
+                                          <img [src]="documentPreviews[document.type].url" [alt]="document.label">
+                                        </button>
+                                      } @else {
+                                        <a [href]="documentPreviews[document.type].url" target="_blank" rel="noreferrer">Open file</a>
+                                      }
                                     } @else {
-                                      <a [href]="documentPreviews[document.type].url" target="_blank" rel="noreferrer">Open file</a>
+                                      <span>{{ isLoadingDocuments ? 'Loading...' : 'Preview unavailable' }}</span>
                                     }
-                                  } @else {
-                                    <span>{{ isLoadingDocuments ? 'Loading...' : 'Preview unavailable' }}</span>
-                                  }
-                                </div>
-                                <strong>{{ document.label }}</strong>
-                                <span>{{ document.fileName }}</span>
-                              </article>
-                            }
-                          </div>
+                                  </div>
+                                  <strong>{{ document.label }}</strong>
+                                  <span>{{ document.fileName }}</span>
+                                </article>
+                              }
+                            </div>
+                          } @else {
+                            <p class="muted">No documents were uploaded with this request.</p>
+                          }
+                        </div>
+                      }
+
+                      <div class="detail-actions">
+                        <button type="button" class="ghost-mini" [disabled]="registrationDetailPage === 1" (click)="changeRegistrationDetailPage(-1)">Previous</button>
+                        @if (registrationDetailPage < 3) {
+                          <button type="button" class="mini-btn" (click)="changeRegistrationDetailPage(1)">Next</button>
                         } @else {
-                          <p class="muted">No documents were uploaded with this request.</p>
+                          <button type="button" class="primary-btn" [disabled]="verifyingRequestId === selectedPendingCustomer.requestId" (click)="verifyCustomer(selectedPendingCustomer)">
+                            {{ verifyingRequestId === selectedPendingCustomer.requestId ? 'Granting...' : 'Grant login access' }}
+                          </button>
                         }
                       </div>
                     } @else {
@@ -317,9 +345,9 @@ interface DocumentPreview {
               }
 
               @case ('inventory') {
-                <div class="tool-row">
-                  <input class="search-input" placeholder="Search product, brand, category" [ngModel]="inventoryQuery()" (ngModelChange)="inventoryQuery.set($event)">
-                  <select [ngModel]="inventoryStatus()" (ngModelChange)="inventoryStatus.set($event)">
+                <div class="tool-row inventory-filter-row">
+                  <input class="search-input" placeholder="Search product, brand, category" [ngModel]="inventoryQuery()" (ngModelChange)="inventoryQuery.set($event); inventoryPage = 1">
+                  <select [ngModel]="inventoryStatus()" (ngModelChange)="inventoryStatus.set($event); inventoryPage = 1">
                     <option value="">All statuses</option>
                     <option value="Available">Available</option>
                     <option value="Unavailable">Unavailable</option>
@@ -333,7 +361,7 @@ interface DocumentPreview {
                       <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Calendar</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
-                      @for (product of filteredProducts(); track product.id) {
+                      @for (product of pagedProducts(); track product.id) {
                         <tr>
                           <td>
                             <div class="product-cell">
@@ -357,36 +385,23 @@ interface DocumentPreview {
                     </tbody>
                   </table>
                 </div>
-
-                <form class="surface editor-panel" [formGroup]="productForm" (ngSubmit)="saveProduct()">
-                  <div class="panel-head"><h3>{{ editingProductId ? 'Edit product' : 'Create product' }}</h3><button type="button" class="link-btn" (click)="resetProductForm()">Reset</button></div>
-                  @if (productFormError) {
-                    <p class="form-alert" role="alert">{{ productFormError }}</p>
-                  }
-                  <div class="form-grid">
-                    <label>Name<input formControlName="name"></label>
-                    <label>Brand<input formControlName="brand"></label>
-                    <label>Category<input formControlName="category"></label>
-                    <label>Status<select formControlName="status"><option>Available</option><option>Unavailable</option><option>Maintenance</option></select></label>
-                    <label>Daily price<input type="number" formControlName="dailyPrice"></label>
-                    <label>Weekly price<input type="number" formControlName="weeklyPrice"></label>
-                    <label>Stock<input type="number" formControlName="stock"></label>
-                    <label>Image URL<input formControlName="image"></label>
+                <div class="pagination-row">
+                  <span>{{ pageSummary(filteredProducts().length, inventoryPage) }}</span>
+                  <div>
+                    <button type="button" class="ghost-mini" [disabled]="inventoryPage === 1" (click)="changePage('inventory', -1)">Previous</button>
+                    <button type="button" class="mini-btn" [disabled]="inventoryPage === pageCount(filteredProducts().length)" (click)="changePage('inventory', 1)">Next</button>
                   </div>
-                  <label>Description<textarea formControlName="description"></textarea></label>
-                  <label>Specifications<textarea formControlName="specifications" placeholder="Sensor: 45MP, Video: 8K RAW"></textarea></label>
-                  <button type="submit" class="primary-btn wide">{{ editingProductId ? 'Save product' : 'Add product' }}</button>
-                </form>
+                </div>
               }
 
               @case ('bookings') {
-                <div class="tool-row">
-                  <input class="search-input" placeholder="Search booking, customer, product" [ngModel]="bookingQuery()" (ngModelChange)="bookingQuery.set($event)">
-                  <select [ngModel]="bookingStatusFilter()" (ngModelChange)="bookingStatusFilter.set($event)">
+                <div class="tool-row booking-filter-row">
+                  <input class="search-input" placeholder="Search booking, customer, product" [ngModel]="bookingQuery()" (ngModelChange)="bookingQuery.set($event); bookingsPage = 1">
+                  <select [ngModel]="bookingStatusFilter()" (ngModelChange)="bookingStatusFilter.set($event); bookingsPage = 1">
                     <option value="">All booking statuses</option>
                     <option>Upcoming</option><option>Active</option><option>Completed</option><option>Cancelled</option><option>Overdue</option>
                   </select>
-                  <select [ngModel]="paymentStatusFilter()" (ngModelChange)="paymentStatusFilter.set($event)">
+                  <select [ngModel]="paymentStatusFilter()" (ngModelChange)="paymentStatusFilter.set($event); bookingsPage = 1">
                     <option value="">All payment statuses</option>
                     <option>Paid</option><option>Pending</option><option>Failed</option><option>Refunded</option>
                   </select>
@@ -395,7 +410,7 @@ interface DocumentPreview {
                   <table>
                     <thead><tr><th>Booking</th><th>Rental window</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th><th>Return</th><th>Actions</th></tr></thead>
                     <tbody>
-                      @for (booking of filteredBookings(); track booking.id) {
+                      @for (booking of pagedBookings(); track booking.id) {
                         <tr>
                           <td><strong>{{ booking.id }}</strong><span>{{ booking.customer }} - {{ booking.phone }}</span></td>
                           <td>{{ booking.startDate | date:'mediumDate' }} - {{ booking.endDate | date:'mediumDate' }}</td>
@@ -413,12 +428,19 @@ interface DocumentPreview {
                     </tbody>
                   </table>
                 </div>
+                <div class="pagination-row">
+                  <span>{{ pageSummary(filteredBookings().length, bookingsPage) }}</span>
+                  <div>
+                    <button type="button" class="ghost-mini" [disabled]="bookingsPage === 1" (click)="changePage('bookings', -1)">Previous</button>
+                    <button type="button" class="mini-btn" [disabled]="bookingsPage === pageCount(filteredBookings().length)" (click)="changePage('bookings', 1)">Next</button>
+                  </div>
+                </div>
               }
 
               @case ('customers') {
-                <div class="tool-row"><input class="search-input" placeholder="Search customer, email, city" [ngModel]="customerQuery()" (ngModelChange)="customerQuery.set($event)"></div>
+                <div class="tool-row"><input class="search-input" placeholder="Search customer, email, city" [ngModel]="customerQuery()" (ngModelChange)="customerQuery.set($event); customersPage = 1"></div>
                 <div class="card-grid">
-                  @for (customer of filteredCustomers(); track customer.id) {
+                  @for (customer of pagedCustomers(); track customer.id) {
                     <article class="surface customer-card" [class.blocked]="customer.blocked">
                       <div class="avatar">{{ customer.name.charAt(0) }}</div>
                       <div>
@@ -437,6 +459,13 @@ interface DocumentPreview {
                     </article>
                   }
                 </div>
+                <div class="pagination-row">
+                  <span>{{ pageSummary(filteredCustomers().length, customersPage) }}</span>
+                  <div>
+                    <button type="button" class="ghost-mini" [disabled]="customersPage === 1" (click)="changePage('customers', -1)">Previous</button>
+                    <button type="button" class="mini-btn" [disabled]="customersPage === pageCount(filteredCustomers().length)" (click)="changePage('customers', 1)">Next</button>
+                  </div>
+                </div>
               }
 
               @case ('payments') {
@@ -444,7 +473,7 @@ interface DocumentPreview {
                   <table>
                     <thead><tr><th>Transaction</th><th>Booking</th><th>Customer</th><th>Gateway</th><th>Policy</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody>
-                      @for (payment of payments(); track payment.id) {
+                      @for (payment of pagedPayments(); track payment.id) {
                         <tr>
                           <td><strong>{{ payment.id }}</strong><span>{{ payment.paidAt | date:'mediumDate' }}</span></td>
                           <td>{{ payment.bookingId }}</td>
@@ -459,6 +488,13 @@ interface DocumentPreview {
                     </tbody>
                   </table>
                 </div>
+                <div class="pagination-row">
+                  <span>{{ pageSummary(payments().length, paymentsPage) }}</span>
+                  <div>
+                    <button type="button" class="ghost-mini" [disabled]="paymentsPage === 1" (click)="changePage('payments', -1)">Previous</button>
+                    <button type="button" class="mini-btn" [disabled]="paymentsPage === pageCount(payments().length)" (click)="changePage('payments', 1)">Next</button>
+                  </div>
+                </div>
               }
 
               @case ('content') {
@@ -466,23 +502,37 @@ interface DocumentPreview {
                   <section class="surface panel">
                     <div class="panel-head"><h3>Blog & SEO</h3><button type="button" class="mini-btn" (click)="publishDraft()">Publish draft</button></div>
                     <div class="dense-list">
-                      @for (post of blogPosts(); track post.id) {
+                      @for (post of pagedBlogPosts(); track post.id) {
                         <article>
                           <div><strong>{{ post.title }}</strong><span>{{ post.category }} - {{ post.author }} - {{ post.publishDate | date:'mediumDate' }}</span></div>
                           <b class="status" [class]="statusClass(post.status)">{{ post.status }}</b>
                         </article>
                       }
                     </div>
+                    <div class="pagination-row">
+                      <span>{{ pageSummary(blogPosts().length, blogPage) }}</span>
+                      <div>
+                        <button type="button" class="ghost-mini" [disabled]="blogPage === 1" (click)="changePage('blog', -1)">Previous</button>
+                        <button type="button" class="mini-btn" [disabled]="blogPage === pageCount(blogPosts().length)" (click)="changePage('blog', 1)">Next</button>
+                      </div>
+                    </div>
                   </section>
                   <section class="surface panel">
                     <div class="panel-head"><h3>Static content</h3><button type="button" class="mini-btn" (click)="markContentReviewed()">Mark reviewed</button></div>
                     <div class="dense-list">
-                      @for (item of staticContent(); track item.key) {
+                      @for (item of pagedStaticContent(); track item.key) {
                         <article>
                           <div><strong>{{ item.title }}</strong><span>{{ item.owner }} - {{ item.updatedAt | date:'mediumDate' }}</span></div>
                           <b class="status" [class]="statusClass(item.status)">{{ item.status }}</b>
                         </article>
                       }
+                    </div>
+                    <div class="pagination-row">
+                      <span>{{ pageSummary(staticContent().length, staticContentPage) }}</span>
+                      <div>
+                        <button type="button" class="ghost-mini" [disabled]="staticContentPage === 1" (click)="changePage('staticContent', -1)">Previous</button>
+                        <button type="button" class="mini-btn" [disabled]="staticContentPage === pageCount(staticContent().length)" (click)="changePage('staticContent', 1)">Next</button>
+                      </div>
                     </div>
                   </section>
                 </div>
@@ -557,25 +607,15 @@ interface DocumentPreview {
         @if (activeDocumentPreview) {
           <div class="document-lightbox" role="dialog" aria-modal="true" [attr.aria-label]="activeDocumentPreview.label" (click)="closeDocumentPreview()">
             <div class="document-lightbox-content" (click)="$event.stopPropagation()">
-              <div class="lightbox-head">
-                <div>
-                  <h3>{{ activeDocumentPreview.label }}</h3>
-                  <span>{{ activeDocumentPreview.fileName }}</span>
-                </div>
-                <button type="button" class="lightbox-close" aria-label="Close image preview" (click)="closeDocumentPreview()">Close</button>
-              </div>
+              <button type="button" class="lightbox-close" aria-label="Close image preview" (click)="closeDocumentPreview()">×</button>
               <div class="lightbox-image-row">
-                <button type="button" class="slide-btn theme-arrow-button previous" aria-label="Previous image" [disabled]="imagePreviews().length < 2" (click)="showPreviousDocumentPreview()">
-                  <span class="theme-arrow-icon" aria-hidden="true"></span>
-                </button>
+                <button type="button" class="lightbox-nav previous" aria-label="Previous image" [disabled]="imagePreviews().length < 2" (click)="showPreviousDocumentPreview()">‹</button>
                 <img [src]="activeDocumentPreview.url" [alt]="activeDocumentPreview.label">
-                <button type="button" class="slide-btn theme-arrow-button" aria-label="Next image" [disabled]="imagePreviews().length < 2" (click)="showNextDocumentPreview()">
-                  <span class="theme-arrow-icon" aria-hidden="true"></span>
-                </button>
+                <button type="button" class="lightbox-nav next" aria-label="Next image" [disabled]="imagePreviews().length < 2" (click)="showNextDocumentPreview()">›</button>
               </div>
               <div class="lightbox-foot">
+                <strong>{{ activeDocumentPreview.label }}</strong>
                 <span>{{ activeDocumentIndex() + 1 }} / {{ imagePreviews().length }}</span>
-                <button type="button" class="ghost-mini" [disabled]="imagePreviews().length < 2" (click)="showNextDocumentPreview()">Slide image</button>
               </div>
             </div>
           </div>
@@ -590,112 +630,149 @@ interface DocumentPreview {
     </section>
   `,
   styles: [`
-    .admin-page { padding-bottom: 4rem; }
-    .admin-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 250px minmax(0, 1fr); }
-    .admin-sidebar { padding: 1rem; position: sticky; top: 92px; }
-    .admin-sidebar h1 { font-size: 1.55rem; line-height: 1; margin: 0 0 1.1rem; }
-    nav { display: grid; gap: .35rem; }
-    nav button { align-items: center; background: transparent; border: 0; border-radius: 14px; color: #171717; display: flex; font-weight: 900; justify-content: space-between; min-height: 44px; padding: .7rem .8rem; text-align: left; }
-    nav button small { background: #fff; border-radius: 999px; color: #777; font-size: .68rem; min-width: 26px; padding: .2rem .45rem; text-align: center; }
-    nav button.active, nav button:hover { background: #111; color: #fff; }
-    nav button.active small, nav button:hover small { background: #ff9700; color: #111; }
-    .admin-workspace { display: grid; gap: 1.1rem; min-width: 0; }
-    .admin-topbar { align-items: center; display: flex; gap: 1rem; justify-content: space-between; }
-    .admin-topbar h2 { font-size: clamp(2rem, 4vw, 3.6rem); line-height: .94; margin: 0; }
-    .topbar-actions, .tool-row, .action-cell { align-items: center; display: flex; flex-wrap: wrap; gap: .65rem; }
-    .tool-row { justify-content: space-between; }
+    :host {
+      --admin-bg: #f6f6f3;
+      --admin-panel: #ffffff;
+      --admin-soft: #faf9f6;
+      --admin-line: rgba(17, 17, 17, .09);
+      --admin-muted: #6f6f68;
+      --admin-ink: #141414;
+      --admin-accent: #ff9700;
+    }
+    .admin-page { max-width: min(1400px, calc(100vw - 48px)) !important; padding-bottom: 2rem; }
+    .admin-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 240px minmax(0, 1fr); }
+    .admin-page :where(.surface) { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
+    .admin-sidebar { background: #161616 !important; color: #fff; padding: .9rem; position: sticky; top: 92px; }
+    .admin-sidebar .eyebrow { color: rgba(255,255,255,.58); margin: 0 0 .35rem; }
+    .admin-sidebar h1 { color: #fff; font-size: 1.35rem; line-height: 1.05; margin: 0 0 1rem; }
+    nav { display: grid; gap: .25rem; }
+    nav button { align-items: center; background: transparent; border: 1px solid transparent; border-radius: 6px; color: rgba(255,255,255,.78); display: flex; font-weight: 850; justify-content: space-between; min-height: 40px; padding: .62rem .7rem; text-align: left; }
+    nav button small { background: rgba(255,255,255,.1); border-radius: 999px; color: rgba(255,255,255,.72); font-size: .68rem; min-width: 26px; padding: .16rem .42rem; text-align: center; }
+    nav button.active, nav button:hover { background: #fff; border-color: #fff; color: #111; }
+    nav button.active small, nav button:hover small { background: var(--admin-accent); color: #111; }
+    .admin-workspace { display: grid; gap: 1.25rem; min-width: 0; }
+    .admin-topbar { align-items: end; background: linear-gradient(180deg, #fff, var(--admin-soft)); border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: 1.25rem; justify-content: space-between; padding: 1.15rem 1.2rem; }
+    .admin-topbar .eyebrow { color: var(--admin-accent); margin: 0 0 .25rem; }
+    .admin-topbar h2 { font-size: clamp(1.75rem, 3.2vw, 3rem); line-height: 1; margin: 0; }
+    .topbar-actions, .tool-row, .action-cell { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; }
+    .tool-row { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 8px; justify-content: space-between; padding: .8rem; }
     .search-input { flex: 1 1 260px; }
-    input, select, textarea { background: #fff; border: 1px solid rgba(17,17,17,.1); border-radius: 16px; color: #111; font: inherit; min-height: 44px; outline: 0; padding: .75rem .9rem; width: 100%; }
+    .inventory-filter-row { justify-content: flex-start; }
+    .inventory-filter-row .search-input { flex: 0 1 320px; max-width: 320px; }
+    .inventory-filter-row select { flex: 0 0 180px; width: 180px; }
+    .booking-filter-row { justify-content: flex-start; }
+    .booking-filter-row .search-input { flex: 0 1 320px; max-width: 320px; }
+    .booking-filter-row select { flex: 0 0 190px; width: 190px; }
+    input, select, textarea { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: var(--admin-ink); font: inherit; min-height: 42px; outline: 0; padding: .68rem .8rem; width: 100%; }
     textarea { min-height: 92px; resize: vertical; }
-    input:focus, select:focus, textarea:focus { border-color: #ff9700; box-shadow: 0 0 0 4px rgba(255,151,0,.16); }
-    button, .primary-btn, .ghost-btn, .mini-btn, .danger-btn, .ghost-mini, .link-btn { align-items: center; border: 0; border-radius: 999px; display: inline-flex; font-weight: 900; justify-content: center; transition: transform .24s ease, background .24s ease, color .24s ease, border-color .24s ease; white-space: nowrap; }
-    .primary-btn { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; min-height: 48px; padding: .8rem 1.2rem; }
-    .primary-btn:hover { background: #ff9700; color: #111; transform: translateY(-2px); }
-    .ghost-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; min-height: 48px; padding: .8rem 1.2rem; }
-    .mini-btn, .danger-btn, .ghost-mini, .link-btn { font-size: .78rem; min-height: 34px; padding: .45rem .7rem; }
-    .mini-btn { background: #111; color: #fff; }
-    .danger-btn { background: #fff1f1; color: #b42318; }
-    .topbar-logout { min-height: 48px; padding: .8rem 1.2rem; }
-    .ghost-mini, .link-btn { background: #fff; border: 1px solid rgba(17,17,17,.1); color: #111; }
-    button:disabled { cursor: not-allowed; opacity: .55; transform: none !important; }
-    .metric-grid { display: grid; gap: .9rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .metric-card { display: grid; gap: .45rem; min-height: 142px; padding: 1rem; }
-    .metric-card span { color: #777; font-size: .76rem; font-weight: 900; text-transform: uppercase; }
-    .metric-card strong { color: #111; font-size: clamp(1.55rem, 3vw, 2.4rem); line-height: 1; }
-    .metric-card small { color: #777; font-weight: 700; }
-    .metric-card.orange { background: #fff5e8; border-color: rgba(255,151,0,.28); }
-    .metric-card.green { background: #effaf3; border-color: rgba(34,197,94,.2); }
-    .metric-card.red { background: #fff1f1; border-color: rgba(244,63,94,.18); }
-    .split-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .panel, .table-panel, .editor-panel, .employee-form, .access-card { padding: 1rem; }
-    .panel-head { align-items: center; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: .9rem; }
+    input:focus, select:focus, textarea:focus { border-color: var(--admin-accent); box-shadow: 0 0 0 3px rgba(255,151,0,.14); }
+    button, .primary-btn, .ghost-btn, .mini-btn, .danger-btn, .ghost-mini, .link-btn { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 900; justify-content: center; transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease; white-space: nowrap; }
+    .primary-btn { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; min-height: 50px; padding: .85rem 1.25rem; }
+    .primary-btn:hover { background: var(--admin-accent); box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .ghost-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); box-shadow: 0 8px 22px rgba(0,0,0,.06); color: #111; min-height: 50px; padding: .85rem 1.25rem; }
+    .ghost-btn:hover, .ghost-mini:hover, .link-btn:hover { background: #111; border-color: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; transform: translateY(-2px); }
+    .mini-btn, .danger-btn, .ghost-mini, .link-btn { font-size: .78rem; min-height: 34px; padding: .48rem .78rem; }
+    .mini-btn { background: #111; box-shadow: 0 10px 22px rgba(0,0,0,.14); color: #fff; }
+    .mini-btn:hover { background: var(--admin-accent); box-shadow: 0 14px 28px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .danger-btn { background: #fff1f1; border: 1px solid rgba(180,35,24,.16); box-shadow: 0 8px 22px rgba(180,35,24,.08); color: #b42318; }
+    .danger-btn:hover { background: #b42318; border-color: #b42318; box-shadow: 0 14px 28px rgba(180,35,24,.18); color: #fff; transform: translateY(-2px); }
+    .topbar-logout { min-height: 50px; padding: .85rem 1.25rem; }
+    .ghost-mini, .link-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); box-shadow: 0 8px 22px rgba(0,0,0,.05); color: #111; }
+    button:disabled, button:disabled:hover { cursor: not-allowed; opacity: .55; transform: none !important; }
+    .metric-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .metric-card { align-content: space-between; display: grid; gap: .55rem; min-height: 136px; min-width: 0; padding: 1rem; position: relative; }
+    .metric-card::before { background: #111; border-radius: 999px; content: ""; height: 4px; left: .9rem; position: absolute; right: .9rem; top: .75rem; }
+    .metric-card span { color: var(--admin-muted); font-size: .7rem; font-weight: 900; padding-top: .55rem; text-transform: uppercase; }
+    .metric-card strong { color: #111; font-size: clamp(1.45rem, 2.6vw, 2.15rem); line-height: 1; }
+    .metric-card small { color: var(--admin-muted); font-weight: 650; line-height: 1.35; }
+    .metric-card.orange::before { background: #ff9700; }
+    .metric-card.green::before { background: #12b76a; }
+    .metric-card.red::before { background: #e5484d; }
+    .metric-card.orange { background: #fffaf2; border-color: rgba(255,151,0,.24); }
+    .metric-card.green { background: #f4fbf7; border-color: rgba(34,197,94,.18); }
+    .metric-card.red { background: #fff7f6; border-color: rgba(244,63,94,.16); }
+    .split-grid { align-items: stretch; display: grid; gap: 1.25rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .panel, .table-panel, .editor-panel, .employee-form, .access-card { padding: 1.05rem; }
+    .panel, .editor-panel, .employee-form { display: grid; gap: 1rem; min-width: 0; }
+    .panel-head { align-items: center; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 0; min-width: 0; }
     .panel-head h3, .customer-card h3 { font-size: 1.05rem; line-height: 1.1; margin: 0; }
     .panel-head span { color: #777; font-size: .82rem; font-weight: 800; }
-    .dense-list { display: grid; gap: .55rem; }
-    .dense-list article { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.07); border-radius: 16px; display: flex; gap: .8rem; justify-content: space-between; padding: .8rem; }
-    .dense-list article.active { border-color: #ff9700; box-shadow: 0 12px 28px rgba(255,151,0,.12); }
+    .dense-list { display: grid; gap: .65rem; }
+    .dense-list article { align-items: center; background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; display: flex; gap: .8rem; justify-content: space-between; min-width: 0; padding: .78rem; }
+    .dense-list article > div { min-width: 0; }
+    .dense-list article.active { background: #fffaf2; border-color: var(--admin-accent); box-shadow: 0 10px 24px rgba(255,151,0,.11); }
     .dense-list strong, td strong { display: block; }
     .dense-list span, td span { color: #777; display: block; font-size: .8rem; margin-top: .18rem; }
-    .request-list article { align-items: stretch; }
+    .request-list article { align-items: center; flex-direction: row; }
     .request-summary { align-items: start; background: transparent; border: 0; color: #111; display: grid; flex: 1; font: inherit; justify-content: stretch; min-width: 0; padding: 0; text-align: left; white-space: normal; }
     .request-summary small { color: #9a6a00; font-size: .72rem; font-weight: 900; margin-top: .25rem; }
-    .registration-grid { align-items: start; grid-template-columns: minmax(300px, .72fr) minmax(0, 1.28fr); }
-    .registration-detail { display: grid; gap: 1rem; min-height: 520px; }
-    .registration-detail .panel-head { background: #fff; border: 1px solid rgba(17,17,17,.07); border-radius: 14px; margin-bottom: 0; padding: .85rem; }
-    .detail-section { background: #fffdfa; border: 1px solid rgba(17,17,17,.07); border-radius: 14px; padding: 1rem; }
+    .request-list .mini-btn { flex: 0 0 auto; min-width: 74px; }
+    .pagination-row { align-items: center; border-top: 1px solid var(--admin-line); display: flex; gap: .85rem; justify-content: space-between; padding-top: .85rem; }
+    .pagination-row span { color: #777; font-size: .78rem; font-weight: 900; }
+    .pagination-row div { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; }
+    .registration-grid { align-items: start; grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr); }
+    .registration-detail { align-content: start; display: grid; gap: 1rem; }
+    .registration-detail .panel-head { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; margin-bottom: 0; padding: .85rem; }
+    .detail-page-count { color: #777; flex: 0 0 auto; font-size: .78rem; font-weight: 900; }
+    .detail-stepper { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 999px; display: grid; gap: .35rem; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: .35rem; }
+    .detail-stepper button { background: transparent; box-shadow: none; color: #777; min-height: 36px; padding: .5rem .65rem; }
+    .detail-stepper button.active, .detail-stepper button:hover { background: #111; box-shadow: 0 10px 22px rgba(0,0,0,.14); color: #fff; transform: none; }
+    .detail-section { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; padding: 1rem; }
     .detail-section + .detail-section { margin-top: 0; }
     .detail-section h4 { color: #9a6a00; font-size: .78rem; letter-spacing: .08em; margin: 0 0 .8rem; text-transform: uppercase; }
     .detail-grid { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
-    .detail-grid div { background: #fff; border: 1px solid rgba(17,17,17,.06); border-radius: 12px; min-width: 0; padding: .75rem; }
+    .detail-grid div { background: #fff; border: 1px solid rgba(17,17,17,.06); border-radius: 6px; min-width: 0; padding: .72rem; }
     .detail-grid dt { color: #777; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
     .detail-grid dd { color: #111; font-weight: 800; margin: .25rem 0 0; overflow-wrap: anywhere; }
+    .detail-actions { align-items: center; border-top: 1px solid var(--admin-line); display: flex; gap: .55rem; justify-content: flex-end; padding-top: 1rem; }
     .document-grid { display: grid; gap: .85rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .document-grid article { background: #fff; border: 1px solid rgba(17,17,17,.07); border-radius: 14px; box-shadow: 0 10px 26px rgba(17,17,17,.04); min-width: 0; padding: .75rem; }
-    .document-frame { align-items: center; aspect-ratio: 4 / 3; background: #f6f4f0; border-radius: 10px; display: flex; justify-content: center; margin-bottom: .65rem; overflow: hidden; }
+    .document-grid article { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; min-width: 0; padding: .75rem; }
+    .document-frame { align-items: center; aspect-ratio: 4 / 3; background: #f2f1ed; border-radius: 6px; display: flex; justify-content: center; margin-bottom: .65rem; overflow: hidden; }
     .document-frame img { height: 100%; object-fit: contain; width: 100%; }
-    .document-preview-btn { background: transparent; border: 0; border-radius: 10px; cursor: zoom-in; height: 100%; padding: 0; width: 100%; }
+    .document-preview-btn { background: transparent; border: 0; border-radius: 6px; cursor: zoom-in; height: 100%; padding: 0; width: 100%; }
     .document-preview-btn:hover { transform: none; }
     .document-frame span, .document-frame a { color: #777; font-size: .82rem; font-weight: 900; }
     .document-grid strong, .document-grid span { display: block; overflow-wrap: anywhere; }
     .document-grid span { color: #777; font-size: .76rem; margin-top: .2rem; }
-    .empty-detail { align-content: center; display: grid; min-height: 420px; text-align: center; }
-    .document-lightbox { align-items: center; background: rgba(17,17,17,.78); display: flex; inset: 0; justify-content: center; padding: 1.25rem; position: fixed; z-index: 1000; }
-    .document-lightbox-content { background: #fff; border-radius: 18px; box-shadow: 0 24px 80px rgba(0,0,0,.32); display: grid; gap: .9rem; max-height: 92vh; max-width: min(980px, 96vw); overflow: hidden; padding: 1rem; width: 100%; }
-    .lightbox-head, .lightbox-foot { align-items: center; display: flex; gap: 1rem; justify-content: space-between; }
-    .lightbox-head { border-bottom: 1px solid rgba(17,17,17,.08); padding-bottom: .8rem; }
-    .lightbox-head h3 { font-size: 1.08rem; line-height: 1.15; margin: 0; }
-    .lightbox-head span, .lightbox-foot span { color: #777; display: block; font-size: .8rem; font-weight: 800; margin-top: .2rem; overflow-wrap: anywhere; }
-    .lightbox-close { background: #fff1f1; color: #b42318; min-height: 40px; padding: .55rem .9rem; }
-    .lightbox-image-row { align-items: center; background: #f6f4f0; border-radius: 14px; display: grid; gap: .75rem; grid-template-columns: 40px minmax(0, 1fr) 40px; min-height: 360px; padding: .8rem; }
-    .lightbox-image-row img { border-radius: 10px; display: block; margin: 0 auto; max-height: 66vh; object-fit: contain; width: 100%; }
-    .slide-btn { --arrow-button-size: 40px; }
-    .lightbox-close:hover { transform: translateY(-1px); }
-    .lightbox-foot { border-top: 1px solid rgba(17,17,17,.08); padding-top: .8rem; }
-    .table-panel { overflow-x: auto; }
-    table { border-collapse: separate; border-spacing: 0 .55rem; min-width: 920px; width: 100%; }
-    th { color: #777; font-size: .72rem; letter-spacing: .08em; padding: 0 .75rem; text-align: left; text-transform: uppercase; }
-    td { background: #fff; border-bottom: 1px solid rgba(17,17,17,.06); border-top: 1px solid rgba(17,17,17,.06); padding: .75rem; vertical-align: middle; }
-    td:first-child { border-left: 1px solid rgba(17,17,17,.06); border-radius: 16px 0 0 16px; }
-    td:last-child { border-radius: 0 16px 16px 0; border-right: 1px solid rgba(17,17,17,.06); }
+    .empty-detail { align-content: center; display: grid; min-height: 260px; text-align: center; }
+    .document-lightbox { align-items: center; backdrop-filter: blur(14px); background: rgba(17,17,17,.62); display: flex; inset: 0; justify-content: center; padding: 1.25rem; position: fixed; z-index: 5000; }
+    .document-lightbox-content { display: grid; gap: .65rem; max-height: 92vh; max-width: min(920px, 94vw); position: relative; width: 100%; }
+    .lightbox-close, .lightbox-nav { align-items: center; background: rgba(255,255,255,.92); border: 1px solid rgba(255,255,255,.32); border-radius: 999px; box-shadow: 0 12px 28px rgba(0,0,0,.2); color: #111; display: inline-flex; font-size: 1.4rem; font-weight: 950; justify-content: center; min-height: 38px; padding: 0; width: 38px; }
+    .lightbox-close { position: absolute; right: .65rem; top: .65rem; z-index: 2; }
+    .lightbox-close:hover, .lightbox-nav:hover { background: #ff9700; color: #111; transform: translateY(-1px); }
+    .lightbox-image-row { align-items: center; display: grid; gap: .75rem; grid-template-columns: 40px minmax(0, 1fr) 40px; min-height: 360px; }
+    .lightbox-image-row img { background: #fff; border-radius: 8px; box-shadow: 0 24px 80px rgba(0,0,0,.34); display: block; margin: 0 auto; max-height: 76vh; object-fit: contain; padding: .5rem; width: 100%; }
+    .lightbox-nav { align-self: center; justify-self: center; }
+    .lightbox-nav:disabled, .lightbox-nav:disabled:hover { background: rgba(255,255,255,.52); box-shadow: none; color: rgba(17,17,17,.35); }
+    .lightbox-foot { align-items: center; color: #fff; display: flex; gap: .7rem; justify-content: center; text-align: center; }
+    .lightbox-foot strong, .lightbox-foot span { text-shadow: 0 2px 14px rgba(0,0,0,.32); }
+    .lightbox-foot strong { font-size: .88rem; }
+    .lightbox-foot span { color: rgba(255,255,255,.75); font-size: .8rem; font-weight: 900; }
+    .table-panel { overflow-x: auto; padding: .85rem; }
+    table { border-collapse: collapse; min-width: 920px; width: 100%; }
+    th { background: #f3f3ef; border-bottom: 1px solid var(--admin-line); color: var(--admin-muted); font-size: .7rem; letter-spacing: .08em; padding: .7rem .75rem; text-align: left; text-transform: uppercase; }
+    td { background: #fff; border-bottom: 1px solid rgba(17,17,17,.07); padding: .72rem .75rem; vertical-align: middle; }
+    tr:hover td { background: #fffaf2; }
     .product-cell { align-items: center; display: flex; gap: .7rem; min-width: 230px; }
-    .product-cell img { aspect-ratio: 1; border-radius: 12px; object-fit: cover; width: 54px; }
-    .status { border-radius: 999px; display: inline-flex; font-size: .72rem; padding: .32rem .55rem; }
+    .product-cell img { aspect-ratio: 1; border-radius: 6px; object-fit: cover; width: 52px; }
+    .status { border-radius: 999px; display: inline-flex; font-size: .7rem; font-weight: 900; padding: .3rem .52rem; }
     .status-ok { background: #ecfdf3; color: #027a48; }
     .status-warn { background: #fff7e6; color: #b35a00; }
     .status-bad { background: #fff1f1; color: #b42318; }
     .status-info { background: #eef4ff; color: #2447a8; }
-    .calendar-strip { background: #f7f7f5; border-radius: 999px; color: #555; padding: .35rem .55rem; }
+    .calendar-strip { background: #f3f3ef; border-radius: 999px; color: #555; padding: .32rem .52rem; }
     .empty-cell { color: #777; text-align: center; }
-    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 14px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
-    .form-grid { display: grid; gap: .85rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 6px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
+    .form-grid { display: grid; gap: .9rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     label { color: #111; display: grid; font-size: .78rem; font-weight: 900; gap: .4rem; }
+    .editor-panel > label { margin-top: 0; }
     .wide { margin-top: .85rem; width: 100%; }
-    .card-grid { display: grid; gap: .9rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .customer-card { display: grid; gap: .75rem; padding: 1rem; }
+    .card-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .customer-card { align-content: start; display: grid; gap: .85rem; min-width: 0; padding: 1.05rem; }
     .customer-card.blocked { opacity: .68; }
     .customer-card p, .customer-card span { color: #777; font-size: .84rem; margin: 0; }
     .avatar { align-items: center; background: #111; border-radius: 50%; color: #ff9700; display: inline-flex; font-weight: 950; height: 42px; justify-content: center; width: 42px; }
-    dl { display: grid; gap: .5rem; grid-template-columns: repeat(3, 1fr); margin: 0; }
+    dl { display: grid; gap: .5rem; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; }
     dt { color: #777; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
     dd { color: #111; font-size: 1.15rem; font-weight: 950; margin: 0; }
     .bar-list { display: grid; gap: .75rem; }
@@ -711,17 +788,26 @@ interface DocumentPreview {
       nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .metric-grid, .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .registration-grid { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 760px) {
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
       .split-grid, .metric-grid, .card-grid, .form-grid, .detail-grid, .document-grid, nav { grid-template-columns: 1fr; }
+      .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select { max-width: none; width: 100%; }
+      .request-list article { align-items: stretch; }
+      .request-list .mini-btn { width: 100%; }
+      .pagination-row { align-items: stretch; flex-direction: column; }
+      .pagination-row div, .pagination-row button { width: 100%; }
+      .detail-stepper { border-radius: 18px; grid-template-columns: 1fr; }
+      .detail-actions { align-items: stretch; flex-direction: column; width: 100%; }
+      .detail-actions button, .detail-actions .primary-btn { width: 100%; }
       .topbar-actions { align-items: stretch; flex-direction: column; }
       .topbar-actions button { width: 100%; }
       .document-lightbox { padding: .7rem; }
-      .document-lightbox-content { max-height: 94vh; padding: .75rem; }
-      .lightbox-head, .lightbox-foot { align-items: stretch; flex-direction: column; }
-      .lightbox-image-row { grid-template-columns: 34px minmax(0, 1fr) 34px; min-height: 260px; padding: .5rem; }
-      .slide-btn { --arrow-button-size: 34px; }
+      .document-lightbox-content { max-height: 94vh; max-width: 96vw; }
+      .lightbox-image-row { gap: .45rem; grid-template-columns: 34px minmax(0, 1fr) 34px; min-height: 260px; }
+      .lightbox-close, .lightbox-nav { font-size: 1.2rem; min-height: 34px; width: 34px; }
+      .lightbox-foot { flex-direction: column; gap: .2rem; }
     }
   `]
 })
@@ -752,11 +838,21 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   productFormError = '';
   employeeFormError = '';
   pendingCustomers: CustomerVerificationResponse[] = [];
+  pendingPage = 1;
+  readonly pendingPageSize = 3;
+  readonly adminPageSize = 5;
+  inventoryPage = 1;
+  bookingsPage = 1;
+  customersPage = 1;
+  paymentsPage = 1;
+  blogPage = 1;
+  staticContentPage = 1;
   pendingLoadError = '';
   isSubmitting = false;
   isLoadingPending = false;
   verifyingRequestId?: number;
   selectedPendingCustomer?: CustomerVerificationResponse;
+  registrationDetailPage = 1;
   documentPreviews: Record<string, DocumentPreview> = {};
   documentPreviewError = '';
   isLoadingDocuments = false;
@@ -856,6 +952,30 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return this.customers().filter((item) => !query || [item.name, item.email, item.city, item.phone].some((value) => value.toLowerCase().includes(query)));
   });
 
+  pagedProducts(): AdminProduct[] {
+    return this.paginate(this.filteredProducts(), this.inventoryPage);
+  }
+
+  pagedBookings(): AdminBooking[] {
+    return this.paginate(this.filteredBookings(), this.bookingsPage);
+  }
+
+  pagedCustomers(): AdminCustomer[] {
+    return this.paginate(this.filteredCustomers(), this.customersPage);
+  }
+
+  pagedPayments(): AdminPayment[] {
+    return this.paginate(this.payments(), this.paymentsPage);
+  }
+
+  pagedBlogPosts(): BlogPostAdmin[] {
+    return this.paginate(this.blogPosts(), this.blogPage);
+  }
+
+  pagedStaticContent(): StaticContentItem[] {
+    return this.paginate(this.staticContent(), this.staticContentPage);
+  }
+
   ngOnInit(): void {
     if (this.authService.isAdmin()) {
       this.loadAdminData();
@@ -882,6 +1002,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.adminService.getInventory().subscribe({
       next: (products) => {
         this.products.set(products.map((product) => this.mapProduct(product)));
+        this.clampAdminPages();
         this.updateTabCount('inventory', String(products.length));
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
@@ -892,6 +1013,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.adminService.getBookings().subscribe({
       next: (bookings) => {
         this.bookings.set(bookings.map((booking) => this.mapBooking(booking)));
+        this.clampAdminPages();
         this.updateTabCount('bookings', String(bookings.length));
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
@@ -902,6 +1024,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.adminService.getCustomers().subscribe({
       next: (customers) => {
         this.customers.set(customers.map((customer) => this.mapCustomer(customer)));
+        this.clampAdminPages();
         this.updateTabCount('customers', String(customers.length));
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
@@ -912,6 +1035,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.adminService.getPayments().subscribe({
       next: (payments) => {
         this.payments.set(payments.map((payment) => this.mapPayment(payment)));
+        this.clampAdminPages();
         this.updateTabCount('payments', String(payments.length));
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
@@ -959,9 +1083,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.pendingCustomers = this.pendingCustomers.filter((item) => item.requestId !== customer.requestId);
+          this.clampPendingPage();
           if (this.selectedPendingCustomer?.requestId === customer.requestId) {
             this.clearDocumentPreviews();
-            this.selectedPendingCustomer = this.pendingCustomers[0];
+            this.selectedPendingCustomer = this.pendingPageItems()[0] ?? this.pendingCustomers[0];
+            this.registrationDetailPage = 1;
             if (this.selectedPendingCustomer) {
               this.loadDocumentPreviews(this.selectedPendingCustomer);
             }
@@ -985,6 +1111,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (customers) => {
           this.pendingCustomers = customers;
+          this.clampPendingPage();
           this.updateTabCount('registrations', String(customers.length));
           if (this.selectedPendingCustomer && !customers.some((customer) => customer.requestId === this.selectedPendingCustomer?.requestId)) {
             this.clearDocumentPreviews();
@@ -1000,8 +1127,81 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   openPendingDetails(customer: CustomerVerificationResponse): void {
     this.selectedPendingCustomer = customer;
+    this.registrationDetailPage = 1;
     this.activeTab.set('registrations');
     this.loadDocumentPreviews(customer);
+  }
+
+  setRegistrationDetailPage(page: number): void {
+    this.registrationDetailPage = Math.min(3, Math.max(1, page));
+  }
+
+  changeRegistrationDetailPage(direction: number): void {
+    this.setRegistrationDetailPage(this.registrationDetailPage + direction);
+  }
+
+  pageCount(total: number): number {
+    return Math.max(1, Math.ceil(total / this.adminPageSize));
+  }
+
+  pageSummary(total: number, page: number): string {
+    if (!total) {
+      return 'No records';
+    }
+    const safePage = Math.min(this.pageCount(total), Math.max(1, page));
+    const start = (safePage - 1) * this.adminPageSize + 1;
+    const end = Math.min(safePage * this.adminPageSize, total);
+    return `Showing ${start}-${end} of ${total}`;
+  }
+
+  changePage(section: 'inventory' | 'bookings' | 'customers' | 'payments' | 'blog' | 'staticContent', direction: number): void {
+    if (section === 'inventory') {
+      this.inventoryPage = this.nextPage(this.inventoryPage, this.filteredProducts().length, direction);
+      return;
+    }
+    if (section === 'bookings') {
+      this.bookingsPage = this.nextPage(this.bookingsPage, this.filteredBookings().length, direction);
+      return;
+    }
+    if (section === 'customers') {
+      this.customersPage = this.nextPage(this.customersPage, this.filteredCustomers().length, direction);
+      return;
+    }
+    if (section === 'payments') {
+      this.paymentsPage = this.nextPage(this.paymentsPage, this.payments().length, direction);
+      return;
+    }
+    if (section === 'blog') {
+      this.blogPage = this.nextPage(this.blogPage, this.blogPosts().length, direction);
+      return;
+    }
+    this.staticContentPage = this.nextPage(this.staticContentPage, this.staticContent().length, direction);
+  }
+
+  pendingPageCount(): number {
+    return Math.max(1, Math.ceil(this.pendingCustomers.length / this.pendingPageSize));
+  }
+
+  pendingPageItems(): CustomerVerificationResponse[] {
+    const start = (this.pendingPage - 1) * this.pendingPageSize;
+    return this.pendingCustomers.slice(start, start + this.pendingPageSize);
+  }
+
+  pendingPageSummary(): string {
+    if (!this.pendingCustomers.length) {
+      return 'No requests';
+    }
+    const start = (this.pendingPage - 1) * this.pendingPageSize + 1;
+    const end = Math.min(this.pendingPage * this.pendingPageSize, this.pendingCustomers.length);
+    return `Showing ${start}-${end} of ${this.pendingCustomers.length}`;
+  }
+
+  changePendingPage(direction: number): void {
+    this.pendingPage = Math.min(this.pendingPageCount(), Math.max(1, this.pendingPage + direction));
+  }
+
+  private clampPendingPage(): void {
+    this.pendingPage = Math.min(this.pendingPageCount(), Math.max(1, this.pendingPage));
   }
 
   logout(): void {
@@ -1063,19 +1263,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   editProduct(product: AdminProduct): void {
-    this.editingProductId = product.id;
-    this.productForm.setValue({
-      name: product.name,
-      brand: product.brand,
-      category: product.category,
-      status: product.status,
-      dailyPrice: product.dailyPrice,
-      weeklyPrice: product.weeklyPrice,
-      stock: product.stock,
-      image: product.image,
-      description: product.description,
-      specifications: Object.entries(product.specifications).map(([key, value]) => `${key}: ${value}`).join(', ')
-    });
+    this.showTopMessage(`Edit page for ${product.name} is not available yet.`, 2600);
   }
 
   resetProductForm(): void {
@@ -1204,8 +1392,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   openCreate(): void {
     if (this.activeTab() === 'inventory') {
-      this.resetProductForm();
-      document.querySelector('.editor-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      this.router.navigateByUrl('/admin/inventory/new');
       return;
     }
     this.showTopMessage(`Create action ready for ${this.activeTabLabel()}.`, 2200);
@@ -1334,6 +1521,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       status: item.status === 'CURRENT' ? 'Current' : 'Needs review',
       updatedAt: item.updatedAt
     })));
+    this.clampAdminPages();
     this.updateTabCount('content', String(content.blogPosts.length + content.staticContent.length));
   }
 
@@ -1567,6 +1755,25 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     if (tab) {
       tab.count = count;
     }
+  }
+
+  private paginate<T>(items: T[], page: number): T[] {
+    const safePage = Math.min(this.pageCount(items.length), Math.max(1, page));
+    const start = (safePage - 1) * this.adminPageSize;
+    return items.slice(start, start + this.adminPageSize);
+  }
+
+  private nextPage(currentPage: number, total: number, direction: number): number {
+    return Math.min(this.pageCount(total), Math.max(1, currentPage + direction));
+  }
+
+  private clampAdminPages(): void {
+    this.inventoryPage = Math.min(this.pageCount(this.filteredProducts().length), Math.max(1, this.inventoryPage));
+    this.bookingsPage = Math.min(this.pageCount(this.filteredBookings().length), Math.max(1, this.bookingsPage));
+    this.customersPage = Math.min(this.pageCount(this.filteredCustomers().length), Math.max(1, this.customersPage));
+    this.paymentsPage = Math.min(this.pageCount(this.payments().length), Math.max(1, this.paymentsPage));
+    this.blogPage = Math.min(this.pageCount(this.blogPosts().length), Math.max(1, this.blogPage));
+    this.staticContentPage = Math.min(this.pageCount(this.staticContent().length), Math.max(1, this.staticContentPage));
   }
 
   private showTopMessage(message: string, duration: number): void {

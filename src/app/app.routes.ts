@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AboutPageComponent } from './pages/about-page.component';
+import { AdminProductCreatePageComponent } from './pages/admin-product-create-page.component';
 import { AdminPageComponent } from './pages/admin-page.component';
 import { BlogDetailPageComponent } from './pages/blog-detail-page.component';
 import { BlogListPageComponent } from './pages/blog-list-page.component';
@@ -37,6 +38,7 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordPageComponent, title: 'Forgot Password | Clickkaar' },
   { path: 'register', component: RegisterPageComponent, title: 'Register | Clickkaar' },
   { path: 'dashboard', component: DashboardPageComponent, title: 'Dashboard | Clickkaar' },
+  { path: 'admin/inventory/new', component: AdminProductCreatePageComponent, title: 'Add Product | Clickkaar' },
   { path: 'admin', component: AdminPageComponent, title: 'Admin | Clickkaar' },
   { path: 'wishlist', component: WishlistPageComponent, title: 'Wishlist | Clickkaar' },
   { path: 'blog', component: BlogListPageComponent, title: 'Blog | Clickkaar' },
