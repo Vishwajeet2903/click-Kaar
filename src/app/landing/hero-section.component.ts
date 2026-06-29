@@ -9,13 +9,14 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   template: `
     <section class="landing-card hero-section" id="home">
       <div class="hero-copy">
-        <p class="eyebrow" appScrollReveal="fade-up">Creative rental marketplace</p>
-        <h1 appScrollReveal="fade-up" [revealDelay]="90">Build a shoot that looks like a <h1 class="mast">MASTERPIECE.</h1></h1>
+        <p class="eyebrow" appScrollReveal="fade-up">PREMIUM PHOTOGRAPHY EQUIPMENT RENTAL PUNE</p>
+        <h1 appScrollReveal="fade-up" [revealDelay]="90">Create Your Next <h1 class="mast">MASTERPIECE.</h1></h1>
+        <h2 appScrollReveal="fade-up" [revealDelay]="90">with the Best Camera Rental in Pune</h2> 
         <p class="hero-subtitle" appScrollReveal="fade-up" [revealDelay]="180">
           Rent the Right Gear, Right When You Need It.
         </p>
         <div class="hero-actions" appScrollReveal="fade-up" [revealDelay]="260">
-          <a routerLink="/catalogue" class="btn-pill dark">Shop rental gear</a>
+          <a routerLink="/catalogue" class="btn-pill dark">Browse Catalogue</a>
         </div>
 
         <form class="market-search" appScrollReveal="fade-up" [revealDelay]="340">

@@ -9,8 +9,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     <section class="landing-card why-us-section" id="why-us">
       <div class="why-heading" appScrollReveal="slide-right">
         <p class="eyebrow">Why Us</p>
-        <h2>Rental marketplace built for real shoot days.</h2>
-        <p>ClickKar keeps equipment discovery, pricing, availability, and booking support clear from the first search to final pickup.</p>
+        <h2>Top camera rental in Pune for creators.</h2>
+        <p>Click-Kaar makes finding photography equipment, booking DSLR and Mirrorless cameras easy from search to final pickup.</p>
       </div>
 
       <div class="why-grid">
@@ -47,9 +47,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 })
 export class AboutVisionSectionComponent {
   readonly benefits = [
-    { number: '01', title: 'Verified equipment', text: 'Every listed camera, lens, light, tripod, and audio kit is checked before it reaches your shoot.' },
-    { number: '02', title: 'Clear rental pricing', text: 'Daily prices, stock counts, and package details are visible before you open the product page.' },
-    { number: '03', title: 'Fast kit building', text: 'Browse packages or individual gear and move quickly from shortlist to rental cart.' },
-    { number: '04', title: 'Shoot-day support', text: 'Get practical help for gear selection, pickup coordination, and production-ready planning.' }
+    { number: '01', title: 'Verified cameras', text: 'Every rental DSLR, mirrorless camera, premium lens and lighting kit is tested before your shoot.' },
+    { number: '02', title: 'Easy gear booking', text: 'Browse photography equipment or individual lenses and move quickly into your rental cart.' },
+    { number: '03', title: 'Live technical support', text: 'Call our local experts anytime during your shoot for immediate camera troubleshooting in Pune city.' },
+    { number: '04', title: 'Local support', text: 'Get expert help selecting cameras, coordinating Pune pickups and shoot planning.' }
   ];
 }

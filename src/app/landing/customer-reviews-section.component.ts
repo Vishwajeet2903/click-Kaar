@@ -12,7 +12,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       <div class="reviews-top" appScrollReveal="fade-up">
         <div class="section-heading">
           <p class="eyebrow">Customer reviews</p>
-          <h2>Trusted by creators who cannot miss the shot.</h2>
+          <h2>Trusted by Pune creators for flawless camera rentals.</h2>
         </div>
         <div class="carousel-controls" aria-label="Customer review slider controls">
           <button type="button" class="theme-arrow-button previous" (click)="slide(-1)" [disabled]="reviews().length < 2" aria-label="Previous reviews">
@@ -59,8 +59,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       <div class="write-review" appScrollReveal="fade-up">
         <div class="write-review-copy">
           <p class="eyebrow">Write a review</p>
-          <h3>Share how your rental went.</h3>
-          <p>Your note helps other creators book the right kit with more confidence.</p>
+          <h3>Share your Click-Kaar equipment experience.</h3>
+          <p>Your review will help other creators to rent Click-Kaar Pro Gear photography equipment with complete confidence.</p>
         </div>
 
         <form class="review-form" (ngSubmit)="submitReview()">

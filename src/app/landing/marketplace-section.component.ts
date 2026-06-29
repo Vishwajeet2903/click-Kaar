@@ -14,8 +14,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     <section class="landing-card marketplace-section" id="marketplace">
       <div class="section-heading" appScrollReveal="fade-up">
         <div>
-          <p class="eyebrow">Marketplace</p>
-          <h2>Shop gear, studios, and creator services in one place.</h2>
+          <p class="eyebrow">RENTAL CATALOGUE</p>
+          <h2>DSLR, Mirrorless & production gear—rent instantly in Pune.</h2>
         </div>
         <!-- <a routerLink="/catalogue" class="btn-pill dark">Open catalogue</a> -->
       </div>
@@ -102,9 +102,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 export class MarketplaceSectionComponent {
   readonly featured$: Observable<Product[]> = inject(ProductService).getFeatured();
   readonly features = [
-    { number: '01', title: 'Choose dates', text: 'Pick rental days and see stock before you commit.' },
-    { number: '02', title: 'Build your cart', text: 'Add cameras, lenses, lights, audio, studios, or people.' },
-    { number: '03', title: 'Confirm booking', text: 'Transparent daily pricing and availability on every listing.' },
-    { number: '04', title: 'Shoot with support', text: 'Get production help for pickup, setup, and creative teams.' }
+    { number: '01', title: 'Choose dates', text: 'Select Pune rental days and view live camera stock.' },
+    { number: '02', title: 'Build your cart', text: 'Add rental cameras, premium lenses, lighting and audio.' },
+    { number: '03', title: 'Confirm booking', text: 'View transparent camera rental pricing and live availability.' },
+    { number: '04', title: 'Shoot with support', text: 'Enjoy easy equipment pickup, quick setup and local support.' }
   ];
 }
