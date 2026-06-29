@@ -17,7 +17,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
           <p class="eyebrow">Marketplace</p>
           <h2>Shop gear, studios, and creator services in one place.</h2>
         </div>
-        <a routerLink="/catalogue" class="btn-pill dark">Open catalogue</a>
+        <!-- <a routerLink="/catalogue" class="btn-pill dark">Open catalogue</a> -->
       </div>
 
       <div class="shop-toolbar" appScrollReveal="fade-up" [revealDelay]="90">
