@@ -18,7 +18,7 @@ import { RouterLink } from '@angular/router';
           </div>
           <div class="footer-cta">
             <p>Marketplace for cameras, lenses, lighting, audio gear, studios, and creator-ready packages.</p>
-            <a routerLink="/catalogue">Open catalogue</a>
+            <a routerLink="/catalogue">Browse catalogue</a>
           </div>
         </div>
 
