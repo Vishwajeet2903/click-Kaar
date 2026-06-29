@@ -93,9 +93,16 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 560px) {
       .marketplace-section { padding: 1.25rem; }
+      h2 { font-size: clamp(2rem, 11vw, 2.8rem); line-height: 1.02; }
       .product-market-grid, .feature-grid { grid-template-columns: 1fr; }
-      .shop-toolbar { border-radius: 22px; width: 100%; }
-      .feature-card { min-height: 220px; }
+      .shop-toolbar { border-radius: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+      .shop-toolbar span,
+      .shop-toolbar a { align-items: center; display: inline-flex; justify-content: center; min-height: 38px; padding: .5rem .55rem; text-align: center; }
+      .market-product,
+      .feature-card { border-radius: 18px; }
+      .commerce-row { align-items: stretch; flex-direction: column; }
+      .commerce-row a { min-height: 44px; width: 100%; }
+      .feature-card { min-height: 190px; padding: 1.1rem; }
     }
   `]
 })

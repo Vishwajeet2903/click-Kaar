@@ -23,7 +23,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .footer-actions { display: flex; gap: .8rem; justify-content: center; }
     @media (max-width: 560px) {
       .landing-footer { min-height: 360px; padding: 1.25rem; }
+      h2 { font-size: clamp(2.2rem, 12vw, 3.15rem); line-height: .98; }
       .footer-actions { flex-direction: column; width: 100%; }
+      .footer-actions .btn-pill { width: 100%; }
     }
   `]
 })

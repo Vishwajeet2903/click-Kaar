@@ -694,6 +694,12 @@ button,
 }
 
 @media (max-width: 767px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .section {
     padding: 2.75rem 0;
   }
@@ -714,6 +720,12 @@ button,
   .landing-card {
     border-radius: 20px;
     max-width: calc(100vw - 18px);
+  }
+
+  .btn-pill {
+    max-width: 100%;
+    min-width: 0;
+    white-space: normal;
   }
 }
 

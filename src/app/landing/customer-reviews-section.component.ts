@@ -191,8 +191,16 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 560px) {
       .reviews-section { padding: 1.25rem; }
+      h2 { font-size: clamp(2rem, 11vw, 2.8rem); line-height: 1.02; }
+      .carousel-controls { width: 100%; }
       .review-fields { grid-template-columns: 1fr; }
-      .write-review { border-radius: 18px; }
+      .review-card { border-radius: 18px; min-height: 260px; padding: 1rem; }
+      p { font-size: 1rem; line-height: 1.35; }
+      .write-review { border-radius: 18px; padding: 1rem; }
+      .write-review-copy h3 { font-size: clamp(1.45rem, 8vw, 2rem); line-height: 1.08; }
+      input,
+      textarea { border-radius: 14px; font-size: .94rem; min-width: 0; }
+      .review-actions .btn-pill { width: 100%; }
     }
   `]
 })

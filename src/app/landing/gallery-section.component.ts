@@ -35,8 +35,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 560px) {
       .gallery-section { padding: 1.25rem; }
+      h2 { font-size: clamp(2rem, 11vw, 2.8rem); line-height: 1.02; }
       .gallery-grid { grid-template-columns: 1fr; }
-      figure, figure.tall { grid-column: auto; grid-row: auto; height: 260px; }
+      figure, figure.tall { border-radius: 18px; grid-column: auto; grid-row: auto; height: 230px; }
     }
   `]
 })

@@ -56,7 +56,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   .mast { color: #ff9700; display: inline; }
   .hero-copy .eyebrow,
   .hero-copy h1 { font-family: var(--display-font); }
-  .eyebrow{color: #ff9700;}
+  .eyebrow{color: #ff9700;font-size: clamp(1rem, 1.5vw, 1.18rem)}
     .hero-section { min-height: calc(100vh - 106px); padding: clamp(2.5rem, 6vw, 5.4rem) clamp(1.2rem, 4vw, 3.2rem) 3.5rem; text-align: center; }
     .hero-copy { margin: 0 auto; max-width: 850px; position: relative; z-index: 2; }
     h1 { color: #111; font-size: clamp(3.3rem, 8vw, 7rem); font-weight: 900; letter-spacing: -0.02em; line-height: .9; margin: .7rem auto 1rem; text-wrap: balance; }
@@ -108,19 +108,38 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       .card-6 { --final-transform: translate(68%, -22%) rotate(12deg); transform: var(--final-transform); }
     }
     @media (max-width: 560px) {
-      .hero-section { min-height: auto; padding-top: 2.5rem; }
+      .hero-section { min-height: auto; padding: 2rem 1rem 1.25rem; }
+      .eyebrow { font-size: .74rem; letter-spacing: .16em; line-height: 1.35; }
+      h1 { font-size: clamp(2.35rem, 13vw, 3.05rem); line-height: .96; margin: .6rem auto .75rem; max-width: 10ch; }
+      h2 { font-size: clamp(1.15rem, 5vw, 1.45rem); line-height: 1.15; margin: 0 auto .7rem; max-width: 14ch; }
+      .hero-subtitle { font-size: .96rem; margin-bottom: 1rem; max-width: 28ch; }
       .hero-actions { flex-direction: column; }
-      .market-search { grid-template-columns: auto 1fr auto; padding: .7rem; }
-      .hero-collage { height: 320px; margin-top: .5rem; }
-      .collage-card { height: 118px; width: 138px; }
-      .card-1 { --final-transform: translate(-138%, -15%) rotate(-12deg); transform: var(--final-transform); }
-      .card-2 { --final-transform: translate(-92%, -40%) rotate(-6deg); transform: var(--final-transform); }
-      .card-3 { --final-transform: translate(-48%, -48%) rotate(-1deg); transform: var(--final-transform); }
-      .card-4 { --final-transform: translate(-5%, -42%) rotate(4deg); transform: var(--final-transform); }
-      .card-5 { --final-transform: translate(42%, -25%) rotate(9deg); transform: var(--final-transform); }
+      .hero-actions .btn-pill { width: min(100%, 230px); }
+      .market-search { gap: .45rem; grid-template-columns: 1fr auto; margin-top: 1rem; padding: .55rem .55rem .55rem .9rem; width: 100%; }
+      .market-search span { display: none; }
+      .market-search input { font-size: .9rem; }
+      .market-search a { height: 42px; width: 42px; }
+      .category-row { gap: .45rem; max-width: 310px; }
+      .category-row a { font-size: .7rem; padding: .5rem .62rem; }
+      .hero-collage { height: 280px; margin-top: .6rem; max-width: 340px; overflow: hidden; }
+      .collage-card { border-radius: 16px; box-shadow: 0 18px 34px rgba(0,0,0,.14); height: 112px; width: 128px; }
+      .tile-caption { border-radius: 14px; bottom: .45rem; flex-direction: column; gap: .05rem; left: .45rem; padding: .38rem .45rem; right: .45rem; }
+      .collage-card b { max-width: 100%; }
+      .collage-card small { font-size: .66rem; }
+      .card-1 { --final-transform: translate(-112%, -22%) rotate(-10deg); transform: var(--final-transform); }
+      .card-2 { --final-transform: translate(-74%, -54%) rotate(-5deg); transform: var(--final-transform); }
+      .card-3 { --final-transform: translate(-37%, -50%) rotate(-1deg); transform: var(--final-transform); }
+      .card-4 { --final-transform: translate(-5%, -40%) rotate(4deg); transform: var(--final-transform); }
+      .card-5 { --final-transform: translate(31%, -16%) rotate(8deg); transform: var(--final-transform); }
       .card-6 { display: none; }
-      .handle-blue { left: 5%; top: 7%; }
-      .handle-green { right: 2%; top: 12%; }
+      .handle { font-size: .76rem; padding: .5rem .62rem; }
+      .handle-blue { left: 3%; top: 7%; }
+      .handle-green { right: 2%; top: 13%; }
+    }
+    @media (max-width: 380px) {
+      h1 { font-size: 2.28rem; }
+      .hero-collage { max-width: 312px; }
+      .collage-card { height: 104px; width: 118px; }
     }
   `]
 })

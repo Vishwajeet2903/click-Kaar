@@ -54,8 +54,12 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 560px) {
       .showcase-section { padding: 1.25rem; }
+      h2 { font-size: clamp(2rem, 11vw, 2.8rem); line-height: 1.02; }
+      .showcase-copy { max-width: none; }
       .package-showcase { grid-template-columns: 1fr; }
-      .package-card, .package-card:nth-child(1), .package-card:nth-child(2) { transform: none; }
+      .package-card, .package-card:nth-child(1), .package-card:nth-child(2) { border-radius: 18px; transform: none; }
+      .listing-meta { align-items: flex-start; border-radius: 14px; flex-direction: column; gap: .2rem; }
+      .package-card h3 { font-size: clamp(1.35rem, 8vw, 1.85rem); line-height: 1.08; }
     }
   `]
 })

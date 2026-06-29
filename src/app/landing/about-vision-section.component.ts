@@ -40,8 +40,10 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 560px) {
       .why-us-section { padding: 1.25rem; }
+      h2 { font-size: clamp(2rem, 11vw, 2.8rem); line-height: 1.02; }
       .why-grid { grid-template-columns: 1fr; }
-      .why-card { min-height: 210px; }
+      .why-card { border-radius: 18px; min-height: 190px; padding: 1.1rem; }
+      .why-card h3 { font-size: clamp(1.25rem, 7vw, 1.65rem); line-height: 1.1; }
     }
   `]
 })
