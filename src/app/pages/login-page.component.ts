@@ -116,8 +116,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
 
     .eyebrow {
-      color: #161616;
-      font-size: .78rem;
+      color: #ff9700;
+      font-size: clamp(1rem, 1.5vw, 1.18rem);
       font-weight: 800;
       letter-spacing: .22rem;
       margin: 0 0 1rem;

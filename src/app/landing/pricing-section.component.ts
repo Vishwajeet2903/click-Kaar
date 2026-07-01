@@ -32,7 +32,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   styles: [`
     .pricing-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .section-heading { margin-bottom: 2rem; max-width: 760px; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: -.055em; line-height: .98; margin: 0; }
+    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: .04em; line-height: .98; margin: 0; }
     .pricing-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .price-card { background: #f6f6f4; border-radius: 24px; min-height: 430px; padding: 1.5rem; }
     .price-card.featured { background: #111; color: #fff; transform: translateY(-12px); }

@@ -23,7 +23,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   styles: [`
     .gallery-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .section-heading { max-width: 760px; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: 0; line-height: .98; margin: 0 0 2rem; word-spacing: .08em; }
+    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: .04em; line-height: .98; margin: 0 0 2rem; word-spacing: .08em; }
     .gallery-grid { display: grid; gap: 1rem; grid-auto-flow: dense; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     figure { background: #f6f6f4; border-radius: 24px; height: 260px; margin: 0; overflow: hidden; }
     figure.wide { grid-column: span 2; }

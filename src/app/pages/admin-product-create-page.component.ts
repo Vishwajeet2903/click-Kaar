@@ -58,7 +58,7 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
     .product-create-page { max-width: min(1100px, calc(100vw - 48px)) !important; padding-bottom: 2rem; }
     .surface { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
     .page-head { align-items: end; background: linear-gradient(180deg, #fff, #faf9f6); display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.25rem; padding: 1.15rem 1.2rem; }
-    .eyebrow { color: #ff9700; font-size: .78rem; font-weight: 900; letter-spacing: .08em; margin: 0 0 .25rem; text-transform: uppercase; }
+    .eyebrow { color: #ff9700; font-size: clamp(1rem, 1.5vw, 1.18rem); font-weight: 900; letter-spacing: .08em; margin: 0 0 .25rem; text-transform: uppercase; }
     h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1; margin: 0; }
     h2 { font-size: 1.05rem; margin: 0; }
     .editor-panel, .access-card { display: grid; gap: 1rem; padding: 1.05rem; }

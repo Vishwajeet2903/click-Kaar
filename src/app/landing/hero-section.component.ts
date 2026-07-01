@@ -109,7 +109,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 560px) {
       .hero-section { min-height: auto; padding: 2rem 1rem 1.25rem; }
-      .eyebrow { font-size: .74rem; letter-spacing: .16em; line-height: 1.35; }
+      .eyebrow { font-size: clamp(1rem, 1.5vw, 1.18rem); letter-spacing: .16em; line-height: 1.35; }
       h1 { font-size: clamp(2.35rem, 13vw, 3.05rem); line-height: .96; margin: .6rem auto .75rem; max-width: 10ch; }
       h2 { font-size: clamp(1.15rem, 5vw, 1.45rem); line-height: 1.15; margin: 0 auto .7rem; max-width: 14ch; }
       .hero-subtitle { font-size: .96rem; margin-bottom: 1rem; max-width: 28ch; }

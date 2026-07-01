@@ -319,7 +319,7 @@ function notFutureDate(control: AbstractControl<string>): ValidationErrors | nul
     .hero-photo { border-radius: 24px; box-shadow: 0 28px 70px rgba(0,0,0,.18); height: min(48vh, 460px); margin: 0; overflow: hidden; }
     .hero-photo img { height: 100%; object-fit: cover; width: 100%; }
     .visual-copy p, .signin { color: #5e5e5a; line-height: 1.6; margin: 0; }
-    .eyebrow { color: #111; font-size: .72rem; font-weight: 900; letter-spacing: .22rem; margin: 0 0 .8rem; text-transform: uppercase; }
+    .eyebrow { color: #ff9700; font-size: clamp(1rem, 1.5vw, 1.18rem); font-weight: 900; letter-spacing: .22rem; margin: 0 0 .8rem; text-transform: uppercase; }
     h1, h2, h3 { color: #111; letter-spacing: 0; margin: 0; }
     h1 { font-size: clamp(2.4rem, 4.8vw, 5.1rem); font-weight: 950; line-height: .98; }
     h2 { font-size: clamp(2rem, 3vw, 3.2rem); font-weight: 950; line-height: 1; }

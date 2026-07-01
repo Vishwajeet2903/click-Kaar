@@ -15,7 +15,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       <div class="section-heading" appScrollReveal="fade-up">
         <div>
           <p class="eyebrow">RENTAL CATALOGUE</p>
-          <h2>DSLR, Mirrorless & production gear—rent instantly in Pune.</h2>
+          <h2>DSLR, Mirrorless & production gear rent instantly in Pune.</h2>
         </div>
         <!-- <a routerLink="/catalogue" class="btn-pill dark">Open catalogue</a> -->
       </div>
@@ -61,7 +61,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   styles: [`
     .marketplace-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .section-heading { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.25rem; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: 0; line-height: .98; margin: 0; word-spacing: .08em; }
+    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: .04em; line-height: .98; margin: 0; word-spacing: .08em; }
     .shop-toolbar { align-items: center; background: #f6f6f4; border-radius: 999px; display: flex; flex-wrap: wrap; gap: .55rem; margin-bottom: 1.1rem; padding: .55rem; width: max-content; max-width: 100%; }
     .shop-toolbar span, .shop-toolbar a { border-radius: 999px; color: #111; font-size: .76rem; font-weight: 900; padding: .55rem .78rem; }
     .shop-toolbar span { background: #111; color: #fff; }

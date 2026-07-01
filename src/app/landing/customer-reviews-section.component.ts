@@ -139,7 +139,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .reviews-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .reviews-top { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.4rem; }
     .section-heading { margin-bottom: 1.4rem; max-width: 760px; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: 0; line-height: .98; margin: 0; word-spacing: .08em; }
+    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: .04em; line-height: .98; margin: 0; word-spacing: .08em; }
     .carousel-controls { display: flex; gap: .5rem; }
     .carousel-controls .theme-arrow-button:disabled { opacity: .45; }
     .reviews-window { --review-step: calc((-100% - 1rem) / 3); overflow: hidden; }
@@ -158,7 +158,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     strong { color: #111; display: block; font-size: .95rem; font-weight: 900; word-spacing: .08em; }
     span { color: #666; display: block; font-size: .82rem; font-weight: 800; margin-top: .15rem; }
     .write-review { align-items: start; background: #f6f6f4; border-radius: 24px; color: #fff; display: grid; gap: clamp(1.2rem, 3vw, 2rem); grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); margin-top: 1.25rem; padding: clamp(1.2rem, 3vw, 2rem); }
-    .write-review-copy .eyebrow { color: #ff9700; font-size: .78rem; letter-spacing: .2em; margin: 0 0 .65rem; }
+    .write-review-copy .eyebrow { color: #ff9700; font-size: clamp(1rem, 1.5vw, 1.18rem); letter-spacing: .2em; margin: 0 0 .65rem; }
     .write-review-copy h3 { color: #000; font-size: clamp(1.65rem, 3vw, 2.6rem); line-height: 1; margin: 0 0 .85rem; }
     .write-review-copy p:not(.eyebrow) { color: gray; font-size: 1rem; font-weight: 600; line-height: 1.45; margin: 0; max-width: 360px; }
     .review-form { display: grid; gap: .85rem; }

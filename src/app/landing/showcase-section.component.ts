@@ -10,7 +10,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     <section class="landing-card showcase-section" id="showcase">
       <div class="showcase-copy">
         <p class="eyebrow" appScrollReveal="slide-right">SHOOT-READY GEAR KITS</p>
-        <h2 appScrollReveal="slide-right" [revealDelay]="80">Rent complete, event-ready camera packages in Pune.</h2>
+        <h2 appScrollReveal="slide-right" [revealDelay]="80">Rent complete, event ready camera packages in Pune.</h2>
         <p appScrollReveal="slide-right" [revealDelay]="160">Why piece together your gear? Click-Kaar offers the premier camera rental in Pune with carefully curated event packages. Rent the perfect combination of Mirrorless camera bodies, lenses and lighting with zero friction.</p>
         <a routerLink="/catalogue" class="btn-pill dark" appScrollReveal="fade-up" [revealDelay]="220">Browse catalogue</a>
       </div>

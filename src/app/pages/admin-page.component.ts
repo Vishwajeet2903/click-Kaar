@@ -643,7 +643,7 @@ interface DocumentPreview {
     .admin-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 240px minmax(0, 1fr); }
     .admin-page :where(.surface) { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
     .admin-sidebar { background: #161616 !important; color: #fff; padding: .9rem; position: sticky; top: 92px; }
-    .admin-sidebar .eyebrow { color: rgba(255,255,255,.58); margin: 0 0 .35rem; }
+    .admin-sidebar .eyebrow { color: #ff9700; margin: 0 0 .35rem; }
     .admin-sidebar h1 { color: #fff; font-size: 1.35rem; line-height: 1.05; margin: 0 0 1rem; }
     nav { display: grid; gap: .25rem; }
     nav button { align-items: center; background: transparent; border: 1px solid transparent; border-radius: 6px; color: rgba(255,255,255,.78); display: flex; font-weight: 850; justify-content: space-between; min-height: 40px; padding: .62rem .7rem; text-align: left; }
@@ -652,7 +652,7 @@ interface DocumentPreview {
     nav button.active small, nav button:hover small { background: var(--admin-accent); color: #111; }
     .admin-workspace { display: grid; gap: 1.25rem; min-width: 0; }
     .admin-topbar { align-items: end; background: linear-gradient(180deg, #fff, var(--admin-soft)); border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: 1.25rem; justify-content: space-between; padding: 1.15rem 1.2rem; }
-    .admin-topbar .eyebrow { color: var(--admin-accent); margin: 0 0 .25rem; }
+    .admin-topbar .eyebrow { color: #ff9700; margin: 0 0 .25rem; }
     .admin-topbar h2 { font-size: clamp(1.75rem, 3.2vw, 3rem); line-height: 1; margin: 0; }
     .topbar-actions, .tool-row, .action-cell { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; }
     .tool-row { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 8px; justify-content: space-between; padding: .8rem; }
