@@ -2,9 +2,10 @@
 
 This backend is containerized for Cloud Run with:
 
+- `/cloudbuild.yaml` for repo-root GitHub/Cloud Build triggers
 - `Dockerfile` for a Java 17 Spring Boot image
 - `application-cloud.yml` for production environment variables
-- `cloudbuild.yaml` for build, push, and deploy
+- `backend/cloudbuild.yaml` for manual deploys from the backend folder
 - `/api/health` as a public health endpoint
 
 ## 1. Choose Google Cloud Values
@@ -79,6 +80,8 @@ From the backend folder:
 cd backend
 gcloud builds submit --config cloudbuild.yaml --substitutions _REGION=$REGION,_REPOSITORY=$REPOSITORY,_SERVICE=$SERVICE,_CORS_ALLOWED_ORIGINS=https://clickkaar.com,_FRONTEND_LOGIN_URL=https://clickkaar.com/login
 ```
+
+If you deploy from a GitHub trigger at the repository root, configure the trigger to use `/cloudbuild.yaml`. That file builds `backend/Dockerfile`; otherwise Google buildpacks may detect the Angular frontend and deploy the wrong container.
 
 ## 7. Verify
 
