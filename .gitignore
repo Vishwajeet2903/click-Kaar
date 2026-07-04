@@ -2,6 +2,7 @@ node_modules/
 dist/
 .angular/
 .vscode/
+backend/target/
 
 npm-debug.log
 yarn-error.log
