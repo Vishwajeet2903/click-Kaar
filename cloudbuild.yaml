@@ -1,15 +1,3 @@
-substitutions:
-  _REGION: asia-south1
-  _REPOSITORY: cloud-run-source-deploy
-  _IMAGE_PATH: click-kaar/click-kaar
-  _SERVICE: click-kaar
-  _CORS_ALLOWED_ORIGINS: https://clickkaar.com
-  _FRONTEND_LOGIN_URL: https://clickkaar.com/login
-  _DB_URL_SECRET: clickkaar-db-url
-  _DB_USERNAME_SECRET: clickkaar-db-username
-  _DB_PASSWORD_SECRET: clickkaar-db-password
-  _JWT_SECRET_SECRET: clickkaar-jwt-secret
-
 steps:
   - name: gcr.io/cloud-builders/docker
     args:
@@ -17,24 +5,24 @@ steps:
       - -f
       - backend/Dockerfile
       - -t
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_PATH}:$SHORT_SHA
+      - asia-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/click-kaar/click-kaar:$SHORT_SHA
       - backend
 
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_PATH}:$SHORT_SHA
+      - asia-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/click-kaar/click-kaar:$SHORT_SHA
 
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args:
       - run
       - deploy
-      - ${_SERVICE}
+      - click-kaar
       - --image
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_PATH}:$SHORT_SHA
+      - asia-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/click-kaar/click-kaar:$SHORT_SHA
       - --region
-      - ${_REGION}
+      - asia-south1
       - --platform
       - managed
       - --allow-unauthenticated
@@ -43,9 +31,9 @@ steps:
       - --cpu
       - "1"
       - --set-env-vars
-      - ^@^SPRING_PROFILES_ACTIVE=cloud@CORS_ALLOWED_ORIGINS=${_CORS_ALLOWED_ORIGINS}@FRONTEND_LOGIN_URL=${_FRONTEND_LOGIN_URL}
+      - ^@^SPRING_PROFILES_ACTIVE=cloud@CORS_ALLOWED_ORIGINS=https://clickkaar.com@FRONTEND_LOGIN_URL=https://clickkaar.com/login
       - --set-secrets
-      - DB_URL=${_DB_URL_SECRET}:latest,DB_USERNAME=${_DB_USERNAME_SECRET}:latest,DB_PASSWORD=${_DB_PASSWORD_SECRET}:latest,JWT_SECRET=${_JWT_SECRET_SECRET}:latest
+      - DB_URL=clickkaar-db-url:latest,DB_USERNAME=clickkaar-db-username:latest,DB_PASSWORD=clickkaar-db-password:latest,JWT_SECRET=clickkaar-jwt-secret:latest
 
 images:
-  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_PATH}:$SHORT_SHA
+  - asia-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/click-kaar/click-kaar:$SHORT_SHA
