@@ -38,16 +38,21 @@ If it already exists, this command will fail harmlessly; continue.
 
 ## 4. Store Required Secrets
 
-Use your real database values here. For Aiven MySQL, `DB_URL` should look like:
+Use your real database values here. For the current Aiven MySQL service:
 
 ```text
-jdbc:mysql://HOST:PORT/defaultdb?ssl-mode=REQUIRED
+Host: mysql-21f136f0-clickkaar.k.aivencloud.com
+Port: 12863
+Database: defaultdb
+User: avnadmin
+SSL mode: REQUIRED
+JDBC URL: jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED
 ```
 
 Create secrets:
 
 ```powershell
-echo "jdbc:mysql://HOST:PORT/defaultdb?ssl-mode=REQUIRED" | gcloud secrets create clickkaar-db-url --data-file=-
+echo "jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED" | gcloud secrets create clickkaar-db-url --data-file=-
 echo "avnadmin" | gcloud secrets create clickkaar-db-username --data-file=-
 echo "your-db-password" | gcloud secrets create clickkaar-db-password --data-file=-
 echo "replace-with-a-long-random-production-jwt-secret" | gcloud secrets create clickkaar-jwt-secret --data-file=-
@@ -56,6 +61,8 @@ echo "replace-with-a-long-random-production-jwt-secret" | gcloud secrets create 
 To update an existing secret:
 
 ```powershell
+echo "jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED" | gcloud secrets versions add clickkaar-db-url --data-file=-
+echo "avnadmin" | gcloud secrets versions add clickkaar-db-username --data-file=-
 echo "new-value" | gcloud secrets versions add clickkaar-db-password --data-file=-
 ```
 
