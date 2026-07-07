@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROJECT_ID="${PROJECT_ID:-click-kaar-backend}"
-DB_URL="jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED"
+DB_URL="jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?sslMode=REQUIRED"
 DB_USERNAME="avnadmin"
 
 secret_exists() {
