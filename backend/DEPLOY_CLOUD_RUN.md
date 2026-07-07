@@ -49,7 +49,16 @@ SSL mode: REQUIRED
 JDBC URL: jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED
 ```
 
-Create secrets:
+Create secrets the first time. In Google Cloud Shell, use `printf` so no extra newline is stored in the secret value:
+
+```bash
+printf '%s' 'jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED' | gcloud secrets create clickkaar-db-url --data-file=-
+printf '%s' 'avnadmin' | gcloud secrets create clickkaar-db-username --data-file=-
+printf '%s' 'your-db-password' | gcloud secrets create clickkaar-db-password --data-file=-
+printf '%s' 'replace-with-a-long-random-production-jwt-secret' | gcloud secrets create clickkaar-jwt-secret --data-file=-
+```
+
+For PowerShell:
 
 ```powershell
 echo "jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED" | gcloud secrets create clickkaar-db-url --data-file=-
@@ -58,7 +67,16 @@ echo "your-db-password" | gcloud secrets create clickkaar-db-password --data-fil
 echo "replace-with-a-long-random-production-jwt-secret" | gcloud secrets create clickkaar-jwt-secret --data-file=-
 ```
 
-To update an existing secret:
+To update an existing secret in Google Cloud Shell:
+
+```bash
+printf '%s' 'jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED' | gcloud secrets versions add clickkaar-db-url --data-file=-
+printf '%s' 'avnadmin' | gcloud secrets versions add clickkaar-db-username --data-file=-
+printf '%s' 'new-db-password' | gcloud secrets versions add clickkaar-db-password --data-file=-
+printf '%s' 'new-long-random-production-jwt-secret' | gcloud secrets versions add clickkaar-jwt-secret --data-file=-
+```
+
+For PowerShell:
 
 ```powershell
 echo "jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED" | gcloud secrets versions add clickkaar-db-url --data-file=-
