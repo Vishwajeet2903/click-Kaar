@@ -26,6 +26,8 @@ gcloud config set project $PROJECT_ID
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com secretmanager.googleapis.com
 ```
 
+The Cloud Build configs also enable `secretmanager.googleapis.com` before deploying, because Cloud Run rejects `--set-secrets` when Secret Manager is disabled. If that build step fails with a permission error, run the command above once as a project owner, or grant the Cloud Build service account `roles/serviceusage.serviceUsageAdmin`.
+
 ## 3. Create Artifact Registry Repository
 
 ```powershell
