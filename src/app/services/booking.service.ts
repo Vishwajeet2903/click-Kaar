@@ -3,9 +3,10 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Booking } from '../models/product.model';
 import { AuthService } from './auth.service';
+import { API_BASE_URL } from './api.config';
 
-const API_URL = 'http://localhost:8080/api/bookings';
-const DASHBOARD_API_URL = 'http://localhost:8080/api/dashboard';
+const API_URL = `${API_BASE_URL}/bookings`;
+const DASHBOARD_API_URL = `${API_BASE_URL}/dashboard`;
 
 export interface BookingItemRequest {
   productId: number;

@@ -16,7 +16,7 @@ Use these examples or replace them:
 $PROJECT_ID = "your-google-cloud-project-id"
 $REGION = "asia-south1"
 $REPOSITORY = "clickkaar"
-$SERVICE = "clickkaar-backend"
+$SERVICE = "click-kaar"
 ```
 
 ## 2. Enable APIs
@@ -115,7 +115,7 @@ From the backend folder:
 
 ```powershell
 cd backend
-gcloud builds submit --config cloudbuild.yaml --substitutions _REGION=$REGION,_REPOSITORY=$REPOSITORY,_SERVICE=$SERVICE,_CORS_ALLOWED_ORIGINS=https://clickkaar.com,_FRONTEND_LOGIN_URL=https://clickkaar.com/login
+gcloud builds submit --config cloudbuild.yaml --substitutions _REGION=$REGION,_REPOSITORY=$REPOSITORY,_SERVICE=$SERVICE,_CORS_ALLOWED_ORIGINS=https://clickkaar.com,https://click-kaar.web.app,https://click-kaar.firebaseapp.com,_FRONTEND_LOGIN_URL=https://click-kaar.web.app/login
 ```
 
 If you deploy from a GitHub trigger at the repository root, configure the trigger to use `/cloudbuild.yaml`. That file builds `backend/Dockerfile`; otherwise Google buildpacks may detect the Angular frontend and deploy the wrong container.
@@ -127,6 +127,12 @@ After deploy finishes, Cloud Run prints the service URL.
 ```powershell
 curl.exe https://YOUR-CLOUD-RUN-URL/api/health
 curl.exe https://YOUR-CLOUD-RUN-URL/api/products
+```
+
+Current Cloud Run URL:
+
+```text
+https://click-kaar-371334584817.asia-south1.run.app
 ```
 
 ## Notes

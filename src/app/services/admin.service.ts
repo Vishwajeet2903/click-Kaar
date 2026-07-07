@@ -2,8 +2,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { API_BASE_URL } from './api.config';
 
-const API_URL = 'http://localhost:8080/api/admin';
+const API_URL = `${API_BASE_URL}/admin`;
 
 export interface EmployeeRequest {
   fullName: string;

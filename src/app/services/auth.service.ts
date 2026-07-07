@@ -2,8 +2,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { API_BASE_URL } from './api.config';
 
-const API_URL = 'http://localhost:8080/api/auth';
+const API_URL = `${API_BASE_URL}/auth`;
 const SESSION_KEY = 'clickkaar_auth';
 
 export interface AuthResponse {
@@ -139,7 +140,7 @@ export class AuthService {
       }
 
       if (error.status === 0) {
-        return 'Unable to reach the backend. Please make sure it is running on port 8080.';
+        return 'Unable to reach the backend. Please try again in a moment.';
       }
     }
 

@@ -1,9 +1,9 @@
 substitutions:
   _REGION: asia-south1
   _REPOSITORY: clickkaar
-  _SERVICE: clickkaar-backend
-  _CORS_ALLOWED_ORIGINS: https://clickkaar.com
-  _FRONTEND_LOGIN_URL: https://clickkaar.com/login
+  _SERVICE: click-kaar
+  _CORS_ALLOWED_ORIGINS: https://clickkaar.com,https://click-kaar.web.app,https://click-kaar.firebaseapp.com
+  _FRONTEND_LOGIN_URL: https://click-kaar.web.app/login
   _DB_URL_SECRET: clickkaar-db-url
   _DB_USERNAME_SECRET: clickkaar-db-username
   _DB_PASSWORD_SECRET: clickkaar-db-password
