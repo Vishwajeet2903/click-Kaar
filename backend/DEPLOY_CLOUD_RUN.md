@@ -72,6 +72,8 @@ gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$CLO
 gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$CLOUD_RUN_RUNTIME_SA" --role="roles/secretmanager.secretAccessor"
 ```
 
+The Cloud Build configs also grant `roles/secretmanager.secretAccessor` to the default Cloud Run runtime service account before deploying. This fixes errors like `Permission denied on secret ... for Revision service account ...-compute@developer.gserviceaccount.com`. If that build step fails with a permission error, run the runtime service account command above once as a project owner, or grant the Cloud Build service account `roles/resourcemanager.projectIamAdmin`.
+
 If your Cloud Build project uses a different build service account, grant these same Cloud Build roles to the service account shown in the Cloud Build error.
 
 ## 6. Deploy

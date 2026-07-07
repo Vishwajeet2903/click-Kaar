@@ -30,6 +30,17 @@ steps:
       - secretmanager.googleapis.com
 
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        PROJECT_NUMBER="$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')"
+        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+          --member="serviceAccount:$${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+          --role="roles/secretmanager.secretAccessor" \
+          --quiet
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args:
       - run
