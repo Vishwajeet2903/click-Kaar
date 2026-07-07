@@ -26,7 +26,7 @@ gcloud config set project $PROJECT_ID
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com secretmanager.googleapis.com
 ```
 
-The Cloud Build configs also enable `secretmanager.googleapis.com` before deploying, because Cloud Run rejects `--set-secrets` when Secret Manager is disabled. If that build step fails with a permission error, run the command above once as a project owner, or grant the Cloud Build service account `roles/serviceusage.serviceUsageAdmin`.
+Cloud Build does not enable APIs during each deployment. If Cloud Run rejects `--set-secrets` because Secret Manager is disabled, run the command above once as a project owner.
 
 ## 3. Create Artifact Registry Repository
 
@@ -72,7 +72,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$CLO
 gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$CLOUD_RUN_RUNTIME_SA" --role="roles/secretmanager.secretAccessor"
 ```
 
-The Cloud Build configs also grant `roles/secretmanager.secretAccessor` to the default Cloud Run runtime service account before deploying. This fixes errors like `Permission denied on secret ... for Revision service account ...-compute@developer.gserviceaccount.com`. If that build step fails with a permission error, run the runtime service account command above once as a project owner, or grant the Cloud Build service account `roles/resourcemanager.projectIamAdmin`.
+The runtime service account grant fixes errors like `Permission denied on secret ... for Revision service account ...-compute@developer.gserviceaccount.com`. Cloud Build does not grant IAM roles during each deployment, so run the command above once as a project owner.
 
 If your Cloud Build project uses a different build service account, grant these same Cloud Build roles to the service account shown in the Cloud Build error.
 
