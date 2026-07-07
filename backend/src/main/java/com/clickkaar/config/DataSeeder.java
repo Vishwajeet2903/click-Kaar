@@ -5,6 +5,7 @@ import com.clickkaar.enums.*;
 import com.clickkaar.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,7 @@ public class DataSeeder {
   private final PasswordEncoder passwordEncoder;
 
   @Bean
+  @ConditionalOnProperty(name = "app.seed.enabled", havingValue = "true", matchIfMissing = true)
   CommandLineRunner seedClickkaarData() {
     return args -> {
       Role customer = roleRepository.findByName(RoleName.CUSTOMER)

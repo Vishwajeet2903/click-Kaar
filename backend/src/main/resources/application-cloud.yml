@@ -20,6 +20,8 @@ spring:
     password: ${MAIL_PASSWORD:}
 
 app:
+  seed:
+    enabled: ${APP_SEED_ENABLED:false}
   frontend:
     login-url: ${FRONTEND_LOGIN_URL:https://clickkaar.com/login}
   jwt:
