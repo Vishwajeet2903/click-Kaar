@@ -51,11 +51,19 @@ JDBC URL: jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb
 
 Create secrets the first time. In Google Cloud Shell, use `printf` so no extra newline is stored in the secret value:
 
+You can run the helper script from the repository root in Cloud Shell:
+
 ```bash
-printf '%s' 'jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED' | gcloud secrets create clickkaar-db-url --data-file=-
-printf '%s' 'avnadmin' | gcloud secrets create clickkaar-db-username --data-file=-
-printf '%s' 'your-db-password' | gcloud secrets create clickkaar-db-password --data-file=-
-printf '%s' 'replace-with-a-long-random-production-jwt-secret' | gcloud secrets create clickkaar-jwt-secret --data-file=-
+bash backend/setup-cloud-secrets.sh
+```
+
+Or create them manually:
+
+```bash
+printf '%s' 'jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl-mode=REQUIRED' | gcloud secrets create clickkaar-db-url --replication-policy="automatic" --data-file=-
+printf '%s' 'avnadmin' | gcloud secrets create clickkaar-db-username --replication-policy="automatic" --data-file=-
+printf '%s' 'your-db-password' | gcloud secrets create clickkaar-db-password --replication-policy="automatic" --data-file=-
+printf '%s' 'replace-with-a-long-random-production-jwt-secret' | gcloud secrets create clickkaar-jwt-secret --replication-policy="automatic" --data-file=-
 ```
 
 For PowerShell:
