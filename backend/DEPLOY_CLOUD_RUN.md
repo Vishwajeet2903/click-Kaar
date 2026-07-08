@@ -115,7 +115,7 @@ From the backend folder:
 
 ```powershell
 cd backend
-gcloud builds submit --config cloudbuild.yaml --substitutions _REGION=$REGION,_REPOSITORY=$REPOSITORY,_SERVICE=$SERVICE,_CORS_ALLOWED_ORIGINS=https://clickkaar.com,https://click-kaar.web.app,https://click-kaar.firebaseapp.com,_FRONTEND_LOGIN_URL=https://click-kaar.web.app/login
+gcloud builds submit --config cloudbuild.yaml --substitutions _REGION=$REGION,_REPOSITORY=$REPOSITORY,_SERVICE=$SERVICE,_CORS_ALLOWED_ORIGINS=https://clickkaar.com,https://www.clickkaar.com,https://click-kaar.web.app,https://click-kaar.firebaseapp.com,http://localhost:4200,http://127.0.0.1:4200,_FRONTEND_LOGIN_URL=https://click-kaar.web.app/login
 ```
 
 If you deploy from a GitHub trigger at the repository root, configure the trigger to use `/cloudbuild.yaml`. That file builds `backend/Dockerfile`; otherwise Google buildpacks may detect the Angular frontend and deploy the wrong container.
