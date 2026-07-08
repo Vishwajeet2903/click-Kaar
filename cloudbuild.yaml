@@ -31,7 +31,7 @@ steps:
       - --cpu
       - "1"
       - --set-env-vars
-      - ^@^SPRING_PROFILES_ACTIVE=cloud@CORS_ALLOWED_ORIGINS=https://clickkaar.com,https://www.clickkaar.com,https://click-kaar.web.app,https://click-kaar.firebaseapp.com,http://localhost:4200,http://127.0.0.1:4200@FRONTEND_LOGIN_URL=https://click-kaar.web.app/login
+      - ^@^SPRING_PROFILES_ACTIVE=cloud@CORS_ALLOWED_ORIGINS=https://click-kaar.com,https://www.click-kaar.com,https://clickkaar.com,https://www.clickkaar.com,https://click-kaar.web.app,https://click-kaar.firebaseapp.com,http://localhost:4200,http://127.0.0.1:4200@FRONTEND_LOGIN_URL=https://click-kaar.web.app/login
       - --set-secrets
       - DB_URL=clickkaar-db-url:latest,DB_USERNAME=clickkaar-db-username:latest,DB_PASSWORD=clickkaar-db-password:latest,JWT_SECRET=clickkaar-jwt-secret:latest
 
