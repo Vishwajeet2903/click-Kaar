@@ -1,4 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CustomerReview, CustomerReviewService } from '../services/customer-review.service';
 import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.directive';
@@ -67,11 +68,11 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
           <div class="review-fields">
             <label>
               <span>Name</span>
-              <input type="text" name="reviewName" [(ngModel)]="reviewDraft.name" placeholder="Your name" required>
+              <input type="text" name="reviewName" [(ngModel)]="reviewDraft.name" placeholder="Your name" required maxlength="120">
             </label>
             <label>
               <span>Creator type</span>
-              <input type="text" name="reviewRole" [(ngModel)]="reviewDraft.role" placeholder="Photographer, filmmaker..." required>
+              <input type="text" name="reviewRole" [(ngModel)]="reviewDraft.role" placeholder="Photographer, filmmaker..." required maxlength="120">
             </label>
           </div>
 
@@ -91,7 +92,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 
           <label>
             <span>Your review</span>
-            <textarea name="reviewQuote" [(ngModel)]="reviewDraft.quote" placeholder="Tell us what was smooth, useful, or memorable." rows="4" required></textarea>
+            <textarea name="reviewQuote" [(ngModel)]="reviewDraft.quote" placeholder="Tell us what was smooth, useful, or memorable." rows="4" required maxlength="600"></textarea>
           </label>
 
           <div class="review-actions">
@@ -215,6 +216,9 @@ export class CustomerReviewsSectionComponent implements OnInit {
   readonly reviewSubmitted = signal(false);
   readonly reviews = signal<CustomerReview[]>([]);
   readonly ratingOptions = [1, 2, 3, 4, 5];
+  readonly maxNameLength = 120;
+  readonly maxRoleLength = 120;
+  readonly maxQuoteLength = 600;
   reviewDraft = {
     name: '',
     role: '',
@@ -268,6 +272,20 @@ export class CustomerReviewsSectionComponent implements OnInit {
     const quote = this.reviewDraft.quote.trim();
 
     if (!name || !role || !quote) {
+      this.reviewError.set('Please fill in your name, creator type, and review.');
+      this.reviewSubmitted.set(false);
+      return;
+    }
+
+    if (name.length > this.maxNameLength || role.length > this.maxRoleLength) {
+      this.reviewError.set('Name and creator type must be 120 characters or less.');
+      this.reviewSubmitted.set(false);
+      return;
+    }
+
+    if (quote.length > this.maxQuoteLength) {
+      this.reviewError.set('Review must be 600 characters or less.');
+      this.reviewSubmitted.set(false);
       return;
     }
 
@@ -291,8 +309,8 @@ export class CustomerReviewsSectionComponent implements OnInit {
         };
         this.loadReviews();
       },
-      error: () => {
-        this.reviewError.set('Could not save your review. Please try again.');
+      error: (error) => {
+        this.reviewError.set(this.reviewSaveErrorMessage(error));
         this.isSubmitting.set(false);
       }
     });
@@ -324,5 +342,27 @@ export class CustomerReviewsSectionComponent implements OnInit {
     window.setTimeout(() => {
       this.isResetting.set(false);
     });
+  }
+
+  private reviewSaveErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 0) {
+        return 'Could not reach the backend from this site. Please refresh and try again.';
+      }
+
+      if (error.error?.errors && typeof error.error.errors === 'object') {
+        const messages = Object.values(error.error.errors)
+          .filter((message): message is string => typeof message === 'string' && message.trim().length > 0);
+        if (messages.length) {
+          return messages.join(' ');
+        }
+      }
+
+      if (typeof error.error?.message === 'string' && error.error.message.trim()) {
+        return error.error.message;
+      }
+    }
+
+    return 'Could not save your review. Please try again.';
   }
 }
