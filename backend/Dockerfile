@@ -11,6 +11,7 @@ FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 ENV JAVA_OPTS=""
+ENV SPRING_PROFILES_ACTIVE=cloud
 
 COPY --from=build /workspace/target/clickkaar-backend-*.jar app.jar
 

@@ -14,6 +14,7 @@ import {
   AdminService,
   CustomerVerificationResponse,
   EmployeeResponse,
+  PaymentRemarkLogResponse,
   RegistrationDocumentResponse
 } from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
@@ -74,6 +75,8 @@ interface AdminPayment {
   status: PaymentStatus;
   amount: number;
   paidAt: string;
+  remark: string;
+  remarkChangeCount: number;
 }
 
 interface BlogPostAdmin {
@@ -108,6 +111,14 @@ interface DocumentPreview {
   fileName: string;
   url: string;
   isImage: boolean;
+}
+
+interface PaymentRemarkLogView {
+  id: number;
+  oldRemark: string;
+  newRemark: string;
+  changedBy: string;
+  changedAt: string;
 }
 
 @Component({
@@ -358,7 +369,7 @@ interface DocumentPreview {
                 <div class="surface table-panel">
                   <table>
                     <thead>
-                      <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Calendar</th><th>Actions</th></tr>
+                      <tr><th>Product</th><th>Category</th><th>Price</th><th>Warranty</th><th>Invoice</th><th>Stock</th><th>Status</th><th>Calendar</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                       @for (product of pagedProducts(); track product.id) {
@@ -371,6 +382,14 @@ interface DocumentPreview {
                           </td>
                           <td>{{ product.category }}</td>
                           <td>{{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }} / day</td>
+                          <td>{{ product.warrantyDate ? (product.warrantyDate | date:'mediumDate') : '-' }}</td>
+                          <td>
+                            @if (product.invoiceUrl) {
+                              <a class="table-link" [href]="product.invoiceUrl" target="_blank" rel="noreferrer">View invoice</a>
+                            } @else {
+                              <span class="muted">-</span>
+                            }
+                          </td>
                           <td>{{ product.stock }}</td>
                           <td><b class="status" [class]="statusClass(product.status)">{{ product.status }}</b></td>
                           <td><span class="calendar-strip">{{ bookedDays(product.name) }} booked days</span></td>
@@ -380,7 +399,7 @@ interface DocumentPreview {
                           </td>
                         </tr>
                       } @empty {
-                        <tr><td colspan="7" class="empty-cell">No inventory matches those filters.</td></tr>
+                        <tr><td colspan="9" class="empty-cell">No inventory matches those filters.</td></tr>
                       }
                     </tbody>
                   </table>
@@ -405,6 +424,10 @@ interface DocumentPreview {
                     <option value="">All payment statuses</option>
                     <option>Paid</option><option>Pending</option><option>Failed</option><option>Refunded</option>
                   </select>
+                  <input class="month-input" type="month" aria-label="Filter bookings by month" [ngModel]="bookingMonthFilter()" (ngModelChange)="bookingMonthFilter.set($event); bookingsPage = 1">
+                  @if (bookingMonthFilter()) {
+                    <button type="button" class="ghost-mini" (click)="bookingMonthFilter.set(''); bookingsPage = 1">Clear month</button>
+                  }
                 </div>
                 <div class="surface table-panel">
                   <table>
@@ -471,7 +494,7 @@ interface DocumentPreview {
               @case ('payments') {
                 <div class="surface table-panel">
                   <table>
-                    <thead><tr><th>Transaction</th><th>Booking</th><th>Customer</th><th>Gateway</th><th>Policy</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+                    <thead><tr><th>Transaction</th><th>Booking</th><th>Customer</th><th>Gateway</th><th>Policy</th><th>Amount</th><th>Status</th><th>Remark</th></tr></thead>
                     <tbody>
                       @for (payment of pagedPayments(); track payment.id) {
                         <tr>
@@ -482,8 +505,60 @@ interface DocumentPreview {
                           <td>{{ payment.mode }}</td>
                           <td>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</td>
                           <td><b class="status" [class]="statusClass(payment.status)">{{ payment.status }}</b></td>
-                          <td><button type="button" class="danger-btn" [disabled]="payment.status === 'Refunded'" (click)="refund(payment)">Refund</button></td>
+                          <td class="remark-cell">
+                            <div class="remark-control">
+                              <input
+                                class="remark-input"
+                                aria-label="Payment remark"
+                                placeholder="Remark"
+                                [ngModel]="payment.remark"
+                                [disabled]="isSavingPaymentRemark(payment.backendId)"
+                                (ngModelChange)="updatePaymentRemarkDraft(payment, $event)"
+                                (keydown.enter)="$event.preventDefault(); savePaymentRemark(payment.backendId)">
+                              <button type="button" class="mini-btn" [disabled]="isSavingPaymentRemark(payment.backendId)" (click)="savePaymentRemark(payment.backendId)">
+                                {{ isSavingPaymentRemark(payment.backendId) ? 'Saving...' : 'Save' }}
+                              </button>
+                            </div>
+                            <button type="button" class="remark-log-btn" [disabled]="payment.remarkChangeCount === 0" (click)="togglePaymentRemarkLog(payment)">
+                              View exact log ({{ payment.remarkChangeCount }})
+                            </button>
+                          </td>
                         </tr>
+                        @if (activeRemarkLogPayment?.backendId === payment.backendId) {
+                          <tr class="remark-log-table-row">
+                            <td colspan="8">
+                              <div class="remark-log-inline">
+                                <div class="remark-log-head">
+                                  <p class="eyebrow">Payment remark log</p>
+                                  <h3>{{ payment.bookingId }}</h3>
+                                  <span>{{ payment.customer }} - {{ payment.remarkChangeCount }} changes</span>
+                                </div>
+                                @if (isLoadingPaymentRemarkLog) {
+                                  <p class="muted">Loading exact remark log...</p>
+                                } @else if (paymentRemarkLogError) {
+                                  <p class="error-text">{{ paymentRemarkLogError }}</p>
+                                } @else if (activePaymentRemarkLogs.length) {
+                                  <div class="remark-log-list">
+                                    @for (log of activePaymentRemarkLogs; track log.id) {
+                                      <article>
+                                        <div>
+                                          <strong>{{ log.changedAt | date:'medium' }}</strong>
+                                          <span>{{ log.changedBy || 'Admin' }}</span>
+                                        </div>
+                                        <dl>
+                                          <div><dt>From</dt><dd>{{ log.oldRemark || '-' }}</dd></div>
+                                          <div><dt>To</dt><dd>{{ log.newRemark || '-' }}</dd></div>
+                                        </dl>
+                                      </article>
+                                    }
+                                  </div>
+                                } @else {
+                                  <p class="muted">No saved remark changes were found.</p>
+                                }
+                              </div>
+                            </td>
+                          </tr>
+                        }
                       }
                     </tbody>
                   </table>
@@ -663,9 +738,18 @@ interface DocumentPreview {
     .booking-filter-row { justify-content: flex-start; }
     .booking-filter-row .search-input { flex: 0 1 320px; max-width: 320px; }
     .booking-filter-row select { flex: 0 0 190px; width: 190px; }
+    .booking-filter-row .month-input { flex: 0 0 170px; width: 170px; }
     input, select, textarea { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: var(--admin-ink); font: inherit; min-height: 42px; outline: 0; padding: .68rem .8rem; width: 100%; }
     textarea { min-height: 92px; resize: vertical; }
     input:focus, select:focus, textarea:focus { border-color: var(--admin-accent); box-shadow: 0 0 0 3px rgba(255,151,0,.14); }
+    .table-link { color: var(--admin-accent); font-size: .78rem; font-weight: 900; text-decoration: none; white-space: nowrap; }
+    .table-link:hover { color: #111; text-decoration: underline; }
+    .remark-input { min-width: 220px; }
+    .remark-cell { min-width: 340px; }
+    .remark-control { align-items: center; display: grid; gap: .45rem; grid-template-columns: minmax(220px, 1fr) auto; }
+    .remark-log-btn { background: transparent; border: 0; box-shadow: none; color: var(--admin-muted); display: inline-flex; font-size: .72rem; font-weight: 900; justify-content: flex-start; margin-top: .32rem; min-height: auto; padding: 0; text-transform: uppercase; }
+    .remark-log-btn:hover { color: var(--admin-accent); transform: none; }
+    .remark-log-btn:disabled, .remark-log-btn:disabled:hover { color: var(--admin-muted); cursor: default; opacity: .65; }
     button, .primary-btn, .ghost-btn, .mini-btn, .danger-btn, .ghost-mini, .link-btn { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 900; justify-content: center; transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease; white-space: nowrap; }
     .primary-btn { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; min-height: 50px; padding: .85rem 1.25rem; }
     .primary-btn:hover { background: var(--admin-accent); box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
@@ -748,6 +832,18 @@ interface DocumentPreview {
     .lightbox-foot strong, .lightbox-foot span { text-shadow: 0 2px 14px rgba(0,0,0,.32); }
     .lightbox-foot strong { font-size: .88rem; }
     .lightbox-foot span { color: rgba(255,255,255,.75); font-size: .8rem; font-weight: 900; }
+    .remark-log-table-row td { background: #fff7ec; padding: 0; }
+    .remark-log-inline { display: grid; gap: 1rem; padding: 1rem; }
+    .remark-log-head { border-bottom: 1px solid var(--admin-line); padding-right: 2.7rem; padding-bottom: .85rem; }
+    .remark-log-head h3 { margin: .15rem 0; }
+    .remark-log-head span { color: var(--admin-muted); font-size: .82rem; font-weight: 800; }
+    .remark-log-list { display: grid; gap: .75rem; }
+    .remark-log-list article { border: 1px solid var(--admin-line); border-radius: 6px; display: grid; gap: .7rem; padding: .8rem; }
+    .remark-log-list article > div { align-items: center; display: flex; flex-wrap: wrap; gap: .45rem; justify-content: space-between; }
+    .remark-log-list article span { color: var(--admin-muted); font-size: .78rem; font-weight: 900; }
+    .remark-log-list dl { display: grid; gap: .55rem; margin: 0; }
+    .remark-log-list dt { color: var(--admin-muted); font-size: .7rem; font-weight: 900; text-transform: uppercase; }
+    .remark-log-list dd { margin: .16rem 0 0; overflow-wrap: anywhere; }
     .table-panel { overflow-x: auto; padding: .85rem; }
     table { border-collapse: collapse; min-width: 920px; width: 100%; }
     th { background: #f3f3ef; border-bottom: 1px solid var(--admin-line); color: var(--admin-muted); font-size: .7rem; letter-spacing: .08em; padding: .7rem .75rem; text-align: left; text-transform: uppercase; }
@@ -793,7 +889,7 @@ interface DocumentPreview {
     @media (max-width: 760px) {
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
       .split-grid, .metric-grid, .card-grid, .form-grid, .detail-grid, .document-grid, nav { grid-template-columns: 1fr; }
-      .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select { max-width: none; width: 100%; }
+      .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input { max-width: none; width: 100%; }
       .request-list article { align-items: stretch; }
       .request-list .mini-btn { width: 100%; }
       .pagination-row { align-items: stretch; flex-direction: column; }
@@ -831,6 +927,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly inventoryStatus = signal('');
   readonly bookingQuery = signal('');
   readonly bookingStatusFilter = signal('');
+  readonly bookingMonthFilter = signal('');
   readonly paymentStatusFilter = signal('');
   readonly customerQuery = signal('');
   editingProductId?: number;
@@ -857,6 +954,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   documentPreviewError = '';
   isLoadingDocuments = false;
   activeDocumentPreview?: DocumentPreview;
+  private readonly savingPaymentRemarkIds = new Set<number>();
+  activeRemarkLogPayment?: AdminPayment;
+  activePaymentRemarkLogs: PaymentRemarkLogView[] = [];
+  isLoadingPaymentRemarkLog = false;
+  paymentRemarkLogError = '';
 
   readonly tabs: { id: AdminTab; label: string; count: string }[] = [
     { id: 'dashboard', label: 'Dashboard', count: 'Live' },
@@ -883,6 +985,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     weeklyPrice: [0, [Validators.required, Validators.min(1)]],
     stock: [1, [Validators.required, Validators.min(0)]],
     image: ['', Validators.required],
+    warrantyDate: [''],
+    invoiceUrl: [''],
     description: ['', Validators.required],
     specifications: ['']
   });
@@ -944,6 +1048,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return this.bookings()
       .filter((item) => !this.bookingStatusFilter() || item.status === this.bookingStatusFilter())
       .filter((item) => !this.paymentStatusFilter() || item.paymentStatus === this.paymentStatusFilter())
+      .filter((item) => this.bookingOverlapsSelectedMonth(item))
       .filter((item) => !query || [item.id, item.customer, ...item.products].some((value) => value.toLowerCase().includes(query)));
   });
 
@@ -1219,6 +1324,40 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.activeDocumentPreview = undefined;
   }
 
+  togglePaymentRemarkLog(payment: AdminPayment): void {
+    if (this.activeRemarkLogPayment?.backendId === payment.backendId) {
+      this.closePaymentRemarkLog();
+      return;
+    }
+
+    this.activeRemarkLogPayment = payment;
+    this.activePaymentRemarkLogs = [];
+    this.paymentRemarkLogError = '';
+    this.isLoadingPaymentRemarkLog = true;
+    this.adminService.getPaymentRemarkLogs(payment.backendId)
+      .pipe(finalize(() => {
+        this.isLoadingPaymentRemarkLog = false;
+      }))
+      .subscribe({
+      next: (logs) => {
+        this.activePaymentRemarkLogs = logs.map((log) => this.mapPaymentRemarkLog(log));
+      },
+      error: (error) => {
+        const message = this.authService.getErrorMessage(error);
+        this.paymentRemarkLogError = message.includes('No static resource')
+          ? 'Remark log API is not available in the running backend. Restart the backend with the latest code.'
+          : message;
+      }
+    });
+  }
+
+  closePaymentRemarkLog(): void {
+    this.activeRemarkLogPayment = undefined;
+    this.activePaymentRemarkLogs = [];
+    this.paymentRemarkLogError = '';
+    this.isLoadingPaymentRemarkLog = false;
+  }
+
   showPreviousDocumentPreview(): void {
     this.showDocumentPreviewAt(this.activeDocumentIndex() - 1);
   }
@@ -1278,6 +1417,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       weeklyPrice: 0,
       stock: 1,
       image: '',
+      warrantyDate: '',
+      invoiceUrl: '',
       description: '',
       specifications: ''
     });
@@ -1337,17 +1478,32 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  refund(payment: AdminPayment): void {
-    if (!confirm(`Initiate refund for ${payment.id}?`)) {
+  updatePaymentRemarkDraft(payment: AdminPayment, remark: string): void {
+    this.payments.update((items) => items.map((item) => item.backendId === payment.backendId ? { ...item, remark } : item));
+  }
+
+  savePaymentRemark(paymentId: number): void {
+    const payment = this.payments().find((item) => item.backendId === paymentId);
+    if (!payment || this.isSavingPaymentRemark(paymentId)) {
       return;
     }
-    this.adminService.refundPayment(payment.backendId, payment.amount, 'Admin refund').subscribe({
+
+    this.savingPaymentRemarkIds.add(paymentId);
+    this.adminService.updatePaymentRemark(paymentId, payment.remark)
+      .pipe(finalize(() => {
+        this.savingPaymentRemarkIds.delete(paymentId);
+      }))
+      .subscribe({
       next: (updatedPayment) => {
         this.payments.update((items) => items.map((item) => item.backendId === updatedPayment.id ? this.mapPayment(updatedPayment) : item));
-        this.showTopMessage('Refund marked.', 2600);
+        this.showTopMessage('Payment remark saved.', 1800);
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
     });
+  }
+
+  isSavingPaymentRemark(paymentId: number): boolean {
+    return this.savingPaymentRemarkIds.has(paymentId);
   }
 
   publishDraft(): void {
@@ -1420,6 +1576,24 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .reduce((sum, booking) => sum + this.daysBetween(booking.startDate, booking.endDate), 0);
   }
 
+  bookingOverlapsSelectedMonth(booking: AdminBooking): boolean {
+    const selectedMonth = this.bookingMonthFilter();
+    if (!selectedMonth) {
+      return true;
+    }
+
+    const [year, month] = selectedMonth.split('-').map(Number);
+    if (!year || !month) {
+      return true;
+    }
+
+    const monthStart = new Date(year, month - 1, 1);
+    const monthEnd = new Date(year, month, 0, 23, 59, 59, 999);
+    const bookingStart = new Date(booking.startDate);
+    const bookingEnd = new Date(booking.endDate);
+    return bookingStart <= monthEnd && bookingEnd >= monthStart;
+  }
+
   statusClass(status: string): string {
     if (['Available', 'Paid', 'Completed', 'Published', 'Current'].includes(status)) {
       return 'status-ok';
@@ -1447,6 +1621,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       specifications: this.parseSpecifications(product.specs ?? ''),
       dailyPrice: Number(product.dailyPrice),
       weeklyPrice: Number(product.weeklyPrice),
+      warrantyDate: product.warrantyDate ?? '',
+      invoiceUrl: product.invoiceUrl ?? '',
       available: status === 'Available',
       rating: 0,
       stock: status === 'Available' ? 1 : 0,
@@ -1499,7 +1675,19 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       mode: this.paymentModeFromApi(payment.mode),
       status: this.paymentStatusFromApi(payment.status),
       amount: Number(payment.amount),
-      paidAt: payment.paidAt
+      paidAt: payment.paidAt,
+      remark: payment.remark ?? '',
+      remarkChangeCount: payment.remarkChangeCount ?? 0
+    };
+  }
+
+  private mapPaymentRemarkLog(log: PaymentRemarkLogResponse): PaymentRemarkLogView {
+    return {
+      id: log.id,
+      oldRemark: log.oldRemark ?? '',
+      newRemark: log.newRemark ?? '',
+      changedBy: log.changedBy ?? '',
+      changedAt: log.changedAt
     };
   }
 
@@ -1536,6 +1724,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       specs: value.specifications,
       dailyPrice: value.dailyPrice,
       weeklyPrice: value.weeklyPrice,
+      warrantyDate: value.warrantyDate || undefined,
+      invoiceUrl: value.invoiceUrl || undefined,
       availabilityStatus: this.productStatusToApi(value.status),
       images: value.image ? [value.image] : []
     };

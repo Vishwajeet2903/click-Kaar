@@ -9,6 +9,8 @@ export interface Product {
   specifications: Record<string, string>;
   dailyPrice: number;
   weeklyPrice: number;
+  warrantyDate?: string;
+  invoiceUrl?: string;
   available: boolean;
   rating: number;
   stock: number;

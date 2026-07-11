@@ -1,1 +1,3 @@
-export const API_BASE_URL = 'https://click-kaar-371334584817.asia-south1.run.app/api';
+import { environment } from '../../environments/environment';
+
+export const API_BASE_URL = environment.apiBaseUrl;

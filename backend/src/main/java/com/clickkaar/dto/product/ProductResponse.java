@@ -4,6 +4,7 @@ import com.clickkaar.enums.AvailabilityStatus;
 import com.clickkaar.enums.ProductCategory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public record ProductResponse(
@@ -16,6 +17,8 @@ public record ProductResponse(
     String specs,
     BigDecimal dailyPrice,
     BigDecimal weeklyPrice,
+    LocalDate warrantyDate,
+    String invoiceUrl,
     AvailabilityStatus availabilityStatus,
     List<String> images
 ) {

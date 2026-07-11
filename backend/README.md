@@ -8,34 +8,48 @@ Spring Boot 3 backend API for Clickkaar, a photography and videography equipment
 - Spring Boot 3
 - Spring Web, Spring Data JPA, Spring Security
 - JWT auth with BCrypt password hashing
-- MySQL by default, PostgreSQL driver included
+- MySQL for local development and deployment, PostgreSQL driver included
 - Lombok, Bean Validation
 - Swagger/OpenAPI
 - Razorpay and Cloudinary dependencies included for production integrations
 
 ## Run Locally
 
-1. Create a MySQL database or let Hibernate create it from the JDBC URL:
+The default Spring profile is `local`, and the local profile uses MySQL.
+
+Create the database if it does not already exist:
 
 ```bash
 mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS clickkaar;"
 ```
 
-2. Set environment variables if your database credentials differ:
+Set credentials if your local MySQL user is not passwordless:
 
 ```bash
-set DB_USERNAME=root
-set DB_PASSWORD=password
-set JWT_SECRET=replace-this-with-a-long-production-secret
+set LOCAL_DB_USERNAME=root
+set LOCAL_DB_PASSWORD=your_mysql_password
 ```
 
-3. Start the backend:
+Start the backend:
 
 ```bash
 mvn spring-boot:run
 ```
 
 Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+## Deployment Profile
+
+Cloud Run uses the `cloud` profile through `SPRING_PROFILES_ACTIVE=cloud` in `cloudbuild.yaml` and the Docker image. Deployment database credentials come from environment variables/secrets:
+
+```text
+DB_URL
+DB_USERNAME
+DB_PASSWORD
+JWT_SECRET
+```
+
+If you want local development to use a different MySQL database, set `LOCAL_DB_URL`, `LOCAL_DB_USERNAME`, and `LOCAL_DB_PASSWORD`.
 
 ## Seed Accounts
 

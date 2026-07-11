@@ -36,4 +36,7 @@ public class Payment extends AuditableEntity {
   private String razorpayOrderId;
   private String razorpayPaymentId;
   private String razorpaySignature;
+
+  @Column(length = 1000)
+  private String remark;
 }

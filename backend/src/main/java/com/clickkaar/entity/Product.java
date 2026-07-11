@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,10 @@ public class Product extends AuditableEntity {
 
   @Column(nullable = false, precision = 10, scale = 2)
   private BigDecimal weeklyPrice;
+
+  private LocalDate warrantyDate;
+
+  private String invoiceUrl;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

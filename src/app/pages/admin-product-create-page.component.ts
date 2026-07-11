@@ -40,6 +40,8 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
             <label>Weekly price<input type="number" formControlName="weeklyPrice"></label>
             <label>Stock<input type="number" formControlName="stock"></label>
             <label>Image URL<input formControlName="image"></label>
+            <label>Warranty date<input type="date" formControlName="warrantyDate"></label>
+            <label>Invoice URL<input formControlName="invoiceUrl"></label>
           </div>
           <label>Description<textarea formControlName="description"></textarea></label>
           <label>Specifications<textarea formControlName="specifications" placeholder="Sensor: 45MP, Video: 8K RAW"></textarea></label>
@@ -108,6 +110,8 @@ export class AdminProductCreatePageComponent {
     weeklyPrice: [0, [Validators.required, Validators.min(1)]],
     stock: [1, [Validators.required, Validators.min(0)]],
     image: ['', Validators.required],
+    warrantyDate: [''],
+    invoiceUrl: [''],
     description: ['', Validators.required],
     specifications: ['']
   });
@@ -141,6 +145,8 @@ export class AdminProductCreatePageComponent {
       weeklyPrice: 0,
       stock: 1,
       image: '',
+      warrantyDate: '',
+      invoiceUrl: '',
       description: '',
       specifications: ''
     });
@@ -157,6 +163,8 @@ export class AdminProductCreatePageComponent {
       specs: value.specifications,
       dailyPrice: value.dailyPrice,
       weeklyPrice: value.weeklyPrice,
+      warrantyDate: value.warrantyDate || undefined,
+      invoiceUrl: value.invoiceUrl || undefined,
       availabilityStatus: this.productStatusToApi(value.status),
       images: value.image ? [value.image] : []
     };

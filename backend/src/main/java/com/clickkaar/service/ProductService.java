@@ -57,6 +57,8 @@ public class ProductService {
         .specs(request.specs())
         .dailyPrice(request.dailyPrice())
         .weeklyPrice(request.weeklyPrice())
+        .warrantyDate(request.warrantyDate())
+        .invoiceUrl(request.invoiceUrl())
         .availabilityStatus(request.availabilityStatus() == null ? AvailabilityStatus.AVAILABLE : request.availabilityStatus())
         .build();
     if (request.images() != null) {
@@ -82,6 +84,8 @@ public class ProductService {
     product.setSpecs(request.specs());
     product.setDailyPrice(request.dailyPrice());
     product.setWeeklyPrice(request.weeklyPrice());
+    product.setWarrantyDate(request.warrantyDate());
+    product.setInvoiceUrl(request.invoiceUrl());
     product.setAvailabilityStatus(request.availabilityStatus() == null ? product.getAvailabilityStatus() : request.availabilityStatus());
     if (request.images() != null) {
       product.getImages().clear();
@@ -109,6 +113,8 @@ public class ProductService {
         product.getSpecs(),
         product.getDailyPrice(),
         product.getWeeklyPrice(),
+        product.getWarrantyDate(),
+        product.getInvoiceUrl(),
         product.getAvailabilityStatus(),
         product.getImages().stream().map(ProductImage::getImageUrl).toList()
     );

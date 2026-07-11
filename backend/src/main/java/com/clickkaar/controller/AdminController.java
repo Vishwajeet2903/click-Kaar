@@ -11,6 +11,7 @@ import com.clickkaar.entity.AdminNote;
 import com.clickkaar.entity.Booking;
 import com.clickkaar.entity.PendingRegistration;
 import com.clickkaar.entity.Payment;
+import com.clickkaar.entity.PaymentRemarkLog;
 import com.clickkaar.entity.Product;
 import com.clickkaar.entity.Refund;
 import com.clickkaar.entity.Role;
@@ -29,6 +30,7 @@ import com.clickkaar.repository.BlogPostRepository;
 import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PendingRegistrationRepository;
 import com.clickkaar.repository.PaymentRepository;
+import com.clickkaar.repository.PaymentRemarkLogRepository;
 import com.clickkaar.repository.ProductRepository;
 import com.clickkaar.repository.RefundRepository;
 import com.clickkaar.repository.RoleRepository;
@@ -89,6 +91,7 @@ public class AdminController {
   private final BookingRepository bookingRepository;
   private final ProductRepository productRepository;
   private final PaymentRepository paymentRepository;
+  private final PaymentRemarkLogRepository paymentRemarkLogRepository;
   private final UserRepository userRepository;
   private final PendingRegistrationRepository pendingRegistrationRepository;
   private final RoleRepository roleRepository;
@@ -198,6 +201,41 @@ public class AdminController {
   @GetMapping("/payments")
   public List<AdminPaymentResponse> payments() {
     return paymentRepository.findAll().stream().map(this::adminPaymentResponse).toList();
+  }
+
+  @PatchMapping("/payments/{paymentId}/remark")
+  @Transactional
+  public AdminPaymentResponse updatePaymentRemark(@PathVariable Long paymentId, @RequestBody PaymentRemarkRequest request) {
+    Payment payment = paymentRepository.findById(paymentId)
+        .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+    String oldRemark = payment.getRemark() == null ? "" : payment.getRemark().trim();
+    String newRemark = request.remark() == null ? "" : request.remark().trim();
+    if (!Objects.equals(oldRemark, newRemark)) {
+      paymentRemarkLogRepository.save(PaymentRemarkLog.builder()
+          .payment(payment)
+          .oldRemark(oldRemark)
+          .newRemark(newRemark)
+          .changedBy(currentAdmin().getEmail())
+          .build());
+      payment.setRemark(newRemark);
+    }
+    return adminPaymentResponse(payment);
+  }
+
+  @GetMapping("/payments/{paymentId}/remark/logs")
+  public List<PaymentRemarkLogResponse> paymentRemarkLogs(@PathVariable Long paymentId) {
+    if (!paymentRepository.existsById(paymentId)) {
+      throw new ResourceNotFoundException("Payment not found");
+    }
+    return paymentRemarkLogRepository.findByPaymentIdOrderByCreatedAtDesc(paymentId).stream()
+        .map(log -> new PaymentRemarkLogResponse(
+            log.getId(),
+            log.getOldRemark(),
+            log.getNewRemark(),
+            log.getChangedBy(),
+            log.getCreatedAt()
+        ))
+        .toList();
   }
 
   @PostMapping("/payments/{paymentId}/refunds")
@@ -588,7 +626,9 @@ public class AdminController {
         payment.getType().name(),
         payment.getStatus(),
         payment.getAmount(),
-        payment.getUpdatedAt()
+        payment.getUpdatedAt(),
+        payment.getRemark(),
+        paymentRemarkLogRepository.countByPaymentId(payment.getId())
     );
   }
 
@@ -613,11 +653,13 @@ public class AdminController {
 
   public record BookingStatusRequest(BookingStatus status) {}
   public record BookingNoteRequest(String note) {}
+  public record PaymentRemarkRequest(String remark) {}
   public record CustomerBlockRequest(boolean blocked) {}
   public record AdminRefundRequest(BigDecimal amount, String reason) {}
   public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes) {}
   public record AdminCustomerResponse(Long id, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}
-  public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt) {}
+  public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt, String remark, long remarkChangeCount) {}
+  public record PaymentRemarkLogResponse(Long id, String oldRemark, String newRemark, String changedBy, LocalDateTime changedAt) {}
   public record AdminBlogPostResponse(Long id, String title, String category, String author, BlogStatus status, LocalDate publishDate, String seoTitle, String metaDescription) {}
   public record AdminStaticContentResponse(String key, String title, LocalDateTime updatedAt, String status) {}
   public record AdminContentResponse(List<AdminBlogPostResponse> blogPosts, List<AdminStaticContentResponse> staticContent) {}

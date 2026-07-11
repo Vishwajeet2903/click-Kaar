@@ -59,6 +59,8 @@ export interface AdminProductRequest {
   specs: string;
   dailyPrice: number;
   weeklyPrice: number;
+  warrantyDate?: string;
+  invoiceUrl?: string;
   availabilityStatus: string;
   images: string[];
 }
@@ -73,6 +75,8 @@ export interface AdminProductResponse {
   specs?: string;
   dailyPrice: number;
   weeklyPrice: number;
+  warrantyDate?: string;
+  invoiceUrl?: string;
   availabilityStatus: string;
   images: string[];
 }
@@ -114,6 +118,16 @@ export interface AdminPaymentResponse {
   status: string;
   amount: number;
   paidAt: string;
+  remark?: string;
+  remarkChangeCount: number;
+}
+
+export interface PaymentRemarkLogResponse {
+  id: number;
+  oldRemark?: string;
+  newRemark?: string;
+  changedBy?: string;
+  changedAt: string;
 }
 
 export interface AdminContentResponse {
@@ -232,6 +246,18 @@ export class AdminService {
 
   refundPayment(paymentId: number, amount: number, reason: string): Observable<AdminPaymentResponse> {
     return this.http.post<AdminPaymentResponse>(`${API_URL}/payments/${paymentId}/refunds`, { amount, reason }, {
+      headers: this.authHeaders()
+    });
+  }
+
+  updatePaymentRemark(paymentId: number, remark: string): Observable<AdminPaymentResponse> {
+    return this.http.patch<AdminPaymentResponse>(`${API_URL}/payments/${paymentId}/remark`, { remark }, {
+      headers: this.authHeaders()
+    });
+  }
+
+  getPaymentRemarkLogs(paymentId: number): Observable<PaymentRemarkLogResponse[]> {
+    return this.http.get<PaymentRemarkLogResponse[]>(`${API_URL}/payments/${paymentId}/remark/logs`, {
       headers: this.authHeaders()
     });
   }
