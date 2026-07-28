@@ -2,6 +2,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../services/cart.service';
+import { useProductImageFallback } from '../services/product.service';
 import { AppButtonComponent } from '../shared/components/app-button.component';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
@@ -18,7 +19,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
           @for (item of cart.items(); track item.product.id) {
             <article class="surface item">
               <a class="item-media" [routerLink]="['/products', item.product.id]" [attr.aria-label]="'View ' + item.product.name">
-                <img [src]="item.product.image" [alt]="item.product.name">
+                <img [src]="item.product.image" [alt]="item.product.name" (error)="useFallback($event, item.product.category)">
               </a>
               <div>
                 <h2><a [routerLink]="['/products', item.product.id]">{{ item.product.name }}</a></h2>
@@ -68,4 +69,8 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 })
 export class CartPageComponent {
   readonly cart = inject(CartService);
+
+  useFallback(event: Event, category: string): void {
+    useProductImageFallback(event);
+  }
 }

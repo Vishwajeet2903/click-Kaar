@@ -64,6 +64,8 @@ printf '%s' 'jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaul
 printf '%s' 'avnadmin' | gcloud secrets create clickkaar-db-username --replication-policy="automatic" --data-file=-
 printf '%s' 'your-db-password' | gcloud secrets create clickkaar-db-password --replication-policy="automatic" --data-file=-
 printf '%s' 'replace-with-a-long-random-production-jwt-secret' | gcloud secrets create clickkaar-jwt-secret --replication-policy="automatic" --data-file=-
+printf '%s' 'rzp_live_or_test_key_id' | gcloud secrets create clickkaar-razorpay-key-id --replication-policy="automatic" --data-file=-
+printf '%s' 'rzp_live_or_test_key_secret' | gcloud secrets create clickkaar-razorpay-key-secret --replication-policy="automatic" --data-file=-
 ```
 
 For PowerShell:
@@ -73,6 +75,8 @@ echo "jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?ssl
 echo "avnadmin" | gcloud secrets create clickkaar-db-username --data-file=-
 echo "your-db-password" | gcloud secrets create clickkaar-db-password --data-file=-
 echo "replace-with-a-long-random-production-jwt-secret" | gcloud secrets create clickkaar-jwt-secret --data-file=-
+echo "rzp_live_or_test_key_id" | gcloud secrets create clickkaar-razorpay-key-id --data-file=-
+echo "rzp_live_or_test_key_secret" | gcloud secrets create clickkaar-razorpay-key-secret --data-file=-
 ```
 
 To update an existing secret in Google Cloud Shell:
@@ -82,6 +86,8 @@ printf '%s' 'jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaul
 printf '%s' 'avnadmin' | gcloud secrets versions add clickkaar-db-username --data-file=-
 printf '%s' 'new-db-password' | gcloud secrets versions add clickkaar-db-password --data-file=-
 printf '%s' 'new-long-random-production-jwt-secret' | gcloud secrets versions add clickkaar-jwt-secret --data-file=-
+printf '%s' 'new-razorpay-key-id' | gcloud secrets versions add clickkaar-razorpay-key-id --data-file=-
+printf '%s' 'new-razorpay-key-secret' | gcloud secrets versions add clickkaar-razorpay-key-secret --data-file=-
 ```
 
 For PowerShell:
@@ -90,6 +96,8 @@ For PowerShell:
 echo "jdbc:mysql://mysql-21f136f0-clickkaar.k.aivencloud.com:12863/defaultdb?sslMode=REQUIRED" | gcloud secrets versions add clickkaar-db-url --data-file=-
 echo "avnadmin" | gcloud secrets versions add clickkaar-db-username --data-file=-
 echo "new-value" | gcloud secrets versions add clickkaar-db-password --data-file=-
+echo "new-razorpay-key-id" | gcloud secrets versions add clickkaar-razorpay-key-id --data-file=-
+echo "new-razorpay-key-secret" | gcloud secrets versions add clickkaar-razorpay-key-secret --data-file=-
 ```
 
 ## 5. Grant Deployment Permissions

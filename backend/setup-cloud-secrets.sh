@@ -26,6 +26,10 @@ printf '\n'
 read -rsp "JWT secret, leave blank to generate one: " JWT_SECRET
 printf '\n'
 
+read -rp "Razorpay key id: " RAZORPAY_KEY_ID
+read -rsp "Razorpay key secret: " RAZORPAY_KEY_SECRET
+printf '\n'
+
 if [ -z "$JWT_SECRET" ]; then
   JWT_SECRET="$(openssl rand -base64 48)"
 fi
@@ -36,6 +40,8 @@ put_secret "clickkaar-db-url" "$DB_URL"
 put_secret "clickkaar-db-username" "$DB_USERNAME"
 put_secret "clickkaar-db-password" "$DB_PASSWORD"
 put_secret "clickkaar-jwt-secret" "$JWT_SECRET"
+put_secret "clickkaar-razorpay-key-id" "$RAZORPAY_KEY_ID"
+put_secret "clickkaar-razorpay-key-secret" "$RAZORPAY_KEY_SECRET"
 
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:371334584817-compute@developer.gserviceaccount.com" \
@@ -44,7 +50,7 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" \
 
 gcloud secrets list \
   --project "$PROJECT_ID" \
-  --filter='name:(clickkaar-db-url OR clickkaar-db-username OR clickkaar-db-password OR clickkaar-jwt-secret)' \
+  --filter='name:(clickkaar-db-url OR clickkaar-db-username OR clickkaar-db-password OR clickkaar-jwt-secret OR clickkaar-razorpay-key-id OR clickkaar-razorpay-key-secret)' \
   --format='table(name)'
 
 printf '\nSecrets are ready. Re-run the Cloud Build check.\n'

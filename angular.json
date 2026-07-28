@@ -28,6 +28,76 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Audio Mic",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Camera",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Card",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Card Reader",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Flash",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Gimble",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Lens",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Lens Filter",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Light Stand",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Modifiere",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Reflector & Diffuser",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Trasmitter",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Tripod",
+                "output": "/products"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/Product Images Pro Gear/Video Lights",
+                "output": "/products"
               }
             ],
             "styles": [

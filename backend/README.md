@@ -47,9 +47,15 @@ DB_URL
 DB_USERNAME
 DB_PASSWORD
 JWT_SECRET
+RAZORPAY_KEY_ID
+RAZORPAY_KEY_SECRET
 ```
 
 If you want local development to use a different MySQL database, set `LOCAL_DB_URL`, `LOCAL_DB_USERNAME`, and `LOCAL_DB_PASSWORD`.
+
+## Razorpay Payments
+
+Set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` before using the Razorpay checkout flow. The backend creates Razorpay orders from the saved booking total, verifies the Razorpay payment signature, stores the payment IDs, and marks the booking as `CONFIRMED` after successful verification.
 
 ## Seed Accounts
 

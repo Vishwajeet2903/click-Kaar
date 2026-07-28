@@ -7,6 +7,7 @@ import com.clickkaar.dto.payment.VerifyPaymentRequest;
 import com.clickkaar.entity.Booking;
 import com.clickkaar.entity.Payment;
 import com.clickkaar.entity.Refund;
+import com.clickkaar.enums.BookingStatus;
 import com.clickkaar.enums.PaymentStatus;
 import com.clickkaar.enums.RefundStatus;
 import com.clickkaar.exception.BadRequestException;
@@ -42,10 +43,11 @@ public class PaymentService {
   @Transactional
   public PaymentOrderResponse createOrder(CreatePaymentOrderRequest request) {
     Booking booking = bookingRepository.findById(request.bookingId()).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
-    String razorpayOrderId = createRazorpayOrderId(booking, request);
+    validateRequestedAmount(booking, request);
+    String razorpayOrderId = createRazorpayOrderId(booking);
     Payment payment = paymentRepository.save(Payment.builder()
         .booking(booking)
-        .amount(request.amount())
+        .amount(booking.getTotalAmount())
         .type(request.type())
         .status(PaymentStatus.PENDING)
         .razorpayOrderId(razorpayOrderId)
@@ -61,6 +63,7 @@ public class PaymentService {
     payment.setRazorpayPaymentId(request.razorpayPaymentId());
     payment.setRazorpaySignature(request.razorpaySignature());
     payment.setStatus(PaymentStatus.PAID);
+    payment.getBooking().setStatus(BookingStatus.CONFIRMED);
     return paymentOrderResponse(payment);
   }
 
@@ -91,7 +94,13 @@ public class PaymentService {
     }
   }
 
-  private String createRazorpayOrderId(Booking booking, CreatePaymentOrderRequest request) {
+  private void validateRequestedAmount(Booking booking, CreatePaymentOrderRequest request) {
+    if (request.amount() != null && request.amount().compareTo(booking.getTotalAmount()) != 0) {
+      throw new BadRequestException("Payment amount does not match the booking total");
+    }
+  }
+
+  private String createRazorpayOrderId(Booking booking) {
     if (razorpayKeyId == null || razorpayKeyId.isBlank() || razorpaySecret == null || razorpaySecret.isBlank()) {
       throw new BadRequestException("Razorpay credentials are not configured");
     }
@@ -99,7 +108,7 @@ public class PaymentService {
     try {
       RazorpayClient razorpayClient = new RazorpayClient(razorpayKeyId, razorpaySecret);
       JSONObject orderRequest = new JSONObject();
-      orderRequest.put("amount", request.amount().multiply(java.math.BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).longValueExact());
+      orderRequest.put("amount", booking.getTotalAmount().multiply(java.math.BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).longValueExact());
       orderRequest.put("currency", "INR");
       orderRequest.put("receipt", booking.getBookingNumber() + "-" + UUID.randomUUID().toString().substring(0, 8));
       Order order = razorpayClient.orders.create(orderRequest);

@@ -49,6 +49,15 @@ public class Product extends AuditableEntity {
 
   private String invoiceUrl;
 
+  @Column(name = "image_link")
+  private String imageLink;
+
+  @Column(name = "link_1")
+  private String link1;
+
+  @Column(name = "link_2")
+  private String link2;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private AvailabilityStatus availabilityStatus;

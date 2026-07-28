@@ -1,8 +1,27 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject, signal } from '@angular/core';
+import { Observable, catchError, map, of, startWith } from 'rxjs';
 import { Product } from '../models/product.model';
+import { API_BASE_URL } from './api.config';
 
 const img = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
+const PRODUCT_IMAGE_FALLBACK = '/clickkaar-logo.png';
+
+export function productFallbackImage(): string {
+  return PRODUCT_IMAGE_FALLBACK;
+}
+
+export function useProductImageFallback(event: Event): void {
+  const image = event.target as HTMLImageElement | null;
+  if (!image) {
+    return;
+  }
+
+  const fallback = productFallbackImage();
+  if (image.src !== fallback) {
+    image.src = fallback;
+  }
+}
 
 export const PRODUCTS: Product[] = [
   {
@@ -145,17 +164,113 @@ export const PRODUCTS: Product[] = [
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
+  private readonly http = inject(HttpClient);
   readonly categories = signal(['Cameras', 'Lenses', 'Lighting', 'Audio Equipment', 'Tripods', 'Accessories']);
 
   getProducts(): Observable<Product[]> {
-    return of(PRODUCTS);
+    return this.http.get<ApiProduct[]>(`${API_BASE_URL}/products`).pipe(
+      map((products) => products.length ? products.map((product) => this.toProduct(product)) : PRODUCTS),
+      catchError(() => of(PRODUCTS))
+    );
   }
 
   getProduct(id: number): Observable<Product | undefined> {
-    return of(PRODUCTS.find((product) => product.id === id));
+    return this.http.get<ApiProduct>(`${API_BASE_URL}/products/${id}`).pipe(
+      map((product) => this.toProduct(product)),
+      catchError(() => of(PRODUCTS.find((product) => product.id === id)))
+    );
   }
 
   getFeatured(): Observable<Product[]> {
-    return of(PRODUCTS.filter((product) => product.available).slice(0, 4));
+    return this.getProducts().pipe(
+      map((products) => {
+        const availableProducts = products.filter((product) => product.available);
+        const featuredProducts = availableProducts.length ? availableProducts : products;
+        return featuredProducts.slice(0, 4);
+      }),
+      startWith(PRODUCTS.filter((product) => product.available).slice(0, 4))
+    );
   }
+
+  private toProduct(product: ApiProduct): Product {
+    const category = displayCategory(product.category);
+    const directImages = [product.imageLink, product.link1, product.link2].filter((image): image is string => !!image);
+    const gallery = uniqueImages([...(product.images ?? []), ...directImages].map(normalizeProductImagePath));
+    const productGallery = gallery.length ? gallery : [productFallbackImage()];
+    return {
+      id: product.id,
+      name: product.name,
+      category,
+      brand: product.brand,
+      image: productGallery[0],
+      gallery: productGallery,
+      description: product.fullDescription || product.shortDescription || '',
+      specifications: parseSpecs(product.specs),
+      dailyPrice: Number(product.dailyPrice),
+      weeklyPrice: Number(product.weeklyPrice),
+      warrantyDate: product.warrantyDate,
+      invoiceUrl: product.invoiceUrl,
+      available: !product.availabilityStatus || product.availabilityStatus === 'AVAILABLE',
+      rating: 4.6,
+      stock: !product.availabilityStatus || product.availabilityStatus === 'AVAILABLE' ? 1 : 0,
+      popularity: 80,
+      createdAt: '2026-01-01'
+    };
+  }
+}
+
+interface ApiProduct {
+  id: number;
+  name: string;
+  brand: string;
+  category: 'CAMERAS' | 'LENSES' | 'LIGHTING' | 'AUDIO' | 'TRIPODS_SUPPORT' | 'ACCESSORIES';
+  shortDescription?: string;
+  fullDescription?: string;
+  specs?: string;
+  dailyPrice: number | string;
+  weeklyPrice: number | string;
+  warrantyDate?: string;
+  invoiceUrl?: string;
+  imageLink?: string;
+  link1?: string;
+  link2?: string;
+  availabilityStatus?: 'AVAILABLE' | 'UNAVAILABLE' | 'ON_RENT' | 'MAINTENANCE';
+  images?: string[];
+}
+
+function uniqueImages(images: string[]): string[] {
+  return [...new Set(images.filter(Boolean))];
+}
+
+function normalizeProductImagePath(image: string): string {
+  if (image.startsWith('/products/')) {
+    return image.replace(/:/g, '_');
+  }
+
+  return image;
+}
+
+function displayCategory(category: ApiProduct['category']): string {
+  return {
+    CAMERAS: 'Cameras',
+    LENSES: 'Lenses',
+    LIGHTING: 'Lighting',
+    AUDIO: 'Audio Equipment',
+    TRIPODS_SUPPORT: 'Tripods',
+    ACCESSORIES: 'Accessories'
+  }[category];
+}
+
+function parseSpecs(specs?: string): Record<string, string> {
+  if (!specs) {
+    return {};
+  }
+
+  return specs.split('\n').reduce<Record<string, string>>((result, line) => {
+    const separator = line.indexOf(':');
+    if (separator > 0) {
+      result[line.slice(0, separator).trim()] = line.slice(separator + 1).trim();
+    }
+    return result;
+  }, {});
 }

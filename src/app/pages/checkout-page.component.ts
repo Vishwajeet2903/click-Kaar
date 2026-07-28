@@ -158,7 +158,7 @@ export class CheckoutPageComponent {
 
         this.paymentService.createOrder({
           bookingId: booking.id,
-          amount: this.cart.grandTotal(),
+          amount: booking.totalAmount,
           type: 'FULL_PAYMENT'
         }).subscribe({
           next: (order) => this.openRazorpay(order),
@@ -198,7 +198,7 @@ export class CheckoutPageComponent {
       const user = this.authService.currentUser();
       const razorpay = new window.Razorpay({
         key: order.razorpayKeyId,
-        amount: Math.round(order.amount * 100),
+        amount: Math.round(Number(order.amount) * 100),
         currency: order.currency,
         name: 'Clickkaar',
         description: 'Equipment rental booking',
@@ -261,8 +261,16 @@ export class CheckoutPageComponent {
     }
 
     return new Promise((resolve, reject) => {
+      const existingScript = document.querySelector<HTMLScriptElement>('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+      if (existingScript) {
+        existingScript.addEventListener('load', () => resolve(), { once: true });
+        existingScript.addEventListener('error', () => reject(new Error('Razorpay checkout failed to load')), { once: true });
+        return;
+      }
+
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
       script.onload = () => resolve();
       script.onerror = () => reject(new Error('Razorpay checkout failed to load'));
       document.body.appendChild(script);

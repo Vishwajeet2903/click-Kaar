@@ -21,6 +21,9 @@ public record ProductRequest(
     @NotNull @DecimalMin("0.0") BigDecimal weeklyPrice,
     LocalDate warrantyDate,
     String invoiceUrl,
+    String imageLink,
+    String link1,
+    String link2,
     AvailabilityStatus availabilityStatus,
     List<String> images
 ) {

@@ -2,6 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../models/product.model';
+import { useProductImageFallback } from '../../services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { WishlistService } from '../../services/wishlist.service';
   template: `
     <article class="product-card">
       <a [routerLink]="['/products', product().id]" class="media-link">
-        <img class="product-image" [src]="product().image" [alt]="product().name">
+        <img class="product-image" [src]="product().image" [alt]="product().name" (error)="useFallback($event)">
         <!-- <span class="stock-chip">{{ product().stock }} available</span> -->
       </a>
       <button
@@ -62,6 +63,10 @@ import { WishlistService } from '../../services/wishlist.service';
 export class ProductCardComponent {
   readonly product = input.required<Product>();
   readonly wishlist = inject(WishlistService);
+
+  useFallback(event: Event): void {
+    useProductImageFallback(event);
+  }
 
   toggleWishlist(): void {
     this.wishlist.toggle(this.product());

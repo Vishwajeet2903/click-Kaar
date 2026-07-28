@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product.model';
-import { ProductService } from '../services/product.service';
+import { ProductService, useProductImageFallback } from '../services/product.service';
 import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.directive';
 
 @Component({
@@ -30,9 +30,9 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 
       <div class="product-market-grid">
         @for (product of featured$ | async; track product.id; let index = $index) {
-          <article class="market-product" appScrollReveal="fade-up" [revealStagger]="index * 95">
+          <article class="market-product">
             <a [routerLink]="['/products', product.id]" class="product-media">
-              <img [src]="product.image" [alt]="product.name">
+              <img [src]="product.image" [alt]="product.name" (error)="useFallback($event, product.category)">
               <!-- <span>{{ product.available ? 'Available now' : 'Waitlist' }}</span> -->
             </a>
             <div class="product-body">
@@ -114,4 +114,8 @@ export class MarketplaceSectionComponent {
     { number: '03', title: 'Confirm booking', text: 'View transparent camera rental pricing and live availability.' },
     { number: '04', title: 'Shoot with support', text: 'Enjoy easy equipment pickup, quick setup and local support.' }
   ];
+
+  useFallback(event: Event, category: string): void {
+    useProductImageFallback(event);
+  }
 }

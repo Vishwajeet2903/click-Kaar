@@ -8,7 +8,7 @@ import { Product } from '../models/product.model';
 import { AuthService } from '../services/auth.service';
 import { BookingService } from '../services/booking.service';
 import { CartService } from '../services/cart.service';
-import { ProductService } from '../services/product.service';
+import { ProductService, useProductImageFallback } from '../services/product.service';
 import { WishlistService } from '../services/wishlist.service';
 import { AppButtonComponent } from '../shared/components/app-button.component';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
@@ -71,7 +71,7 @@ export class AddedDialogComponent {}
           <div class="col-lg-7">
             <div class="gallery surface">
               <div class="media-frame" (touchstart)="onGalleryTouchStart($event)" (touchend)="onGalleryTouchEnd($event)">
-                <img class="main-img" [src]="selectedImage()" [alt]="product()!.name">
+                <img class="main-img" [src]="selectedImage()" [alt]="product()!.name" (error)="useFallback($event)">
                 <!-- <span class="stock-chip" [class.out]="!product()!.available">
                   {{ product()!.available ? 'Available now' : 'Unavailable' }}
                 </span> -->
@@ -439,6 +439,13 @@ export class ProductDetailsPageComponent {
   selectImage(index: number): void {
     const image = this.product()?.gallery[index];
     if (image) this.selectedImage.set(image);
+  }
+
+  useFallback(event: Event): void {
+    const product = this.product();
+    if (product) {
+      useProductImageFallback(event);
+    }
   }
 
   showPreviousImage(): void {

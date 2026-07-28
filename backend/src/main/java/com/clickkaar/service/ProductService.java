@@ -59,6 +59,9 @@ public class ProductService {
         .weeklyPrice(request.weeklyPrice())
         .warrantyDate(request.warrantyDate())
         .invoiceUrl(request.invoiceUrl())
+        .imageLink(imageColumnValue(request, 0))
+        .link1(imageColumnValue(request, 1))
+        .link2(imageColumnValue(request, 2))
         .availabilityStatus(request.availabilityStatus() == null ? AvailabilityStatus.AVAILABLE : request.availabilityStatus())
         .build();
     if (request.images() != null) {
@@ -86,6 +89,9 @@ public class ProductService {
     product.setWeeklyPrice(request.weeklyPrice());
     product.setWarrantyDate(request.warrantyDate());
     product.setInvoiceUrl(request.invoiceUrl());
+    product.setImageLink(imageColumnValue(request, 0));
+    product.setLink1(imageColumnValue(request, 1));
+    product.setLink2(imageColumnValue(request, 2));
     product.setAvailabilityStatus(request.availabilityStatus() == null ? product.getAvailabilityStatus() : request.availabilityStatus());
     if (request.images() != null) {
       product.getImages().clear();
@@ -115,8 +121,24 @@ public class ProductService {
         product.getWeeklyPrice(),
         product.getWarrantyDate(),
         product.getInvoiceUrl(),
+        product.getImageLink(),
+        product.getLink1(),
+        product.getLink2(),
         product.getAvailabilityStatus(),
         product.getImages().stream().map(ProductImage::getImageUrl).toList()
     );
+  }
+
+  private String imageColumnValue(ProductRequest request, int index) {
+    String explicit = switch (index) {
+      case 0 -> request.imageLink();
+      case 1 -> request.link1();
+      case 2 -> request.link2();
+      default -> null;
+    };
+    if (explicit != null && !explicit.isBlank()) {
+      return explicit;
+    }
+    return request.images() != null && index < request.images().size() ? request.images().get(index) : null;
   }
 }
