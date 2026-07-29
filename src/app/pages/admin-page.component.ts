@@ -714,7 +714,7 @@ interface PaymentRemarkLogView {
       --admin-ink: #141414;
       --admin-accent: #ff9700;
     }
-    .admin-page { max-width: min(1400px, calc(100vw - 48px)) !important; padding-bottom: 2rem; }
+    .admin-page { max-width: 95vw !important; padding-bottom: 2rem; }
     .admin-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 240px minmax(0, 1fr); }
     .admin-page :where(.surface) { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
     .admin-sidebar { background: #161616 !important; color: #fff; padding: .9rem; position: sticky; top: 92px; }

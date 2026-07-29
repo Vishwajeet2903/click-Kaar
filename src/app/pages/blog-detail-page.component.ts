@@ -21,7 +21,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     }
   `,
   styles: [`
-    .blog { max-width: 880px; }
+    .blog { max-width: 95vw; }
     img { aspect-ratio: 16/9; border-radius: 8px; margin-bottom: 1.5rem; width: 100%; }
     h1 { font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 950; }
     p { color: #dbeafe; font-size: 1.08rem; line-height: 1.8; }

@@ -62,7 +62,6 @@ export class AddedDialogComponent {}
           </div>
           <div class="hero-stats" aria-label="Rental highlights">
             <div><span>Rating</span><strong class="rating-value">{{ product()!.rating }}</strong></div>
-            <div><span>Stock</span><strong>{{ product()!.stock }}</strong></div>
             <div><span>Weekly</span><strong>{{ product()!.weeklyPrice | currency:'INR':'symbol':'1.0-0' }}</strong></div>
           </div>
         </div>
@@ -98,7 +97,7 @@ export class AddedDialogComponent {}
                   <small>per day</small>
                 </div>
                 <div class="availability" [class.out]="!product()!.available">
-                  {{ product()!.available ? product()!.stock + ' units ready' : 'Check back soon' }}
+                  {{ product()!.available ? 'Available' : 'Check back soon' }}
                 </div>
               </div>
 
@@ -208,7 +207,7 @@ export class AddedDialogComponent {}
     .copy { max-width: 760px; }
     h1 { color: #111; font-size: clamp(2.2rem, 6vw, 5.25rem); font-weight: 950; letter-spacing: 0; line-height: .92; margin: .35rem 0 .75rem; }
     .intro { color: #575757; font-size: clamp(1rem, 1.7vw, 1.16rem); line-height: 1.65; margin: 0; max-width: 680px; }
-    .hero-stats { display: grid; gap: .65rem; grid-template-columns: repeat(3, minmax(86px, 1fr)); min-width: min(100%, 360px); }
+    .hero-stats { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(86px, 1fr)); min-width: min(100%, 260px); }
     .hero-stats div { background: #fff; border-radius: 18px; color: #fff; padding: .85rem .95rem; }
     .hero-stats span { color: #000; display: block; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
     .hero-stats strong { color: #000; display: block; font-size: clamp(1rem, 2vw, 1.28rem); line-height: 1.1; margin-top: .35rem; }

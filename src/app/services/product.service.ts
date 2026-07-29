@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, catchError, map, of, startWith } from 'rxjs';
+import { Observable, catchError, concatMap, from, map, of, reduce, startWith, switchMap } from 'rxjs';
 import { Product } from '../models/product.model';
 import { API_BASE_URL } from './api.config';
 
@@ -169,8 +169,8 @@ export class ProductService {
 
   getProducts(): Observable<Product[]> {
     return this.http.get<ApiProduct[]>(`${API_BASE_URL}/products`).pipe(
-      map((products) => products.length ? products.map((product) => this.toProduct(product)) : PRODUCTS),
-      catchError(() => of(PRODUCTS))
+      switchMap((products) => products.length ? of(this.toProducts(products)) : this.getProductsByCategoryFallback()),
+      catchError(() => this.getProductsByCategoryFallback())
     );
   }
 
@@ -217,7 +217,23 @@ export class ProductService {
       createdAt: '2026-01-01'
     };
   }
+
+  private getProductsByCategoryFallback(): Observable<Product[]> {
+    return from(API_CATEGORIES).pipe(
+      concatMap((category) => this.http.get<ApiProduct[]>(`${API_BASE_URL}/products/category/${category}`).pipe(
+        catchError(() => of([] as ApiProduct[]))
+      )),
+      reduce((all, products) => [...all, ...products], [] as ApiProduct[]),
+      map((products) => products.length ? this.toProducts(products) : PRODUCTS)
+    );
+  }
+
+  private toProducts(products: ApiProduct[]): Product[] {
+    return products.map((product) => this.toProduct(product));
+  }
 }
+
+const API_CATEGORIES: ApiProduct['category'][] = ['CAMERAS', 'LENSES', 'LIGHTING', 'AUDIO', 'TRIPODS_SUPPORT', 'ACCESSORIES'];
 
 interface ApiProduct {
   id: number;

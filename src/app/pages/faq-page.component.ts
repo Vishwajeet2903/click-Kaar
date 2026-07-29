@@ -19,7 +19,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     </section>
   `,
   styles: [`
-    .faq { max-width: 880px; }
+    .faq { max-width: 95vw; }
     details { margin-bottom: .9rem; padding: 1rem; }
     summary { cursor: pointer; font-weight: 900; }
     p { margin: .8rem 0 0; }

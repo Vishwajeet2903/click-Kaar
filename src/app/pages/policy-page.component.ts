@@ -17,7 +17,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     </section>
   `,
   styles: [`
-    .policy { max-width: 900px; }
+    .policy { max-width: 95vw; }
     .block { margin-bottom: 1rem; padding: 1.2rem; }
     h2 { font-size: 1.2rem; font-weight: 900; }
   `]

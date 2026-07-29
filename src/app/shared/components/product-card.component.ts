@@ -13,7 +13,6 @@ import { WishlistService } from '../../services/wishlist.service';
     <article class="product-card">
       <a [routerLink]="['/products', product().id]" class="media-link">
         <img class="product-image" [src]="product().image" [alt]="product().name" (error)="useFallback($event)">
-        <!-- <span class="stock-chip">{{ product().stock }} available</span> -->
       </a>
       <button
         type="button"
@@ -49,7 +48,6 @@ import { WishlistService } from '../../services/wishlist.service';
     .wishlist-btn.active svg { fill: currentColor; }
     img { aspect-ratio: 4/3; display: block; height: auto; object-fit: cover; width: 100%; transition: transform .35s ease; }
     .product-card:hover img { transform: scale(1.06); }
-    .stock-chip { background: rgba(255,255,255,.93); border-radius: 999px; bottom: .65rem; color: #ff9700; font-size: .7rem; font-weight: 900; left: .65rem; padding: .42rem .58rem; position: absolute; }
     .content { display: flex; flex: 1; flex-direction: column; padding: .9rem .3rem .3rem; }
     .content p { color: #ff9700; font-size: .72rem; font-weight: 900; letter-spacing: .18em; margin: 0 0 .45rem; text-transform: uppercase; }
     h3 { color: #111; font-size: 1.04rem; font-weight: 900; letter-spacing: 0; line-height: 1.15; margin: 0 0 .9rem; min-height: 2.4em; word-spacing: .08em; }
