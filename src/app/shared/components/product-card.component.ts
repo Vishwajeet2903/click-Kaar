@@ -1,7 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../models/product.model';
+import { AuthService } from '../../services/auth.service';
 import { productFallbackImage, useProductImageFallback } from '../../services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
 
@@ -14,18 +15,20 @@ import { WishlistService } from '../../services/wishlist.service';
       <a [routerLink]="['/products', product().id]" class="media-link">
         <img class="product-image" [class.logo-fallback]="isFallbackImage()" [src]="product().image" [alt]="product().name" (error)="useFallback($event)">
       </a>
-      <button
-        type="button"
-        class="wishlist-btn"
-        [class.active]="wishlist.has(product().id)"
-        [attr.aria-label]="wishlist.has(product().id) ? 'Remove from wishlist' : 'Add to wishlist'"
-        [attr.aria-pressed]="wishlist.has(product().id)"
-        (click)="toggleWishlist()"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 20.4s-7.2-4.5-9.4-8.7C.8 8.2 2.8 4.4 6.6 4.1c2.1-.2 3.8.9 5.4 2.8 1.6-1.9 3.3-3 5.4-2.8 3.8.3 5.8 4.1 4 7.6-2.2 4.2-9.4 8.7-9.4 8.7Z" />
-        </svg>
-      </button>
+      @if (canShowCustomerActions()) {
+        <button
+          type="button"
+          class="wishlist-btn"
+          [class.active]="wishlist.has(product().id)"
+          [attr.aria-label]="wishlist.has(product().id) ? 'Remove from wishlist' : 'Add to wishlist'"
+          [attr.aria-pressed]="wishlist.has(product().id)"
+          (click)="toggleWishlist()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 20.4s-7.2-4.5-9.4-8.7C.8 8.2 2.8 4.4 6.6 4.1c2.1-.2 3.8.9 5.4 2.8 1.6-1.9 3.3-3 5.4-2.8 3.8.3 5.8 4.1 4 7.6-2.2 4.2-9.4 8.7-9.4 8.7Z" />
+          </svg>
+        </button>
+      }
       <div class="content">
         <p>{{ product().category }}</p>
         <h3><a [routerLink]="['/products', product().id]">{{ product().name }}</a></h3>
@@ -63,6 +66,8 @@ import { WishlistService } from '../../services/wishlist.service';
 export class ProductCardComponent {
   readonly product = input.required<Product>();
   readonly wishlist = inject(WishlistService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   isFallbackImage(): boolean {
     return this.product().image === productFallbackImage();
@@ -73,7 +78,24 @@ export class ProductCardComponent {
     (event.target as HTMLImageElement | null)?.classList.add('logo-fallback');
   }
 
+  canShowCustomerActions(): boolean {
+    const user = this.authService.currentUser();
+    return !user || this.authService.isCustomer();
+  }
+
   toggleWishlist(): void {
+    if (!this.ensureCustomerAccess()) {
+      return;
+    }
     this.wishlist.toggle(this.product());
+  }
+
+  private ensureCustomerAccess(): boolean {
+    const user = this.authService.currentUser();
+    if (!user) {
+      void this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+      return false;
+    }
+    return this.authService.isCustomer();
   }
 }

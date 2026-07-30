@@ -1,6 +1,7 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 import { CartService } from '../services/cart.service';
 import { useProductImageFallback } from '../services/product.service';
 import { AppButtonComponent } from '../shared/components/app-button.component';
@@ -69,6 +70,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 })
 export class CartPageComponent {
   readonly cart = inject(CartService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   useFallback(event: Event, category: string): void {
@@ -76,6 +78,14 @@ export class CartPageComponent {
   }
 
   goToCheckout(): void {
-    void this.router.navigateByUrl(this.cart.count() === 0 ? '/catalogue' : '/checkout');
+    if (this.cart.count() === 0) {
+      void this.router.navigateByUrl('/catalogue');
+      return;
+    }
+    if (!this.authService.currentUser()) {
+      void this.router.navigate(['/login'], { queryParams: { returnUrl: '/checkout' } });
+      return;
+    }
+    void this.router.navigateByUrl(this.authService.isCustomer() ? '/checkout' : this.authService.defaultDashboardUrl());
   }
 }

@@ -121,6 +121,10 @@ export class AuthService {
     return this.currentUser()?.roles.includes('ADMIN') ?? false;
   }
 
+  isCustomer(): boolean {
+    return this.currentUser()?.roles.includes('CUSTOMER') ?? false;
+  }
+
   hasRole(role: string): boolean {
     return this.currentUser()?.roles.includes(role) ?? false;
   }

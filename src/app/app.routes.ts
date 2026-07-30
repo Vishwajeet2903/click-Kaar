@@ -23,10 +23,14 @@ import { StaffDashboardPageComponent } from './pages/staff-dashboard-page.compon
 import { WishlistPageComponent } from './pages/wishlist-page.component';
 import { AuthService } from './services/auth.service';
 
-const requireLoginForCheckout = () => {
+const requireCustomer = (returnUrl: string) => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  return authService.currentUser() ? true : router.createUrlTree(['/login'], { queryParams: { returnUrl: '/checkout' } });
+  const user = authService.currentUser();
+  if (!user) {
+    return router.createUrlTree(['/login'], { queryParams: { returnUrl } });
+  }
+  return authService.isCustomer() ? true : router.createUrlTree([authService.defaultDashboardUrl()]);
 };
 
 const requireAdmin = () => {
@@ -53,8 +57,8 @@ export const routes: Routes = [
   { path: '', component: HomePageComponent, title: 'Clickkaar' },
   { path: 'catalogue', component: CataloguePageComponent, title: 'Catalogue | Clickkaar' },
   { path: 'products/:id', component: ProductDetailsPageComponent, title: 'Equipment Details | Clickkaar' },
-  { path: 'cart', component: CartPageComponent, title: 'Booking Cart | Clickkaar' },
-  { path: 'checkout', component: CheckoutPageComponent, canActivate: [requireLoginForCheckout], title: 'Checkout | Clickkaar' },
+  { path: 'cart', component: CartPageComponent, canActivate: [() => requireCustomer('/cart')], title: 'Booking Cart | Clickkaar' },
+  { path: 'checkout', component: CheckoutPageComponent, canActivate: [() => requireCustomer('/checkout')], title: 'Checkout | Clickkaar' },
   { path: 'login', component: LoginPageComponent, title: 'Login | Clickkaar' },
   { path: 'forgot-password', component: ForgotPasswordPageComponent, title: 'Forgot Password | Clickkaar' },
   { path: 'register', component: RegisterPageComponent, title: 'Register | Clickkaar' },
@@ -64,7 +68,7 @@ export const routes: Routes = [
   { path: 'manager-dashboard', component: StaffDashboardPageComponent, canActivate: [() => requireAnyRole(['MANAGER'], '/manager-dashboard')], title: 'Manager Dashboard | Clickkaar' },
   { path: 'inventory-dashboard', component: StaffDashboardPageComponent, canActivate: [() => requireAnyRole(['INVENTORY_STAFF'], '/inventory-dashboard')], title: 'Inventory Dashboard | Clickkaar' },
   { path: 'content-dashboard', component: StaffDashboardPageComponent, canActivate: [() => requireAnyRole(['CONTENT_EDITOR'], '/content-dashboard')], title: 'Content Dashboard | Clickkaar' },
-  { path: 'wishlist', component: WishlistPageComponent, title: 'Wishlist | Clickkaar' },
+  { path: 'wishlist', component: WishlistPageComponent, canActivate: [() => requireCustomer('/wishlist')], title: 'Wishlist | Clickkaar' },
   { path: 'blog', component: BlogListPageComponent, title: 'Blog | Clickkaar' },
   { path: 'blog/:slug', component: BlogDetailPageComponent, title: 'Blog Detail | Clickkaar' },
   { path: 'about', component: AboutPageComponent, title: 'About | Clickkaar' },

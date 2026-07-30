@@ -138,6 +138,10 @@ export class CheckoutPageComponent {
       void this.router.navigate(['/login'], { queryParams: { returnUrl: '/checkout' } });
       return;
     }
+    if (!this.authService.isCustomer()) {
+      void this.router.navigateByUrl(this.authService.defaultDashboardUrl());
+      return;
+    }
 
     this.isPaying.set(true);
     this.bookingService.createBooking({

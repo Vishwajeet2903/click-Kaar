@@ -49,32 +49,36 @@ import { ProductService } from '../services/product.service';
                 }
               </div>
             </li> -->
-            <li class="nav-item"><a routerLink="/wishlist" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Wishlist</a></li>
+            @if (canShowCustomerActions()) {
+              <li class="nav-item"><a routerLink="/wishlist" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Wishlist</a></li>
+            }
             @if (authService.isAdmin()) {
               <li class="nav-item"><a routerLink="/admin" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Admin</a></li>
             }
           </ul>
           <div class="actions">
-            <a routerLink="/cart" class="cart-link" aria-label="Open cart" (click)="closeMenu()">
-              @if (cart.count() > 0) {
-                <svg class="cart-full" viewBox="0 0 32 32" aria-hidden="true">
-                  <path class="cart-basket-fill" d="M8.7 11h18.1l-1.7 9.8a3 3 0 0 1-3 2.5H12.3a3 3 0 0 1-3-2.6L7.4 7.2H4.2" />
-                  <path class="cart-line" d="M12.5 15.2h11.2M13.3 19h9.6" />
-                  <circle class="cart-wheel" cx="12.4" cy="26.6" r="1.3" />
-                  <circle class="cart-wheel" cx="23.1" cy="26.6" r="1.3" />
-                </svg>
-              } @else {
-                <svg class="cart-empty" viewBox="0 0 32 32" aria-hidden="true">
-                  <path d="M8.7 11h18.1l-1.7 9.8a3 3 0 0 1-3 2.5H12.3a3 3 0 0 1-3-2.6L7.4 7.2H4.2" />
-                  <path d="M12.5 15.2h11.2M13.3 19h9.6" />
-                  <circle cx="12.4" cy="26.6" r="1.3" />
-                  <circle cx="23.1" cy="26.6" r="1.3" />
-                </svg>
-              }
-              @if (cart.count() > 0) {
-                <b>{{ cart.count() }}</b>
-              }
-            </a>
+            @if (canShowCustomerActions()) {
+              <a routerLink="/cart" class="cart-link" aria-label="Open cart" (click)="closeMenu()">
+                @if (cart.count() > 0) {
+                  <svg class="cart-full" viewBox="0 0 32 32" aria-hidden="true">
+                    <path class="cart-basket-fill" d="M8.7 11h18.1l-1.7 9.8a3 3 0 0 1-3 2.5H12.3a3 3 0 0 1-3-2.6L7.4 7.2H4.2" />
+                    <path class="cart-line" d="M12.5 15.2h11.2M13.3 19h9.6" />
+                    <circle class="cart-wheel" cx="12.4" cy="26.6" r="1.3" />
+                    <circle class="cart-wheel" cx="23.1" cy="26.6" r="1.3" />
+                  </svg>
+                } @else {
+                  <svg class="cart-empty" viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M8.7 11h18.1l-1.7 9.8a3 3 0 0 1-3 2.5H12.3a3 3 0 0 1-3-2.6L7.4 7.2H4.2" />
+                    <path d="M12.5 15.2h11.2M13.3 19h9.6" />
+                    <circle cx="12.4" cy="26.6" r="1.3" />
+                    <circle cx="23.1" cy="26.6" r="1.3" />
+                  </svg>
+                }
+                @if (cart.count() > 0) {
+                  <b>{{ cart.count() }}</b>
+                }
+              </a>
+            }
             @if (currentUser(); as user) {
               <a [routerLink]="accountLink()" class="avatar-link" [attr.aria-label]="accountLabel(user.fullName)" [title]="accountLabel(user.fullName)" (click)="closeMenu()">
                 {{ getInitial(user.fullName) }}
@@ -182,5 +186,10 @@ export class NavbarComponent implements OnDestroy {
 
   accountLabel(name: string): string {
     return this.authService.isAdmin() || this.authService.isStaff() ? `Open dashboard for ${name}` : `Open profile for ${name}`;
+  }
+
+  canShowCustomerActions(): boolean {
+    const user = this.authService.currentUser();
+    return !user || this.authService.isCustomer();
   }
 }

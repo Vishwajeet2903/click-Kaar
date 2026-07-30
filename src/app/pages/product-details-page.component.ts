@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Product } from '../models/product.model';
 import { AuthService } from '../services/auth.service';
 import { BookingService } from '../services/booking.service';
@@ -309,6 +309,7 @@ export class ProductDetailsPageComponent {
   private readonly bookingService = inject(BookingService);
   private readonly authService = inject(AuthService);
   private readonly cart = inject(CartService);
+  private readonly router = inject(Router);
   protected readonly wishlist = inject(WishlistService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
@@ -472,6 +473,9 @@ export class ProductDetailsPageComponent {
   addToCart(): void {
     const product = this.product();
     if (!product || this.isCheckingAvailability()) return;
+    if (!this.ensureCustomerAccess()) {
+      return;
+    }
     if (this.startDate() < this.today() || this.endDate() < this.today()) {
       this.showTopMessage('Choose today or a future date for booking.', 3200);
       this.setStartDate(this.dateInputValue(this.today()));
@@ -501,6 +505,9 @@ export class ProductDetailsPageComponent {
   toggleWishlist(): void {
     const product = this.product();
     if (!product) return;
+    if (!this.ensureCustomerAccess()) {
+      return;
+    }
     const added = this.wishlist.toggle(product);
     this.snackBar.open(added ? 'Added to wishlist' : 'Removed from wishlist', 'Close', {
       duration: 2200,
@@ -517,6 +524,19 @@ export class ProductDetailsPageComponent {
       verticalPosition: 'top',
       panelClass: ['snackbar-success-top']
     });
+  }
+
+  private ensureCustomerAccess(): boolean {
+    const user = this.authService.currentUser();
+    if (!user) {
+      void this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+      return false;
+    }
+    if (!this.authService.isCustomer()) {
+      this.showTopMessage('Only customer accounts can rent products or use wishlist.', 3200);
+      return false;
+    }
+    return true;
   }
 
   private parseDateInput(value: string): Date {
