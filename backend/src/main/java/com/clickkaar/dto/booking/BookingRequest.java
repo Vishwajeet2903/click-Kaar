@@ -12,6 +12,7 @@ public record BookingRequest(
     @NotNull Long customerId,
     @NotNull @FutureOrPresent LocalDate rentalStartDate,
     @NotNull @FutureOrPresent LocalDate rentalEndDate,
-    @NotEmpty List<@Valid BookingItemRequest> items
+    @NotEmpty List<@Valid BookingItemRequest> items,
+    String paymentMethod
 ) {
 }

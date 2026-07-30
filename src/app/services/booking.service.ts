@@ -17,6 +17,7 @@ export interface BookingRequest {
   rentalStartDate: string;
   rentalEndDate: string;
   items: BookingItemRequest[];
+  paymentMethod?: 'cash' | 'razorpay';
 }
 
 export interface BookingResponse {

@@ -33,6 +33,7 @@ public class PaymentService {
   private final BookingRepository bookingRepository;
   private final PaymentRepository paymentRepository;
   private final RefundRepository refundRepository;
+  private final BookingService bookingService;
 
   @Value("${app.razorpay.key-id:}")
   private String razorpayKeyId;
@@ -64,6 +65,7 @@ public class PaymentService {
     payment.setRazorpaySignature(request.razorpaySignature());
     payment.setStatus(PaymentStatus.PAID);
     payment.getBooking().setStatus(BookingStatus.CONFIRMED);
+    bookingService.sendBookingBillEmail(payment.getBooking(), PaymentStatus.PAID, "Razorpay online payment");
     return paymentOrderResponse(payment);
   }
 

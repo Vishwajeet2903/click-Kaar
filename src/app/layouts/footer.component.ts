@@ -69,7 +69,7 @@ import { RouterLink } from '@angular/router';
         <div class="footer-bottom">
           <span>© 2026 CLICK-KAAR LLP.</span>
           <div>
-            <a href="#">Terms & Condition </a>
+            <a routerLink="/terms">Terms & Condition</a>
             
           </div>
         </div>

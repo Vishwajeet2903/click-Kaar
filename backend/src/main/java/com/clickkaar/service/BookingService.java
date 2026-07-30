@@ -8,26 +8,32 @@ import com.clickkaar.entity.BookingItem;
 import com.clickkaar.entity.Product;
 import com.clickkaar.entity.User;
 import com.clickkaar.enums.BookingStatus;
+import com.clickkaar.enums.PaymentStatus;
 import com.clickkaar.exception.BadRequestException;
 import com.clickkaar.exception.ResourceNotFoundException;
 import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.ProductRepository;
+import com.clickkaar.repository.StaticContentRepository;
 import com.clickkaar.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -38,6 +44,7 @@ public class BookingService {
   private final BookingRepository bookingRepository;
   private final ProductRepository productRepository;
   private final UserRepository userRepository;
+  private final StaticContentRepository staticContentRepository;
   private final JavaMailSender mailSender;
   private static final DateTimeFormatter DISPLAY_DATE = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
@@ -84,7 +91,9 @@ public class BookingService {
     }
     booking.setTotalAmount(total);
     Booking saved = bookingRepository.save(booking);
-    sendBookingConfirmationEmail(saved);
+    if (shouldSendBillOnCreate(request.paymentMethod())) {
+      sendBookingBillEmail(saved, PaymentStatus.PENDING, displayPaymentMethod(request.paymentMethod()));
+    }
     return toResponse(saved);
   }
 
@@ -141,28 +150,32 @@ public class BookingService {
     return startDate.format(DISPLAY_DATE) + " and " + endDate.format(DISPLAY_DATE);
   }
 
-  private void sendBookingConfirmationEmail(Booking booking) {
+  public void sendBookingBillEmail(Booking booking, PaymentStatus paymentStatus, String paymentMethod) {
     if (!isMailConfigured()) {
-      log.warn("Skipping booking confirmation email for {} because MAIL_USERNAME or MAIL_PASSWORD is not configured", booking.getCustomer().getEmail());
+      log.warn("Skipping booking bill email for {} because MAIL_USERNAME or MAIL_PASSWORD is not configured", booking.getCustomer().getEmail());
       return;
     }
 
     try {
-      SimpleMailMessage message = new SimpleMailMessage();
-      message.setFrom(configuredMailUsername());
-      message.setTo(booking.getCustomer().getEmail());
-      message.setSubject("Your ClickKaar Booking Has Been Received");
-      message.setText(
+      var mimeMessage = mailSender.createMimeMessage();
+      var helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
+      helper.setFrom(configuredMailUsername());
+      helper.setTo(booking.getCustomer().getEmail());
+      helper.setSubject("ClickKaar Bill - " + booking.getBookingNumber() + " - " + billStatus(paymentStatus));
+      helper.setText(
           "Dear " + booking.getCustomer().getFullName() + ",\n\n"
-              + "Thank you for booking with ClickKaar.\n\n"
-              + "We have successfully received your booking request. Our team will review the booking details and keep you updated on the next steps.\n\n"
-              + "Booking Details:\n\n"
+              + "Thank you for booking with ClickKaar. Your checkout bill is below.\n\n"
+              + "Bill Details:\n\n"
               + "- Booking Number: " + booking.getBookingNumber() + "\n"
               + "- Rental Period: " + dateRange(booking.getRentalStartDate(), booking.getRentalEndDate()) + "\n"
               + "- Rental Days: " + booking.getRentalDays() + "\n"
               + "- Items: " + bookedItems(booking) + "\n"
               + "- Total Amount: Rs. " + booking.getTotalAmount().toPlainString() + "\n"
-              + "- Status: " + booking.getStatus() + "\n\n"
+              + "- Bill Status: " + billStatus(paymentStatus) + "\n"
+              + "- Payment Method: " + paymentMethod + "\n"
+              + "- Booking Status: " + booking.getStatus() + "\n\n"
+              + nextPaymentStep(paymentStatus, paymentMethod) + "\n\n"
+              + "The ClickKaar Terms & Conditions are attached with this email.\n\n"
               + "You can log in to your ClickKaar account to view your booking details.\n\n"
               + "Login URL: " + configuredLoginUrl() + "\n\n"
               + "If you have any questions or need assistance, please contact our support team.\n\n"
@@ -172,12 +185,19 @@ public class BookingService {
               + "Email: support@clickkaar.com\n"
               + "Website: https://clickkaar.com"
       );
-      mailSender.send(message);
-      log.info("Booking confirmation email sent to {} for {}", booking.getCustomer().getEmail(), booking.getBookingNumber());
+      helper.addAttachment(
+          "clickkaar-terms-and-conditions.txt",
+          new ByteArrayResource(termsAndConditionsText().getBytes(StandardCharsets.UTF_8)),
+          "text/plain; charset=UTF-8"
+      );
+      mailSender.send(mimeMessage);
+      log.info("Booking bill email sent to {} for {}", booking.getCustomer().getEmail(), booking.getBookingNumber());
     } catch (MailAuthenticationException exception) {
-      log.warn("Unable to send booking confirmation email to {} because SMTP authentication failed for {}", booking.getCustomer().getEmail(), configuredMailUsername());
+      log.warn("Unable to send booking bill email to {} because SMTP authentication failed for {}", booking.getCustomer().getEmail(), configuredMailUsername());
     } catch (MailException exception) {
-      log.warn("Unable to send booking confirmation email to {}", booking.getCustomer().getEmail(), exception);
+      log.warn("Unable to send booking bill email to {}", booking.getCustomer().getEmail(), exception);
+    } catch (MessagingException exception) {
+      log.warn("Unable to prepare booking bill email for {}", booking.getCustomer().getEmail(), exception);
     }
   }
 
@@ -185,6 +205,45 @@ public class BookingService {
     return booking.getItems().stream()
         .map(item -> item.getProduct().getName())
         .collect(Collectors.joining(", "));
+  }
+
+  private boolean shouldSendBillOnCreate(String paymentMethod) {
+    String normalized = normalizedPaymentMethod(paymentMethod);
+    return normalized.isBlank() || normalized.equals("cash");
+  }
+
+  private String displayPaymentMethod(String paymentMethod) {
+    String normalized = normalizedPaymentMethod(paymentMethod);
+    if (normalized.equals("cash")) {
+      return "Pay in cash at delivery";
+    }
+    if (normalized.equals("razorpay")) {
+      return "Razorpay online payment";
+    }
+    return "Not selected";
+  }
+
+  private String normalizedPaymentMethod(String paymentMethod) {
+    return paymentMethod == null ? "" : paymentMethod.trim().toLowerCase(Locale.ROOT);
+  }
+
+  private String billStatus(PaymentStatus paymentStatus) {
+    return paymentStatus == PaymentStatus.PAID ? "PAID" : "UNPAID";
+  }
+
+  private String nextPaymentStep(PaymentStatus paymentStatus, String paymentMethod) {
+    if (paymentStatus == PaymentStatus.PAID) {
+      return "Payment received. Your booking is confirmed.";
+    }
+
+    return "Payment is pending. Please pay the bill amount using " + paymentMethod + ".";
+  }
+
+  private String termsAndConditionsText() {
+    return staticContentRepository.findByPageKey("terms")
+        .map(content -> content.getContent() == null ? "" : content.getContent().trim())
+        .filter(content -> !content.isBlank() && !content.equalsIgnoreCase("Clickkaar rental terms placeholder."))
+        .orElse(DEFAULT_TERMS_AND_CONDITIONS);
   }
 
   private boolean isMailConfigured() {
@@ -202,4 +261,28 @@ public class BookingService {
   private String configuredLoginUrl() {
     return loginUrl == null || loginUrl.isBlank() ? "https://clickkaar.com/login" : loginUrl.trim();
   }
+
+  private static final String DEFAULT_TERMS_AND_CONDITIONS = """
+      CLICKKAAR TERMS & CONDITIONS
+
+      1. These terms apply to every booking, rental, pickup, delivery, use, and return of ClickKaar rental equipment.
+      2. The customer must provide accurate account, KYC, contact, billing, and delivery details before equipment is handed over.
+      3. A booking is subject to equipment availability, verification, and ClickKaar confirmation.
+      4. Rental charges, security deposits, delivery charges, taxes, late fees, damage charges, and any other applicable charges must be paid as communicated in the booking or bill.
+      5. For pay-in-cash bookings, the bill remains unpaid until ClickKaar receives the cash payment and records the payment.
+      6. Equipment must be used only for lawful purposes and handled carefully during the rental period.
+      7. The customer must not sub-rent, lend, pledge, modify, repair, disassemble, or transfer the equipment without ClickKaar's written consent.
+      8. The customer is responsible for loss, theft, missing accessories, and damage beyond normal wear and tear during the rental period.
+      9. Equipment must be returned on or before the agreed return date and time. Late returns may attract additional charges.
+      10. Security deposits may be adjusted against unpaid rental dues, late return charges, cleaning charges, repair charges, replacement charges, or other amounts owed.
+      11. Cancellation, refund, rescheduling, and extension requests are subject to ClickKaar approval and applicable policy.
+      12. ClickKaar may refuse, cancel, suspend, or recover equipment if customer details are false, payment is pending, risk is detected, or terms are breached.
+      13. The customer agrees to indemnify ClickKaar against claims, losses, fines, or third-party damages caused by misuse of the equipment or breach of these terms.
+      14. This agreement is governed by the laws of India.
+
+      Contact:
+      Email: info@clickkaar.com
+      Phone: 91-9096820033
+      Website: https://clickkaar.com
+      """;
 }

@@ -148,7 +148,8 @@ export class CheckoutPageComponent {
       customerId: user.userId,
       rentalStartDate: this.dateInputValue(this.earliestStartDate()),
       rentalEndDate: this.dateInputValue(this.latestEndDate()),
-      items: this.cart.items().flatMap((item) => Array.from({ length: item.quantity }, () => ({ productId: item.product.id })))
+      items: this.cart.items().flatMap((item) => Array.from({ length: item.quantity }, () => ({ productId: item.product.id }))),
+      paymentMethod: this.paymentMethod()
     }).pipe(finalize(() => {
       if (this.paymentMethod() === 'cash') {
         this.isPaying.set(false);
