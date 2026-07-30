@@ -197,6 +197,7 @@ export class ProductService {
     const directImages = [product.imageLink, product.link1, product.link2].filter((image): image is string => !!image);
     const gallery = uniqueImages([...(product.images ?? []), ...directImages].map(normalizeProductImagePath));
     const productGallery = gallery.length ? gallery : [productFallbackImage()];
+    const rentable = !product.availabilityStatus || product.availabilityStatus === 'AVAILABLE' || product.availabilityStatus === 'ON_RENT';
     return {
       id: product.id,
       name: product.name,
@@ -211,9 +212,9 @@ export class ProductService {
       warrantyDate: product.warrantyDate,
       invoiceUrl: product.invoiceUrl,
       availabilityStatus: product.availabilityStatus,
-      available: !product.availabilityStatus || product.availabilityStatus === 'AVAILABLE',
+      available: rentable,
       rating: 4.6,
-      stock: !product.availabilityStatus || product.availabilityStatus === 'AVAILABLE' ? 1 : 0,
+      stock: rentable ? 1 : 0,
       popularity: 80,
       createdAt: '2026-01-01'
     };

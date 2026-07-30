@@ -112,6 +112,10 @@ export class AddedDialogComponent {}
                 </button>
               </div>
 
+              @if (bookingAlert()) {
+                <div class="booking-alert" role="alert">{{ bookingAlert() }}</div>
+              }
+
               @if (activeDateField()) {
                 <div class="calendar-popover" aria-label="Rental calendar">
                   <div class="calendar-head">
@@ -134,6 +138,7 @@ export class AddedDialogComponent {}
                         <button
                           type="button"
                           [class.selected]="isSelectedCalendarDate(day)"
+                          [class.blocked]="isBlockedCalendarDate(day)"
                           [disabled]="isDisabledCalendarDate(day)"
                           (click)="selectCalendarDate(day)"
                         >
@@ -231,6 +236,7 @@ export class AddedDialogComponent {}
     .date-control:hover, .date-control.active { border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.13); transform: translateY(-1px); }
     .date-control span { color: #ff9700; font-size: .72rem; font-weight: 950; text-transform: uppercase; }
     .date-control strong { color: #111; font-size: 1rem; line-height: 1.1; }
+    .booking-alert { background: #fff8ed; border: 1px solid rgba(255,151,0,.34); border-left: 4px solid #ff9700; border-radius: 16px; color: #111; font-size: .9rem; font-weight: 850; line-height: 1.45; margin: .75rem 0 1rem; padding: .85rem 1rem; }
     .calendar-popover { background: #fff; border: 1px solid rgba(255,151,0,.36); border-radius: 22px; box-shadow: 0 18px 38px rgba(17,17,17,.1); margin: 1rem 0 1.2rem; padding: 1.1rem; }
     .calendar-head { align-items: center; display: flex; justify-content: space-between; margin-bottom: 1rem; }
     .calendar-head strong { color: #111; font-size: .96rem; }
@@ -267,6 +273,7 @@ export class AddedDialogComponent {}
     .calendar-days button { background: #fff; border: 1px solid transparent; color: #111; cursor: pointer; font-weight: 900; }
     .calendar-days button:hover, .calendar-days button.selected { background: #ff9700; border-color: #ff9700; color: #111; }
     .calendar-days button:disabled { background: #f5f5f3; color: #c7c7c0; cursor: not-allowed; }
+    .calendar-days button.blocked:disabled { background: rgba(194,58,33,.1); border-color: rgba(194,58,33,.16); color: #c23a21; text-decoration: line-through; }
     .duration-options { display: grid; gap: .65rem; grid-template-columns: repeat(4, 1fr); margin: 0 0 1.1rem; }
     .duration-card { background: #fff; border: 1px solid rgba(255,151,0,.42); border-radius: 16px; color: #111; cursor: pointer; min-height: 62px; padding: .65rem .5rem; text-align: center; transition: transform .25s ease, border-color .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease; }
     .duration-card span { color: #ff9700; display: block; font-size: .68rem; font-weight: 950; line-height: 1.1; text-transform: uppercase; }
@@ -318,12 +325,15 @@ export class ProductDetailsPageComponent {
   readonly startDate = signal(new Date());
   readonly endDate = signal(new Date(Date.now() + 3 * 86_400_000));
   readonly isCheckingAvailability = signal(false);
+  readonly blockedRanges = signal<Array<{ start: Date; end: Date }>>([]);
+  readonly bookingAlert = signal('');
   protected readonly activeDateField = signal<'start' | 'end' | undefined>(undefined);
   protected readonly calendarMonth = signal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   protected readonly rentalDurations = [1, 2, 5, 7];
   protected readonly weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   private readonly monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private galleryTouchStartX = 0;
+  private alertTimeout: ReturnType<typeof setTimeout> | undefined;
   readonly duration = computed(() => Math.max(1, Math.ceil((this.endDate().getTime() - this.startDate().getTime()) / 86_400_000)));
   readonly total = computed(() => (this.product()?.dailyPrice ?? 0) * this.duration());
   readonly specEntries = computed(() => Object.entries(this.product()?.specifications ?? {}));
@@ -333,6 +343,7 @@ export class ProductDetailsPageComponent {
     this.productService.getProduct(id).subscribe((product) => {
       this.product.set(product);
       this.selectedImage.set(product?.image ?? '');
+      this.loadBlockedRanges(id);
     });
   }
 
@@ -356,17 +367,33 @@ export class ProductDetailsPageComponent {
     const selectedStart = this.parseDateInput(value);
     const today = this.today();
     const nextStart = selectedStart < today ? today : selectedStart;
+    if (this.isBlockedCalendarDate(nextStart)) {
+      this.showTopMessage('This date is already booked. Please choose another date.', 3200);
+      return;
+    }
     this.startDate.set(nextStart);
 
     const nextEnd = new Date(nextStart);
     nextEnd.setDate(nextStart.getDate() + currentDuration);
+    if (this.rangeOverlapsBlockedDates(nextStart, nextEnd)) {
+      const availableWindow = this.firstAvailableWindow(currentDuration, nextStart);
+      this.startDate.set(availableWindow.start);
+      this.endDate.set(availableWindow.end);
+      this.showTopMessage('Selected days crossed booked dates, so the calendar moved to the next available window.', 3600);
+      return;
+    }
     this.endDate.set(nextEnd);
   }
 
   setEndDate(value: string): void {
     const nextEnd = this.parseDateInput(value);
     const minEndDate = this.startDate() < this.today() ? this.today() : this.startDate();
-    this.endDate.set(nextEnd < minEndDate ? minEndDate : nextEnd);
+    const adjustedEnd = nextEnd < minEndDate ? minEndDate : nextEnd;
+    if (this.rangeOverlapsBlockedDates(this.startDate(), adjustedEnd)) {
+      this.showTopMessage('This rental range includes booked dates. Please choose an earlier available end date.', 3400);
+      return;
+    }
+    this.endDate.set(adjustedEnd);
   }
 
   openCalendar(field: 'start' | 'end'): void {
@@ -405,6 +432,7 @@ export class ProductDetailsPageComponent {
 
   selectCalendarDate(day: Date): void {
     if (this.isDisabledCalendarDate(day)) return;
+    this.bookingAlert.set('');
 
     if (this.activeDateField() === 'start') {
       this.setStartDate(this.dateInputValue(day));
@@ -421,8 +449,14 @@ export class ProductDetailsPageComponent {
 
   isDisabledCalendarDate(day: Date): boolean {
     if (day < this.today()) return true;
+    if (this.isBlockedCalendarDate(day)) return true;
+    if (this.activeDateField() === 'end' && this.rangeOverlapsBlockedDates(this.startDate(), day)) return true;
 
     return this.activeDateField() === 'end' && this.dateInputValue(day) < this.dateInputValue(this.startDate());
+  }
+
+  isBlockedCalendarDate(day: Date): boolean {
+    return this.blockedRanges().some((range) => this.isDateWithinRange(day, range.start, range.end));
   }
 
   isPreviousCalendarMonthDisabled(): boolean {
@@ -433,6 +467,10 @@ export class ProductDetailsPageComponent {
     const start = this.startDate();
     const nextEndDate = new Date(start);
     nextEndDate.setDate(start.getDate() + days);
+    if (this.rangeOverlapsBlockedDates(start, nextEndDate)) {
+      this.showTopMessage('Those rental days include already booked dates. Please choose another window.', 3600);
+      return;
+    }
     this.endDate.set(nextEndDate);
   }
 
@@ -481,6 +519,10 @@ export class ProductDetailsPageComponent {
       this.setStartDate(this.dateInputValue(this.today()));
       return;
     }
+    if (this.rangeOverlapsBlockedDates(this.startDate(), this.endDate())) {
+      this.showTopMessage('This product is already booked for one or more selected dates.', 3600);
+      return;
+    }
 
     this.isCheckingAvailability.set(true);
     this.bookingService.checkAvailability(product.id, this.dateInputValue(this.startDate()), this.dateInputValue(this.endDate()))
@@ -518,12 +560,11 @@ export class ProductDetailsPageComponent {
   }
 
   private showTopMessage(message: string, duration: number): void {
-    this.snackBar.open(message, 'Close', {
-      duration,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: ['snackbar-success-top']
-    });
+    this.bookingAlert.set(message);
+    if (this.alertTimeout) {
+      clearTimeout(this.alertTimeout);
+    }
+    this.alertTimeout = setTimeout(() => this.bookingAlert.set(''), duration);
   }
 
   private ensureCustomerAccess(): boolean {
@@ -542,6 +583,64 @@ export class ProductDetailsPageComponent {
   private parseDateInput(value: string): Date {
     const [year, month, day] = value.split('-').map(Number);
     return new Date(year, month - 1, day);
+  }
+
+  private loadBlockedRanges(productId: number): void {
+    this.bookingService.getBlockedRanges(productId).subscribe({
+      next: (ranges) => {
+        this.blockedRanges.set(ranges.map((range) => ({
+          start: this.parseDateInput(range.startDate),
+          end: this.parseDateInput(range.endDate)
+        })));
+        this.moveSelectionToAvailableWindow();
+      },
+      error: () => {
+        this.blockedRanges.set([]);
+        this.showTopMessage('Booked dates could not be loaded. Please refresh before selecting rental dates.', 4200);
+      }
+    });
+  }
+
+  private rangeOverlapsBlockedDates(startDate: Date, endDate: Date): boolean {
+    const start = this.stripTime(startDate);
+    const end = this.stripTime(endDate);
+    return this.blockedRanges().some((range) => start <= range.end && end >= range.start);
+  }
+
+  private moveSelectionToAvailableWindow(): void {
+    if (!this.rangeOverlapsBlockedDates(this.startDate(), this.endDate())) {
+      return;
+    }
+
+    const availableWindow = this.firstAvailableWindow(this.duration(), this.today());
+    this.startDate.set(availableWindow.start);
+    this.endDate.set(availableWindow.end);
+  }
+
+  private firstAvailableWindow(durationDays: number, fromDate: Date): { start: Date; end: Date } {
+    let start = this.stripTime(fromDate);
+
+    for (let attempt = 0; attempt < 730; attempt += 1) {
+      const end = new Date(start);
+      end.setDate(start.getDate() + durationDays);
+      if (!this.rangeOverlapsBlockedDates(start, end)) {
+        return { start, end };
+      }
+
+      start = new Date(start);
+      start.setDate(start.getDate() + 1);
+    }
+
+    return { start: this.today(), end: this.today() };
+  }
+
+  private isDateWithinRange(day: Date, startDate: Date, endDate: Date): boolean {
+    const date = this.stripTime(day);
+    return date >= startDate && date <= endDate;
+  }
+
+  private stripTime(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
   private today(): Date {

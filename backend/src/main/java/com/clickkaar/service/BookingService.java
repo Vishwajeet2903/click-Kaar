@@ -3,6 +3,7 @@ package com.clickkaar.service;
 import com.clickkaar.dto.booking.BookingRequest;
 import com.clickkaar.dto.booking.BookingResponse;
 import com.clickkaar.dto.booking.AvailabilityResponse;
+import com.clickkaar.dto.booking.BlockedDateRangeResponse;
 import com.clickkaar.entity.Booking;
 import com.clickkaar.entity.BookingItem;
 import com.clickkaar.entity.Product;
@@ -109,6 +110,17 @@ public class BookingService {
     }
 
     return new AvailabilityResponse(true, product.getName() + " is available for " + dateRange(startDate, endDate) + ".");
+  }
+
+  @Transactional(readOnly = true)
+  public List<BlockedDateRangeResponse> blockedRanges(Long productId) {
+    if (!productRepository.existsById(productId)) {
+      throw new ResourceNotFoundException("Product not found");
+    }
+
+    return bookingRepository.findBlockedRangesForProduct(productId, LocalDate.now()).stream()
+        .map(booking -> new BlockedDateRangeResponse(booking.getRentalStartDate(), booking.getRentalEndDate()))
+        .toList();
   }
 
   @Transactional(readOnly = true)

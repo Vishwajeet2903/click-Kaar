@@ -37,6 +37,11 @@ export interface AvailabilityResponse {
   message: string;
 }
 
+export interface BlockedDateRangeResponse {
+  startDate: string;
+  endDate: string;
+}
+
 export interface CustomerDashboardResponse {
   profile: CustomerDashboardProfile;
   summary: CustomerDashboardSummary;
@@ -102,6 +107,10 @@ export class BookingService {
     return this.http.get<AvailabilityResponse>(`${API_URL}/availability`, {
       params: { productId, startDate, endDate }
     });
+  }
+
+  getBlockedRanges(productId: number): Observable<BlockedDateRangeResponse[]> {
+    return this.http.get<BlockedDateRangeResponse[]>(`${API_URL}/products/${productId}/blocked-ranges`);
   }
 
   getBookings(): Observable<Booking[]> {

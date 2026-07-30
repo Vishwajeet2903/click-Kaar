@@ -72,10 +72,6 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
                   <strong>{{ dashboard.summary.wishlistCount }}</strong>
                 </article>
                 <article class="surface stat">
-                  <span>Total spent</span>
-                  <strong>{{ dashboard.summary.totalSpent | currency:'INR':'symbol':'1.0-0' }}</strong>
-                </article>
-                <article class="surface stat">
                   <span>Pending payments</span>
                   <strong>{{ dashboard.summary.pendingPayments }}</strong>
                 </article>
@@ -212,7 +208,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .profile-meta span { color: #777; font-size: .85rem; font-weight: 800; }
     .profile-meta strong { background: rgba(255,151,0,.2); border-radius: 999px; color: #ff9700; font-size: .75rem; padding: .35rem .65rem; }
     .profile-meta small { color: #777; font-weight: 800; }
-    .summary-grid { display: grid; gap: .85rem; grid-template-columns: repeat(6, minmax(0, 1fr)); margin-bottom: 1.2rem; }
+    .summary-grid { display: grid; gap: .85rem; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-bottom: 1.2rem; }
     .stat { display: grid; gap: .35rem; min-height: 104px; }
     .stat span, .section-head span, .payment-list span { color: #777; font-size: .78rem; font-weight: 900; text-transform: uppercase; }
     .stat strong { color: #111; font-size: clamp(1.1rem, 2vw, 1.75rem); font-weight: 950; line-height: 1; overflow-wrap: anywhere; }

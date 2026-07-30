@@ -1,6 +1,7 @@
 package com.clickkaar.controller;
 
 import com.clickkaar.dto.booking.AvailabilityResponse;
+import com.clickkaar.dto.booking.BlockedDateRangeResponse;
 import com.clickkaar.dto.booking.BookingRequest;
 import com.clickkaar.dto.booking.BookingResponse;
 import com.clickkaar.enums.BookingStatus;
@@ -31,6 +32,11 @@ public class BookingController {
       @RequestParam LocalDate endDate
   ) {
     return bookingService.availability(productId, startDate, endDate);
+  }
+
+  @GetMapping("/products/{productId}/blocked-ranges")
+  public List<BlockedDateRangeResponse> blockedRanges(@PathVariable Long productId) {
+    return bookingService.blockedRanges(productId);
   }
 
   @GetMapping("/customer/{customerId}")

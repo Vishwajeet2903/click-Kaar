@@ -18,9 +18,19 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
       select count(bi) > 0
       from BookingItem bi
       where bi.product.id = :productId
-        and bi.booking.status in (com.clickkaar.enums.BookingStatus.PENDING, com.clickkaar.enums.BookingStatus.CONFIRMED, com.clickkaar.enums.BookingStatus.ACTIVE)
+        and bi.booking.status in (com.clickkaar.enums.BookingStatus.PENDING, com.clickkaar.enums.BookingStatus.CONFIRMED, com.clickkaar.enums.BookingStatus.ACTIVE, com.clickkaar.enums.BookingStatus.OVERDUE)
         and :startDate <= bi.booking.rentalEndDate
         and :endDate >= bi.booking.rentalStartDate
       """)
   boolean existsOverlappingBooking(@Param("productId") Long productId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+  @Query("""
+      select distinct bi.booking
+      from BookingItem bi
+      where bi.product.id = :productId
+        and bi.booking.status in (com.clickkaar.enums.BookingStatus.PENDING, com.clickkaar.enums.BookingStatus.CONFIRMED, com.clickkaar.enums.BookingStatus.ACTIVE, com.clickkaar.enums.BookingStatus.OVERDUE)
+        and bi.booking.rentalEndDate >= :fromDate
+      order by bi.booking.rentalStartDate
+      """)
+  List<Booking> findBlockedRangesForProduct(@Param("productId") Long productId, @Param("fromDate") LocalDate fromDate);
 }
