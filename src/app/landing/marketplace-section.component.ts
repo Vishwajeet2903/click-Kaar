@@ -61,7 +61,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   styles: [`
     .marketplace-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .section-heading { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.25rem; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: .04em; line-height: .98; margin: 0; word-spacing: .08em; }
+    h2 { color: #111; font-size: clamp(2.15rem, 4vw, 3.75rem); font-weight: 900; letter-spacing: 0; line-height: 1.08; margin: 0; max-width: 900px; word-spacing: 0; }
     .shop-toolbar { align-items: center; background: #f6f6f4; border-radius: 999px; display: flex; flex-wrap: wrap; gap: .55rem; margin-bottom: 1.1rem; padding: .55rem; width: max-content; max-width: 100%; }
     .shop-toolbar span, .shop-toolbar a { border-radius: 999px; color: #111; font-size: .76rem; font-weight: 900; padding: .55rem .78rem; }
     .shop-toolbar span { background: #111; color: #fff; }
@@ -93,7 +93,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 560px) {
       .marketplace-section { padding: 1.25rem; }
-      h2 { font-size: clamp(2rem, 11vw, 2.8rem); line-height: 1.02; }
+      h2 { font-size: clamp(1.9rem, 9vw, 2.55rem); line-height: 1.12; }
       .product-market-grid, .feature-grid { grid-template-columns: 1fr; }
       .shop-toolbar { border-radius: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
       .shop-toolbar span,

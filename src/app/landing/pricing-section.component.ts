@@ -31,8 +31,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   `,
   styles: [`
     .pricing-section { padding: clamp(2rem, 6vw, 4.8rem); }
-    .section-heading { margin-bottom: 2rem; max-width: 760px; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: .04em; line-height: .98; margin: 0; }
+    .section-heading { margin-bottom: 2rem; max-width: 920px; }
+    h2 { color: #111; font-size: clamp(2.15rem, 4vw, 3.75rem); font-weight: 900; letter-spacing: 0; line-height: 1.08; margin: 0; max-width: 900px; }
     .pricing-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .price-card { background: #f6f6f4; border-radius: 24px; min-height: 430px; padding: 1.5rem; }
     .price-card.featured { background: #111; color: #fff; transform: translateY(-12px); }
@@ -54,8 +54,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 })
 export class PricingSectionComponent {
   readonly plans = [
-    { name: 'Starter', price: '₹899', note: 'per rental day', featured: false, features: ['Basic camera kits', 'Standard support', 'Self pickup options'] },
-    { name: 'Creator', price: '₹2,499', note: 'per shoot day', featured: true, features: ['Premium gear bundles', 'Creator shortlist', 'Priority booking'] },
+    { name: 'Starter', price: 'Rs. 899', note: 'per rental day', featured: false, features: ['Basic camera kits', 'Standard support', 'Self pickup options'] },
+    { name: 'Creator', price: 'Rs. 2,499', note: 'per shoot day', featured: true, features: ['Premium gear bundles', 'Creator shortlist', 'Priority booking'] },
     { name: 'Studio', price: 'Custom', note: 'for teams', featured: false, features: ['Crew and gear planning', 'Studio sourcing', 'Managed production help'] }
   ];
 }

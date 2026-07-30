@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -10,7 +9,7 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
 @Component({
   selector: 'app-catalogue-page',
   standalone: true,
-  imports: [CurrencyPipe, FormsModule, BreadcrumbComponent, ProductCardComponent],
+  imports: [FormsModule, BreadcrumbComponent, ProductCardComponent],
   template: `
     <app-breadcrumb label="Catalogue" />
     <section class="container pb-5">
@@ -52,13 +51,6 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
                 @for (item of brands(); track item) { <option [value]="item">{{ item }}</option> }
               </select>
             </div>
-            <div class="filter-group">
-              <div class="price-row">
-                <label class="form-label" for="catalogue-price">Max daily price</label>
-                <strong>{{ maxPrice() | currency:'INR':'symbol':'1.0-0' }}</strong>
-              </div>
-              <input id="catalogue-price" class="form-range" type="range" min="500" max="5000" step="100" [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set(+$event); page.set(1)">
-            </div>
             <!-- <label class="toggle"><input type="checkbox" [ngModel]="availableOnly()" (ngModelChange)="availableOnly.set($event); page.set(1)"> Available only</label> -->
           </div>
         </aside>
@@ -91,9 +83,6 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
     .filter-count { background: #fff; border-radius: 999px; color: #171717; font-size: .86rem; font-weight: 900; margin: 0; padding: .55rem .75rem; text-align: center; }
     .filter-group { display: grid; gap: .45rem; }
     .form-label, .toggle { color: #171717; font-weight: 800; margin: 0; }
-    .price-row { align-items: center; display: flex; gap: .75rem; justify-content: space-between; }
-    .price-row strong { color: #ff9700; font-size: .95rem; white-space: nowrap; }
-    .form-range { accent-color: #ff9700; }
     .toggle { align-items: center; display: flex; gap: .5rem; }
     .toggle input { accent-color: #ff9700; height: 18px; width: 18px; }
     .empty { padding: 2rem; text-align: center; }
@@ -108,7 +97,6 @@ export class CataloguePageComponent {
   readonly query = signal('');
   readonly category = signal(inject(ActivatedRoute).snapshot.queryParamMap.get('category') ?? '');
   readonly brand = signal('');
-  readonly maxPrice = signal(5000);
   readonly availableOnly = signal(false);
   readonly sort = signal('popular');
   readonly page = signal(1);
@@ -121,7 +109,6 @@ export class CataloguePageComponent {
       .filter((item) => !q || item.name.toLowerCase().includes(q) || item.brand.toLowerCase().includes(q))
       .filter((item) => !this.category() || item.category === this.category())
       .filter((item) => !this.brand() || item.brand === this.brand())
-      .filter((item) => item.dailyPrice <= this.maxPrice())
       .filter((item) => !this.availableOnly() || item.available)
       .sort((a, b) => this.sort() === 'low' ? a.dailyPrice - b.dailyPrice : this.sort() === 'high' ? b.dailyPrice - a.dailyPrice : this.sort() === 'newest' ? b.createdAt.localeCompare(a.createdAt) : b.popularity - a.popularity);
   });
@@ -131,7 +118,6 @@ export class CataloguePageComponent {
     this.query(),
     this.category(),
     this.brand(),
-    this.maxPrice() < 5000,
     this.availableOnly()
   ].filter(Boolean).length);
 
@@ -143,7 +129,6 @@ export class CataloguePageComponent {
     this.query.set('');
     this.category.set('');
     this.brand.set('');
-    this.maxPrice.set(5000);
     this.availableOnly.set(false);
     this.page.set(1);
   }

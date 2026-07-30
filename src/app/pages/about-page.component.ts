@@ -9,32 +9,64 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     <app-breadcrumb label="About Us" />
     <section class="container pb-5">
       <div class="about-hero">
-        <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&w=1600&q=80" alt="Studio lights and photography crew">
         <div>
-          <p class="eyebrow">About Clickkaar</p>
-          <h1 class="section-title">Built for photographers, filmmakers, and creators who need the right gear without owning everything.</h1>
-          <p class="muted">Clickkaar is a frontend mock rental platform designed around fast discovery, transparent rental pricing, and clean booking workflows.</p>
+          <p class="eyebrow">About Click-Kaar Pro Gear</p>
+          <h1 class="section-title">A Pune-based camera and production equipment rental company.</h1>
+          <p class="intro">Click-Kaar Pro Gear supports the creative and media industry with high-quality, reliable equipment for corporate films, documentaries, advertisements, independent films, weddings, and digital content production.</p>
         </div>
       </div>
-      <div class="row g-4 mt-2">
-        @for (item of values; track item.title) {
-          <div class="col-md-4"><div class="surface value"><h2>{{ item.title }}</h2><p class="muted">{{ item.text }}</p></div></div>
-        }
+
+      <div class="about-content">
+        <article class="surface story">
+          <h2>Our Goal</h2>
+          <p>Our goal is to offer the latest technology and professional gear to help creators bring their ideas to life. With a wide range of cameras, lenses, lighting, audio equipment, production accessories, and technical support, Click-Kaar Pro Gear is your trusted partner for every shoot.</p>
+        </article>
+
+        <article class="surface story">
+          <h2>Our Services</h2>
+          <p>At Click-Kaar Pro Gear, we are committed to delivering quality and reliability for every production. We offer professional camera and filmmaking equipment from leading global brands to meet the needs of photographers, filmmakers, and content creators.</p>
+          <div class="service-grid">
+            @for (service of services; track service) {
+              <span>{{ service }}</span>
+            }
+          </div>
+        </article>
+
+        <article class="surface story">
+          <h2>Our Fantastic Team</h2>
+          <p>Our dedicated team is committed to providing reliable and professional service for every production. From equipment bookings and technical support to operations and customer assistance, we work together to ensure a smooth rental experience.</p>
+          <p>Whether it's a corporate film, commercial, documentary, wedding, or independent project, our team is always ready to help you choose the right equipment and provide the support you need for a successful shoot.</p>
+        </article>
       </div>
     </section>
   `,
   styles: [`
-    .about-hero { align-items: center; display: grid; gap: 2rem; grid-template-columns: 1fr 1fr; }
-    img { aspect-ratio: 4/3; border-radius: 8px; object-fit: cover; width: 100%; }
-    .value { height: 100%; padding: 1.2rem; }
-    h2 { font-size: 1.2rem; font-weight: 900; }
-    @media (max-width: 767px) { .about-hero { grid-template-columns: 1fr; } }
+    .about-hero { width: 100%; }
+    .section-title { font-size: clamp(2.1rem, 4vw, 3.85rem); letter-spacing: 0; line-height: 1.08; margin: 0 0 1rem; max-width: none; text-align: left; word-spacing: 0; }
+    .intro { color: #242424; font-size: 1.1rem; line-height: 1.75; margin: 0; max-width: none; }
+    .about-content { display: grid; gap: 1rem; margin-top: 1.75rem; }
+    .story { padding: clamp(1.2rem, 3vw, 2rem); }
+    h2 { color: #111; font-size: clamp(1.5rem, 2.4vw, 2.2rem); font-weight: 900; letter-spacing: 0; line-height: 1.12; margin: 0 0 .85rem; }
+    .story p { color: #333; font-size: 1rem; line-height: 1.72; margin: 0; max-width: none; }
+    .story p + p { margin-top: .85rem; }
+    .service-grid { display: grid; gap: .75rem; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 1.2rem; }
+    .service-grid span { background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 999px; color: #111; font-size: .92rem; font-weight: 800; padding: .75rem 1rem; }
+    @media (max-width: 991px) { .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) {
+      .section-title { font-size: clamp(1.9rem, 9vw, 2.55rem); line-height: 1.12; }
+      .intro { font-size: 1rem; line-height: 1.65; }
+      .service-grid { grid-template-columns: 1fr; }
+      .service-grid span { border-radius: 14px; }
+    }
   `]
 })
 export class AboutPageComponent {
-  readonly values = [
-    { title: 'Inspected inventory', text: 'Every mock listing is presented as tested, clean, and production-ready.' },
-    { title: 'Flexible rental thinking', text: 'Daily and weekly rates help crews plan lean shoots with clear totals.' },
-    { title: 'Creator-first UX', text: 'The interface focuses on discovery, booking confidence, and repeat rentals.' }
+  readonly services = [
+    'Camera & Lens Rentals',
+    'Lighting Equipment',
+    'Audio & Recording Gear',
+    'Gimbals, Tripods & Camera Support',
+    'Production Accessories',
+    'Technical Assistance & Equipment Consultation'
   ];
 }

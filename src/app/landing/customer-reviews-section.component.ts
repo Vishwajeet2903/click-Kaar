@@ -139,8 +139,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .carousel-controls .theme-arrow-button.previous .theme-arrow-icon { transform: rotate(180deg); }
     .reviews-section { padding: clamp(2rem, 6vw, 4.8rem); }
     .reviews-top { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.4rem; }
-    .section-heading { margin-bottom: 1.4rem; max-width: 760px; }
-    h2 { color: #111; font-size: clamp(2.5rem, 5vw, 4.6rem); font-weight: 900; letter-spacing: .04em; line-height: .98; margin: 0; word-spacing: .08em; }
+    .section-heading { margin-bottom: 1.4rem; max-width: 920px; }
+    h2 { color: #111; font-size: clamp(2.15rem, 4vw, 3.75rem); font-weight: 900; letter-spacing: 0; line-height: 1.08; margin: 0; max-width: 900px; word-spacing: 0; }
     .carousel-controls { display: flex; gap: .5rem; }
     .carousel-controls .theme-arrow-button:disabled { opacity: .45; }
     .reviews-window { --review-step: calc((-100% - 1rem) / 3); overflow: hidden; }
@@ -152,11 +152,11 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .rating { color: #ff9700; font-size: 1rem; font-weight: 900; letter-spacing: .14em; margin-bottom: 1rem; }
     .rating span { color: inherit; display: inline; font-size: inherit; font-weight: inherit; letter-spacing: inherit; margin: 0; }
     .rating .dimmed { color: #d6d1c8; }
-    p { color: #222; flex: 1; font-size: clamp(1.1rem, 1.8vw, 1.35rem); font-weight: 800; letter-spacing: 0; line-height: 1.25; margin: 0 0 1.4rem; word-spacing: .06em; }
+    p { color: #222; flex: 1; font-size: clamp(1rem, 1.45vw, 1.18rem); font-weight: 700; letter-spacing: 0; line-height: 1.5; margin: 0 0 1.4rem; word-spacing: 0; }
     .reviewer { align-items: center; display: flex; gap: .8rem; }
     img { border-radius: 50%; height: 52px; object-fit: cover; width: 52px; }
     .reviewer-initials { align-items: center; background: #111; border-radius: 50%; color: #fff; display: inline-flex; flex: 0 0 52px; font-size: .9rem; font-weight: 900; height: 52px; justify-content: center; margin: 0; width: 52px; }
-    strong { color: #111; display: block; font-size: .95rem; font-weight: 900; word-spacing: .08em; }
+    strong { color: #111; display: block; font-size: .95rem; font-weight: 900; word-spacing: 0; }
     span { color: #666; display: block; font-size: .82rem; font-weight: 800; margin-top: .15rem; }
     .write-review { align-items: start; background: #f6f6f4; border-radius: 24px; color: #fff; display: grid; gap: clamp(1.2rem, 3vw, 2rem); grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); margin-top: 1.25rem; padding: clamp(1.2rem, 3vw, 2rem); }
     .write-review-copy .eyebrow { color: #ff9700; font-size: clamp(1rem, 1.5vw, 1.18rem); letter-spacing: .2em; margin: 0 0 .65rem; }
@@ -192,7 +192,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 560px) {
       .reviews-section { padding: 1.25rem; }
-      h2 { font-size: clamp(2rem, 11vw, 2.8rem); line-height: 1.02; }
+      h2 { font-size: clamp(1.9rem, 9vw, 2.55rem); line-height: 1.12; }
       .carousel-controls { width: 100%; }
       .review-fields { grid-template-columns: 1fr; }
       .review-card { border-radius: 18px; min-height: 260px; padding: 1rem; }

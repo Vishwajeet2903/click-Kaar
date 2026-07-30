@@ -36,6 +36,7 @@ import { ProductService } from '../services/product.service';
             <li class="nav-item"><a routerLink="/" fragment="home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link" (click)="closeMenu()">Get Started</a></li>
             <!-- <li class="nav-item"><a routerLink="/" fragment="marketplace" class="nav-link" (click)="closeMenu()">Marketplace</a></li> -->
             <li class="nav-item"><a routerLink="/catalogue" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Catalogue</a></li>
+            <li class="nav-item"><a routerLink="/about" routerLinkActive="active" class="nav-link" (click)="closeMenu()">About Us</a></li>
             <li class="nav-item"><a routerLink="/blog" fragment="gallery" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Blog</a></li>
             <!-- <li class="nav-item has-mega">
               <a routerLink="/catalogue" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Categories</a>

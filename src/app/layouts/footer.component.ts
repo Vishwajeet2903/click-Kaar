@@ -40,7 +40,6 @@ import { RouterLink } from '@angular/router';
           <nav aria-label="Support links">
             <h3>Support</h3>
             <a routerLink="/terms">Terms</a>
-            <a routerLink="/privacy">Privacy</a>
             <a routerLink="/contact">Contact number</a>
             <a routerLink="/contact">Email</a>
             <a routerLink="/contact">Address</a>
