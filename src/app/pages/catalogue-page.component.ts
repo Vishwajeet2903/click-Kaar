@@ -102,10 +102,11 @@ export class CataloguePageComponent {
   readonly page = signal(1);
   readonly categories = this.productService.categories;
   readonly products = signal<Product[]>([]);
-  readonly brands = computed(() => [...new Set(this.products().map((item) => item.brand))]);
+  readonly catalogueProducts = computed(() => this.products().filter((item) => item.availabilityStatus !== 'MAINTENANCE'));
+  readonly brands = computed(() => [...new Set(this.catalogueProducts().map((item) => item.brand))]);
   readonly filtered = computed(() => {
     const q = this.query().toLowerCase();
-    return this.products()
+    return this.catalogueProducts()
       .filter((item) => !q || item.name.toLowerCase().includes(q) || item.brand.toLowerCase().includes(q))
       .filter((item) => !this.category() || item.category === this.category())
       .filter((item) => !this.brand() || item.brand === this.brand())

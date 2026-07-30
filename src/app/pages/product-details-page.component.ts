@@ -319,7 +319,7 @@ export class ProductDetailsPageComponent {
   readonly isCheckingAvailability = signal(false);
   protected readonly activeDateField = signal<'start' | 'end' | undefined>(undefined);
   protected readonly calendarMonth = signal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
-  protected readonly rentalDurations = [1, 2, 3, 4];
+  protected readonly rentalDurations = [1, 2, 5, 7];
   protected readonly weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   private readonly monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private galleryTouchStartX = 0;

@@ -19,6 +19,7 @@ import { NotFoundPageComponent } from './pages/not-found-page.component';
 import { PolicyPageComponent } from './pages/policy-page.component';
 import { ProductDetailsPageComponent } from './pages/product-details-page.component';
 import { RegisterPageComponent } from './pages/register-page.component';
+import { StaffDashboardPageComponent } from './pages/staff-dashboard-page.component';
 import { WishlistPageComponent } from './pages/wishlist-page.component';
 import { AuthService } from './services/auth.service';
 
@@ -26,6 +27,26 @@ const requireLoginForCheckout = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
   return authService.currentUser() ? true : router.createUrlTree(['/login'], { queryParams: { returnUrl: '/checkout' } });
+};
+
+const requireAdmin = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const user = authService.currentUser();
+  if (!user) {
+    return router.createUrlTree(['/login'], { queryParams: { returnUrl: '/admin' } });
+  }
+  return authService.isAdmin() ? true : router.createUrlTree(['/dashboard']);
+};
+
+const requireAnyRole = (roles: string[], returnUrl: string) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const user = authService.currentUser();
+  if (!user) {
+    return router.createUrlTree(['/login'], { queryParams: { returnUrl } });
+  }
+  return roles.some((role) => authService.hasRole(role)) ? true : router.createUrlTree([authService.defaultDashboardUrl()]);
 };
 
 export const routes: Routes = [
@@ -38,8 +59,11 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordPageComponent, title: 'Forgot Password | Clickkaar' },
   { path: 'register', component: RegisterPageComponent, title: 'Register | Clickkaar' },
   { path: 'dashboard', component: DashboardPageComponent, title: 'Dashboard | Clickkaar' },
-  { path: 'admin/inventory/new', component: AdminProductCreatePageComponent, title: 'Add Product | Clickkaar' },
-  { path: 'admin', component: AdminPageComponent, title: 'Admin | Clickkaar' },
+  { path: 'admin/inventory/new', component: AdminProductCreatePageComponent, canActivate: [() => requireAnyRole(['ADMIN', 'MANAGER', 'INVENTORY_STAFF'], '/admin/inventory/new')], title: 'Add Product | Clickkaar' },
+  { path: 'admin', component: AdminPageComponent, canActivate: [requireAdmin], title: 'Admin | Clickkaar' },
+  { path: 'manager-dashboard', component: StaffDashboardPageComponent, canActivate: [() => requireAnyRole(['MANAGER'], '/manager-dashboard')], title: 'Manager Dashboard | Clickkaar' },
+  { path: 'inventory-dashboard', component: StaffDashboardPageComponent, canActivate: [() => requireAnyRole(['INVENTORY_STAFF'], '/inventory-dashboard')], title: 'Inventory Dashboard | Clickkaar' },
+  { path: 'content-dashboard', component: StaffDashboardPageComponent, canActivate: [() => requireAnyRole(['CONTENT_EDITOR'], '/content-dashboard')], title: 'Content Dashboard | Clickkaar' },
   { path: 'wishlist', component: WishlistPageComponent, title: 'Wishlist | Clickkaar' },
   { path: 'blog', component: BlogListPageComponent, title: 'Blog | Clickkaar' },
   { path: 'blog/:slug', component: BlogDetailPageComponent, title: 'Blog Detail | Clickkaar' },

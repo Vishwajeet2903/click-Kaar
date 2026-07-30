@@ -14,7 +14,7 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
   template: `
     <app-breadcrumb label="Add inventory" />
     <section class="container product-create-page">
-      @if (authService.isAdmin()) {
+      @if (canManageInventory()) {
         <div class="page-head surface">
           <div>
             <p class="eyebrow">Inventory</p>
@@ -132,6 +132,10 @@ export class AdminProductCreatePageComponent {
         this.productFormError = this.authService.getErrorMessage(error);
       }
     });
+  }
+
+  canManageInventory(): boolean {
+    return this.authService.hasRole('ADMIN') || this.authService.hasRole('MANAGER') || this.authService.hasRole('INVENTORY_STAFF');
   }
 
   resetProductForm(): void {

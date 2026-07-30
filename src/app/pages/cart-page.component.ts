@@ -1,6 +1,6 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { useProductImageFallback } from '../services/product.service';
 import { AppButtonComponent } from '../shared/components/app-button.component';
@@ -42,7 +42,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
             <p><span>Security Deposit</span><strong>{{ cart.securityDeposit() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
             <p><span>GST</span><strong>{{ cart.tax() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
             <p class="grand"><span>Grand Total</span><strong>{{ cart.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
-            <a routerLink="/checkout"><app-button>Checkout</app-button></a>
+            <app-button type="button" (click)="goToCheckout()">Checkout</app-button>
           </div>
         </aside>
       </div>
@@ -69,8 +69,13 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 })
 export class CartPageComponent {
   readonly cart = inject(CartService);
+  private readonly router = inject(Router);
 
   useFallback(event: Event, category: string): void {
     useProductImageFallback(event);
+  }
+
+  goToCheckout(): void {
+    void this.router.navigateByUrl(this.cart.count() === 0 ? '/catalogue' : '/checkout');
   }
 }

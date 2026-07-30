@@ -210,6 +210,7 @@ export class ProductService {
       weeklyPrice: Number(product.weeklyPrice),
       warrantyDate: product.warrantyDate,
       invoiceUrl: product.invoiceUrl,
+      availabilityStatus: product.availabilityStatus,
       available: !product.availabilityStatus || product.availabilityStatus === 'AVAILABLE',
       rating: 4.6,
       stock: !product.availabilityStatus || product.availabilityStatus === 'AVAILABLE' ? 1 : 0,

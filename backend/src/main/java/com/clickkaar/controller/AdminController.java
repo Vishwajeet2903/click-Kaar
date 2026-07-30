@@ -84,7 +84,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF','CONTENT_EDITOR')")
 @RequiredArgsConstructor
 @Slf4j
 public class AdminController {
@@ -134,22 +134,35 @@ public class AdminController {
   }
 
   @PostMapping("/inventory")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   @ResponseStatus(HttpStatus.CREATED)
   public ProductResponse createInventoryProduct(@Valid @RequestBody ProductRequest request) {
     return productService.create(request);
   }
 
   @PutMapping("/inventory/{productId}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   public ProductResponse updateInventoryProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequest request) {
     return productService.update(productId, request);
   }
 
   @PatchMapping("/inventory/{productId}/maintenance")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   @Transactional
   public ProductResponse markProductMaintenance(@PathVariable Long productId) {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     product.setAvailabilityStatus(AvailabilityStatus.MAINTENANCE);
+    return productService.findById(productId);
+  }
+
+  @PatchMapping("/inventory/{productId}/available")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @Transactional
+  public ProductResponse markProductAvailable(@PathVariable Long productId) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    product.setAvailabilityStatus(AvailabilityStatus.AVAILABLE);
     return productService.findById(productId);
   }
 
@@ -160,6 +173,7 @@ public class AdminController {
   }
 
   @PatchMapping("/bookings/{bookingId}/status")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   @Transactional
   public AdminBookingResponse updateBookingStatus(@PathVariable Long bookingId, @RequestBody BookingStatusRequest request) {
     Booking booking = bookingRepository.findById(bookingId)
@@ -169,6 +183,7 @@ public class AdminController {
   }
 
   @PostMapping("/bookings/{bookingId}/notes")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @Transactional
   public AdminBookingResponse addBookingNote(@PathVariable Long bookingId, @RequestBody BookingNoteRequest request) {
     Booking booking = bookingRepository.findById(bookingId)
@@ -182,6 +197,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   public List<AdminCustomerResponse> customers() {
     return userRepository.findAll().stream()
         .filter(user -> user.getRoles().stream().anyMatch(role -> role.getName() == RoleName.CUSTOMER))
@@ -190,6 +206,7 @@ public class AdminController {
   }
 
   @PatchMapping("/customers/{customerId}/blocked")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @Transactional
   public AdminCustomerResponse setCustomerBlocked(@PathVariable Long customerId, @RequestBody CustomerBlockRequest request) {
     User customer = userRepository.findById(customerId)
@@ -199,11 +216,13 @@ public class AdminController {
   }
 
   @GetMapping("/payments")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   public List<AdminPaymentResponse> payments() {
     return paymentRepository.findAll().stream().map(this::adminPaymentResponse).toList();
   }
 
   @PatchMapping("/payments/{paymentId}/remark")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @Transactional
   public AdminPaymentResponse updatePaymentRemark(@PathVariable Long paymentId, @RequestBody PaymentRemarkRequest request) {
     Payment payment = paymentRepository.findById(paymentId)
@@ -223,6 +242,7 @@ public class AdminController {
   }
 
   @GetMapping("/payments/{paymentId}/remark/logs")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   public List<PaymentRemarkLogResponse> paymentRemarkLogs(@PathVariable Long paymentId) {
     if (!paymentRepository.existsById(paymentId)) {
       throw new ResourceNotFoundException("Payment not found");
@@ -239,6 +259,7 @@ public class AdminController {
   }
 
   @PostMapping("/payments/{paymentId}/refunds")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @Transactional
   public AdminPaymentResponse refundPayment(@PathVariable Long paymentId, @RequestBody AdminRefundRequest request) {
     Payment payment = paymentRepository.findById(paymentId)
@@ -254,6 +275,7 @@ public class AdminController {
   }
 
   @GetMapping("/content")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
   public AdminContentResponse content() {
     List<AdminBlogPostResponse> posts = blogPostRepository.findAll().stream()
         .map(post -> new AdminBlogPostResponse(
@@ -279,6 +301,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports/categories")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   public List<CategoryReportResponse> categoryReports() {
     return productRepository.findAll().stream()
         .collect(Collectors.groupingBy(product -> product.getCategory().getDisplayName(), Collectors.counting()))
@@ -288,6 +311,7 @@ public class AdminController {
   }
 
   @GetMapping("/roles/permissions")
+  @PreAuthorize("hasRole('ADMIN')")
   public List<RolePermissionResponse> rolePermissions() {
     return List.of(
         new RolePermissionResponse("Dashboard", "View", "View", "View", "View"),
@@ -301,6 +325,7 @@ public class AdminController {
   }
 
   @GetMapping("/settings")
+  @PreAuthorize("hasRole('ADMIN')")
   public AdminSettingsRequest settings() {
     return staticContentRepository.findByPageKey("admin-settings")
         .map(content -> {
@@ -314,6 +339,7 @@ public class AdminController {
   }
 
   @PutMapping("/settings")
+  @PreAuthorize("hasRole('ADMIN')")
   @Transactional
   public AdminSettingsRequest saveSettings(@RequestBody AdminSettingsRequest request) {
     try {
@@ -328,6 +354,7 @@ public class AdminController {
   }
 
   @PostMapping("/employees")
+  @PreAuthorize("hasRole('ADMIN')")
   @ResponseStatus(HttpStatus.CREATED)
   public EmployeeResponse createEmployee(@Valid @RequestBody EmployeeRequest request) {
     if (userRepository.existsByEmail(request.email())) {
@@ -337,8 +364,9 @@ public class AdminController {
       throw new BadRequestException("Mobile is already registered");
     }
 
-    Role employeeRole = roleRepository.findByName(RoleName.EMPLOYEE)
-        .orElseThrow(() -> new BadRequestException("Employee role is not configured"));
+    RoleName requestedRole = employeeRoleName(request.role());
+    Role employeeRole = roleRepository.findByName(requestedRole)
+        .orElseThrow(() -> new BadRequestException(requestedRole.name() + " role is not configured"));
 
     User employee = User.builder()
         .fullName(request.fullName())
@@ -356,6 +384,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers/pending")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   public List<CustomerVerificationResponse> pendingCustomers() {
     return pendingRegistrationRepository.findAll().stream()
         .map(this::customerVerificationResponse)
@@ -363,6 +392,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers/{requestId}/documents/{documentType}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   public ResponseEntity<Resource> pendingCustomerDocument(@PathVariable Long requestId, @PathVariable String documentType) {
     PendingRegistration pendingRegistration = pendingRegistrationRepository.findById(requestId)
         .orElseThrow(() -> new BadRequestException("Pending registration not found"));
@@ -394,6 +424,7 @@ public class AdminController {
   }
 
   @PatchMapping("/customers/{requestId}/verify")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @Transactional
   public CustomerVerificationResponse verifyCustomer(@PathVariable Long requestId) {
     PendingRegistration pendingRegistration = pendingRegistrationRepository.findById(requestId)
@@ -636,6 +667,15 @@ public class AdminController {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     return userRepository.findByEmail(email)
         .orElseThrow(() -> new BadRequestException("Admin user not found"));
+  }
+
+  private RoleName employeeRoleName(String role) {
+    return switch (role == null ? "" : role.trim().toUpperCase()) {
+      case "MANAGER" -> RoleName.MANAGER;
+      case "INVENTORY_STAFF", "INVENTORY" -> RoleName.INVENTORY_STAFF;
+      case "CONTENT_EDITOR", "CONTENT" -> RoleName.CONTENT_EDITOR;
+      default -> throw new BadRequestException("Select a valid employee role");
+    };
   }
 
   private String returnStatusFor(Booking booking) {

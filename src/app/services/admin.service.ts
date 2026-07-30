@@ -10,6 +10,7 @@ export interface EmployeeRequest {
   fullName: string;
   email: string;
   mobile: string;
+  role: string;
   password: string;
 }
 
@@ -204,6 +205,12 @@ export class AdminService {
 
   markProductMaintenance(productId: number): Observable<AdminProductResponse> {
     return this.http.patch<AdminProductResponse>(`${API_URL}/inventory/${productId}/maintenance`, null, {
+      headers: this.authHeaders()
+    });
+  }
+
+  markProductAvailable(productId: number): Observable<AdminProductResponse> {
+    return this.http.patch<AdminProductResponse>(`${API_URL}/inventory/${productId}/available`, null, {
       headers: this.authHeaders()
     });
   }

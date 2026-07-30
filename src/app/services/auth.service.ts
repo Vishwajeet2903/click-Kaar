@@ -121,6 +121,31 @@ export class AuthService {
     return this.currentUser()?.roles.includes('ADMIN') ?? false;
   }
 
+  hasRole(role: string): boolean {
+    return this.currentUser()?.roles.includes(role) ?? false;
+  }
+
+  isStaff(): boolean {
+    return ['MANAGER', 'INVENTORY_STAFF', 'CONTENT_EDITOR'].some((role) => this.hasRole(role));
+  }
+
+  defaultDashboardUrl(): string {
+    const roles = this.currentUser()?.roles ?? [];
+    if (roles.includes('ADMIN')) {
+      return '/admin';
+    }
+    if (roles.includes('MANAGER')) {
+      return '/manager-dashboard';
+    }
+    if (roles.includes('INVENTORY_STAFF')) {
+      return '/inventory-dashboard';
+    }
+    if (roles.includes('CONTENT_EDITOR')) {
+      return '/content-dashboard';
+    }
+    return '/dashboard';
+  }
+
   getErrorMessage(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
       if (typeof error.error === 'string' && error.error.trim()) {

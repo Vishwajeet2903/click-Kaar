@@ -2,7 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../models/product.model';
-import { useProductImageFallback } from '../../services/product.service';
+import { productFallbackImage, useProductImageFallback } from '../../services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { WishlistService } from '../../services/wishlist.service';
   template: `
     <article class="product-card">
       <a [routerLink]="['/products', product().id]" class="media-link">
-        <img class="product-image" [src]="product().image" [alt]="product().name" (error)="useFallback($event)">
+        <img class="product-image" [class.logo-fallback]="isFallbackImage()" [src]="product().image" [alt]="product().name" (error)="useFallback($event)">
       </a>
       <button
         type="button"
@@ -47,7 +47,9 @@ import { WishlistService } from '../../services/wishlist.service';
     .wishlist-btn.active { background: #ff9700; color: #111; }
     .wishlist-btn.active svg { fill: currentColor; }
     img { aspect-ratio: 4/3; display: block; height: auto; object-fit: cover; width: 100%; transition: transform .35s ease; }
+    img.logo-fallback { background: #fff; object-fit: contain; padding: clamp(1.4rem, 14%, 3rem); }
     .product-card:hover img { transform: scale(1.06); }
+    .product-card:hover img.logo-fallback { transform: scale(1.02); }
     .content { display: flex; flex: 1; flex-direction: column; padding: .9rem .3rem .3rem; }
     .content p { color: #ff9700; font-size: .72rem; font-weight: 900; letter-spacing: .18em; margin: 0 0 .45rem; text-transform: uppercase; }
     h3 { color: #111; font-size: 1.04rem; font-weight: 900; letter-spacing: 0; line-height: 1.15; margin: 0 0 .9rem; min-height: 2.4em; word-spacing: .08em; }
@@ -62,8 +64,13 @@ export class ProductCardComponent {
   readonly product = input.required<Product>();
   readonly wishlist = inject(WishlistService);
 
+  isFallbackImage(): boolean {
+    return this.product().image === productFallbackImage();
+  }
+
   useFallback(event: Event): void {
     useProductImageFallback(event);
+    (event.target as HTMLImageElement | null)?.classList.add('logo-fallback');
   }
 
   toggleWishlist(): void {

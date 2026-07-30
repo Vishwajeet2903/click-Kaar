@@ -2,7 +2,9 @@ package com.clickkaar.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,6 +30,11 @@ public class GlobalExceptionHandler {
     Map<String, String> fields = new HashMap<>();
     ex.getBindingResult().getFieldErrors().forEach(error -> fields.put(error.getField(), error.getDefaultMessage()));
     return error(HttpStatus.BAD_REQUEST, "Validation failed", fields);
+  }
+
+  @ExceptionHandler({AccessDeniedException.class, AuthorizationDeniedException.class})
+  ResponseEntity<ApiError> handleAccessDenied(RuntimeException ex) {
+    return error(HttpStatus.FORBIDDEN, "Access denied", Map.of());
   }
 
   @ExceptionHandler(Exception.class)

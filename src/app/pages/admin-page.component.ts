@@ -35,6 +35,8 @@ interface AdminMetric {
 interface AdminProduct extends Product {
   status: ProductStatus;
   maintenanceNote: string;
+  imageLabel: string;
+  imageLoadFailed: boolean;
 }
 
 interface AdminBooking {
@@ -376,7 +378,11 @@ interface PaymentRemarkLogView {
                         <tr>
                           <td>
                             <div class="product-cell">
-                              <img [src]="product.image" [alt]="product.name">
+                              @if (product.image && !product.imageLoadFailed) {
+                                <img [src]="product.image" [alt]="product.name" (error)="markProductImageFailed(product.id)">
+                              } @else {
+                                <span class="image-short-name">{{ product.imageLabel }}</span>
+                              }
                               <div><strong>{{ product.name }}</strong><span>{{ product.brand }}</span></div>
                             </div>
                           </td>
@@ -395,7 +401,11 @@ interface PaymentRemarkLogView {
                           <td><span class="calendar-strip">{{ bookedDays(product.name) }} booked days</span></td>
                           <td class="action-cell">
                             <button type="button" class="mini-btn" (click)="editProduct(product)">Edit</button>
-                            <button type="button" class="danger-btn" (click)="markMaintenance(product)">Maintenance</button>
+                            @if (product.status === 'Maintenance') {
+                              <button type="button" class="return-btn" (click)="returnFromMaintenance(product)">Return</button>
+                            } @else {
+                              <button type="button" class="danger-btn" (click)="markMaintenance(product)">Maintenance</button>
+                            }
                           </td>
                         </tr>
                       } @empty {
@@ -651,6 +661,7 @@ interface PaymentRemarkLogView {
                     <label>Full name<input formControlName="fullName"></label>
                     <label>Email<input formControlName="email"></label>
                     <label>Mobile<input formControlName="mobile"></label>
+                    <label>Dashboard role<select formControlName="role"><option value="MANAGER">Manager</option><option value="INVENTORY_STAFF">Inventory Staff</option><option value="CONTENT_EDITOR">Content Editor</option></select></label>
                     <label>Temporary password<input type="password" formControlName="password"></label>
                   </div>
                   <button type="submit" class="primary-btn wide" [disabled]="isSubmitting">{{ isSubmitting ? 'Creating...' : 'Create employee' }}</button>
@@ -750,16 +761,18 @@ interface PaymentRemarkLogView {
     .remark-log-btn { background: transparent; border: 0; box-shadow: none; color: var(--admin-muted); display: inline-flex; font-size: .72rem; font-weight: 900; justify-content: flex-start; margin-top: .32rem; min-height: auto; padding: 0; text-transform: uppercase; }
     .remark-log-btn:hover { color: var(--admin-accent); transform: none; }
     .remark-log-btn:disabled, .remark-log-btn:disabled:hover { color: var(--admin-muted); cursor: default; opacity: .65; }
-    button, .primary-btn, .ghost-btn, .mini-btn, .danger-btn, .ghost-mini, .link-btn { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 900; justify-content: center; transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease; white-space: nowrap; }
+    button, .primary-btn, .ghost-btn, .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 900; justify-content: center; transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease; white-space: nowrap; }
     .primary-btn { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; min-height: 50px; padding: .85rem 1.25rem; }
     .primary-btn:hover { background: var(--admin-accent); box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .ghost-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); box-shadow: 0 8px 22px rgba(0,0,0,.06); color: #111; min-height: 50px; padding: .85rem 1.25rem; }
     .ghost-btn:hover, .ghost-mini:hover, .link-btn:hover { background: #111; border-color: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; transform: translateY(-2px); }
-    .mini-btn, .danger-btn, .ghost-mini, .link-btn { font-size: .78rem; min-height: 34px; padding: .48rem .78rem; }
+    .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { font-size: .78rem; min-height: 34px; padding: .48rem .78rem; }
     .mini-btn { background: #111; box-shadow: 0 10px 22px rgba(0,0,0,.14); color: #fff; }
     .mini-btn:hover { background: var(--admin-accent); box-shadow: 0 14px 28px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
     .danger-btn { background: #fff1f1; border: 1px solid rgba(180,35,24,.16); box-shadow: 0 8px 22px rgba(180,35,24,.08); color: #b42318; }
     .danger-btn:hover { background: #b42318; border-color: #b42318; box-shadow: 0 14px 28px rgba(180,35,24,.18); color: #fff; transform: translateY(-2px); }
+    .return-btn { background: #ecfdf3; border: 1px solid rgba(2,122,72,.2); box-shadow: 0 8px 22px rgba(2,122,72,.08); color: #027a48; }
+    .return-btn:hover { background: #027a48; border-color: #027a48; box-shadow: 0 14px 28px rgba(2,122,72,.18); color: #fff; transform: translateY(-2px); }
     .topbar-logout { min-height: 50px; padding: .85rem 1.25rem; }
     .ghost-mini, .link-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); box-shadow: 0 8px 22px rgba(0,0,0,.05); color: #111; }
     button:disabled, button:disabled:hover { cursor: not-allowed; opacity: .55; transform: none !important; }
@@ -851,6 +864,7 @@ interface PaymentRemarkLogView {
     tr:hover td { background: #fffaf2; }
     .product-cell { align-items: center; display: flex; gap: .7rem; min-width: 230px; }
     .product-cell img { aspect-ratio: 1; border-radius: 6px; object-fit: cover; width: 52px; }
+    .image-short-name { align-items: center; aspect-ratio: 1; background: #f3f3ef; border: 1px solid rgba(17,17,17,.08); border-radius: 6px; color: #555; display: inline-flex; flex: 0 0 52px; font-size: .58rem; font-weight: 950; justify-content: center; line-height: 1.1; max-width: 52px; overflow: hidden; padding: .28rem; text-align: center; text-transform: uppercase; }
     .status { border-radius: 999px; display: inline-flex; font-size: .7rem; font-weight: 900; padding: .3rem .52rem; }
     .status-ok { background: #ecfdf3; color: #027a48; }
     .status-warn { background: #fff7e6; color: #b35a00; }
@@ -995,6 +1009,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     fullName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     mobile: ['', [Validators.required, Validators.minLength(10)]],
+    role: ['MANAGER', Validators.required],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
@@ -1436,6 +1451,18 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  returnFromMaintenance(product: AdminProduct): void {
+    if (!confirm(`Mark ${product.name} as returned and available?`)) {
+      return;
+    }
+    this.adminService.updateProduct(product.id, this.productRequestFromProduct(product, 'Available')).subscribe({
+      next: (updatedProduct) => {
+        this.products.update((items) => items.map((item) => item.id === updatedProduct.id ? this.mapProduct(updatedProduct) : item));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
   advanceBooking(booking: AdminBooking): void {
     const next: Record<BookingStatus, BookingStatus> = {
       Upcoming: 'Active',
@@ -1530,7 +1557,13 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (employee) => {
           this.createdEmployee = employee;
-          this.employeeForm.reset();
+          this.employeeForm.reset({
+            fullName: '',
+            email: '',
+            mobile: '',
+            role: 'MANAGER',
+            password: ''
+          });
           this.showTopMessage('Employee account created.', 2600);
         },
         error: (error) => {
@@ -1574,6 +1607,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return this.bookings()
       .filter((booking) => booking.products.includes(productName) && booking.status !== 'Cancelled')
       .reduce((sum, booking) => sum + this.daysBetween(booking.startDate, booking.endDate), 0);
+  }
+
+  markProductImageFailed(productId: number): void {
+    this.products.update((items) => items.map((item) => item.id === productId ? { ...item, imageLoadFailed: true } : item));
   }
 
   bookingOverlapsSelectedMonth(booking: AdminBooking): boolean {
@@ -1629,7 +1666,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       popularity: 0,
       createdAt: '',
       status,
-      maintenanceNote: status === 'Maintenance' ? 'Marked from admin panel' : ''
+      maintenanceNote: status === 'Maintenance' ? 'Marked from admin panel' : '',
+      imageLabel: this.shortImageName(image),
+      imageLoadFailed: !image
     };
   }
 
@@ -1731,6 +1770,23 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     };
   }
 
+  private productRequestFromProduct(product: AdminProduct, status: ProductStatus): AdminProductRequest {
+    return {
+      name: product.name,
+      brand: product.brand,
+      category: this.categoryToApi(product.category),
+      shortDescription: product.description,
+      fullDescription: product.description,
+      specs: this.specificationsToText(product.specifications),
+      dailyPrice: product.dailyPrice,
+      weeklyPrice: product.weeklyPrice,
+      warrantyDate: product.warrantyDate || undefined,
+      invoiceUrl: product.invoiceUrl || undefined,
+      availabilityStatus: this.productStatusToApi(status),
+      images: product.gallery?.length ? product.gallery : product.image ? [product.image] : []
+    };
+  }
+
   private categoryFromApi(category: string): string {
     const labels: Record<string, string> = {
       CAMERAS: 'Cameras',
@@ -1826,6 +1882,27 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         }
         return specs;
       }, {});
+  }
+
+  private shortImageName(image: string): string {
+    if (!image) return 'No img';
+    const cleanName = decodeURIComponent(image.split(/[?#]/)[0].split('/').filter(Boolean).pop() ?? image)
+      .replace(/\.[^.]+$/, '')
+      .replace(/[^a-zA-Z0-9]+/g, ' ')
+      .trim();
+    const initials = cleanName
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 3)
+      .map((part) => part.slice(0, 3))
+      .join('-');
+    return initials || 'Img';
+  }
+
+  private specificationsToText(specifications: Record<string, string>): string {
+    return Object.entries(specifications)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(', ');
   }
 
   private daysBetween(startDate: string, endDate: string): number {

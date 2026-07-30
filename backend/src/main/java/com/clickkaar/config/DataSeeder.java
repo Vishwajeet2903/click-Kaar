@@ -40,10 +40,19 @@ public class DataSeeder {
           .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.CUSTOMER).build()));
       roleRepository.findByName(RoleName.EMPLOYEE)
           .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.EMPLOYEE).build()));
+      Role manager = roleRepository.findByName(RoleName.MANAGER)
+          .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.MANAGER).build()));
+      Role inventoryStaff = roleRepository.findByName(RoleName.INVENTORY_STAFF)
+          .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.INVENTORY_STAFF).build()));
+      Role contentEditor = roleRepository.findByName(RoleName.CONTENT_EDITOR)
+          .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.CONTENT_EDITOR).build()));
       Role admin = roleRepository.findByName(RoleName.ADMIN)
           .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.ADMIN).build()));
 
       User adminUser = seedUser("Clickkaar Admin", "admin@clickkaar.com", "9999999999", Set.of(admin), true);
+      seedUser("Clickkaar Manager", "manager@clickkaar.com", "9999999991", Set.of(manager), true);
+      seedUser("Clickkaar Inventory Staff", "inventory@clickkaar.com", "9999999992", Set.of(inventoryStaff), true);
+      seedUser("Clickkaar Content Editor", "content@clickkaar.com", "9999999993", Set.of(contentEditor), true);
       seedCategories();
       seedProducts();
       seedBlogs();

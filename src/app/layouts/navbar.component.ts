@@ -38,6 +38,9 @@ import { ProductService } from '../services/product.service';
             <li class="nav-item"><a routerLink="/catalogue" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Catalogue</a></li>
             <li class="nav-item"><a routerLink="/about" routerLinkActive="active" class="nav-link" (click)="closeMenu()">About Us</a></li>
             <li class="nav-item"><a routerLink="/blog" fragment="gallery" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Blog</a></li>
+            @if (authService.isStaff()) {
+              <li class="nav-item"><a [routerLink]="accountLink()" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Staff</a></li>
+            }
             <!-- <li class="nav-item has-mega">
               <a routerLink="/catalogue" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Categories</a>
               <div class="mega surface">
@@ -174,10 +177,10 @@ export class NavbarComponent implements OnDestroy {
   }
 
   accountLink(): string {
-    return this.authService.isAdmin() ? '/admin' : '/dashboard';
+    return this.authService.defaultDashboardUrl();
   }
 
   accountLabel(name: string): string {
-    return this.authService.isAdmin() ? `Open admin panel for ${name}` : `Open profile for ${name}`;
+    return this.authService.isAdmin() || this.authService.isStaff() ? `Open dashboard for ${name}` : `Open profile for ${name}`;
   }
 }

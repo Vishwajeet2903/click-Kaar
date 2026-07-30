@@ -11,6 +11,7 @@ export interface Product {
   weeklyPrice: number;
   warrantyDate?: string;
   invoiceUrl?: string;
+  availabilityStatus?: 'AVAILABLE' | 'UNAVAILABLE' | 'ON_RENT' | 'MAINTENANCE';
   available: boolean;
   rating: number;
   stock: number;

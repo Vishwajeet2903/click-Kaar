@@ -498,7 +498,7 @@ export class LoginPageComponent {
             panelClass: ['snackbar-success-top']
           });
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-          void this.router.navigateByUrl(returnUrl || (user.roles.includes('ADMIN') ? '/admin' : '/dashboard'));
+          void this.router.navigateByUrl(returnUrl || this.authService.defaultDashboardUrl());
         },
         error: (error) => {
           this.snackBar.open(this.authService.getErrorMessage(error), 'Close', {
