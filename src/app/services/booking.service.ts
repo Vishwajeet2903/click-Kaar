@@ -18,6 +18,7 @@ export interface BookingRequest {
   rentalEndDate: string;
   items: BookingItemRequest[];
   paymentMethod?: 'cash' | 'razorpay';
+  couponCode?: string;
 }
 
 export interface BookingResponse {
@@ -40,6 +41,11 @@ export interface AvailabilityResponse {
 export interface BlockedDateRangeResponse {
   startDate: string;
   endDate: string;
+}
+
+export interface CouponPreviewResponse {
+  code: string;
+  discountPercent: number;
 }
 
 export interface CustomerDashboardResponse {
@@ -111,6 +117,12 @@ export class BookingService {
 
   getBlockedRanges(productId: number): Observable<BlockedDateRangeResponse[]> {
     return this.http.get<BlockedDateRangeResponse[]>(`${API_URL}/products/${productId}/blocked-ranges`);
+  }
+
+  previewCoupon(couponCode: string): Observable<CouponPreviewResponse> {
+    return this.http.get<CouponPreviewResponse>(`${API_URL}/coupons/${encodeURIComponent(couponCode)}`, {
+      headers: this.authHeaders()
+    });
   }
 
   getBookings(): Observable<Booking[]> {

@@ -7,6 +7,7 @@ import { finalize } from 'rxjs';
 import { Product } from '../models/product.model';
 import {
   AdminBookingResponse,
+  AdminCouponResponse,
   AdminContentResponse,
   AdminPaymentResponse,
   AdminProductRequest,
@@ -20,7 +21,7 @@ import {
 import { AuthService } from '../services/auth.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
-type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'content' | 'reports' | 'roles' | 'settings';
+type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'coupons' | 'content' | 'reports' | 'roles' | 'settings';
 type BookingStatus = 'Upcoming' | 'Active' | 'Completed' | 'Cancelled' | 'Overdue';
 type PaymentStatus = 'Paid' | 'Pending' | 'Failed' | 'Refunded';
 type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
@@ -79,6 +80,14 @@ interface AdminPayment {
   paidAt: string;
   remark: string;
   remarkChangeCount: number;
+}
+
+interface AdminCoupon {
+  id: number;
+  code: string;
+  discountPercent: number;
+  active: boolean;
+  createdAt: string;
 }
 
 interface BlogPostAdmin {
@@ -582,6 +591,43 @@ interface PaymentRemarkLogView {
                 </div>
               }
 
+              @case ('coupons') {
+                <div class="split-grid">
+                  <form class="surface editor-panel" [formGroup]="couponForm" (ngSubmit)="submitCoupon()">
+                    <div class="panel-head"><h3>Create coupon</h3><span>Discount percent</span></div>
+                    @if (couponFormError) {
+                      <p class="form-alert" role="alert">{{ couponFormError }}</p>
+                    }
+                    <div class="form-grid coupon-form-grid">
+                      <label>Coupon code<input formControlName="code" placeholder="WELCOME10" (input)="normalizeCouponInput()"></label>
+                      <label>Discount percent<input type="number" min="1" max="100" formControlName="discountPercent"></label>
+                      <label class="checkbox-label"><input type="checkbox" formControlName="active"> Active coupon</label>
+                    </div>
+                    <button type="submit" class="primary-btn wide" [disabled]="isSubmittingCoupon">{{ isSubmittingCoupon ? 'Creating...' : 'Create coupon' }}</button>
+                  </form>
+
+                  <section class="surface panel">
+                    <div class="panel-head">
+                      <h3>Coupon codes</h3>
+                      <button type="button" class="link-btn" (click)="loadCoupons()">Refresh</button>
+                    </div>
+                    <div class="dense-list coupon-list">
+                      @for (coupon of coupons(); track coupon.id) {
+                        <article>
+                          <div>
+                            <strong>{{ coupon.code }}</strong>
+                            <span>{{ coupon.discountPercent }}% discount - Created {{ coupon.createdAt | date:'mediumDate' }}</span>
+                          </div>
+                          <b class="status" [class]="coupon.active ? 'status-ok' : 'status-bad'">{{ coupon.active ? 'Active' : 'Inactive' }}</b>
+                        </article>
+                      } @empty {
+                        <p class="muted">No coupons have been created yet.</p>
+                      }
+                    </div>
+                  </section>
+                </div>
+              }
+
               @case ('content') {
                 <div class="split-grid">
                   <section class="surface panel">
@@ -874,7 +920,11 @@ interface PaymentRemarkLogView {
     .empty-cell { color: #777; text-align: center; }
     .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 6px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
     .form-grid { display: grid; gap: .9rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .coupon-form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     label { color: #111; display: grid; font-size: .78rem; font-weight: 900; gap: .4rem; }
+    .checkbox-label { align-content: end; grid-template-columns: 18px 1fr; min-height: 70px; }
+    .checkbox-label input { min-height: 18px; padding: 0; width: 18px; }
+    .coupon-list article strong { letter-spacing: .04em; }
     .editor-panel > label { margin-top: 0; }
     .wide { margin-top: .85rem; width: 100%; }
     .card-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -934,6 +984,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly bookings = signal<AdminBooking[]>([]);
   readonly customers = signal<AdminCustomer[]>([]);
   readonly payments = signal<AdminPayment[]>([]);
+  readonly coupons = signal<AdminCoupon[]>([]);
   readonly blogPosts = signal<BlogPostAdmin[]>([]);
   readonly staticContent = signal<StaticContentItem[]>([]);
 
@@ -948,6 +999,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   createdEmployee?: EmployeeResponse;
   productFormError = '';
   employeeFormError = '';
+  couponFormError = '';
   pendingCustomers: CustomerVerificationResponse[] = [];
   pendingPage = 1;
   readonly pendingPageSize = 3;
@@ -960,6 +1012,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   staticContentPage = 1;
   pendingLoadError = '';
   isSubmitting = false;
+  isSubmittingCoupon = false;
   isLoadingPending = false;
   verifyingRequestId?: number;
   selectedPendingCustomer?: CustomerVerificationResponse;
@@ -981,6 +1034,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     { id: 'bookings', label: 'Bookings', count: '4' },
     { id: 'customers', label: 'Customers', count: '3' },
     { id: 'payments', label: 'Payments', count: '3' },
+    { id: 'coupons', label: 'Coupons', count: '0' },
     { id: 'content', label: 'Content', count: '5' },
     { id: 'reports', label: 'Reports', count: 'CSV' },
     { id: 'roles', label: 'Roles', count: 'RBAC' },
@@ -1013,6 +1067,12 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
+  readonly couponForm = this.fb.nonNullable.group({
+    code: ['', Validators.required],
+    discountPercent: [10, [Validators.required, Validators.min(1), Validators.max(100)]],
+    active: [true]
+  });
+
   readonly settingsForm = this.fb.nonNullable.group({
     gateway: ['Razorpay'],
     paymentPolicy: ['Security deposit'],
@@ -1033,6 +1093,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       bookings: 'Booking management',
       customers: 'Customer management',
       payments: 'Payments & refunds',
+      coupons: 'Coupon management',
       content: 'Blog & content',
       reports: 'Reports & analytics',
       roles: 'Roles & permissions',
@@ -1112,6 +1173,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.loadBookings();
     this.loadCustomers();
     this.loadPayments();
+    this.loadCoupons();
     this.loadContent();
     this.loadCategoryReports();
     this.loadRolePermissions();
@@ -1157,6 +1219,16 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.payments.set(payments.map((payment) => this.mapPayment(payment)));
         this.clampAdminPages();
         this.updateTabCount('payments', String(payments.length));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  loadCoupons(): void {
+    this.adminService.getCoupons().subscribe({
+      next: (coupons) => {
+        this.coupons.set(coupons.map((coupon) => this.mapCoupon(coupon)));
+        this.updateTabCount('coupons', String(coupons.length));
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
     });
@@ -1541,6 +1613,38 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.staticContent.update((items) => items.map((item) => ({ ...item, status: 'Current' })));
   }
 
+  normalizeCouponInput(): void {
+    const code = this.couponForm.controls.code.value.toUpperCase().replace(/\s+/g, '');
+    this.couponForm.controls.code.setValue(code, { emitEvent: false });
+  }
+
+  submitCoupon(): void {
+    this.couponFormError = '';
+    this.normalizeCouponInput();
+    if (this.couponForm.invalid || this.isSubmittingCoupon) {
+      this.couponForm.markAllAsTouched();
+      this.couponFormError = 'Enter a coupon code and a discount percent from 1 to 100.';
+      return;
+    }
+
+    this.isSubmittingCoupon = true;
+    this.adminService.createCoupon(this.couponForm.getRawValue())
+      .pipe(finalize(() => {
+        this.isSubmittingCoupon = false;
+      }))
+      .subscribe({
+        next: (coupon) => {
+          this.coupons.update((items) => [this.mapCoupon(coupon), ...items]);
+          this.updateTabCount('coupons', String(this.coupons().length));
+          this.couponForm.reset({ code: '', discountPercent: 10, active: true });
+          this.showTopMessage('Coupon code created.', 2600);
+        },
+        error: (error) => {
+          this.couponFormError = this.authService.getErrorMessage(error);
+        }
+      });
+  }
+
   submitEmployee(): void {
     this.employeeFormError = '';
     if (this.employeeForm.invalid || this.isSubmitting) {
@@ -1717,6 +1821,16 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       paidAt: payment.paidAt,
       remark: payment.remark ?? '',
       remarkChangeCount: payment.remarkChangeCount ?? 0
+    };
+  }
+
+  private mapCoupon(coupon: AdminCouponResponse): AdminCoupon {
+    return {
+      id: coupon.id,
+      code: coupon.code,
+      discountPercent: Number(coupon.discountPercent),
+      active: coupon.active,
+      createdAt: coupon.createdAt
     };
   }
 

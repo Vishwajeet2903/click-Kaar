@@ -1,10 +1,10 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { BookingService } from '../services/booking.service';
+import { BookingService, CouponPreviewResponse } from '../services/booking.service';
 import { CartService } from '../services/cart.service';
 import { PaymentOrderResponse, PaymentService } from '../services/payment.service';
 import { AppButtonComponent } from '../shared/components/app-button.component';
@@ -79,7 +79,35 @@ declare global {
             <div class="surface panel">
               <h2>Order Summary</h2>
               @for (item of cart.items(); track item.product.id) { <p><span>{{ item.product.name }} x {{ item.quantity }}</span><strong>{{ cart.itemTotal(item) | currency:'INR':'symbol':'1.0-0' }}</strong></p> }
-              <p class="grand"><span>Total</span><strong>{{ cart.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+              <div class="coupon-field">
+                <label for="checkout-coupon">Coupon Code</label>
+                <div class="coupon-control">
+                  <input
+                    id="checkout-coupon"
+                    type="text"
+                    autocomplete="off"
+                    inputmode="text"
+                    placeholder="Enter coupon code"
+                    [value]="couponCode()"
+                    (input)="updateCouponCode($any($event.target).value)"
+                    (keydown.enter)="$event.preventDefault(); applyCoupon()"
+                  >
+                  <button type="button" class="apply-coupon-btn" [disabled]="isApplyingCoupon() || isPaying() || !couponCode().trim()" (click)="applyCoupon()">
+                    {{ isApplyingCoupon() ? 'Applying...' : 'Apply' }}
+                  </button>
+                </div>
+                @if (couponError()) {
+                  <small class="coupon-error">{{ couponError() }}</small>
+                }
+                @if (appliedCoupon()) {
+                  <small class="coupon-success">{{ appliedCoupon()?.code }} applied - {{ appliedCoupon()?.discountPercent }}% off</small>
+                }
+              </div>
+              <p><span>Subtotal</span><strong>{{ cart.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+              @if (appliedCoupon()) {
+                <p class="discount-row"><span>Coupon discount</span><strong>-{{ discountAmount() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+              }
+              <p class="grand"><span>Payable Amount</span><strong>{{ payableAmount() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
               <app-button type="button" [disabled]="isPaying() || cart.count() === 0" (click)="placeOrder()">{{ actionLabel() }}</app-button>
             </div>
           </div>
@@ -96,19 +124,44 @@ declare global {
     .payment-option strong { color: #111; font-size: 1.02rem; }
     .payment-option span { color: #777; line-height: 1.45; }
     .panel p { display: flex; justify-content: space-between; gap: 1rem; }
+    .coupon-field { border-top: 1px solid rgba(148,163,184,.16); display: grid; gap: .45rem; margin-top: .85rem; padding-top: 1rem; }
+    .coupon-field label { color: #555; font-size: .92rem; font-weight: 850; }
+    .coupon-control { display: grid; gap: .55rem; grid-template-columns: minmax(0, 1fr) auto; }
+    .coupon-field input { background: #fff; border: 1px solid rgba(17,17,17,.14); border-radius: 14px; color: #111; font: inherit; font-weight: 800; min-height: 48px; outline: none; padding: .8rem .95rem; text-transform: uppercase; transition: border-color .2s ease, box-shadow .2s ease; width: 100%; }
+    .coupon-field input:focus { border-color: #ff9700; box-shadow: 0 0 0 4px rgba(255,151,0,.14); }
+    .coupon-field input::placeholder { color: #9a9a9a; font-weight: 700; text-transform: none; }
+    .apply-coupon-btn { background: #111; border: 0; border-radius: 14px; color: #fff; cursor: pointer; font-weight: 900; min-height: 48px; min-width: 96px; padding: .75rem 1rem; transition: background .2s ease, color .2s ease, transform .2s ease; }
+    .apply-coupon-btn:hover { background: #ff9700; color: #111; transform: translateY(-1px); }
+    .apply-coupon-btn:disabled, .apply-coupon-btn:disabled:hover { background: #111; color: #fff; cursor: not-allowed; opacity: .58; transform: none; }
+    .coupon-error, .coupon-success { font-size: .8rem; font-weight: 850; line-height: 1.35; }
+    .coupon-error { color: #b42318; }
+    .coupon-success { color: #027a48; }
+    .discount-row strong { color: #027a48; }
     .grand { border-top: 1px solid rgba(148,163,184,.16); padding-top: 1rem; }
     .grand strong { color: #ff9700; }
     .success { margin: 4rem auto; max-width: 680px; text-align: center; }
     .success h1 { font-weight: 950; }
     .success a { color: #ff9700; font-weight: 900; }
-    @media (max-width: 575px) { .panel p { flex-direction: column; } }
+    @media (max-width: 575px) { .panel p { flex-direction: column; } .coupon-control { grid-template-columns: 1fr; } }
   `]
 })
 export class CheckoutPageComponent {
   readonly cart = inject(CartService);
   readonly success = signal(false);
   readonly isPaying = signal(false);
+  readonly isApplyingCoupon = signal(false);
   readonly paymentMethod = signal<PaymentMethod>('razorpay');
+  readonly couponCode = signal('');
+  readonly appliedCoupon = signal<CouponPreviewResponse | null>(null);
+  readonly couponError = signal('');
+  readonly discountAmount = computed(() => {
+    const coupon = this.appliedCoupon();
+    if (!coupon) {
+      return 0;
+    }
+    return Math.round(this.cart.grandTotal() * (Number(coupon.discountPercent) / 100));
+  });
+  readonly payableAmount = computed(() => Math.max(0, this.cart.grandTotal() - this.discountAmount()));
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
@@ -121,6 +174,41 @@ export class CheckoutPageComponent {
     }
 
     return this.paymentMethod() === 'razorpay' ? 'Pay with Razorpay' : 'Proceed';
+  }
+
+  updateCouponCode(value: string): void {
+    const code = value.toUpperCase().replace(/\s+/g, '');
+    this.couponCode.set(code);
+    this.couponError.set('');
+    if (this.appliedCoupon()?.code !== code) {
+      this.appliedCoupon.set(null);
+    }
+  }
+
+  applyCoupon(): void {
+    const code = this.couponCode().trim();
+    this.couponError.set('');
+    if (!code) {
+      this.couponError.set('Enter a coupon code.');
+      return;
+    }
+
+    this.isApplyingCoupon.set(true);
+    this.bookingService.previewCoupon(code)
+      .pipe(finalize(() => {
+        this.isApplyingCoupon.set(false);
+      }))
+      .subscribe({
+        next: (coupon) => {
+          this.appliedCoupon.set(coupon);
+          this.couponCode.set(coupon.code);
+          this.snackBar.open('Coupon applied.', 'Close', { duration: 1800 });
+        },
+        error: (error) => {
+          this.appliedCoupon.set(null);
+          this.couponError.set(this.authService.getErrorMessage(error));
+        }
+      });
   }
 
   placeOrder(): void {
@@ -149,7 +237,8 @@ export class CheckoutPageComponent {
       rentalStartDate: this.dateInputValue(this.earliestStartDate()),
       rentalEndDate: this.dateInputValue(this.latestEndDate()),
       items: this.cart.items().flatMap((item) => Array.from({ length: item.quantity }, () => ({ productId: item.product.id }))),
-      paymentMethod: this.paymentMethod()
+      paymentMethod: this.paymentMethod(),
+      couponCode: this.appliedCoupon()?.code ?? ''
     }).pipe(finalize(() => {
       if (this.paymentMethod() === 'cash') {
         this.isPaying.set(false);

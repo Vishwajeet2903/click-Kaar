@@ -4,8 +4,10 @@ import com.clickkaar.dto.booking.BookingRequest;
 import com.clickkaar.dto.booking.BookingResponse;
 import com.clickkaar.dto.booking.AvailabilityResponse;
 import com.clickkaar.dto.booking.BlockedDateRangeResponse;
+import com.clickkaar.dto.booking.CouponPreviewResponse;
 import com.clickkaar.entity.Booking;
 import com.clickkaar.entity.BookingItem;
+import com.clickkaar.entity.Coupon;
 import com.clickkaar.entity.Product;
 import com.clickkaar.entity.User;
 import com.clickkaar.enums.BookingStatus;
@@ -13,6 +15,7 @@ import com.clickkaar.enums.PaymentStatus;
 import com.clickkaar.exception.BadRequestException;
 import com.clickkaar.exception.ResourceNotFoundException;
 import com.clickkaar.repository.BookingRepository;
+import com.clickkaar.repository.CouponRepository;
 import com.clickkaar.repository.ProductRepository;
 import com.clickkaar.repository.StaticContentRepository;
 import com.clickkaar.repository.UserRepository;
@@ -29,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +50,7 @@ public class BookingService {
   private final ProductRepository productRepository;
   private final UserRepository userRepository;
   private final StaticContentRepository staticContentRepository;
+  private final CouponRepository couponRepository;
   private final JavaMailSender mailSender;
   private static final DateTimeFormatter DISPLAY_DATE = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
@@ -90,7 +95,7 @@ public class BookingService {
           .build());
       total = total.add(lineTotal);
     }
-    booking.setTotalAmount(total);
+    booking.setTotalAmount(applyCouponDiscount(total, request.couponCode()));
     Booking saved = bookingRepository.save(booking);
     if (shouldSendBillOnCreate(request.paymentMethod())) {
       sendBookingBillEmail(saved, PaymentStatus.PENDING, displayPaymentMethod(request.paymentMethod()));
@@ -121,6 +126,12 @@ public class BookingService {
     return bookingRepository.findBlockedRangesForProduct(productId, LocalDate.now()).stream()
         .map(booking -> new BlockedDateRangeResponse(booking.getRentalStartDate(), booking.getRentalEndDate()))
         .toList();
+  }
+
+  @Transactional(readOnly = true)
+  public CouponPreviewResponse couponPreview(String couponCode) {
+    Coupon coupon = activeCoupon(couponCode);
+    return new CouponPreviewResponse(coupon.getCode(), coupon.getDiscountPercent());
   }
 
   @Transactional(readOnly = true)
@@ -156,6 +167,28 @@ public class BookingService {
 
   private String unavailableMessage(String productName, LocalDate startDate, LocalDate endDate) {
     return productName + " is already booked between " + dateRange(startDate, endDate) + ". Please choose another date range.";
+  }
+
+  private BigDecimal applyCouponDiscount(BigDecimal total, String couponCode) {
+    String normalizedCode = couponCode == null ? "" : couponCode.trim();
+    if (normalizedCode.isBlank()) {
+      return total;
+    }
+
+    Coupon coupon = activeCoupon(normalizedCode);
+    BigDecimal discount = total
+        .multiply(coupon.getDiscountPercent())
+        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+    return total.subtract(discount).max(BigDecimal.ZERO);
+  }
+
+  private Coupon activeCoupon(String couponCode) {
+    String normalizedCode = couponCode == null ? "" : couponCode.trim();
+    if (normalizedCode.isBlank()) {
+      throw new BadRequestException("Enter a coupon code");
+    }
+    return couponRepository.findByCodeIgnoreCaseAndActiveTrue(normalizedCode)
+        .orElseThrow(() -> new BadRequestException("Coupon code is invalid or inactive"));
   }
 
   private String dateRange(LocalDate startDate, LocalDate endDate) {

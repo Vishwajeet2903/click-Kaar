@@ -9,6 +9,7 @@ import com.clickkaar.dto.product.ProductRequest;
 import com.clickkaar.dto.product.ProductResponse;
 import com.clickkaar.entity.AdminNote;
 import com.clickkaar.entity.Booking;
+import com.clickkaar.entity.Coupon;
 import com.clickkaar.entity.PendingRegistration;
 import com.clickkaar.entity.Payment;
 import com.clickkaar.entity.PaymentRemarkLog;
@@ -29,6 +30,7 @@ import com.clickkaar.repository.AdminNoteRepository;
 import com.clickkaar.repository.BlogPostRepository;
 import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PendingRegistrationRepository;
+import com.clickkaar.repository.CouponRepository;
 import com.clickkaar.repository.PaymentRepository;
 import com.clickkaar.repository.PaymentRemarkLogRepository;
 import com.clickkaar.repository.ProductRepository;
@@ -91,6 +93,7 @@ public class AdminController {
   private final BookingRepository bookingRepository;
   private final ProductRepository productRepository;
   private final PaymentRepository paymentRepository;
+  private final CouponRepository couponRepository;
   private final PaymentRemarkLogRepository paymentRemarkLogRepository;
   private final UserRepository userRepository;
   private final PendingRegistrationRepository pendingRegistrationRepository;
@@ -351,6 +354,39 @@ public class AdminController {
     } catch (JsonProcessingException exception) {
       throw new BadRequestException("Unable to save admin settings");
     }
+  }
+
+  @GetMapping("/coupons")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  public List<AdminCouponResponse> coupons() {
+    return couponRepository.findAll().stream()
+        .map(this::adminCouponResponse)
+        .toList();
+  }
+
+  @PostMapping("/coupons")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @ResponseStatus(HttpStatus.CREATED)
+  @Transactional
+  public AdminCouponResponse createCoupon(@RequestBody AdminCouponRequest request) {
+    String code = normalizeCouponCode(request.code());
+    BigDecimal discountPercent = request.discountPercent();
+    if (code.isBlank()) {
+      throw new BadRequestException("Enter a coupon code");
+    }
+    if (discountPercent == null || discountPercent.compareTo(BigDecimal.ONE) < 0 || discountPercent.compareTo(BigDecimal.valueOf(100)) > 0) {
+      throw new BadRequestException("Discount percent must be between 1 and 100");
+    }
+    if (couponRepository.existsByCodeIgnoreCase(code)) {
+      throw new BadRequestException("Coupon code already exists");
+    }
+
+    Coupon coupon = Coupon.builder()
+        .code(code)
+        .discountPercent(discountPercent)
+        .active(request.active() == null || request.active())
+        .build();
+    return adminCouponResponse(couponRepository.save(coupon));
   }
 
   @PostMapping("/employees")
@@ -663,6 +699,20 @@ public class AdminController {
     );
   }
 
+  private AdminCouponResponse adminCouponResponse(Coupon coupon) {
+    return new AdminCouponResponse(
+        coupon.getId(),
+        coupon.getCode(),
+        coupon.getDiscountPercent(),
+        coupon.isActive(),
+        coupon.getCreatedAt()
+    );
+  }
+
+  private String normalizeCouponCode(String code) {
+    return code == null ? "" : code.trim().toUpperCase();
+  }
+
   private User currentAdmin() {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     return userRepository.findByEmail(email)
@@ -696,9 +746,11 @@ public class AdminController {
   public record PaymentRemarkRequest(String remark) {}
   public record CustomerBlockRequest(boolean blocked) {}
   public record AdminRefundRequest(BigDecimal amount, String reason) {}
+  public record AdminCouponRequest(String code, BigDecimal discountPercent, Boolean active) {}
   public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes) {}
   public record AdminCustomerResponse(Long id, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}
   public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt, String remark, long remarkChangeCount) {}
+  public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, LocalDateTime createdAt) {}
   public record PaymentRemarkLogResponse(Long id, String oldRemark, String newRemark, String changedBy, LocalDateTime changedAt) {}
   public record AdminBlogPostResponse(Long id, String title, String category, String author, BlogStatus status, LocalDate publishDate, String seoTitle, String metaDescription) {}
   public record AdminStaticContentResponse(String key, String title, LocalDateTime updatedAt, String status) {}

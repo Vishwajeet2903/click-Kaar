@@ -153,6 +153,9 @@ export class AuthService {
   getErrorMessage(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
       if (typeof error.error === 'string' && error.error.trim()) {
+        if (/<\/?[a-z][\s\S]*>/i.test(error.error)) {
+          return 'Backend server error. Please restart the backend and try again.';
+        }
         return error.error;
       }
 

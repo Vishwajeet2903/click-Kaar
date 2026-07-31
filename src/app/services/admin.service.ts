@@ -161,6 +161,20 @@ export interface AdminSettingsResponse {
   analyticsId: string;
 }
 
+export interface AdminCouponRequest {
+  code: string;
+  discountPercent: number;
+  active: boolean;
+}
+
+export interface AdminCouponResponse {
+  id: number;
+  code: string;
+  discountPercent: number;
+  active: boolean;
+  createdAt: string;
+}
+
 export interface CategoryReportResponse {
   name: string;
   value: number;
@@ -295,6 +309,18 @@ export class AdminService {
 
   saveSettings(request: AdminSettingsResponse): Observable<AdminSettingsResponse> {
     return this.http.put<AdminSettingsResponse>(`${API_URL}/settings`, request, {
+      headers: this.authHeaders()
+    });
+  }
+
+  getCoupons(): Observable<AdminCouponResponse[]> {
+    return this.http.get<AdminCouponResponse[]>(`${API_URL}/coupons`, {
+      headers: this.authHeaders()
+    });
+  }
+
+  createCoupon(request: AdminCouponRequest): Observable<AdminCouponResponse> {
+    return this.http.post<AdminCouponResponse>(`${API_URL}/coupons`, request, {
       headers: this.authHeaders()
     });
   }

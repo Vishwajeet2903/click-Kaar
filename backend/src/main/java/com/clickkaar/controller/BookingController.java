@@ -4,6 +4,7 @@ import com.clickkaar.dto.booking.AvailabilityResponse;
 import com.clickkaar.dto.booking.BlockedDateRangeResponse;
 import com.clickkaar.dto.booking.BookingRequest;
 import com.clickkaar.dto.booking.BookingResponse;
+import com.clickkaar.dto.booking.CouponPreviewResponse;
 import com.clickkaar.enums.BookingStatus;
 import com.clickkaar.service.BookingService;
 import jakarta.validation.Valid;
@@ -37,6 +38,11 @@ public class BookingController {
   @GetMapping("/products/{productId}/blocked-ranges")
   public List<BlockedDateRangeResponse> blockedRanges(@PathVariable Long productId) {
     return bookingService.blockedRanges(productId);
+  }
+
+  @GetMapping("/coupons/{couponCode}")
+  public CouponPreviewResponse couponPreview(@PathVariable String couponCode) {
+    return bookingService.couponPreview(couponCode);
   }
 
   @GetMapping("/customer/{customerId}")

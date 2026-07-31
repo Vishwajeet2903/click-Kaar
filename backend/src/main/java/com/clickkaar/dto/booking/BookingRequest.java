@@ -13,6 +13,7 @@ public record BookingRequest(
     @NotNull @FutureOrPresent LocalDate rentalStartDate,
     @NotNull @FutureOrPresent LocalDate rentalEndDate,
     @NotEmpty List<@Valid BookingItemRequest> items,
-    String paymentMethod
+    String paymentMethod,
+    String couponCode
 ) {
 }
