@@ -10,3 +10,4 @@ ng-serve.log
 ng-serve.err.log
 
 *.local
+backend/backend-run.log

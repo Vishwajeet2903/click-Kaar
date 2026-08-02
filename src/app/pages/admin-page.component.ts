@@ -380,7 +380,7 @@ interface PaymentRemarkLogView {
                 <div class="surface table-panel">
                   <table>
                     <thead>
-                      <tr><th>Product</th><th>Category</th><th>Price</th><th>Warranty</th><th>Invoice</th><th>Stock</th><th>Status</th><th>Calendar</th><th>Actions</th></tr>
+                      <tr><th>Product</th><th>Category</th><th>Price</th><th>Warranty</th><th>Invoice</th><th>Stock</th><th>Status</th><th>Booked days</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                       @for (product of pagedProducts(); track product.id) {
@@ -407,7 +407,7 @@ interface PaymentRemarkLogView {
                           </td>
                           <td>{{ product.stock }}</td>
                           <td><b class="status" [class]="statusClass(product.status)">{{ product.status }}</b></td>
-                          <td><span class="calendar-strip">{{ bookedDays(product.name) }} booked days</span></td>
+                          <td><span class="calendar-strip">{{ bookedDays(product.name) }}</span></td>
                           <td class="action-cell">
                             <button type="button" class="mini-btn" (click)="editProduct(product)">Edit</button>
                             @if (product.status === 'Maintenance') {
@@ -953,6 +953,8 @@ interface PaymentRemarkLogView {
     @media (max-width: 760px) {
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
       .split-grid, .metric-grid, .card-grid, .form-grid, .detail-grid, .document-grid, nav { grid-template-columns: 1fr; }
+      .admin-sidebar nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #111; }
+      .admin-sidebar nav button.active small { background: #111; color: #fff; }
       .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input { max-width: none; width: 100%; }
       .request-list article { align-items: stretch; }
       .request-list .mini-btn { width: 100%; }
