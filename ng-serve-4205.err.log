@@ -1,0 +1,902 @@
+[1m[33mComponent HMR has been enabled, see https://angular.dev/hmr for more info.[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2741: Property 'reviews' is missing in type '{ dashboard: string; registrations: string; inventory: string; bookings: string; customers: string; payments: string; coupons: string; content: string; reports: string; roles: string; settings: string; }' but required in type 'Record<AdminTab, string>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1102:10:
+[37m      1102 │     const [32mtitles[37m: Record<AdminTab, string> = {
+           ╵           [32m~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewQuery' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:685:100:
+[37m      685 │ ..., role, quote" [ngModel]="[32mreviewQuery[37m()" (ngModelChange)="revi...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewQuery' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:685:132:
+[37m      685 │ ...Query()" (ngModelChange)="[32mreviewQuery[37m.set($event); reviewsPage...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:685:157:
+[37m      685 │ ...ry()" (ngModelChange)="reviewQuery.set($event); [32mreviewsPage[37m = 1">
+          ╵                                                    [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewRatingFilter' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:686:37:
+[37m      686 │ ...   <select [ngModel]="[32mreviewRatingFilter[37m()" (ngModelChange)="r...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewRatingFilter' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:686:76:
+[37m      686 │ ...r()" (ngModelChange)="[32mreviewRatingFilter[37m.set($event); reviewsP...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:686:108:
+[37m      686 │ ...ngModelChange)="reviewRatingFilter.set($event); [32mreviewsPage[37m = 1">
+          ╵                                                    [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:697:66:
+[37m      697 │ ...ditor-panel" [formGroup]="[32mreviewForm[37m" (ngSubmit)="submitReview...
+          ╵                              [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'submitReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:697:90:
+[37m      697 │ ...itor-panel" [formGroup]="reviewForm" (ngSubmit)="[32msubmitReview[37m()">
+          ╵                                                     [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editingReviewId' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:699:29:
+[37m      699 │ ...                 <h3>{{ [32meditingReviewId[37m ? 'Edit review' : 'Cre...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editingReviewId' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:700:27:
+[37m      700 │                       @if ([32meditingReviewId[37m) {
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'resetReviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:701:72:
+[37m      701 │ ...class="link-btn" (click)="[32mresetReviewForm[37m()">Cancel edit</button>
+          ╵                              [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:704:25:
+[37m      704 │                     @if ([32mreviewFormError[37m) {
+          ╵                          [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:705:60:
+[37m      705 │ ...     <p class="form-alert" role="alert">{{ [32mreviewFormError[37m }}</p>
+          ╵                                               [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'isSubmittingReview' does not exist on type 'AdminPageComponent'. Did you mean 'isSubmitting'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:713:79:
+[37m      713 │ ...btn wide" [disabled]="[32misSubmittingReview[37m">{{ isSubmittingRevie...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'isSubmittingReview' does not exist on type 'AdminPageComponent'. Did you mean 'isSubmitting'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:713:102:
+[37m      713 │ ...sSubmittingReview">{{ [32misSubmittingReview[37m ? 'Saving...' : (edit...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editingReviewId' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:713:138:
+[37m      713 │ ...Review ? 'Saving...' : ([32meditingReviewId[37m ? 'Save review' : 'Cre...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'loadReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:719:70:
+[37m      719 │ ...button" class="link-btn" (click)="[32mloadReviews[37m()">Refresh</button>
+          ╵                                      [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'pagedReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:722:38:
+[37m      722 │ ...               @for (review of [32mpagedReviews[37m(); track review.id) {
+          ╵                                   [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:730:76:
+[37m      730 │ ...tton" class="mini-btn" (click)="[32meditReview[37m(review)">Edit</button>
+          ╵                                    [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'deleteReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:731:78:
+[37m      731 │ ...class="danger-btn" (click)="[32mdeleteReview[37m(review)">Delete</button>
+          ╵                                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'filteredReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:739:43:
+[37m      739 │ ...   <span>{{ pageSummary([32mfilteredReviews[37m().length, reviewsPage)...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:739:69:
+[37m      739 │ ...n>{{ pageSummary(filteredReviews().length, [32mreviewsPage[37m) }}</span>
+          ╵                                               [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:77:
+[37m      741 │ ...="ghost-mini" [disabled]="[32mreviewsPage[37m === 1" (click)="changePa...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:116:
+[37m      741 │ ...Page === 1" (click)="changePage([32m'reviews'[37m, -1)">Previous</button>
+          ╵                                    [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:75:
+[37m      742 │ ...ss="mini-btn" [disabled]="[32mreviewsPage[37m === pageCount(filteredRe...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'filteredReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:101:
+[37m      742 │ ...viewsPage === pageCount([32mfilteredReviews[37m().length)" (click)="ch...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:148:
+[37m      742 │ ...views().length)" (click)="changePage([32m'reviews'[37m, 1)">Next</button>
+          ╵                                         [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2741: Property 'reviews' is missing in type '{ dashboard: string; registrations: string; inventory: string; bookings: string; customers: string; payments: string; coupons: string; content: string; reports: string; roles: string; settings: string; }' but required in type 'Record<AdminTab, string>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1168:10:
+[37m      1168 │     const [32mtitles[37m: Record<AdminTab, string> = {
+           ╵           [32m~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewQuery' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:685:100:
+[37m      685 │ ..., role, quote" [ngModel]="[32mreviewQuery[37m()" (ngModelChange)="revi...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewQuery' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:685:132:
+[37m      685 │ ...Query()" (ngModelChange)="[32mreviewQuery[37m.set($event); reviewsPage...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:685:157:
+[37m      685 │ ...ry()" (ngModelChange)="reviewQuery.set($event); [32mreviewsPage[37m = 1">
+          ╵                                                    [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewRatingFilter' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:686:37:
+[37m      686 │ ...   <select [ngModel]="[32mreviewRatingFilter[37m()" (ngModelChange)="r...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewRatingFilter' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:686:76:
+[37m      686 │ ...r()" (ngModelChange)="[32mreviewRatingFilter[37m.set($event); reviewsP...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:686:108:
+[37m      686 │ ...ngModelChange)="reviewRatingFilter.set($event); [32mreviewsPage[37m = 1">
+          ╵                                                    [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:697:66:
+[37m      697 │ ...ditor-panel" [formGroup]="[32mreviewForm[37m" (ngSubmit)="submitReview...
+          ╵                              [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'submitReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:697:90:
+[37m      697 │ ...itor-panel" [formGroup]="reviewForm" (ngSubmit)="[32msubmitReview[37m()">
+          ╵                                                     [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editingReviewId' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:699:29:
+[37m      699 │ ...                 <h3>{{ [32meditingReviewId[37m ? 'Edit review' : 'Cre...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editingReviewId' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:700:27:
+[37m      700 │                       @if ([32meditingReviewId[37m) {
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'resetReviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:701:72:
+[37m      701 │ ...class="link-btn" (click)="[32mresetReviewForm[37m()">Cancel edit</button>
+          ╵                              [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:704:25:
+[37m      704 │                     @if ([32mreviewFormError[37m) {
+          ╵                          [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:705:60:
+[37m      705 │ ...     <p class="form-alert" role="alert">{{ [32mreviewFormError[37m }}</p>
+          ╵                                               [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'isSubmittingReview' does not exist on type 'AdminPageComponent'. Did you mean 'isSubmitting'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:713:79:
+[37m      713 │ ...btn wide" [disabled]="[32misSubmittingReview[37m">{{ isSubmittingRevie...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'isSubmittingReview' does not exist on type 'AdminPageComponent'. Did you mean 'isSubmitting'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:713:102:
+[37m      713 │ ...sSubmittingReview">{{ [32misSubmittingReview[37m ? 'Saving...' : (edit...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editingReviewId' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:713:138:
+[37m      713 │ ...Review ? 'Saving...' : ([32meditingReviewId[37m ? 'Save review' : 'Cre...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'loadReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:719:70:
+[37m      719 │ ...button" class="link-btn" (click)="[32mloadReviews[37m()">Refresh</button>
+          ╵                                      [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'pagedReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:722:38:
+[37m      722 │ ...               @for (review of [32mpagedReviews[37m(); track review.id) {
+          ╵                                   [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:730:76:
+[37m      730 │ ...tton" class="mini-btn" (click)="[32meditReview[37m(review)">Edit</button>
+          ╵                                    [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'deleteReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:731:78:
+[37m      731 │ ...class="danger-btn" (click)="[32mdeleteReview[37m(review)">Delete</button>
+          ╵                                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'filteredReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:739:43:
+[37m      739 │ ...   <span>{{ pageSummary([32mfilteredReviews[37m().length, reviewsPage)...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:739:69:
+[37m      739 │ ...n>{{ pageSummary(filteredReviews().length, [32mreviewsPage[37m) }}</span>
+          ╵                                               [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:77:
+[37m      741 │ ...="ghost-mini" [disabled]="[32mreviewsPage[37m === 1" (click)="changePa...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:116:
+[37m      741 │ ...Page === 1" (click)="changePage([32m'reviews'[37m, -1)">Previous</button>
+          ╵                                    [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'reviewsPage' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:75:
+[37m      742 │ ...ss="mini-btn" [disabled]="[32mreviewsPage[37m === pageCount(filteredRe...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'filteredReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:101:
+[37m      742 │ ...viewsPage === pageCount([32mfilteredReviews[37m().length)" (click)="ch...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:148:
+[37m      742 │ ...views().length)" (click)="changePage([32m'reviews'[37m, 1)">Next</button>
+          ╵                                         [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2741: Property 'reviews' is missing in type '{ dashboard: string; registrations: string; inventory: string; bookings: string; customers: string; payments: string; coupons: string; content: string; reports: string; roles: string; settings: string; }' but required in type 'Record<AdminTab, string>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1172:10:
+[37m      1172 │     const [32mtitles[37m: Record<AdminTab, string> = {
+           ╵           [32m~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'submitReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:697:90:
+[37m      697 │ ...itor-panel" [formGroup]="reviewForm" (ngSubmit)="[32msubmitReview[37m()">
+          ╵                                                     [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'resetReviewForm' does not exist on type 'AdminPageComponent'. Did you mean 'reviewForm'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:701:72:
+[37m      701 │ ...class="link-btn" (click)="[32mresetReviewForm[37m()">Cancel edit</button>
+          ╵                              [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'loadReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:719:70:
+[37m      719 │ ...button" class="link-btn" (click)="[32mloadReviews[37m()">Refresh</button>
+          ╵                                      [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'pagedReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:722:38:
+[37m      722 │ ...               @for (review of [32mpagedReviews[37m(); track review.id) {
+          ╵                                   [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:730:76:
+[37m      730 │ ...tton" class="mini-btn" (click)="[32meditReview[37m(review)">Edit</button>
+          ╵                                    [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'deleteReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:731:78:
+[37m      731 │ ...class="danger-btn" (click)="[32mdeleteReview[37m(review)">Delete</button>
+          ╵                                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'filteredReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:739:43:
+[37m      739 │ ...   <span>{{ pageSummary([32mfilteredReviews[37m().length, reviewsPage)...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:116:
+[37m      741 │ ...Page === 1" (click)="changePage([32m'reviews'[37m, -1)">Previous</button>
+          ╵                                    [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'filteredReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:101:
+[37m      742 │ ...viewsPage === pageCount([32mfilteredReviews[37m().length)" (click)="ch...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:148:
+[37m      742 │ ...views().length)" (click)="changePage([32m'reviews'[37m, 1)">Next</button>
+          ╵                                         [32m~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'submitReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:697:90:
+[37m      697 │ ...itor-panel" [formGroup]="reviewForm" (ngSubmit)="[32msubmitReview[37m()">
+          ╵                                                     [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'resetReviewForm' does not exist on type 'AdminPageComponent'. Did you mean 'reviewForm'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:701:72:
+[37m      701 │ ...class="link-btn" (click)="[32mresetReviewForm[37m()">Cancel edit</button>
+          ╵                              [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'loadReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:719:70:
+[37m      719 │ ...button" class="link-btn" (click)="[32mloadReviews[37m()">Refresh</button>
+          ╵                                      [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:730:76:
+[37m      730 │ ...tton" class="mini-btn" (click)="[32meditReview[37m(review)">Edit</button>
+          ╵                                    [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'deleteReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:731:78:
+[37m      731 │ ...class="danger-btn" (click)="[32mdeleteReview[37m(review)">Delete</button>
+          ╵                                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:116:
+[37m      741 │ ...Page === 1" (click)="changePage([32m'reviews'[37m, -1)">Previous</button>
+          ╵                                    [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:148:
+[37m      742 │ ...views().length)" (click)="changePage([32m'reviews'[37m, 1)">Next</button>
+          ╵                                         [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'loadReviews' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1288:9:
+[37m      1288 │     this.[32mloadReviews[37m();
+           ╵          [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'submitReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:697:90:
+[37m      697 │ ...itor-panel" [formGroup]="reviewForm" (ngSubmit)="[32msubmitReview[37m()">
+          ╵                                                     [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'resetReviewForm' does not exist on type 'AdminPageComponent'. Did you mean 'reviewForm'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:701:72:
+[37m      701 │ ...class="link-btn" (click)="[32mresetReviewForm[37m()">Cancel edit</button>
+          ╵                              [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:730:76:
+[37m      730 │ ...tton" class="mini-btn" (click)="[32meditReview[37m(review)">Edit</button>
+          ╵                                    [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'deleteReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:731:78:
+[37m      731 │ ...class="danger-btn" (click)="[32mdeleteReview[37m(review)">Delete</button>
+          ╵                                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:116:
+[37m      741 │ ...Page === 1" (click)="changePage([32m'reviews'[37m, -1)">Previous</button>
+          ╵                                    [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type '"reviews"' is not assignable to parameter of type '"inventory" | "bookings" | "customers" | "payments" | "blog" | "staticContent"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:742:148:
+[37m      742 │ ...views().length)" (click)="changePage([32m'reviews'[37m, 1)">Next</button>
+          ╵                                         [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'mapReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1352:54:
+[37m      1352 │ ...is.reviews.set(reviews.map((review) => this.[32mmapReview[37m(review)));
+           ╵                                                [32m~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'submitReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:697:90:
+[37m      697 │ ...itor-panel" [formGroup]="reviewForm" (ngSubmit)="[32msubmitReview[37m()">
+          ╵                                                     [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'resetReviewForm' does not exist on type 'AdminPageComponent'. Did you mean 'reviewForm'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:701:72:
+[37m      701 │ ...class="link-btn" (click)="[32mresetReviewForm[37m()">Cancel edit</button>
+          ╵                              [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'editReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:730:76:
+[37m      730 │ ...tton" class="mini-btn" (click)="[32meditReview[37m(review)">Edit</button>
+          ╵                                    [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'deleteReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:731:78:
+[37m      731 │ ...class="danger-btn" (click)="[32mdeleteReview[37m(review)">Delete</button>
+          ╵                                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'mapReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1352:54:
+[37m      1352 │ ...is.reviews.set(reviews.map((review) => this.[32mmapReview[37m(review)));
+           ╵                                                [32m~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'mapReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1352:54:
+[37m      1352 │ ...is.reviews.set(reviews.map((review) => this.[32mmapReview[37m(review)));
+           ╵                                                [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewRequestFromForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1783:25:
+[37m      1783 │     const request = this.[32mreviewRequestFromForm[37m();
+           ╵                          [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'mapReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1795:30:
+[37m      1795 │           const mapped = this.[32mmapReview[37m(review);
+           ╵                               [32m~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewRequestFromForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1783:25:
+[37m      1783 │     const request = this.[32mreviewRequestFromForm[37m();
+           ╵                          [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'selectedReview' does not exist on type 'AdminPageComponent'. Did you mean 'deleteReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:701:25:
+[37m      701 │                     @if ([32mselectedReview[37m) {
+          ╵                          [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'selectedReview' does not exist on type 'AdminPageComponent'. Did you mean 'deleteReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:705:37:
+[37m      705 │                           <strong>{{ [32mselectedReview[37m.name }}</strong>
+          ╵                                      [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'selectedReview' does not exist on type 'AdminPageComponent'. Did you mean 'deleteReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:709:37:
+[37m      709 │                           <strong>{{ [32mselectedReview[37m.role }}</strong>
+          ╵                                      [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'selectedReview' does not exist on type 'AdminPageComponent'. Did you mean 'deleteReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:713:37:
+[37m      713 │ ...               <strong>{{ [32mselectedReview[37m.rating }} stars</strong>
+          ╵                              [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'selectedReview' does not exist on type 'AdminPageComponent'. Did you mean 'deleteReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:717:37:
+[37m      717 │ ...             <strong>{{ [32mselectedReview[37m.createdAt | date:'mediu...
+          ╵                            [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'selectedReview' does not exist on type 'AdminPageComponent'. Did you mean 'deleteReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:719:30:
+[37m      719 │                         <p>{{ [32mselectedReview[37m.quote }}</p>
+          ╵                               [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1: Property 'selectedReview' does not exist on type 'AdminPageComponent'. Did you mean 'deleteReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:720:87:
+[37m      720 │ ...tn" (click)="deleteReview([32mselectedReview[37m)">Delete review</button>
+          ╵                              [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'viewReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:76:
+[37m      741 │ ...tton" class="mini-btn" (click)="[32mviewReview[37m(review)">View</button>
+          ╵                                    [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'AdminReviewRequest'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:2139:35:
+[37m      2139 │   private reviewRequestFromForm(): [32mAdminReviewRequest[37m {
+           ╵                                    [32m~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'viewReview' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:741:76:
+[37m      741 │ ...tton" class="mini-btn" (click)="[32mviewReview[37m(review)">View</button>
+          ╵                                    [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1783:9:
+[37m      1783 │     this.[32mreviewFormError[37m = '';
+           ╵          [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1784:13:
+[37m      1784 │     if (this.[32mreviewForm[37m.invalid || this.isSubmittingReview) {
+           ╵              [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'isSubmittingReview' does not exist on type 'AdminPageComponent'. Did you mean 'isSubmitting'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1784:40:
+[37m      1784 │     if (this.reviewForm.invalid || this.[32misSubmittingReview[37m) {
+           ╵                                         [32m~~~~~~~~~~~~~~~~~~[0m
+
+  'isSubmitting' is declared here.
+
+    src/app/pages/admin-page.component.ts:1117:2:
+[37m      1117 │   [32misSubmitting[37m = false;
+           ╵   [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1785:11:
+[37m      1785 │       this.[32mreviewForm[37m.markAllAsTouched();
+           ╵            [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1786:11:
+[37m      1786 │       this.[32mreviewFormError[37m = 'Enter a name, role, rating from 1 ...
+           ╵            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'editingReviewId' does not exist on type 'AdminPageComponent'. Did you mean 'editReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1791:29:
+[37m      1791 │     const saveRequest = this.[32meditingReviewId[37m
+           ╵                              [32m~~~~~~~~~~~~~~~[0m
+
+  'editReview' is declared here.
+
+    src/app/pages/admin-page.component.ts:1820:2:
+[37m      1820 │   [32meditReview[37m(review: AdminReview): void {
+           ╵   [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'editingReviewId' does not exist on type 'AdminPageComponent'. Did you mean 'editReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1792:44:
+[37m      1792 │ ... ? this.adminService.updateReview(this.[32meditingReviewId[37m, request)
+           ╵                                           [32m~~~~~~~~~~~~~~~[0m
+
+  'editReview' is declared here.
+
+    src/app/pages/admin-page.component.ts:1820:2:
+[37m      1820 │   [32meditReview[37m(review: AdminReview): void {
+           ╵   [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'isSubmittingReview' does not exist on type 'AdminPageComponent'. Did you mean 'isSubmitting'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1795:9:
+[37m      1795 │     this.[32misSubmittingReview[37m = true;
+           ╵          [32m~~~~~~~~~~~~~~~~~~[0m
+
+  'isSubmitting' is declared here.
+
+    src/app/pages/admin-page.component.ts:1117:2:
+[37m      1117 │   [32misSubmitting[37m = false;
+           ╵   [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'isSubmittingReview' does not exist on type 'AdminPageComponent'. Did you mean 'isSubmitting'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1798:13:
+[37m      1798 │         this.[32misSubmittingReview[37m = false;
+           ╵              [32m~~~~~~~~~~~~~~~~~~[0m
+
+  'isSubmitting' is declared here.
+
+    src/app/pages/admin-page.component.ts:1117:2:
+[37m      1117 │   [32misSubmitting[37m = false;
+           ╵   [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'editingReviewId' does not exist on type 'AdminPageComponent'. Did you mean 'editReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1803:19:
+[37m      1803 │           if (this.[32meditingReviewId[37m) {
+           ╵                    [32m~~~~~~~~~~~~~~~[0m
+
+  'editReview' is declared here.
+
+    src/app/pages/admin-page.component.ts:1820:2:
+[37m      1820 │   [32meditReview[37m(review: AdminReview): void {
+           ╵   [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1815:15:
+[37m      1815 │           this.[32mreviewFormError[37m = this.authService.getErrorMessag...
+           ╵                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'editingReviewId' does not exist on type 'AdminPageComponent'. Did you mean 'editReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1821:9:
+[37m      1821 │     this.[32meditingReviewId[37m = review.id;
+           ╵          [32m~~~~~~~~~~~~~~~[0m
+
+  'editReview' is declared here.
+
+    src/app/pages/admin-page.component.ts:1820:2:
+[37m      1820 │   [32meditReview[37m(review: AdminReview): void {
+           ╵   [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1822:9:
+[37m      1822 │     this.[32mreviewFormError[37m = '';
+           ╵          [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1823:9:
+[37m      1823 │     this.[32mreviewForm[37m.reset({
+           ╵          [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'editingReviewId' does not exist on type 'AdminPageComponent'. Did you mean 'editReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1839:17:
+[37m      1839 │         if (this.[32meditingReviewId[37m === review.id) {
+           ╵                  [32m~~~~~~~~~~~~~~~[0m
+
+  'editReview' is declared here.
+
+    src/app/pages/admin-page.component.ts:1820:2:
+[37m      1820 │   [32meditReview[37m(review: AdminReview): void {
+           ╵   [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'editingReviewId' does not exist on type 'AdminPageComponent'. Did you mean 'editReview'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1851:9:
+[37m      1851 │     this.[32meditingReviewId[37m = undefined;
+           ╵          [32m~~~~~~~~~~~~~~~[0m
+
+  'editReview' is declared here.
+
+    src/app/pages/admin-page.component.ts:1820:2:
+[37m      1820 │   [32meditReview[37m(review: AdminReview): void {
+           ╵   [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewFormError' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1852:9:
+[37m      1852 │     this.[32mreviewFormError[37m = '';
+           ╵          [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:1853:9:
+[37m      1853 │     this.[32mreviewForm[37m.reset({
+           ╵          [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'AdminReviewRequest'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:2135:35:
+[37m      2135 │   private reviewRequestFromForm(): [32mAdminReviewRequest[37m {
+           ╵                                    [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'reviewForm' does not exist on type 'AdminPageComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-page.component.ts:2136:23:
+[37m      2136 │     const value = this.[32mreviewForm[37m.getRawValue();
+           ╵                        [32m~~~~~~~~~~[0m
+
+[39m[22m

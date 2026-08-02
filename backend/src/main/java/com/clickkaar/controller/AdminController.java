@@ -5,6 +5,7 @@ import com.clickkaar.dto.admin.EmployeeRequest;
 import com.clickkaar.dto.admin.EmployeeResponse;
 import com.clickkaar.dto.admin.CustomerVerificationResponse;
 import com.clickkaar.dto.admin.RegistrationDocumentResponse;
+import com.clickkaar.dto.content.CustomerReviewResponse;
 import com.clickkaar.dto.product.ProductRequest;
 import com.clickkaar.dto.product.ProductResponse;
 import com.clickkaar.entity.AdminNote;
@@ -40,6 +41,7 @@ import com.clickkaar.repository.StaticContentRepository;
 import com.clickkaar.repository.UserRepository;
 import com.clickkaar.repository.WishlistRepository;
 import com.clickkaar.service.ProductService;
+import com.clickkaar.service.ContentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
@@ -61,6 +63,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -105,6 +108,7 @@ public class AdminController {
   private final StaticContentRepository staticContentRepository;
   private final PasswordEncoder passwordEncoder;
   private final ProductService productService;
+  private final ContentService contentService;
   private final ObjectMapper objectMapper;
   private final JavaMailSender mailSender;
 
@@ -147,6 +151,19 @@ public class AdminController {
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   public ProductResponse updateInventoryProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequest request) {
     return productService.update(productId, request);
+  }
+
+  @GetMapping("/reviews")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  public List<CustomerReviewResponse> reviews() {
+    return contentService.reviews();
+  }
+
+  @DeleteMapping("/reviews/{reviewId}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteReview(@PathVariable Long reviewId) {
+    contentService.deleteReview(reviewId);
   }
 
   @PatchMapping("/inventory/{productId}/maintenance")

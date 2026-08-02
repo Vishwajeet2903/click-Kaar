@@ -59,6 +59,14 @@ public class ContentService {
     return toReviewResponse(review);
   }
 
+  @Transactional
+  public void deleteReview(Long reviewId) {
+    if (!customerReviewRepository.existsById(reviewId)) {
+      throw new ResourceNotFoundException("Review not found");
+    }
+    customerReviewRepository.deleteById(reviewId);
+  }
+
   public Faq createFaq(FaqRequest request) {
     return faqRepository.save(Faq.builder()
         .question(request.question())

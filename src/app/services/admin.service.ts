@@ -62,6 +62,9 @@ export interface AdminProductRequest {
   weeklyPrice: number;
   warrantyDate?: string;
   invoiceUrl?: string;
+  imageLink?: string;
+  link1?: string;
+  link2?: string;
   availabilityStatus: string;
   images: string[];
 }
@@ -78,6 +81,9 @@ export interface AdminProductResponse {
   weeklyPrice: number;
   warrantyDate?: string;
   invoiceUrl?: string;
+  imageLink?: string;
+  link1?: string;
+  link2?: string;
   availabilityStatus: string;
   images: string[];
 }
@@ -172,6 +178,16 @@ export interface AdminCouponResponse {
   code: string;
   discountPercent: number;
   active: boolean;
+  createdAt: string;
+}
+
+export interface AdminReviewResponse {
+  id: number;
+  name: string;
+  role: string;
+  rating: number;
+  quote: string;
+  avatar?: string | null;
   createdAt: string;
 }
 
@@ -321,6 +337,16 @@ export class AdminService {
 
   createCoupon(request: AdminCouponRequest): Observable<AdminCouponResponse> {
     return this.http.post<AdminCouponResponse>(`${API_URL}/coupons`, request, {
+      headers: this.authHeaders()
+    });
+  }
+
+  getReviews(): Observable<AdminReviewResponse[]> {
+    return this.http.get<AdminReviewResponse[]>(`${API_BASE_URL}/content/reviews`);
+  }
+
+  deleteReview(reviewId: number): Observable<void> {
+    return this.http.delete<void>(`${API_BASE_URL}/content/reviews/${reviewId}`, {
       headers: this.authHeaders()
     });
   }

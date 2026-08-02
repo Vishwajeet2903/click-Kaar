@@ -12,6 +12,7 @@ import {
   AdminPaymentResponse,
   AdminProductRequest,
   AdminProductResponse,
+  AdminReviewResponse,
   AdminService,
   CustomerVerificationResponse,
   EmployeeResponse,
@@ -21,7 +22,7 @@ import {
 import { AuthService } from '../services/auth.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
-type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'coupons' | 'content' | 'reports' | 'roles' | 'settings';
+type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'coupons' | 'content' | 'reviews' | 'reports' | 'roles' | 'settings';
 type BookingStatus = 'Upcoming' | 'Active' | 'Completed' | 'Cancelled' | 'Overdue';
 type PaymentStatus = 'Paid' | 'Pending' | 'Failed' | 'Refunded';
 type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
@@ -87,6 +88,15 @@ interface AdminCoupon {
   code: string;
   discountPercent: number;
   active: boolean;
+  createdAt: string;
+}
+
+interface AdminReview {
+  id: number;
+  name: string;
+  role: string;
+  rating: number;
+  quote: string;
   createdAt: string;
 }
 
@@ -669,6 +679,80 @@ interface PaymentRemarkLogView {
                 </div>
               }
 
+              @case ('reviews') {
+                <div class="tool-row inventory-filter-row">
+                  <input class="search-input" placeholder="Search reviewer, role, quote" [ngModel]="reviewQuery()" (ngModelChange)="reviewQuery.set($event)">
+                  <select [ngModel]="reviewRatingFilter()" (ngModelChange)="reviewRatingFilter.set($event)">
+                    <option value="">All ratings</option>
+                    <option value="5">5 stars</option>
+                    <option value="4">4 stars</option>
+                    <option value="3">3 stars</option>
+                    <option value="2">2 stars</option>
+                    <option value="1">1 star</option>
+                  </select>
+                </div>
+
+                <div class="split-grid">
+                  <section class="surface panel review-detail-panel">
+                    <div class="panel-head">
+                      <h3>Review details</h3>
+                      <button type="button" class="link-btn" (click)="loadReviews()">Refresh</button>
+                    </div>
+                    @if (selectedReview) {
+                      <div class="review-detail">
+                        <div>
+                          <span>Name</span>
+                          <strong>{{ selectedReview.name }}</strong>
+                        </div>
+                        <div>
+                          <span>Role</span>
+                          <strong>{{ selectedReview.role }}</strong>
+                        </div>
+                        <div>
+                          <span>Rating</span>
+                          <strong>{{ selectedReview.rating }} stars</strong>
+                        </div>
+                        <div>
+                          <span>Submitted</span>
+                          <strong>{{ selectedReview.createdAt | date:'medium' }}</strong>
+                        </div>
+                        <p>{{ selectedReview.quote }}</p>
+                        <button type="button" class="danger-btn" (click)="deleteReview(selectedReview)">Delete review</button>
+                      </div>
+                    } @else {
+                      <p class="muted">Select a customer review to view the submitted details.</p>
+                    }
+                  </section>
+
+                  <section class="surface panel">
+                    <div class="panel-head">
+                      <h3>Customer reviews</h3>
+                      <button type="button" class="link-btn" (click)="loadReviews()">Refresh</button>
+                    </div>
+                    <div class="dense-list review-list">
+                      @for (review of filteredReviews(); track review.id) {
+                        <article>
+                          <div>
+                            <strong>{{ review.name }}</strong>
+                            <span>{{ review.role }} - {{ review.rating }} stars - {{ review.createdAt | date:'mediumDate' }}</span>
+                            <small>{{ review.quote }}</small>
+                          </div>
+                          <div class="row-actions">
+                            <button type="button" class="mini-btn" (click)="viewReview(review)">View</button>
+                            <button type="button" class="danger-btn" (click)="deleteReview(review)">Delete</button>
+                          </div>
+                        </article>
+                      } @empty {
+                        <p class="muted">No reviews match those filters.</p>
+                      }
+                    </div>
+                    <div class="pagination-row">
+                      <span>{{ filteredReviews().length ? 'Showing all ' + filteredReviews().length + ' reviews' : 'No reviews' }}</span>
+                    </div>
+                  </section>
+                </div>
+              }
+
               @case ('reports') {
                 <div class="metric-grid reports">
                   <article class="surface metric-card"><span>Revenue growth</span><strong>{{ .18 | percent }}</strong><small>Compared with last month</small></article>
@@ -921,6 +1005,15 @@ interface PaymentRemarkLogView {
     .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 6px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
     .form-grid { display: grid; gap: .9rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .coupon-form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .review-list article { align-items: start; }
+    .review-list small { color: #777; display: block; font-size: .82rem; font-weight: 700; line-height: 1.45; margin-top: .38rem; max-width: 70ch; }
+    .row-actions { align-items: center; display: flex; flex: 0 0 auto; gap: .5rem; }
+    .review-detail-panel { align-content: start; }
+    .review-detail { display: grid; gap: .8rem; }
+    .review-detail > div { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; padding: .8rem; }
+    .review-detail span { color: var(--admin-muted); display: block; font-size: .72rem; font-weight: 900; margin-bottom: .28rem; text-transform: uppercase; }
+    .review-detail strong { color: #111; font-weight: 950; }
+    .review-detail p { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: #333; font-size: .95rem; font-weight: 700; line-height: 1.55; margin: 0; padding: .9rem; }
     label { color: #111; display: grid; font-size: .78rem; font-weight: 900; gap: .4rem; }
     .checkbox-label { align-content: end; grid-template-columns: 18px 1fr; min-height: 70px; }
     .checkbox-label input { min-height: 18px; padding: 0; width: 18px; }
@@ -987,6 +1080,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly customers = signal<AdminCustomer[]>([]);
   readonly payments = signal<AdminPayment[]>([]);
   readonly coupons = signal<AdminCoupon[]>([]);
+  readonly reviews = signal<AdminReview[]>([]);
   readonly blogPosts = signal<BlogPostAdmin[]>([]);
   readonly staticContent = signal<StaticContentItem[]>([]);
 
@@ -997,6 +1091,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly bookingMonthFilter = signal('');
   readonly paymentStatusFilter = signal('');
   readonly customerQuery = signal('');
+  readonly reviewQuery = signal('');
+  readonly reviewRatingFilter = signal('');
   editingProductId?: number;
   createdEmployee?: EmployeeResponse;
   productFormError = '';
@@ -1018,6 +1114,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   isLoadingPending = false;
   verifyingRequestId?: number;
   selectedPendingCustomer?: CustomerVerificationResponse;
+  selectedReview?: AdminReview;
   registrationDetailPage = 1;
   documentPreviews: Record<string, DocumentPreview> = {};
   documentPreviewError = '';
@@ -1038,6 +1135,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     { id: 'payments', label: 'Payments', count: '3' },
     { id: 'coupons', label: 'Coupons', count: '0' },
     { id: 'content', label: 'Content', count: '5' },
+    { id: 'reviews', label: 'Reviews', count: '0' },
     { id: 'reports', label: 'Reports', count: 'CSV' },
     { id: 'roles', label: 'Roles', count: 'RBAC' },
     { id: 'settings', label: 'Settings', count: 'Ops' }
@@ -1097,6 +1195,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       payments: 'Payments & refunds',
       coupons: 'Coupon management',
       content: 'Blog & content',
+      reviews: 'Review management',
       reports: 'Reports & analytics',
       roles: 'Roles & permissions',
       settings: 'Platform settings'
@@ -1133,6 +1232,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly filteredCustomers = computed(() => {
     const query = this.customerQuery().trim().toLowerCase();
     return this.customers().filter((item) => !query || [item.name, item.email, item.city, item.phone].some((value) => value.toLowerCase().includes(query)));
+  });
+
+  readonly filteredReviews = computed(() => {
+    const query = this.reviewQuery().trim().toLowerCase();
+    const rating = Number(this.reviewRatingFilter());
+    return this.reviews()
+      .filter((item) => !rating || item.rating === rating)
+      .filter((item) => !query || [item.name, item.role, item.quote].some((value) => value.toLowerCase().includes(query)));
   });
 
   pagedProducts(): AdminProduct[] {
@@ -1176,6 +1283,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.loadCustomers();
     this.loadPayments();
     this.loadCoupons();
+    this.loadReviews();
     this.loadContent();
     this.loadCategoryReports();
     this.loadRolePermissions();
@@ -1231,6 +1339,21 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       next: (coupons) => {
         this.coupons.set(coupons.map((coupon) => this.mapCoupon(coupon)));
         this.updateTabCount('coupons', String(coupons.length));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  loadReviews(): void {
+    this.adminService.getReviews().subscribe({
+      next: (reviews) => {
+        const mappedReviews = reviews.map((review) => this.mapReview(review));
+        this.reviews.set(mappedReviews);
+        if (this.selectedReview && !mappedReviews.some((review) => review.id === this.selectedReview?.id)) {
+          this.selectedReview = undefined;
+        }
+        this.clampAdminPages();
+        this.updateTabCount('reviews', String(reviews.length));
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
     });
@@ -1491,7 +1614,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   editProduct(product: AdminProduct): void {
-    this.showTopMessage(`Edit page for ${product.name} is not available yet.`, 2600);
+    this.router.navigateByUrl(`/admin/inventory/edit/${product.id}`);
   }
 
   resetProductForm(): void {
@@ -1647,6 +1770,29 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  viewReview(review: AdminReview): void {
+    this.selectedReview = review;
+  }
+
+  deleteReview(review: AdminReview): void {
+    if (!confirm(`Delete review from ${review.name}?`)) {
+      return;
+    }
+
+    this.adminService.deleteReview(review.id).subscribe({
+      next: () => {
+        this.reviews.update((items) => items.filter((item) => item.id !== review.id));
+        if (this.selectedReview?.id === review.id) {
+          this.selectedReview = undefined;
+        }
+        this.clampAdminPages();
+        this.updateTabCount('reviews', String(this.reviews().length));
+        this.showTopMessage('Review deleted.', 2200);
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
   submitEmployee(): void {
     this.employeeFormError = '';
     if (this.employeeForm.invalid || this.isSubmitting) {
@@ -1690,6 +1836,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/admin/inventory/new');
       return;
     }
+    if (this.activeTab() === 'reviews') {
+      this.selectedReview = this.filteredReviews()[0];
+      this.showTopMessage('Select a review to view or delete.', 1800);
+      return;
+    }
     this.showTopMessage(`Create action ready for ${this.activeTabLabel()}.`, 2200);
   }
 
@@ -1705,7 +1856,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
             ? this.pendingCustomers
             : tab === 'payments'
               ? this.payments()
-              : this.metrics();
+              : tab === 'reviews'
+                ? this.reviews()
+                : this.metrics();
     this.downloadCsv(`clickkaar-${tab}.csv`, rows);
   }
 
@@ -1833,6 +1986,17 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       discountPercent: Number(coupon.discountPercent),
       active: coupon.active,
       createdAt: coupon.createdAt
+    };
+  }
+
+  private mapReview(review: AdminReviewResponse): AdminReview {
+    return {
+      id: review.id,
+      name: review.name,
+      role: review.role,
+      rating: Number(review.rating),
+      quote: review.quote,
+      createdAt: review.createdAt
     };
   }
 

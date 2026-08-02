@@ -58,7 +58,7 @@ declare global {
     <app-breadcrumb label="Checkout" />
     <section class="container pb-5">
       @if (success()) {
-        <div class="surface success"><h1>Booking confirmed</h1><p class="muted">Your mock rental order has been placed successfully.</p><a href="/dashboard">Go to dashboard</a></div>
+        <div class="surface success"><h1>Booking confirmed</h1><p class="muted">Your rental order has been placed successfully.</p><a href="/dashboard">Go to dashboard</a></div>
       } @else {
         <h1 class="section-title">Checkout</h1>
         <div class="row g-4">

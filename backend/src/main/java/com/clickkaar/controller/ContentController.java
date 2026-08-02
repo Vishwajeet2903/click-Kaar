@@ -42,6 +42,12 @@ public class ContentController {
     return contentService.createReview(request);
   }
 
+  @DeleteMapping("/reviews/{reviewId}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  public void deleteReview(@PathVariable Long reviewId) {
+    contentService.deleteReview(reviewId);
+  }
+
   @PostMapping("/faqs")
   @PreAuthorize("hasRole('ADMIN')")
   public Faq createFaq(@Valid @RequestBody FaqRequest request) {

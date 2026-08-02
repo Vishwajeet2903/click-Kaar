@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { AdminProductRequest, AdminService } from '../services/admin.service';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AdminProductRequest, AdminProductResponse, AdminService } from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
@@ -12,13 +12,13 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, BreadcrumbComponent],
   template: `
-    <app-breadcrumb label="Add inventory" />
+    <app-breadcrumb [label]="pageLabel()" />
     <section class="container product-create-page">
       @if (canManageInventory()) {
         <div class="page-head surface">
           <div>
             <p class="eyebrow">Inventory</p>
-            <h1>Add product</h1>
+            <h1>{{ pageTitle() }}</h1>
           </div>
           <a routerLink="/admin" class="ghost-btn">Back to admin</a>
         </div>
@@ -26,8 +26,11 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
         <form class="surface editor-panel" [formGroup]="productForm" (ngSubmit)="saveProduct()">
           <div class="panel-head">
             <h2>Product details</h2>
-            <button type="button" class="link-btn" (click)="resetProductForm()">Reset</button>
+            <button type="button" class="link-btn" (click)="resetProductForm()">{{ isEditMode() ? 'Restore' : 'Reset' }}</button>
           </div>
+          @if (isLoadingProduct) {
+            <p class="muted">Loading product details...</p>
+          }
           @if (productFormError) {
             <p class="form-alert" role="alert">{{ productFormError }}</p>
           }
@@ -45,12 +48,12 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
           </div>
           <label>Description<textarea formControlName="description"></textarea></label>
           <label>Specifications<textarea formControlName="specifications" placeholder="Sensor: 45MP, Video: 8K RAW"></textarea></label>
-          <button type="submit" class="primary-btn wide" [disabled]="isSubmitting">{{ isSubmitting ? 'Adding...' : 'Add product' }}</button>
+          <button type="submit" class="primary-btn wide" [disabled]="isSubmitting || isLoadingProduct">{{ submitLabel() }}</button>
         </form>
       } @else {
         <div class="surface access-card">
           <p class="eyebrow">Admin access</p>
-          <h1>Please log in as admin to add inventory.</h1>
+          <h1>Please log in as admin to manage inventory.</h1>
           <a routerLink="/login" class="primary-btn">Go to login</a>
         </div>
       }
@@ -77,6 +80,7 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
     .ghost-btn:hover, .link-btn:hover { background: #111; color: #fff; transform: translateY(-2px); }
     .link-btn { font-size: .78rem; min-height: 34px; padding: .48rem .78rem; }
     .wide { width: 100%; }
+    .muted { color: #777; font-size: .9rem; font-weight: 800; margin: 0; }
     .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 6px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0; padding: .85rem 1rem; }
     .access-card { margin: 0 auto; max-width: 680px; text-align: center; }
     .access-card h1 { font-size: clamp(2rem, 5vw, 4rem); line-height: .96; }
@@ -91,15 +95,29 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
     }
   `]
 })
-export class AdminProductCreatePageComponent {
+export class AdminProductCreatePageComponent implements OnInit {
   readonly authService = inject(AuthService);
 
   private readonly adminService = inject(AdminService);
+  private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
 
   productFormError = '';
   isSubmitting = false;
+  isLoadingProduct = false;
+  private readonly editingProduct = signal<AdminProductResponse | undefined>(undefined);
+
+  readonly isEditMode = computed(() => !!this.editingProductId);
+  readonly pageLabel = computed(() => this.isEditMode() ? 'Edit inventory' : 'Add inventory');
+  readonly pageTitle = computed(() => this.isEditMode() ? 'Edit product' : 'Add product');
+  readonly submitLabel = computed(() => {
+    if (this.isSubmitting) {
+      return this.isEditMode() ? 'Saving...' : 'Adding...';
+    }
+    return this.isEditMode() ? 'Save changes' : 'Add product';
+  });
+  editingProductId?: number;
 
   readonly productForm = this.fb.nonNullable.group({
     name: ['', Validators.required],
@@ -116,6 +134,22 @@ export class AdminProductCreatePageComponent {
     specifications: ['']
   });
 
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (!idParam) {
+      return;
+    }
+
+    const productId = Number(idParam);
+    if (!Number.isInteger(productId) || productId <= 0) {
+      this.productFormError = 'Invalid product selected.';
+      return;
+    }
+
+    this.editingProductId = productId;
+    this.loadProductForEdit(productId);
+  }
+
   saveProduct(): void {
     this.productFormError = '';
     if (this.productForm.invalid || this.isSubmitting) {
@@ -125,7 +159,12 @@ export class AdminProductCreatePageComponent {
     }
 
     this.isSubmitting = true;
-    this.adminService.createProduct(this.productRequestFromForm()).subscribe({
+    const request = this.productRequestFromForm();
+    const saveRequest = this.editingProductId
+      ? this.adminService.updateProduct(this.editingProductId, request)
+      : this.adminService.createProduct(request);
+
+    saveRequest.subscribe({
       next: () => this.router.navigateByUrl('/admin'),
       error: (error) => {
         this.isSubmitting = false;
@@ -140,6 +179,12 @@ export class AdminProductCreatePageComponent {
 
   resetProductForm(): void {
     this.productFormError = '';
+    const product = this.editingProduct();
+    if (product) {
+      this.patchFormFromProduct(product);
+      return;
+    }
+
     this.productForm.reset({
       name: '',
       brand: '',
@@ -174,6 +219,62 @@ export class AdminProductCreatePageComponent {
     };
   }
 
+  private loadProductForEdit(productId: number): void {
+    this.isLoadingProduct = true;
+    this.productForm.disable();
+    this.adminService.getInventory().subscribe({
+      next: (products) => {
+        const product = products.find((item) => item.id === productId);
+        if (!product) {
+          this.productFormError = 'Product not found in inventory.';
+          return;
+        }
+
+        this.editingProduct.set(product);
+        this.patchFormFromProduct(product);
+      },
+      error: (error) => {
+        this.productFormError = this.authService.getErrorMessage(error);
+        this.isLoadingProduct = false;
+        this.productForm.enable();
+      },
+      complete: () => {
+        this.isLoadingProduct = false;
+        this.productForm.enable();
+      }
+    });
+  }
+
+  private patchFormFromProduct(product: AdminProductResponse): void {
+    const image = product.images?.[0] || product.imageLink || product.link1 || product.link2 || '';
+    this.productForm.reset({
+      name: product.name,
+      brand: product.brand,
+      category: this.categoryFromApi(product.category),
+      status: this.productStatusFromApi(product.availabilityStatus),
+      dailyPrice: Number(product.dailyPrice),
+      weeklyPrice: Number(product.weeklyPrice),
+      stock: product.availabilityStatus === 'AVAILABLE' ? 1 : 0,
+      image,
+      warrantyDate: product.warrantyDate ?? '',
+      invoiceUrl: product.invoiceUrl ?? '',
+      description: product.fullDescription || product.shortDescription || '',
+      specifications: product.specs ?? ''
+    });
+  }
+
+  private categoryFromApi(category: string): string {
+    const labels: Record<string, string> = {
+      CAMERAS: 'Cameras',
+      LENSES: 'Lenses',
+      LIGHTING: 'Lighting',
+      AUDIO: 'Audio Equipment',
+      TRIPODS_SUPPORT: 'Tripods',
+      ACCESSORIES: 'Accessories'
+    };
+    return labels[category] ?? category;
+  }
+
   private categoryToApi(category: string): string {
     const labels: Record<string, string> = {
       Cameras: 'CAMERAS',
@@ -191,5 +292,11 @@ export class AdminProductCreatePageComponent {
     if (status === 'Maintenance') return 'MAINTENANCE';
     if (status === 'Available') return 'AVAILABLE';
     return 'UNAVAILABLE';
+  }
+
+  private productStatusFromApi(status: string): ProductStatus {
+    if (status === 'MAINTENANCE') return 'Maintenance';
+    if (status === 'AVAILABLE') return 'Available';
+    return 'Unavailable';
   }
 }
