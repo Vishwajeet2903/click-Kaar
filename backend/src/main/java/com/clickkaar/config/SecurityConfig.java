@@ -47,6 +47,7 @@ public class SecurityConfig {
                 "/api/bookings/products/*/blocked-ranges",
                 "/api/blog/**",
                 "/api/content/**",
+                "/uploads/**",
                 "/swagger-ui.html",
                 "/swagger-ui/**",
                 "/v3/api-docs/**"

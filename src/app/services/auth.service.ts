@@ -174,6 +174,22 @@ export class AuthService {
       if (error.status === 0) {
         return 'Unable to reach the backend. Please try again in a moment.';
       }
+
+      if (error.status === 401 || error.status === 403) {
+        return 'You are not authorized to perform this action. Please log in again with admin access.';
+      }
+
+      if (error.status === 404) {
+        return 'This backend endpoint is not available yet. Please restart or redeploy the backend.';
+      }
+
+      if (error.status === 413) {
+        return 'The selected file is too large. Please upload a smaller image.';
+      }
+
+      if (error.status >= 500) {
+        return 'Backend server error. Please check the backend logs and try again.';
+      }
     }
 
     return 'Something went wrong. Please try again.';

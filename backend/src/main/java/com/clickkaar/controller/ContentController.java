@@ -4,6 +4,7 @@ import com.clickkaar.dto.content.ContactMessageRequest;
 import com.clickkaar.dto.content.CustomerReviewRequest;
 import com.clickkaar.dto.content.CustomerReviewResponse;
 import com.clickkaar.dto.content.FaqRequest;
+import com.clickkaar.dto.content.GalleryImageResponse;
 import com.clickkaar.dto.content.StaticContentRequest;
 import com.clickkaar.entity.ContactMessage;
 import com.clickkaar.entity.Faq;
@@ -35,6 +36,11 @@ public class ContentController {
   @GetMapping("/reviews")
   public List<CustomerReviewResponse> reviews() {
     return contentService.reviews();
+  }
+
+  @GetMapping("/gallery")
+  public List<GalleryImageResponse> gallery() {
+    return contentService.galleryImages();
   }
 
   @PostMapping("/reviews")

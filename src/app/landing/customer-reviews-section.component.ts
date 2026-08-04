@@ -36,6 +36,12 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
                   }
                 </div>
                 <p>"{{ review.quote }}"</p>
+                @if (review.adminReply) {
+                  <div class="admin-reply">
+                    <span>Click-Kaar replied</span>
+                    <strong>{{ review.adminReply }}</strong>
+                  </div>
+                }
                 <div class="reviewer">
                   @if (review.avatar) {
                     <img [src]="review.avatar" [alt]="review.name">
@@ -147,12 +153,15 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .reviews-track { display: flex; gap: 1rem; transform: translateX(calc(var(--review-index) * var(--review-step))); transition: transform .62s cubic-bezier(.22, 1, .36, 1); }
     .reviews-track.no-transition { transition: none; }
     .reviews-empty { align-items: center; background: #f6f6f4; border: 1px dashed rgba(17,17,17,.16); border-radius: 24px; color: #666; display: flex; font-size: 1rem; font-weight: 800; min-height: 180px; padding: 1.25rem; }
-    .review-card { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; display: flex; flex: 0 0 calc((100% - 2rem) / 3); flex-direction: column; min-height: 310px; padding: 1.35rem; transition: box-shadow .28s ease, transform .28s ease; }
-    .review-card:hover { box-shadow: 0 24px 48px rgba(0,0,0,.14); transform: translateY(-8px); }
+    .review-card { background: #f6f6f4; border: 1px solid rgba(17,17,17,.04); border-radius: 30px; display: flex; flex: 0 0 calc((100% - 2rem) / 3); flex-direction: column; min-height: 310px; padding: 1.35rem; transition: box-shadow .28s ease, transform .28s ease; }
+    .review-card:hover { box-shadow: 0 18px 42px rgba(0,0,0,.09); transform: translateY(-5px); }
     .rating { color: #ff9700; font-size: 1rem; font-weight: 900; letter-spacing: .14em; margin-bottom: 1rem; }
     .rating span { color: inherit; display: inline; font-size: inherit; font-weight: inherit; letter-spacing: inherit; margin: 0; }
     .rating .dimmed { color: #d6d1c8; }
     p { color: #222; flex: 1; font-size: clamp(1rem, 1.45vw, 1.18rem); font-weight: 700; letter-spacing: 0; line-height: 1.5; margin: 0 0 1.4rem; word-spacing: 0; }
+    .admin-reply { background: #fff; border-left: 4px solid #ff9700; border-radius: 14px; margin: 0 0 1rem; padding: .8rem .9rem; }
+    .admin-reply span { color: #ff9700; font-size: .72rem; font-weight: 950; letter-spacing: .08em; margin: 0 0 .35rem; text-transform: uppercase; }
+    .admin-reply strong { color: #222; font-size: .9rem; font-weight: 800; line-height: 1.45; }
     .reviewer { align-items: center; display: flex; gap: .8rem; }
     img { border-radius: 50%; height: 52px; object-fit: cover; width: 52px; }
     .reviewer-initials { align-items: center; background: #111; border-radius: 50%; color: #fff; display: inline-flex; flex: 0 0 52px; font-size: .9rem; font-weight: 900; height: 52px; justify-content: center; margin: 0; width: 52px; }
@@ -172,7 +181,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     input:focus,
     textarea:focus { border-color: #ff9700; box-shadow: 0 0 0 3px rgba(255,151,0,.24); }
     .rating-picker { display: flex; gap: .25rem; }
-    .rating-picker button { background: transparent; border: 0; color: rgba(255,255,255,.28); cursor: pointer; font-size: 1.55rem; line-height: 1; padding: .1rem .18rem; transition: color .2s ease, transform .2s ease; }
+    .rating-picker button { background: transparent; border: 0; color: #808080; cursor: pointer; font-size: 1.55rem; line-height: 1; padding: .1rem .18rem; transition: color .2s ease, transform .2s ease; }
     .rating-picker button.active,
     .rating-picker button:hover { color: #ff9700; transform: translateY(-1px); }
     .review-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .8rem; }
@@ -195,7 +204,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       h2 { font-size: clamp(1.9rem, 9vw, 2.55rem); line-height: 1.12; }
       .carousel-controls { width: 100%; }
       .review-fields { grid-template-columns: 1fr; }
-      .review-card { border-radius: 18px; min-height: 260px; padding: 1rem; }
+      .review-card { border-radius: 24px; min-height: 260px; padding: 1rem; }
       p { font-size: 1rem; line-height: 1.35; }
       .write-review { border-radius: 18px; padding: 1rem; }
       .write-review-copy h3 { font-size: clamp(1.45rem, 8vw, 2rem); line-height: 1.08; }
@@ -223,7 +232,7 @@ export class CustomerReviewsSectionComponent implements OnInit {
     name: '',
     role: '',
     quote: '',
-    rating: 5
+    rating: 0
   };
 
   readonly renderedReviews = computed(() => [
@@ -271,7 +280,7 @@ export class CustomerReviewsSectionComponent implements OnInit {
     const role = this.reviewDraft.role.trim();
     const quote = this.reviewDraft.quote.trim();
 
-    if (!name || !role || !quote) {
+    if (!name || !role || !quote || !this.reviewDraft.rating) {
       this.reviewError.set('Please fill in your name, creator type, and review.');
       this.reviewSubmitted.set(false);
       return;
@@ -305,7 +314,7 @@ export class CustomerReviewsSectionComponent implements OnInit {
           name: '',
           role: '',
           quote: '',
-          rating: 5
+          rating: 0
         };
         this.loadReviews();
       },

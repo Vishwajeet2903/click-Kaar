@@ -27,5 +27,8 @@ public class CustomerReview extends AuditableEntity {
   @Column(columnDefinition = "TEXT", nullable = false)
   private String quote;
 
+  @Column(columnDefinition = "TEXT")
+  private String adminReply;
+
   private String avatar;
 }

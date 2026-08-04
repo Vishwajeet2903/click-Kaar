@@ -6,6 +6,8 @@ import com.clickkaar.dto.admin.EmployeeResponse;
 import com.clickkaar.dto.admin.CustomerVerificationResponse;
 import com.clickkaar.dto.admin.RegistrationDocumentResponse;
 import com.clickkaar.dto.content.CustomerReviewResponse;
+import com.clickkaar.dto.content.GalleryImageRequest;
+import com.clickkaar.dto.content.GalleryImageResponse;
 import com.clickkaar.dto.product.ProductRequest;
 import com.clickkaar.dto.product.ProductResponse;
 import com.clickkaar.entity.AdminNote;
@@ -71,7 +73,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -164,6 +168,46 @@ public class AdminController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteReview(@PathVariable Long reviewId) {
     contentService.deleteReview(reviewId);
+  }
+
+  @PatchMapping("/reviews/{reviewId}/reply")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  public CustomerReviewResponse replyToReview(@PathVariable Long reviewId, @RequestBody ReviewReplyRequest request) {
+    return contentService.replyToReview(reviewId, request.reply());
+  }
+
+  @GetMapping("/gallery")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  public List<GalleryImageResponse> galleryImages() {
+    return contentService.allGalleryImages();
+  }
+
+  @PostMapping("/gallery")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @ResponseStatus(HttpStatus.CREATED)
+  public GalleryImageResponse createGalleryImage(@Valid @RequestBody GalleryImageRequest request) {
+    return contentService.createGalleryImage(request);
+  }
+
+  @PostMapping(value = "/gallery/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @ResponseStatus(HttpStatus.CREATED)
+  public GalleryImageResponse uploadGalleryImage(
+      @RequestParam("image") MultipartFile image,
+      @RequestParam String altText,
+      @RequestParam(defaultValue = "false") boolean wide,
+      @RequestParam(defaultValue = "false") boolean tall,
+      @RequestParam Integer displayOrder,
+      @RequestParam(defaultValue = "true") Boolean active
+  ) {
+    return contentService.uploadGalleryImage(image, altText, wide, tall, displayOrder, active);
+  }
+
+  @DeleteMapping("/gallery/{imageId}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteGalleryImage(@PathVariable Long imageId) {
+    contentService.deleteGalleryImage(imageId);
   }
 
   @PatchMapping("/inventory/{productId}/maintenance")
@@ -763,6 +807,7 @@ public class AdminController {
   public record PaymentRemarkRequest(String remark) {}
   public record CustomerBlockRequest(boolean blocked) {}
   public record AdminRefundRequest(BigDecimal amount, String reason) {}
+  public record ReviewReplyRequest(String reply) {}
   public record AdminCouponRequest(String code, BigDecimal discountPercent, Boolean active) {}
   public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes) {}
   public record AdminCustomerResponse(Long id, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}

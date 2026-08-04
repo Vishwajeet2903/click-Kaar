@@ -8,6 +8,7 @@ public record CustomerReviewResponse(
     String role,
     Integer rating,
     String quote,
+    String adminReply,
     String avatar,
     LocalDateTime createdAt
 ) {

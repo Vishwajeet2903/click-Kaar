@@ -54,11 +54,11 @@ import { WishlistService } from '../../services/wishlist.service';
     .product-card:hover img { transform: scale(1.06); }
     .product-card:hover img.logo-fallback { transform: scale(1.02); }
     .content { display: flex; flex: 1; flex-direction: column; padding: .9rem .3rem .3rem; }
-    .content p { color: #ff9700; font-size: .72rem; font-weight: 900; letter-spacing: .18em; margin: 0 0 .45rem; text-transform: uppercase; }
-    h3 { color: #111; font-size: 1.04rem; font-weight: 900; letter-spacing: 0; line-height: 1.15; margin: 0 0 .9rem; min-height: 2.4em; word-spacing: .08em; }
+    .content p { color: #d77d00; font-size: .78rem; font-weight: 800; letter-spacing: .08em; line-height: 1.35; margin: 0 0 .45rem; text-transform: uppercase; }
+    h3 { color: #111; font-size: 1.08rem; font-weight: 900; letter-spacing: 0; line-height: 1.25; margin: 0 0 .9rem; min-height: 2.6em; word-spacing: 0; }
     .card-bottom { align-items: center; display: flex; gap: .6rem; justify-content: space-between; margin-top: auto; min-height: 50px; }
-    strong { color: #111; font-size: 1rem; font-weight: 950; word-spacing: .08em; }
-    small { color: #777; font-size: .75rem; font-weight: 800; }
+    strong { color: #111; font-size: 1.02rem; font-weight: 900; word-spacing: 0; }
+    small { color: #666; font-size: .78rem; font-weight: 600; }
     .details { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; white-space: nowrap; }
     .details:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
   `]

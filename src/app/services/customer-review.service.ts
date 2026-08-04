@@ -11,6 +11,7 @@ export interface CustomerReview {
   name: string;
   role: string;
   rating: number;
+  adminReply?: string | null;
   avatar?: string | null;
   createdAt: string;
 }

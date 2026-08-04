@@ -187,6 +187,7 @@ export interface AdminReviewResponse {
   role: string;
   rating: number;
   quote: string;
+  adminReply?: string | null;
   avatar?: string | null;
   createdAt: string;
 }
@@ -347,6 +348,12 @@ export class AdminService {
 
   deleteReview(reviewId: number): Observable<void> {
     return this.http.delete<void>(`${API_BASE_URL}/content/reviews/${reviewId}`, {
+      headers: this.authHeaders()
+    });
+  }
+
+  replyToReview(reviewId: number, reply: string): Observable<AdminReviewResponse> {
+    return this.http.patch<AdminReviewResponse>(`${API_URL}/reviews/${reviewId}/reply`, { reply }, {
       headers: this.authHeaders()
     });
   }

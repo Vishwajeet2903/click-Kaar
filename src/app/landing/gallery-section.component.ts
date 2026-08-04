@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.directive';
+import { GalleryImage, GalleryService } from '../services/gallery.service';
 
 @Component({
   selector: 'app-gallery-section',
@@ -12,10 +13,12 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
         <h2>Colorful production moments, ready to be remixed.</h2>
       </div>
       <div class="gallery-grid">
-        @for (image of images; track image.alt; let index = $index) {
+        @for (image of images(); track image.id; let index = $index) {
           <figure [class.tall]="image.tall" [class.wide]="image.wide" appScrollReveal="scale" [revealStagger]="index * 70">
-            <img [src]="image.src" [alt]="image.alt">
+            <img [src]="image.imageUrl" [alt]="image.altText">
           </figure>
+        } @empty {
+          <p class="gallery-empty">Gallery images will appear here once they are added from admin.</p>
         }
       </div>
     </section>
@@ -30,6 +33,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     figure.tall { grid-column: auto; grid-row: auto; height: 260px; }
     img { height: 100%; object-fit: cover; transition: transform .45s ease; width: 100%; }
     figure:hover img { transform: scale(1.07); }
+    .gallery-empty { color: #666; font-size: 1rem; font-weight: 800; grid-column: 1 / -1; margin: 0; }
     @media (max-width: 900px) {
       .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -41,13 +45,15 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
   `]
 })
-export class GallerySectionComponent {
-  readonly images = [
-    { src: 'https://images.unsplash.com/photo-1495707902641-75cac588d2e9?auto=format&fit=crop&w=900&q=80', alt: 'Camera shoot detail', wide: true },
-    { src: '/join-photographer.png', alt: 'Photographer creative portrait', tall: true },
-    { src: 'https://images.unsplash.com/photo-1607462109225-6b64ae2dd3cb?auto=format&fit=crop&w=900&q=80', alt: 'Tripod equipment' },
-    { src: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=900&q=80', alt: 'Audio equipment' },
-    { src: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80', alt: 'Studio interior', wide: true },
-    { src: 'https://images.unsplash.com/photo-1516724562728-afc824a36e84?auto=format&fit=crop&w=900&q=80', alt: 'Outdoor creator kit' }
-  ];
+export class GallerySectionComponent implements OnInit {
+  private readonly galleryService = inject(GalleryService);
+
+  readonly images = signal<GalleryImage[]>([]);
+
+  ngOnInit(): void {
+    this.galleryService.getGallery().subscribe({
+      next: (images) => this.images.set(images),
+      error: () => this.images.set([])
+    });
+  }
 }

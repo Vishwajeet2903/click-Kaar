@@ -20,6 +20,7 @@ import {
   RegistrationDocumentResponse
 } from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
+import { GalleryImage, GalleryService } from '../services/gallery.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
 type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'coupons' | 'content' | 'reviews' | 'reports' | 'roles' | 'settings';
@@ -97,6 +98,18 @@ interface AdminReview {
   role: string;
   rating: number;
   quote: string;
+  adminReply: string;
+  createdAt: string;
+}
+
+interface AdminGalleryImage {
+  id: number;
+  imageUrl: string;
+  altText: string;
+  wide: boolean;
+  tall: boolean;
+  active: boolean;
+  displayOrder: number;
   createdAt: string;
 }
 
@@ -677,6 +690,66 @@ interface PaymentRemarkLogView {
                     </div>
                   </section>
                 </div>
+
+                <div class="split-grid content-gallery-grid">
+                  <form class="surface panel gallery-form" [formGroup]="galleryForm" (ngSubmit)="submitGalleryImage()">
+                    <h3 class="gallery-card-title">Add gallery image</h3>
+                    @if (galleryFormError) {
+                      <p class="form-alert" role="alert">{{ galleryFormError }}</p>
+                    }
+                    <div class="gallery-upload-flow">
+                      <div class="gallery-image-field">
+                        <span>Choose image</span>
+                        <label class="gallery-upload-box" [class.has-preview]="galleryPreviewUrl">
+                          <input type="file" accept="image/*" (change)="setGalleryFile($event)">
+                          @if (galleryPreviewUrl) {
+                            <img [src]="galleryPreviewUrl" [alt]="galleryForm.controls.altText.value || 'Selected gallery image preview'">
+                          } @else {
+                            <b>Choose image</b>
+                            <small>JPG, PNG, or WebP up to 10MB</small>
+                          }
+                        </label>
+                      </div>
+                      <div class="gallery-upload-fields">
+                        <label>Alt text<input formControlName="altText" placeholder="Describe the image"></label>
+                        <label>Display order<input type="number" formControlName="displayOrder" min="1"></label>
+                        <div class="gallery-toggle-row">
+                          <label class="checkbox-label"><input type="checkbox" formControlName="wide"><span>Wide tile</span></label>
+                          <label class="checkbox-label"><input type="checkbox" formControlName="tall"><span>Tall tile</span></label>
+                          <label class="checkbox-label"><input type="checkbox" formControlName="active"><span>Show on site</span></label>
+                        </div>
+                        @if (galleryFileName) {
+                          <div class="selected-file">
+                            <span>{{ galleryFileName }}</span>
+                            <button type="button" class="ghost-mini" (click)="clearGalleryFile()">Remove</button>
+                          </div>
+                        }
+                        <button type="submit" class="primary-btn wide" [disabled]="isSubmittingGallery">{{ isSubmittingGallery ? 'Adding...' : 'Add image' }}</button>
+                      </div>
+                    </div>
+                  </form>
+
+                  <section class="surface panel">
+                    <div class="panel-head">
+                      <h3>Gallery images</h3>
+                      <button type="button" class="link-btn" (click)="loadGalleryImages()">Refresh</button>
+                    </div>
+                    <div class="gallery-admin-grid">
+                      @for (image of galleryImages(); track image.id) {
+                        <article>
+                          <img [src]="image.imageUrl" [alt]="image.altText">
+                          <div>
+                            <strong>{{ image.altText }}</strong>
+                            <span>Order {{ image.displayOrder }} - {{ image.active ? 'Live' : 'Hidden' }}</span>
+                          </div>
+                          <button type="button" class="danger-btn" (click)="deleteGalleryImage(image)">Delete</button>
+                        </article>
+                      } @empty {
+                        <p class="muted">No gallery images have been added yet.</p>
+                      }
+                    </div>
+                  </section>
+                </div>
               }
 
               @case ('reviews') {
@@ -717,7 +790,14 @@ interface PaymentRemarkLogView {
                           <strong>{{ selectedReview.createdAt | date:'medium' }}</strong>
                         </div>
                         <p>{{ selectedReview.quote }}</p>
-                        <button type="button" class="danger-btn" (click)="deleteReview(selectedReview)">Delete review</button>
+                        <div class="review-reply-editor">
+                          <label>Reply to review<textarea id="reviewReplyEditor" [(ngModel)]="reviewReplyDraft" [ngModelOptions]="{ standalone: true }" rows="4" placeholder="Write an admin reply that will show under this review."></textarea></label>
+                          <div class="row-actions">
+                            <button type="button" class="mini-btn" [disabled]="isSavingReviewReply" (click)="saveReviewReply(selectedReview)">{{ isSavingReviewReply ? 'Saving...' : 'Save reply' }}</button>
+                            <button type="button" class="ghost-mini" [disabled]="isSavingReviewReply || !reviewReplyDraft.trim()" (click)="clearReviewReply(selectedReview)">Clear reply</button>
+                            <button type="button" class="danger-btn" (click)="deleteReview(selectedReview)">Delete review</button>
+                          </div>
+                        </div>
                       </div>
                     } @else {
                       <p class="muted">Select a customer review to view the submitted details.</p>
@@ -731,15 +811,18 @@ interface PaymentRemarkLogView {
                     </div>
                     <div class="dense-list review-list">
                       @for (review of filteredReviews(); track review.id) {
-                        <article>
+                        <article class="clickable-review" [class.active]="selectedReview?.id === review.id" (click)="viewReview(review)" tabindex="0" role="button" [attr.aria-label]="'View review by ' + review.name" (keydown.enter)="viewReview(review)" (keydown.space)="viewReview(review)">
                           <div>
                             <strong>{{ review.name }}</strong>
                             <span>{{ review.role }} - {{ review.rating }} stars - {{ review.createdAt | date:'mediumDate' }}</span>
                             <small>{{ review.quote }}</small>
+                            @if (review.adminReply) {
+                              <small class="review-reply-preview">Reply: {{ review.adminReply }}</small>
+                            }
                           </div>
                           <div class="row-actions">
-                            <button type="button" class="mini-btn" (click)="viewReview(review)">View</button>
-                            <button type="button" class="danger-btn" (click)="deleteReview(review)">Delete</button>
+                            <button type="button" class="mini-btn" (click)="$event.stopPropagation(); replyToReviewFromList(review)">Reply</button>
+                            <button type="button" class="danger-btn" (click)="$event.stopPropagation(); deleteReview(review)">Delete</button>
                           </div>
                         </article>
                       } @empty {
@@ -1005,8 +1088,33 @@ interface PaymentRemarkLogView {
     .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 6px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
     .form-grid { display: grid; gap: .9rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .coupon-form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .content-gallery-grid { align-items: start; }
+    .gallery-form { align-content: start; align-self: start; }
+    .gallery-card-title { color: #111; font-size: 1rem; font-weight: 950; margin: 0 0 .5rem; }
+    .gallery-upload-flow { align-items: stretch; display: grid; gap: .5rem; grid-template-columns: 1fr; }
+    .gallery-image-field { display: grid; gap: .3rem; }
+    .gallery-image-field > span { color: #111; font-size: .78rem; font-weight: 900; }
+    .gallery-upload-box { align-items: center; background: #fff; border: 1px dashed rgba(17,17,17,.24); border-radius: 8px; color: var(--admin-muted); cursor: pointer; display: flex; flex-direction: column; justify-content: center; min-height: 110px; overflow: hidden; padding: .6rem; text-align: center; transition: border-color .2s ease, box-shadow .2s ease, background .2s ease; }
+    .gallery-upload-box:hover { background: #fffaf2; border-color: var(--admin-accent); box-shadow: 0 12px 24px rgba(255,151,0,.11); }
+    .gallery-upload-box input { display: none; }
+    .gallery-upload-box b { color: #111; font-size: 1rem; font-weight: 950; }
+    .gallery-upload-box small { color: var(--admin-muted); font-size: .78rem; font-weight: 800; margin-top: .35rem; }
+    .gallery-upload-box img { height: 100%; object-fit: cover; width: 100%; }
+    .gallery-upload-box.has-preview { border-style: solid; padding: 0; }
+    .gallery-upload-fields { align-content: start; display: grid; gap: .48rem; }
+    .gallery-toggle-row { align-items: center; display: grid; gap: .4rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .gallery-admin-grid { display: grid; gap: .85rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .gallery-admin-grid article { background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; display: grid; gap: .75rem; padding: .75rem; }
+    .gallery-admin-grid img { aspect-ratio: 16 / 10; border-radius: 6px; object-fit: cover; width: 100%; }
+    .gallery-admin-grid strong, .gallery-admin-grid span { display: block; overflow-wrap: anywhere; }
+    .gallery-admin-grid span { color: var(--admin-muted); font-size: .8rem; font-weight: 800; margin-top: .2rem; }
+    .selected-file { align-items: center; background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: .5rem; justify-content: space-between; min-width: 0; padding: .42rem .55rem; }
+    .selected-file span { color: #333; font-size: .82rem; font-weight: 800; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .review-list article { align-items: start; }
+    .clickable-review { cursor: pointer; }
+    .clickable-review:focus-visible { outline: 3px solid rgba(255,151,0,.34); outline-offset: 3px; }
     .review-list small { color: #777; display: block; font-size: .82rem; font-weight: 700; line-height: 1.45; margin-top: .38rem; max-width: 70ch; }
+    .review-reply-preview { background: #fffaf2; border-left: 3px solid var(--admin-accent); color: #5f4300 !important; padding: .45rem .6rem; }
     .row-actions { align-items: center; display: flex; flex: 0 0 auto; gap: .5rem; }
     .review-detail-panel { align-content: start; }
     .review-detail { display: grid; gap: .8rem; }
@@ -1014,8 +1122,10 @@ interface PaymentRemarkLogView {
     .review-detail span { color: var(--admin-muted); display: block; font-size: .72rem; font-weight: 900; margin-bottom: .28rem; text-transform: uppercase; }
     .review-detail strong { color: #111; font-weight: 950; }
     .review-detail p { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: #333; font-size: .95rem; font-weight: 700; line-height: 1.55; margin: 0; padding: .9rem; }
+    .review-reply-editor { display: grid; gap: .7rem; }
+    .review-reply-editor textarea { min-height: 98px; }
     label { color: #111; display: grid; font-size: .78rem; font-weight: 900; gap: .4rem; }
-    .checkbox-label { align-content: end; grid-template-columns: 18px 1fr; min-height: 70px; }
+    .checkbox-label { align-items: center; grid-template-columns: 18px 1fr; min-height: 42px; }
     .checkbox-label input { min-height: 18px; padding: 0; width: 18px; }
     .coupon-list article strong { letter-spacing: .04em; }
     .editor-panel > label { margin-top: 0; }
@@ -1045,7 +1155,8 @@ interface PaymentRemarkLogView {
     }
     @media (max-width: 760px) {
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
-      .split-grid, .metric-grid, .card-grid, .form-grid, .detail-grid, .document-grid, nav { grid-template-columns: 1fr; }
+      .split-grid, .metric-grid, .card-grid, .form-grid, .detail-grid, .document-grid, .gallery-upload-flow, .gallery-toggle-row, .gallery-admin-grid, nav { grid-template-columns: 1fr; }
+      .gallery-upload-box { min-height: 110px; }
       .admin-sidebar nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #111; }
       .admin-sidebar nav button.active small { background: #111; color: #fff; }
       .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input { max-width: none; width: 100%; }
@@ -1070,6 +1181,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly authService = inject(AuthService);
 
   private readonly adminService = inject(AdminService);
+  private readonly galleryService = inject(GalleryService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
@@ -1081,6 +1193,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly payments = signal<AdminPayment[]>([]);
   readonly coupons = signal<AdminCoupon[]>([]);
   readonly reviews = signal<AdminReview[]>([]);
+  readonly galleryImages = signal<AdminGalleryImage[]>([]);
   readonly blogPosts = signal<BlogPostAdmin[]>([]);
   readonly staticContent = signal<StaticContentItem[]>([]);
 
@@ -1098,6 +1211,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   productFormError = '';
   employeeFormError = '';
   couponFormError = '';
+  galleryFormError = '';
+  galleryFileName = '';
+  galleryPreviewUrl = '';
   pendingCustomers: CustomerVerificationResponse[] = [];
   pendingPage = 1;
   readonly pendingPageSize = 3;
@@ -1111,10 +1227,13 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   pendingLoadError = '';
   isSubmitting = false;
   isSubmittingCoupon = false;
+  isSubmittingGallery = false;
   isLoadingPending = false;
   verifyingRequestId?: number;
   selectedPendingCustomer?: CustomerVerificationResponse;
   selectedReview?: AdminReview;
+  reviewReplyDraft = '';
+  isSavingReviewReply = false;
   registrationDetailPage = 1;
   documentPreviews: Record<string, DocumentPreview> = {};
   documentPreviewError = '';
@@ -1125,6 +1244,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   activePaymentRemarkLogs: PaymentRemarkLogView[] = [];
   isLoadingPaymentRemarkLog = false;
   paymentRemarkLogError = '';
+  private selectedGalleryFile?: File;
 
   readonly tabs: { id: AdminTab; label: string; count: string }[] = [
     { id: 'dashboard', label: 'Dashboard', count: 'Live' },
@@ -1173,6 +1293,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     active: [true]
   });
 
+  readonly galleryForm = this.fb.nonNullable.group({
+    altText: ['', Validators.required],
+    displayOrder: [1, [Validators.required, Validators.min(1)]],
+    wide: [false],
+    tall: [false],
+    active: [true]
+  });
+
   readonly settingsForm = this.fb.nonNullable.group({
     gateway: ['Razorpay'],
     paymentPolicy: ['Security deposit'],
@@ -1194,7 +1322,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       customers: 'Customer management',
       payments: 'Payments & refunds',
       coupons: 'Coupon management',
-      content: 'Blog & content',
+      content: 'Blog, content & gallery',
       reviews: 'Review management',
       reports: 'Reports & analytics',
       roles: 'Roles & permissions',
@@ -1275,6 +1403,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.clearDocumentPreviews();
+    this.clearGalleryPreview();
   }
 
   private loadAdminData(): void {
@@ -1284,6 +1413,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.loadPayments();
     this.loadCoupons();
     this.loadReviews();
+    this.loadGalleryImages();
     this.loadContent();
     this.loadCategoryReports();
     this.loadRolePermissions();
@@ -1351,9 +1481,23 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.reviews.set(mappedReviews);
         if (this.selectedReview && !mappedReviews.some((review) => review.id === this.selectedReview?.id)) {
           this.selectedReview = undefined;
+          this.reviewReplyDraft = '';
+        } else if (this.selectedReview) {
+          this.selectedReview = mappedReviews.find((review) => review.id === this.selectedReview?.id);
+          this.reviewReplyDraft = this.selectedReview?.adminReply ?? '';
         }
         this.clampAdminPages();
         this.updateTabCount('reviews', String(reviews.length));
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
+  loadGalleryImages(): void {
+    this.galleryService.getAdminGallery().subscribe({
+      next: (images) => {
+        this.galleryImages.set(images.map((image) => this.mapGalleryImage(image)));
+        this.updateContentTabCount();
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
     });
@@ -1743,6 +1887,23 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.couponForm.controls.code.setValue(code, { emitEvent: false });
   }
 
+  setGalleryFile(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const file = input?.files?.[0];
+    this.clearGalleryPreview();
+    this.selectedGalleryFile = file;
+    this.galleryFileName = file?.name ?? '';
+    if (file) {
+      this.galleryPreviewUrl = URL.createObjectURL(file);
+    }
+  }
+
+  clearGalleryFile(): void {
+    this.selectedGalleryFile = undefined;
+    this.galleryFileName = '';
+    this.clearGalleryPreview();
+  }
+
   submitCoupon(): void {
     this.couponFormError = '';
     this.normalizeCouponInput();
@@ -1770,8 +1931,97 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  submitGalleryImage(): void {
+    this.galleryFormError = '';
+    if (this.galleryForm.invalid || !this.selectedGalleryFile || this.isSubmittingGallery) {
+      this.galleryForm.markAllAsTouched();
+      this.galleryFormError = 'Choose an image, enter alt text, and set a display order.';
+      return;
+    }
+
+    const value = this.galleryForm.getRawValue();
+    const formData = new FormData();
+    formData.append('image', this.selectedGalleryFile);
+    formData.append('altText', value.altText);
+    formData.append('displayOrder', String(value.displayOrder));
+    formData.append('wide', String(value.wide));
+    formData.append('tall', String(value.tall));
+    formData.append('active', String(value.active));
+
+    this.isSubmittingGallery = true;
+    this.galleryService.uploadGalleryImage(formData)
+      .pipe(finalize(() => {
+        this.isSubmittingGallery = false;
+      }))
+      .subscribe({
+        next: (image) => {
+          const nextImages = [...this.galleryImages(), this.mapGalleryImage(image)]
+            .sort((a, b) => a.displayOrder - b.displayOrder || b.id - a.id);
+          this.galleryImages.set(nextImages);
+          this.updateContentTabCount();
+          this.galleryForm.reset({
+            altText: '',
+            displayOrder: nextImages.length + 1,
+            wide: false,
+            tall: false,
+            active: true
+          });
+          this.clearGalleryFile();
+          this.showTopMessage('Gallery image added.', 2600);
+        },
+        error: (error) => {
+          this.galleryFormError = this.authService.getErrorMessage(error);
+        }
+      });
+  }
+
+  deleteGalleryImage(image: AdminGalleryImage): void {
+    this.galleryService.deleteGalleryImage(image.id).subscribe({
+      next: () => {
+        const nextImages = this.galleryImages().filter((item) => item.id !== image.id);
+        this.galleryImages.set(nextImages);
+        this.updateContentTabCount();
+        this.showTopMessage('Gallery image deleted.', 2200);
+      },
+      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+    });
+  }
+
   viewReview(review: AdminReview): void {
     this.selectedReview = review;
+    this.reviewReplyDraft = review.adminReply;
+  }
+
+  replyToReviewFromList(review: AdminReview): void {
+    this.viewReview(review);
+    window.setTimeout(() => document.getElementById('reviewReplyEditor')?.focus());
+  }
+
+  saveReviewReply(review: AdminReview): void {
+    if (this.isSavingReviewReply) {
+      return;
+    }
+
+    this.isSavingReviewReply = true;
+    this.adminService.replyToReview(review.id, this.reviewReplyDraft.trim())
+      .pipe(finalize(() => {
+        this.isSavingReviewReply = false;
+      }))
+      .subscribe({
+        next: (updatedReview) => {
+          const mappedReview = this.mapReview(updatedReview);
+          this.reviews.update((items) => items.map((item) => item.id === mappedReview.id ? mappedReview : item));
+          this.selectedReview = mappedReview;
+          this.reviewReplyDraft = mappedReview.adminReply;
+          this.showTopMessage('Review reply saved.', 2200);
+        },
+        error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      });
+  }
+
+  clearReviewReply(review: AdminReview): void {
+    this.reviewReplyDraft = '';
+    this.saveReviewReply(review);
   }
 
   deleteReview(review: AdminReview): void {
@@ -1784,6 +2034,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.reviews.update((items) => items.filter((item) => item.id !== review.id));
         if (this.selectedReview?.id === review.id) {
           this.selectedReview = undefined;
+          this.reviewReplyDraft = '';
         }
         this.clampAdminPages();
         this.updateTabCount('reviews', String(this.reviews().length));
@@ -1838,6 +2089,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     }
     if (this.activeTab() === 'reviews') {
       this.selectedReview = this.filteredReviews()[0];
+      this.reviewReplyDraft = this.selectedReview?.adminReply ?? '';
       this.showTopMessage('Select a review to view or delete.', 1800);
       return;
     }
@@ -1989,6 +2241,19 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapGalleryImage(image: GalleryImage): AdminGalleryImage {
+    return {
+      id: image.id,
+      imageUrl: image.imageUrl,
+      altText: image.altText,
+      wide: image.wide,
+      tall: image.tall,
+      active: image.active,
+      displayOrder: image.displayOrder,
+      createdAt: image.createdAt
+    };
+  }
+
   private mapReview(review: AdminReviewResponse): AdminReview {
     return {
       id: review.id,
@@ -1996,6 +2261,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       role: review.role,
       rating: Number(review.rating),
       quote: review.quote,
+      adminReply: review.adminReply ?? '',
       createdAt: review.createdAt
     };
   }
@@ -2029,7 +2295,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       updatedAt: item.updatedAt
     })));
     this.clampAdminPages();
-    this.updateTabCount('content', String(content.blogPosts.length + content.staticContent.length));
+    this.updateContentTabCount();
+  }
+
+  private updateContentTabCount(): void {
+    this.updateTabCount('content', String(this.blogPosts().length + this.staticContent().length + this.galleryImages().length));
   }
 
   private productRequestFromForm(): AdminProductRequest {
@@ -2270,6 +2540,13 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.documentPreviews = {};
     this.documentPreviewError = '';
     this.isLoadingDocuments = false;
+  }
+
+  private clearGalleryPreview(): void {
+    if (this.galleryPreviewUrl) {
+      URL.revokeObjectURL(this.galleryPreviewUrl);
+      this.galleryPreviewUrl = '';
+    }
   }
 
   private downloadCsv(filename: string, rows: unknown[]): void {

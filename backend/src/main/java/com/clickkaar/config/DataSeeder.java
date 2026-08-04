@@ -25,6 +25,7 @@ public class DataSeeder {
   private final BlogPostRepository blogPostRepository;
   private final FaqRepository faqRepository;
   private final CustomerReviewRepository customerReviewRepository;
+  private final GalleryImageRepository galleryImageRepository;
   private final StaticContentRepository staticContentRepository;
   private final BookingRepository bookingRepository;
   private final PaymentRepository paymentRepository;
@@ -57,6 +58,7 @@ public class DataSeeder {
       seedProducts();
       seedBlogs();
       seedFaqs();
+      seedGalleryImages();
       seedCustomerReviews();
       seedStaticContent();
 
@@ -204,6 +206,29 @@ public class DataSeeder {
     faqRepository.save(Faq.builder().question("Can I choose rental dates?").answer("Yes. Product details include datepickers and automatic duration pricing.").active(true).displayOrder(2).build());
     faqRepository.save(Faq.builder().question("Are payments real?").answer("Razorpay integration is available when credentials are configured; cash booking is also supported.").active(true).displayOrder(3).build());
     faqRepository.save(Faq.builder().question("Can products be filtered?").answer("Yes. Catalogue supports category, brand, price, availability, search, sorting, and pagination.").active(true).displayOrder(4).build());
+  }
+
+  private void seedGalleryImages() {
+    if (galleryImageRepository.count() > 0) {
+      return;
+    }
+    seedGalleryImage("https://images.unsplash.com/photo-1495707902641-75cac588d2e9?auto=format&fit=crop&w=900&q=80", "Camera shoot detail", true, false, 1);
+    seedGalleryImage("/join-photographer.png", "Photographer creative portrait", false, true, 2);
+    seedGalleryImage("https://images.unsplash.com/photo-1607462109225-6b64ae2dd3cb?auto=format&fit=crop&w=900&q=80", "Tripod equipment", false, false, 3);
+    seedGalleryImage("https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=900&q=80", "Audio equipment", false, false, 4);
+    seedGalleryImage("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80", "Studio interior", true, false, 5);
+    seedGalleryImage("https://images.unsplash.com/photo-1516724562728-afc824a36e84?auto=format&fit=crop&w=900&q=80", "Outdoor creator kit", false, false, 6);
+  }
+
+  private void seedGalleryImage(String imageUrl, String altText, boolean wide, boolean tall, int displayOrder) {
+    galleryImageRepository.save(GalleryImage.builder()
+        .imageUrl(imageUrl)
+        .altText(altText)
+        .wide(wide)
+        .tall(tall)
+        .active(true)
+        .displayOrder(displayOrder)
+        .build());
   }
 
   private void seedCustomerReviews() {

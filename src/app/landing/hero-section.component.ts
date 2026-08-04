@@ -10,7 +10,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     <section class="landing-card hero-section" id="home">
       <div class="hero-copy">
         <p class="eyebrow" appScrollReveal="fade-up">PREMIUM PHOTOGRAPHY EQUIPMENT RENTAL PUNE</p>
-        <h1 appScrollReveal="fade-up" [revealDelay]="90">Create Your Next <h1 class="mast">MASTERPIECE.</h1></h1>
+        <h1 appScrollReveal="fade-up" [revealDelay]="90">Create Your Next <h1 class="mast">MASTERPIECE<span class="mast-period">.</span></h1></h1>
         <h2 appScrollReveal="fade-up" [revealDelay]="90">with the Best Camera Rental in Pune</h2> 
         <p class="hero-subtitle" appScrollReveal="fade-up" [revealDelay]="180">
           Rent the Right Gear, Right When You Need It.
@@ -54,6 +54,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
   `,
   styles: [`
   .mast { color: #ff9700; display: inline; }
+  .mast-period { font-size: .58em; vertical-align: baseline; }
   .hero-copy .eyebrow,
   .hero-copy h1 { font-family: var(--display-font); }
   .eyebrow{color: #ff9700;font-size: clamp(1rem, 1.5vw, 1.18rem)}
