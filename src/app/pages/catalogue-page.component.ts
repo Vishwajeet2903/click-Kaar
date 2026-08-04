@@ -12,7 +12,7 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
   imports: [FormsModule, BreadcrumbComponent, ProductCardComponent],
   template: `
     <app-breadcrumb label="Catalogue" />
-    <section class="container pb-5">
+    <section class="container catalogue-shell pb-5">
       <div class="d-flex justify-content-between align-items-end gap-3 flex-wrap mb-4">
         <div><p class="eyebrow">Rental catalogue</p><h1 class="section-title">Find the exact gear for the shot</h1></div>
       </div>
@@ -67,6 +67,7 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
   `,
   styles: [`
     :host ::ng-deep .section-title { font-size: clamp(2rem, 4.2vw, 3.8rem); letter-spacing: 0; line-height: 1.08; text-align: left; }
+    :host ::ng-deep section.container.catalogue-shell { border-radius: 32px !important; overflow: hidden; }
     .eyebrow { font-size: .92rem; letter-spacing: .1em; line-height: 1.2; }
     .form-control::placeholder{color: #777}
     .filters { display: grid; gap: 1rem; padding: 1rem; position: sticky; top: 92px; }
