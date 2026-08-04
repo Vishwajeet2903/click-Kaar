@@ -1669,6 +1669,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   changeRegistrationDetailPage(direction: number): void {
     this.setRegistrationDetailPage(this.registrationDetailPage + direction);
+    this.scrollToSectionTop();
   }
 
   pageCount(total: number): number {
@@ -1688,25 +1689,31 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   changePage(section: 'inventory' | 'bookings' | 'customers' | 'payments' | 'blog' | 'staticContent', direction: number): void {
     if (section === 'inventory') {
       this.inventoryPage = this.nextPage(this.inventoryPage, this.filteredProducts().length, direction);
+      this.scrollToSectionTop();
       return;
     }
     if (section === 'bookings') {
       this.bookingsPage = this.nextPage(this.bookingsPage, this.filteredBookings().length, direction);
+      this.scrollToSectionTop();
       return;
     }
     if (section === 'customers') {
       this.customersPage = this.nextPage(this.customersPage, this.filteredCustomers().length, direction);
+      this.scrollToSectionTop();
       return;
     }
     if (section === 'payments') {
       this.paymentsPage = this.nextPage(this.paymentsPage, this.payments().length, direction);
+      this.scrollToSectionTop();
       return;
     }
     if (section === 'blog') {
       this.blogPage = this.nextPage(this.blogPage, this.blogPosts().length, direction);
+      this.scrollToSectionTop();
       return;
     }
     this.staticContentPage = this.nextPage(this.staticContentPage, this.staticContent().length, direction);
+    this.scrollToSectionTop();
   }
 
   pendingPageCount(): number {
@@ -1729,6 +1736,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   changePendingPage(direction: number): void {
     this.pendingPage = Math.min(this.pendingPageCount(), Math.max(1, this.pendingPage + direction));
+    this.scrollToSectionTop();
   }
 
   private clampPendingPage(): void {
@@ -2799,6 +2807,22 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   private nextPage(currentPage: number, total: number, direction: number): number {
     return Math.min(this.pageCount(total), Math.max(1, currentPage + direction));
+  }
+
+  private scrollToSectionTop(): void {
+    const target = document.querySelector('.admin-page');
+    if (!target) return;
+    const start = window.scrollY;
+    const end = target.getBoundingClientRect().top + window.scrollY;
+    const duration = 900;
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      window.scrollTo(0, start + (end - start) * eased);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
   }
 
   private clampAdminPages(): void {

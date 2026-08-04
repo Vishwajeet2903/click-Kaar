@@ -57,9 +57,9 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
             }
           </div>
           <div class="pagination-bar">
-            <button (click)="page.set(page() - 1)" [disabled]="page() === 1">Previous</button>
+            <button (click)="changePage(-1)" [disabled]="page() === 1">Previous</button>
             <span>Page {{ page() }} of {{ totalPages() }}</span>
-            <button (click)="page.set(page() + 1)" [disabled]="page() === totalPages()">Next</button>
+            <button (click)="changePage(1)" [disabled]="page() === totalPages()">Next</button>
           </div>
         </div>
       </div>
@@ -139,5 +139,26 @@ export class CataloguePageComponent {
     this.category.set(category);
     this.brand.set('');
     this.page.set(1);
+  }
+
+  changePage(direction: number): void {
+    this.page.set(Math.min(this.totalPages(), Math.max(1, this.page() + direction)));
+    this.scrollToSectionTop('.catalogue-shell');
+  }
+
+  private scrollToSectionTop(selector: string): void {
+    const target = document.querySelector(selector);
+    if (!target) return;
+    const start = window.scrollY;
+    const end = target.getBoundingClientRect().top + window.scrollY;
+    const duration = 900;
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      window.scrollTo(0, start + (end - start) * eased);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
   }
 }

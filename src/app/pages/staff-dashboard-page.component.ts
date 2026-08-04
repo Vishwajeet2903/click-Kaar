@@ -278,6 +278,23 @@ export class StaffDashboardPageComponent implements OnInit {
 
   changeInventoryPage(direction: number): void {
     this.inventoryPage.set(Math.min(this.inventoryPageCount(), Math.max(1, this.inventoryPage() + direction)));
+    this.scrollToSectionTop();
+  }
+
+  private scrollToSectionTop(): void {
+    const target = document.querySelector('.staff-dashboard');
+    if (!target) return;
+    const start = window.scrollY;
+    const end = target.getBoundingClientRect().top + window.scrollY;
+    const duration = 900;
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      window.scrollTo(0, start + (end - start) * eased);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
   }
 
   inventoryPageSummary(): string {
