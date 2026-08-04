@@ -48,6 +48,7 @@ public class ProductService {
   public ProductResponse create(ProductRequest request) {
     Category category = categoryRepository.findByName(request.category())
         .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+    AvailabilityStatus availabilityStatus = request.availabilityStatus() == null ? AvailabilityStatus.AVAILABLE : request.availabilityStatus();
     Product product = Product.builder()
         .name(request.name())
         .brand(request.brand())
@@ -62,7 +63,8 @@ public class ProductService {
         .imageLink(imageColumnValue(request, 0))
         .link1(imageColumnValue(request, 1))
         .link2(imageColumnValue(request, 2))
-        .availabilityStatus(request.availabilityStatus() == null ? AvailabilityStatus.AVAILABLE : request.availabilityStatus())
+        .stock(request.stock() == null ? defaultStock(availabilityStatus) : request.stock())
+        .availabilityStatus(availabilityStatus)
         .build();
     if (request.images() != null) {
       request.images().forEach(url -> product.getImages().add(ProductImage.builder()
@@ -93,6 +95,7 @@ public class ProductService {
     product.setLink1(imageColumnValue(request, 1));
     product.setLink2(imageColumnValue(request, 2));
     product.setAvailabilityStatus(request.availabilityStatus() == null ? product.getAvailabilityStatus() : request.availabilityStatus());
+    product.setStock(request.stock() == null ? defaultStock(product.getAvailabilityStatus()) : request.stock());
     if (request.images() != null) {
       product.getImages().clear();
       request.images().forEach(url -> product.getImages().add(ProductImage.builder()
@@ -124,9 +127,14 @@ public class ProductService {
         product.getImageLink(),
         product.getLink1(),
         product.getLink2(),
+        product.getStock() == null ? defaultStock(product.getAvailabilityStatus()) : product.getStock(),
         product.getAvailabilityStatus(),
         product.getImages().stream().map(ProductImage::getImageUrl).toList()
     );
+  }
+
+  private int defaultStock(AvailabilityStatus status) {
+    return status == AvailabilityStatus.AVAILABLE ? 1 : 0;
   }
 
   private String imageColumnValue(ProductRequest request, int index) {

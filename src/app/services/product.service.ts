@@ -5,6 +5,7 @@ import { Product } from '../models/product.model';
 import { API_BASE_URL } from './api.config';
 
 const img = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
+const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
 const PRODUCT_IMAGE_FALLBACK = '/clickkaar-logo.png';
 
 export function productFallbackImage(): string {
@@ -214,7 +215,7 @@ export class ProductService {
       availabilityStatus: product.availabilityStatus,
       available: rentable,
       rating: 4.6,
-      stock: rentable ? 1 : 0,
+      stock: product.stock ?? (rentable ? 1 : 0),
       popularity: 80,
       createdAt: '2026-01-01'
     };
@@ -252,6 +253,7 @@ interface ApiProduct {
   imageLink?: string;
   link1?: string;
   link2?: string;
+  stock?: number;
   availabilityStatus?: 'AVAILABLE' | 'UNAVAILABLE' | 'ON_RENT' | 'MAINTENANCE';
   images?: string[];
 }
@@ -261,6 +263,10 @@ function uniqueImages(images: string[]): string[] {
 }
 
 function normalizeProductImagePath(image: string): string {
+  if (image.startsWith('/uploads/')) {
+    return `${API_ORIGIN}${image}`;
+  }
+
   if (image.startsWith('/products/')) {
     return image.replace(/:/g, '_');
   }

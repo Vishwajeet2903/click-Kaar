@@ -30,7 +30,7 @@ public class DataSeeder {
   private final BookingRepository bookingRepository;
   private final PaymentRepository paymentRepository;
   private final WishlistRepository wishlistRepository;
-  private final AdminNoteRepository adminNoteRepository;
+  private final BookingNoteRepository bookingNoteRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Bean
@@ -369,7 +369,7 @@ public class DataSeeder {
         .razorpayOrderId("order_" + bookingNumber)
         .razorpayPaymentId(paymentStatus == PaymentStatus.PAID ? "pay_" + bookingNumber : null)
         .build());
-    adminNoteRepository.save(AdminNote.builder()
+    bookingNoteRepository.save(BookingNote.builder()
         .booking(savedBooking)
         .admin(admin)
         .note(note)

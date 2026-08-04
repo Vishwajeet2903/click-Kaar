@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "admin_notes")
-public class AdminNote extends AuditableEntity {
+@Table(name = "booking_notes")
+public class BookingNote extends AuditableEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

@@ -65,6 +65,7 @@ export interface AdminProductRequest {
   imageLink?: string;
   link1?: string;
   link2?: string;
+  stock: number;
   availabilityStatus: string;
   images: string[];
 }
@@ -84,6 +85,7 @@ export interface AdminProductResponse {
   imageLink?: string;
   link1?: string;
   link2?: string;
+  stock?: number;
   availabilityStatus: string;
   images: string[];
 }
@@ -192,6 +194,10 @@ export interface AdminBlogPostResponse {
   status: string;
 }
 
+export interface ImageUploadResponse {
+  imageUrl: string;
+}
+
 export interface AdminSettingsResponse {
   gateway: string;
   paymentPolicy: string;
@@ -264,8 +270,20 @@ export class AdminService {
     });
   }
 
+  createProductWithImage(request: AdminProductRequest, image: File): Observable<AdminProductResponse> {
+    return this.http.post<AdminProductResponse>(`${API_URL}/inventory/save`, this.productFormData(request, image), {
+      headers: this.authHeaders()
+    });
+  }
+
   updateProduct(productId: number, request: AdminProductRequest): Observable<AdminProductResponse> {
     return this.http.put<AdminProductResponse>(`${API_URL}/inventory/${productId}`, request, {
+      headers: this.authHeaders()
+    });
+  }
+
+  updateProductWithImage(productId: number, request: AdminProductRequest, image?: File): Observable<AdminProductResponse> {
+    return this.http.put<AdminProductResponse>(`${API_URL}/inventory/${productId}/save`, this.productFormData(request, image), {
       headers: this.authHeaders()
     });
   }
@@ -284,12 +302,6 @@ export class AdminService {
 
   getBookings(): Observable<AdminBookingResponse[]> {
     return this.http.get<AdminBookingResponse[]>(`${API_URL}/bookings`, {
-      headers: this.authHeaders()
-    });
-  }
-
-  updateBookingStatus(bookingId: number, status: string): Observable<AdminBookingResponse> {
-    return this.http.patch<AdminBookingResponse>(`${API_URL}/bookings/${bookingId}/status`, { status }, {
       headers: this.authHeaders()
     });
   }
@@ -338,6 +350,14 @@ export class AdminService {
 
   getContent(): Observable<AdminContentResponse> {
     return this.http.get<AdminContentResponse>(`${API_URL}/content`, {
+      headers: this.authHeaders()
+    });
+  }
+
+  uploadImage(file: File): Observable<ImageUploadResponse> {
+    const formData = new FormData();
+    formData.append('image', file);
+    return this.http.post<ImageUploadResponse>(`${API_URL}/images/upload`, formData, {
       headers: this.authHeaders()
     });
   }
@@ -434,5 +454,14 @@ export class AdminService {
   private authHeaders(): HttpHeaders {
     const token = this.authService.getToken();
     return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
+  }
+
+  private productFormData(request: AdminProductRequest, image?: File): FormData {
+    const formData = new FormData();
+    formData.append('product', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+    if (image) {
+      formData.append('image', image);
+    }
+    return formData;
   }
 }

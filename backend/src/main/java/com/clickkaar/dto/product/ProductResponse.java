@@ -22,6 +22,7 @@ public record ProductResponse(
     String imageLink,
     String link1,
     String link2,
+    Integer stock,
     AvailabilityStatus availabilityStatus,
     List<String> images
 ) {

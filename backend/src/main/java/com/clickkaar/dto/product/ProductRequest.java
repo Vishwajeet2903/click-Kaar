@@ -3,6 +3,7 @@ package com.clickkaar.dto.product;
 import com.clickkaar.enums.AvailabilityStatus;
 import com.clickkaar.enums.ProductCategory;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -24,6 +25,7 @@ public record ProductRequest(
     String imageLink,
     String link1,
     String link2,
+    @Min(0) Integer stock,
     AvailabilityStatus availabilityStatus,
     List<String> images
 ) {

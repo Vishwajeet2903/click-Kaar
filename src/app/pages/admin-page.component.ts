@@ -167,7 +167,7 @@ interface PaymentRemarkLogView {
   imports: [CurrencyPipe, DatePipe, PercentPipe, FormsModule, ReactiveFormsModule, RouterLink, MatSnackBarModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb label="Admin" />
-    <section class="container admin-page">
+    <section class="container admin-page admin-shell">
       @if (authService.isAdmin()) {
         <div class="admin-layout">
           <aside class="admin-sidebar surface">
@@ -177,7 +177,7 @@ interface PaymentRemarkLogView {
             </div>
             <nav aria-label="Admin sections">
               @for (tab of tabs; track tab.id) {
-                <button type="button" [class.active]="activeTab() === tab.id" (click)="activeTab.set(tab.id)">
+                <button type="button" [class.active]="activeTab() === tab.id" (click)="selectAdminTab(tab.id)">
                   <span>{{ tab.label }}</span>
                   <small>{{ tab.count }}</small>
                 </button>
@@ -193,7 +193,9 @@ interface PaymentRemarkLogView {
               </div>
               <div class="topbar-actions">
                 <!-- <button type="button" class="ghost-btn" (click)="exportActive()">Export</button> -->
-                <button type="button" class="primary-btn" (click)="openCreate()">Create</button>
+                @if (activeTab() === 'inventory') {
+                  <button type="button" class="primary-btn" (click)="addProduct()">Add product</button>
+                }
                 <button type="button" class="danger-btn topbar-logout" (click)="logout()">Logout</button>
               </div>
             </header>
@@ -437,7 +439,7 @@ interface PaymentRemarkLogView {
                           <td>{{ product.stock }}</td>
                           <td><b class="status" [class]="statusClass(product.status)">{{ product.status }}</b></td>
                           <td><span class="calendar-strip">{{ bookedDays(product.name) }}</span></td>
-                          <td class="action-cell">
+                          <td class="action-cell inventory-action-cell">
                             <button type="button" class="mini-btn" (click)="editProduct(product)">Edit</button>
                             @if (product.status === 'Maintenance') {
                               <button type="button" class="return-btn" (click)="returnFromMaintenance(product)">Return</button>
@@ -490,8 +492,7 @@ interface PaymentRemarkLogView {
                           <td><b class="status" [class]="statusClass(booking.status)">{{ booking.status }}</b></td>
                           <td><b class="status" [class]="statusClass(booking.paymentStatus)">{{ booking.paymentStatus }}</b></td>
                           <td>{{ booking.returnStatus }}</td>
-                          <td class="action-cell">
-                            <button type="button" class="mini-btn" (click)="advanceBooking(booking)">Advance</button>
+                          <td class="action-cell booking-action-cell">
                             <button type="button" class="ghost-mini" (click)="addNote(booking)">Note</button>
                           </td>
                         </tr>
@@ -705,7 +706,7 @@ interface PaymentRemarkLogView {
                         <label>Author<input formControlName="authorName" placeholder="Clickkaar Team"></label>
                         <label>Publish date<input type="date" formControlName="publishDate"></label>
                         <label>Status<select formControlName="status"><option value="DRAFT">Draft</option><option value="PUBLISHED">Published</option></select></label>
-                        <label class="wide-field">Cover image URL<input formControlName="coverImage" placeholder="https://..."></label>
+                        <label class="wide-field file-field">Cover image<input type="file" accept="image/*" (change)="setBlogCoverImage($event)"><span>{{ blogCoverLabel() }}</span></label>
                         <label class="wide-field">Tags<input formControlName="tags" placeholder="camera, lighting, rentals"></label>
                         <label class="wide-field">SEO title<input formControlName="seoTitle" placeholder="Search title"></label>
                         <label class="wide-field">Meta description<textarea formControlName="seoDescription" rows="2" placeholder="Short SEO description"></textarea></label>
@@ -963,30 +964,40 @@ interface PaymentRemarkLogView {
   `,
   styles: [`
     :host {
-      --admin-bg: #f6f6f3;
+      --admin-bg: #ececec;
       --admin-panel: #ffffff;
-      --admin-soft: #faf9f6;
+      --admin-soft: #ffffff;
       --admin-line: rgba(17, 17, 17, .09);
       --admin-muted: #6f6f68;
       --admin-ink: #141414;
       --admin-accent: #ff9700;
     }
-    .admin-page { max-width: 95vw !important; padding-bottom: 2rem; }
+    :host ::ng-deep section.container.admin-shell { border-radius: 32px !important; overflow: hidden; }
+    .admin-page { color: var(--admin-ink); max-width: 95vw !important; padding-bottom: 2rem; }
     .admin-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 240px minmax(0, 1fr); }
     .admin-page :where(.surface) { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
-    .admin-sidebar { background: #161616 !important; color: #fff; padding: .9rem; position: sticky; top: 92px; }
+    .admin-sidebar { align-self: start; background: #ffffff !important; color: #111; padding: .9rem; position: static; }
     .admin-sidebar .eyebrow { color: #ff9700; margin: 0 0 .35rem; }
-    .admin-sidebar h1 { color: #fff; font-size: 1.35rem; line-height: 1.05; margin: 0 0 1rem; }
+    .admin-sidebar h1 { color: #111; font-size: 1.28rem; letter-spacing: 0; line-height: 1.14; margin: 0 0 1rem; }
     nav { display: grid; gap: .25rem; }
-    nav button { align-items: center; background: transparent; border: 1px solid transparent; border-radius: 6px; color: rgba(255,255,255,.78); display: flex; font-weight: 850; justify-content: space-between; min-height: 40px; padding: .62rem .7rem; text-align: left; }
-    nav button small { background: rgba(255,255,255,.1); border-radius: 999px; color: rgba(255,255,255,.72); font-size: .68rem; min-width: 26px; padding: .16rem .42rem; text-align: center; }
-    nav button.active, nav button:hover { background: #fff; border-color: #fff; color: #111; }
-    nav button.active small, nav button:hover small { background: var(--admin-accent); color: #111; }
+    nav button { align-items: center; background: transparent; border: 1px solid transparent; border-radius: 6px; color: #555; display: flex; font-size: .9rem; font-weight: 800; justify-content: space-between; line-height: 1.25; min-height: 40px; padding: .62rem .7rem; text-align: left; }
+    nav button small { background: #f6f6f4; border-radius: 999px; color: #666; font-size: .68rem; min-width: 26px; padding: .16rem .42rem; text-align: center; }
+    nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
+    nav button:hover { background: #f6f6f4; border-color: #e6e6e0; color: #111; }
+    nav button.active small { background: #111; color: #fff; }
+    nav button:hover small { background: #e6e6e0; color: #555; }
     .admin-workspace { display: grid; gap: 1.25rem; min-width: 0; }
-    .admin-topbar { align-items: end; background: linear-gradient(180deg, #fff, var(--admin-soft)); border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: 1.25rem; justify-content: space-between; padding: 1.15rem 1.2rem; }
+    .admin-topbar { align-items: end; background: #ffffff; border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: 1.25rem; justify-content: space-between; padding: 1.15rem 1.2rem; }
     .admin-topbar .eyebrow { color: #ff9700; margin: 0 0 .25rem; }
-    .admin-topbar h2 { font-size: clamp(1.75rem, 3.2vw, 3rem); line-height: 1; margin: 0; }
+    .admin-topbar h2 { font-size: clamp(1.55rem, 2.7vw, 2.35rem); letter-spacing: 0; line-height: 1.14; margin: 0; }
     .topbar-actions, .tool-row, .action-cell { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; }
+    .inventory-action-cell { flex-wrap: nowrap; min-width: 178px; }
+    .inventory-action-cell .mini-btn,
+    .inventory-action-cell .danger-btn,
+    .inventory-action-cell .return-btn { flex: 0 0 auto; }
+    .booking-action-cell { flex-wrap: nowrap; min-width: 76px; }
+    .booking-action-cell .mini-btn,
+    .booking-action-cell .ghost-mini { flex: 0 0 auto; }
     .tool-row { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 8px; justify-content: space-between; padding: .8rem; }
     .search-input { flex: 1 1 260px; }
     .inventory-filter-row { justify-content: flex-start; }
@@ -996,7 +1007,7 @@ interface PaymentRemarkLogView {
     .booking-filter-row .search-input { flex: 0 1 320px; max-width: 320px; }
     .booking-filter-row select { flex: 0 0 190px; width: 190px; }
     .booking-filter-row .month-input { flex: 0 0 170px; width: 170px; }
-    input, select, textarea { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: var(--admin-ink); font: inherit; min-height: 42px; outline: 0; padding: .68rem .8rem; width: 100%; }
+    input, select, textarea { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: var(--admin-ink); font: inherit; font-size: .92rem; font-weight: 500; line-height: 1.45; min-height: 42px; outline: 0; padding: .68rem .8rem; width: 100%; }
     textarea { min-height: 92px; resize: vertical; }
     input:focus, select:focus, textarea:focus { border-color: var(--admin-accent); box-shadow: 0 0 0 3px rgba(255,151,0,.14); }
     .table-link { color: var(--admin-accent); font-size: .78rem; font-weight: 900; text-decoration: none; white-space: nowrap; }
@@ -1025,8 +1036,8 @@ interface PaymentRemarkLogView {
     .metric-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .metric-card { align-content: space-between; display: grid; gap: .55rem; min-height: 136px; min-width: 0; padding: 1rem; position: relative; }
     .metric-card::before { background: #111; border-radius: 999px; content: ""; height: 4px; left: .9rem; position: absolute; right: .9rem; top: .75rem; }
-    .metric-card span { color: var(--admin-muted); font-size: .7rem; font-weight: 900; padding-top: .55rem; text-transform: uppercase; }
-    .metric-card strong { color: #111; font-size: clamp(1.45rem, 2.6vw, 2.15rem); line-height: 1; }
+    .metric-card span { color: #555; font-size: .72rem; font-weight: 800; line-height: 1.3; padding-top: .55rem; text-transform: uppercase; }
+    .metric-card strong { color: #111; font-size: clamp(1.32rem, 2.25vw, 1.9rem); line-height: 1.12; }
     .metric-card small { color: var(--admin-muted); font-weight: 650; line-height: 1.35; }
     .metric-card.orange::before { background: #ff9700; }
     .metric-card.green::before { background: #12b76a; }
@@ -1038,14 +1049,15 @@ interface PaymentRemarkLogView {
     .panel, .table-panel, .editor-panel, .employee-form, .access-card { padding: 1.05rem; }
     .panel, .editor-panel, .employee-form { display: grid; gap: 1rem; min-width: 0; }
     .panel-head { align-items: center; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 0; min-width: 0; }
-    .panel-head h3, .customer-card h3 { font-size: 1.05rem; line-height: 1.1; margin: 0; }
-    .panel-head span { color: #777; font-size: .82rem; font-weight: 800; }
+    .panel-head h3, .customer-card h3 { font-size: 1rem; letter-spacing: 0; line-height: 1.25; margin: 0; }
+    .panel-head span { color: #555; font-size: .84rem; font-weight: 700; line-height: 1.35; }
     .dense-list { display: grid; gap: .65rem; }
     .dense-list article { align-items: center; background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; display: flex; gap: .8rem; justify-content: space-between; min-width: 0; padding: .78rem; }
     .dense-list article > div { min-width: 0; }
     .dense-list article.active { background: #fffaf2; border-color: var(--admin-accent); box-shadow: 0 10px 24px rgba(255,151,0,.11); }
     .dense-list strong, td strong { display: block; }
-    .dense-list span, td span { color: #777; display: block; font-size: .8rem; margin-top: .18rem; }
+    .dense-list strong, td strong { color: #111; font-size: .94rem; line-height: 1.35; }
+    .dense-list span, td span { color: #555; display: block; font-size: .82rem; line-height: 1.45; margin-top: .18rem; }
     .request-list article { align-items: center; flex-direction: row; }
     .request-summary { align-items: start; background: transparent; border: 0; color: #111; display: grid; flex: 1; font: inherit; justify-content: stretch; min-width: 0; padding: 0; text-align: left; white-space: normal; }
     .request-summary small { color: #9a6a00; font-size: .72rem; font-weight: 900; margin-top: .25rem; }
@@ -1143,6 +1155,8 @@ interface PaymentRemarkLogView {
     .gallery-upload-flow { align-items: stretch; display: grid; gap: .5rem; grid-template-columns: 1fr; }
     .gallery-image-field { display: grid; gap: .3rem; }
     .gallery-image-field > span { color: #111; font-size: .78rem; font-weight: 900; }
+    .file-field input { display: none; }
+    .file-field span { align-items: center; background: #fff; border: 1px dashed rgba(17,17,17,.22); border-radius: 6px; color: #555; display: flex; min-height: 42px; padding: .68rem .8rem; }
     .gallery-upload-box { align-items: center; background: #fff; border: 1px dashed rgba(17,17,17,.24); border-radius: 8px; color: var(--admin-muted); cursor: pointer; display: flex; flex-direction: column; justify-content: center; min-height: 110px; overflow: hidden; padding: .6rem; text-align: center; transition: border-color .2s ease, box-shadow .2s ease, background .2s ease; }
     .gallery-upload-box:hover { background: #fffaf2; border-color: var(--admin-accent); box-shadow: 0 12px 24px rgba(255,151,0,.11); }
     .gallery-upload-box input { display: none; }
@@ -1173,7 +1187,7 @@ interface PaymentRemarkLogView {
     .review-detail p { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: #333; font-size: .95rem; font-weight: 700; line-height: 1.55; margin: 0; padding: .9rem; }
     .review-reply-editor { display: grid; gap: .7rem; }
     .review-reply-editor textarea { min-height: 98px; }
-    label { color: #111; display: grid; font-size: .78rem; font-weight: 900; gap: .4rem; }
+    label { color: #111; display: grid; font-size: .82rem; font-weight: 800; gap: .4rem; line-height: 1.35; }
     .checkbox-label { align-items: center; grid-template-columns: 18px 1fr; min-height: 42px; }
     .checkbox-label input { min-height: 18px; padding: 0; width: 18px; }
     .coupon-list article strong { letter-spacing: .04em; }
@@ -1267,6 +1281,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   galleryFormError = '';
   galleryFileName = '';
   galleryPreviewUrl = '';
+  blogCoverFileName = '';
   pendingCustomers: CustomerVerificationResponse[] = [];
   pendingPage = 1;
   readonly pendingPageSize = 3;
@@ -1300,6 +1315,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   isLoadingPaymentRemarkLog = false;
   paymentRemarkLogError = '';
   private selectedGalleryFile?: File;
+  private selectedBlogCoverFile?: File;
 
   readonly tabs: { id: AdminTab; label: string; count: string }[] = [
     { id: 'dashboard', label: 'Dashboard', count: 'Live' },
@@ -1663,6 +1679,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.loadDocumentPreviews(customer);
   }
 
+  selectAdminTab(tab: AdminTab): void {
+    this.activeTab.set(tab);
+    this.scrollToSectionTop();
+  }
+
   setRegistrationDetailPage(page: number): void {
     this.registrationDetailPage = Math.min(3, Math.max(1, page));
   }
@@ -1839,6 +1860,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`/admin/inventory/edit/${product.id}`);
   }
 
+  addProduct(): void {
+    this.router.navigateByUrl('/admin/inventory/new');
+  }
+
   resetProductForm(): void {
     this.productFormError = '';
     this.editingProductId = undefined;
@@ -1877,22 +1902,6 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.adminService.updateProduct(product.id, this.productRequestFromProduct(product, 'Available')).subscribe({
       next: (updatedProduct) => {
         this.products.update((items) => items.map((item) => item.id === updatedProduct.id ? this.mapProduct(updatedProduct) : item));
-      },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
-    });
-  }
-
-  advanceBooking(booking: AdminBooking): void {
-    const next: Record<BookingStatus, BookingStatus> = {
-      Upcoming: 'Active',
-      Active: 'Completed',
-      Completed: 'Completed',
-      Cancelled: 'Cancelled',
-      Overdue: 'Completed'
-    };
-    this.adminService.updateBookingStatus(booking.backendId, this.bookingStatusToApi(next[booking.status])).subscribe({
-      next: (updatedBooking) => {
-        this.bookings.update((items) => items.map((item) => item.backendId === updatedBooking.id ? this.mapBooking(updatedBooking) : item));
       },
       error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
     });
@@ -1959,6 +1968,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   startNewBlogPost(): void {
     this.editingBlogPostId = undefined;
     this.blogFormError = '';
+    this.selectedBlogCoverFile = undefined;
+    this.blogCoverFileName = '';
     this.blogForm.reset({
       title: '',
       slug: '',
@@ -1978,6 +1989,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   editBlogPost(post: BlogPostAdmin): void {
     this.editingBlogPostId = post.id;
     this.blogFormError = '';
+    this.selectedBlogCoverFile = undefined;
+    this.blogCoverFileName = '';
     this.blogForm.setValue({
       title: post.title,
       slug: post.slug,
@@ -2000,6 +2013,16 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     }
 
     this.blogForm.controls.slug.setValue(this.slugify(this.blogForm.controls.title.value), { emitEvent: false });
+  }
+
+  setBlogCoverImage(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    this.selectedBlogCoverFile = input?.files?.[0];
+    this.blogCoverFileName = this.selectedBlogCoverFile?.name ?? '';
+  }
+
+  blogCoverLabel(): string {
+    return this.blogCoverFileName || (this.blogForm.controls.coverImage.value ? 'Current image selected' : 'Choose image');
   }
 
   normalizeCouponInput(): void {
@@ -2055,13 +2078,31 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.blogFormError = '';
     this.blogForm.controls.slug.setValue(this.slugify(this.blogForm.controls.slug.value || this.blogForm.controls.title.value), { emitEvent: false });
 
-    if (this.blogForm.invalid || this.isSubmittingBlog) {
+    if (this.blogForm.invalid || this.isSubmittingBlog || (!this.blogForm.controls.coverImage.value && !this.selectedBlogCoverFile)) {
       this.blogForm.markAllAsTouched();
-      this.blogFormError = 'Enter the title, slug, author, date, category, content, and status.';
+      this.blogFormError = 'Enter the title, slug, author, date, category, content, status, and choose a cover image.';
       return;
     }
 
     this.isSubmittingBlog = true;
+    if (this.selectedBlogCoverFile) {
+      this.adminService.uploadImage(this.selectedBlogCoverFile).subscribe({
+        next: (upload) => {
+          this.blogForm.controls.coverImage.setValue(upload.imageUrl);
+          this.submitBlogPostRequest();
+        },
+        error: (error) => {
+          this.isSubmittingBlog = false;
+          this.blogFormError = this.authService.getErrorMessage(error);
+        }
+      });
+      return;
+    }
+
+    this.submitBlogPostRequest();
+  }
+
+  private submitBlogPostRequest(): void {
     const request = this.blogForm.getRawValue();
     const save = this.editingBlogPostId
       ? this.adminService.updateBlogPost(this.editingBlogPostId, request)
@@ -2269,20 +2310,6 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  openCreate(): void {
-    if (this.activeTab() === 'inventory') {
-      this.router.navigateByUrl('/admin/inventory/new');
-      return;
-    }
-    if (this.activeTab() === 'reviews') {
-      this.selectedReview = this.filteredReviews()[0];
-      this.reviewReplyDraft = this.selectedReview?.adminReply ?? '';
-      this.showTopMessage('Select a review to view or delete.', 1800);
-      return;
-    }
-    this.showTopMessage(`Create action ready for ${this.activeTabLabel()}.`, 2200);
-  }
-
   exportActive(): void {
     const tab = this.activeTab();
     const rows = tab === 'inventory'
@@ -2360,7 +2387,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       invoiceUrl: product.invoiceUrl ?? '',
       available: status === 'Available',
       rating: 0,
-      stock: status === 'Available' ? 1 : 0,
+      stock: product.stock ?? (status === 'Available' ? 1 : 0),
       popularity: 0,
       createdAt: '',
       status,
@@ -2525,6 +2552,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       weeklyPrice: value.weeklyPrice,
       warrantyDate: value.warrantyDate || undefined,
       invoiceUrl: value.invoiceUrl || undefined,
+      stock: Number(value.stock) || 0,
       availabilityStatus: this.productStatusToApi(value.status),
       images: value.image ? [value.image] : []
     };
@@ -2542,6 +2570,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       weeklyPrice: product.weeklyPrice,
       warrantyDate: product.warrantyDate || undefined,
       invoiceUrl: product.invoiceUrl || undefined,
+      stock: product.stock,
       availabilityStatus: this.productStatusToApi(status),
       images: product.gallery?.length ? product.gallery : product.image ? [product.image] : []
     };
@@ -2594,17 +2623,6 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       OVERDUE: 'Overdue'
     };
     return labels[status] ?? 'Upcoming';
-  }
-
-  private bookingStatusToApi(status: BookingStatus): string {
-    const labels: Record<BookingStatus, string> = {
-      Upcoming: 'CONFIRMED',
-      Active: 'ACTIVE',
-      Completed: 'COMPLETED',
-      Cancelled: 'CANCELLED',
-      Overdue: 'OVERDUE'
-    };
-    return labels[status];
   }
 
   private paymentStatusFromApi(status: string): PaymentStatus {
@@ -2813,7 +2831,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     const target = document.querySelector('.admin-page');
     if (!target) return;
     const start = window.scrollY;
-    const end = target.getBoundingClientRect().top + window.scrollY;
+    const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - 92);
     const duration = 900;
     const startTime = performance.now();
     const animate = (now: number) => {

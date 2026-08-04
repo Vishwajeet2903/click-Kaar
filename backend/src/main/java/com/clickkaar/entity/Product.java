@@ -58,6 +58,8 @@ public class Product extends AuditableEntity {
   @Column(name = "link_2")
   private String link2;
 
+  private Integer stock;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private AvailabilityStatus availabilityStatus;

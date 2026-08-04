@@ -101,13 +101,6 @@ public class ContentService {
 
   @Transactional
   public GalleryImageResponse uploadGalleryImage(MultipartFile file, String altText, boolean wide, boolean tall, Integer displayOrder, Boolean active) {
-    if (file == null || file.isEmpty()) {
-      throw new BadRequestException("Choose an image to upload");
-    }
-    String contentType = file.getContentType() == null ? "" : file.getContentType().toLowerCase();
-    if (!contentType.startsWith("image/")) {
-      throw new BadRequestException("Gallery upload must be an image");
-    }
     if (altText == null || altText.isBlank()) {
       throw new BadRequestException("Alt text is required");
     }
@@ -115,19 +108,7 @@ public class ContentService {
       throw new BadRequestException("Display order must be at least 1");
     }
 
-    String originalFilename = file.getOriginalFilename() == null ? "gallery-image" : file.getOriginalFilename();
-    String safeFilename = originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
-    Path uploadDirectory = Path.of("uploads", "gallery");
-    Path destination = uploadDirectory.resolve(UUID.randomUUID() + "-" + safeFilename).normalize();
-
-    try {
-      Files.createDirectories(uploadDirectory);
-      file.transferTo(destination);
-    } catch (IOException exception) {
-      throw new BadRequestException("Unable to save gallery image");
-    }
-
-    String imageUrl = "/uploads/gallery/" + destination.getFileName();
+    String imageUrl = saveUploadedImage(file, "gallery");
     GalleryImage image = galleryImageRepository.save(GalleryImage.builder()
         .imageUrl(imageUrl)
         .altText(altText.trim())
@@ -137,6 +118,10 @@ public class ContentService {
         .active(active == null || active)
         .build());
     return toGalleryImageResponse(image);
+  }
+
+  public String uploadImage(MultipartFile file) {
+    return saveUploadedImage(file, "content");
   }
 
   @Transactional
@@ -209,5 +194,29 @@ public class ContentService {
         image.getCreatedAt(),
         image.getUpdatedAt()
     );
+  }
+
+  private String saveUploadedImage(MultipartFile file, String folder) {
+    if (file == null || file.isEmpty()) {
+      throw new BadRequestException("Choose an image to upload");
+    }
+    String contentType = file.getContentType() == null ? "" : file.getContentType().toLowerCase();
+    if (!contentType.startsWith("image/")) {
+      throw new BadRequestException("Upload must be an image");
+    }
+
+    String originalFilename = file.getOriginalFilename() == null ? "image" : file.getOriginalFilename();
+    String safeFilename = originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
+    Path uploadDirectory = Path.of("uploads", folder);
+    Path destination = uploadDirectory.resolve(UUID.randomUUID() + "-" + safeFilename).normalize();
+
+    try {
+      Files.createDirectories(uploadDirectory);
+      file.transferTo(destination);
+    } catch (IOException exception) {
+      throw new BadRequestException("Unable to save image");
+    }
+
+    return "/uploads/" + folder + "/" + destination.getFileName();
   }
 }

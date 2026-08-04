@@ -10,8 +10,8 @@ import com.clickkaar.dto.content.GalleryImageRequest;
 import com.clickkaar.dto.content.GalleryImageResponse;
 import com.clickkaar.dto.product.ProductRequest;
 import com.clickkaar.dto.product.ProductResponse;
-import com.clickkaar.entity.AdminNote;
 import com.clickkaar.entity.Booking;
+import com.clickkaar.entity.BookingNote;
 import com.clickkaar.entity.Coupon;
 import com.clickkaar.entity.PendingRegistration;
 import com.clickkaar.entity.Payment;
@@ -29,7 +29,7 @@ import com.clickkaar.enums.RefundStatus;
 import com.clickkaar.enums.RoleName;
 import com.clickkaar.exception.BadRequestException;
 import com.clickkaar.exception.ResourceNotFoundException;
-import com.clickkaar.repository.AdminNoteRepository;
+import com.clickkaar.repository.BookingNoteRepository;
 import com.clickkaar.repository.BlogPostRepository;
 import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PendingRegistrationRepository;
@@ -74,11 +74,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -105,7 +107,7 @@ public class AdminController {
   private final UserRepository userRepository;
   private final PendingRegistrationRepository pendingRegistrationRepository;
   private final RoleRepository roleRepository;
-  private final AdminNoteRepository adminNoteRepository;
+  private final BookingNoteRepository bookingNoteRepository;
   private final WishlistRepository wishlistRepository;
   private final RefundRepository refundRepository;
   private final BlogPostRepository blogPostRepository;
@@ -151,10 +153,30 @@ public class AdminController {
     return productService.create(request);
   }
 
+  @PostMapping(value = "/inventory/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @ResponseStatus(HttpStatus.CREATED)
+  public ProductResponse createInventoryProductWithImage(
+      @RequestPart("product") String productJson,
+      @RequestPart("image") MultipartFile image
+  ) {
+    return productService.create(productRequestWithImage(productJson, image));
+  }
+
   @PutMapping("/inventory/{productId}")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   public ProductResponse updateInventoryProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequest request) {
     return productService.update(productId, request);
+  }
+
+  @PutMapping(value = "/inventory/{productId}/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  public ProductResponse updateInventoryProductWithImage(
+      @PathVariable Long productId,
+      @RequestPart("product") String productJson,
+      @RequestPart(value = "image", required = false) MultipartFile image
+  ) {
+    return productService.update(productId, productRequestWithImage(productJson, image));
   }
 
   @GetMapping("/reviews")
@@ -201,6 +223,13 @@ public class AdminController {
       @RequestParam(defaultValue = "true") Boolean active
   ) {
     return contentService.uploadGalleryImage(image, altText, wide, tall, displayOrder, active);
+  }
+
+  @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF','CONTENT_EDITOR')")
+  @ResponseStatus(HttpStatus.CREATED)
+  public ImageUploadResponse uploadImage(@RequestParam("image") MultipartFile image) {
+    return new ImageUploadResponse(contentService.uploadImage(image));
   }
 
   @DeleteMapping("/gallery/{imageId}")
@@ -252,7 +281,7 @@ public class AdminController {
   public AdminBookingResponse addBookingNote(@PathVariable Long bookingId, @RequestBody BookingNoteRequest request) {
     Booking booking = bookingRepository.findById(bookingId)
         .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
-    adminNoteRepository.save(AdminNote.builder()
+    bookingNoteRepository.save(BookingNote.builder()
         .booking(booking)
         .admin(currentAdmin())
         .note(request.note())
@@ -711,7 +740,7 @@ public class AdminController {
         .findFirst()
         .orElse(payments.isEmpty() ? PaymentStatus.PENDING : payments.get(payments.size() - 1).getStatus());
     String returnStatus = returnStatusFor(booking);
-    List<String> notes = adminNoteRepository.findByBookingId(booking.getId()).stream().map(AdminNote::getNote).toList();
+    List<String> notes = bookingNoteRepository.findByBookingId(booking.getId()).stream().map(BookingNote::getNote).toList();
     return new AdminBookingResponse(
         booking.getId(),
         booking.getBookingNumber(),
@@ -807,6 +836,36 @@ public class AdminController {
     return "NOT_DUE";
   }
 
+  private ProductRequest productRequestWithImage(String productJson, MultipartFile image) {
+    try {
+      ProductRequest request = objectMapper.readValue(productJson, ProductRequest.class);
+      if (image == null || image.isEmpty()) {
+        return request;
+      }
+      String imageUrl = contentService.uploadImage(image);
+      return new ProductRequest(
+          request.name(),
+          request.brand(),
+          request.category(),
+          request.shortDescription(),
+          request.fullDescription(),
+          request.specs(),
+          request.dailyPrice(),
+          request.weeklyPrice(),
+          request.warrantyDate(),
+          request.invoiceUrl(),
+          imageUrl,
+          request.link1(),
+          request.link2(),
+          request.stock(),
+          request.availabilityStatus(),
+          List.of(imageUrl)
+      );
+    } catch (IOException exception) {
+      throw new BadRequestException("Invalid product data");
+    }
+  }
+
   public record BookingStatusRequest(BookingStatus status) {}
   public record BookingNoteRequest(String note) {}
   public record PaymentRemarkRequest(String remark) {}
@@ -820,6 +879,7 @@ public class AdminController {
   public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, LocalDateTime createdAt) {}
   public record PaymentRemarkLogResponse(Long id, String oldRemark, String newRemark, String changedBy, LocalDateTime changedAt) {}
   public record AdminBlogPostResponse(Long id, String title, String slug, String coverImage, String category, String author, BlogStatus status, LocalDate publishDate, String tags, String seoTitle, String metaDescription, String seoKeywords, String content) {}
+  public record ImageUploadResponse(String imageUrl) {}
   public record AdminStaticContentResponse(String key, String title, LocalDateTime updatedAt, String status) {}
   public record AdminContentResponse(List<AdminBlogPostResponse> blogPosts, List<AdminStaticContentResponse> staticContent) {}
   public record CategoryReportResponse(String name, long value) {}

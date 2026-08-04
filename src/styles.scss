@@ -18,6 +18,7 @@ $display-font: Poppins, Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
 html {
   color-scheme: light;
   scroll-behavior: smooth;
+  scroll-padding-top: 92px;
   @include mat.theme((
     color: (
       primary: mat.$orange-palette,

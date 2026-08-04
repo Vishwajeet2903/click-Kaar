@@ -11,10 +11,16 @@ import { WishlistService } from '../../services/wishlist.service';
   standalone: true,
   imports: [CurrencyPipe, RouterLink],
   template: `
-    <article class="product-card">
-      <a [routerLink]="['/products', product().id]" class="media-link">
-        <img class="product-image" [class.logo-fallback]="isFallbackImage()" [src]="product().image" [alt]="product().name" (error)="useFallback($event)">
-      </a>
+    <article class="product-card" [class.preview-card]="product().id === 0">
+      @if (product().id === 0) {
+        <div class="media-link">
+          <img class="product-image" [class.logo-fallback]="isFallbackImage()" [src]="product().image" [alt]="product().name" (error)="useFallback($event)">
+        </div>
+      } @else {
+        <a [routerLink]="['/products', product().id]" class="media-link">
+          <img class="product-image" [class.logo-fallback]="isFallbackImage()" [src]="product().image" [alt]="product().name" (error)="useFallback($event)">
+        </a>
+      }
       @if (canShowCustomerActions()) {
         <button
           type="button"
@@ -31,10 +37,20 @@ import { WishlistService } from '../../services/wishlist.service';
       }
       <div class="content">
         <p>{{ product().category }}</p>
-        <h3><a [routerLink]="['/products', product().id]">{{ product().name }}</a></h3>
+        <h3>
+          @if (product().id === 0) {
+            <span>{{ product().name }}</span>
+          } @else {
+            <a [routerLink]="['/products', product().id]">{{ product().name }}</a>
+          }
+        </h3>
         <div class="card-bottom">
           <strong>{{ product().dailyPrice | currency:'INR':'symbol':'1.0-0' }}<small>/day</small></strong>
-          <a class="details" [routerLink]="['/products', product().id]">Rent</a>
+          @if (product().id === 0) {
+            <span class="details preview-action">Rent</span>
+          } @else {
+            <a class="details" [routerLink]="['/products', product().id]">Rent</a>
+          }
         </div>
       </div>
     </article>
@@ -61,6 +77,9 @@ import { WishlistService } from '../../services/wishlist.service';
     small { color: #666; font-size: .78rem; font-weight: 600; }
     .details { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; white-space: nowrap; }
     .details:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
+    .preview-card .media-link,
+    .preview-card .preview-action { cursor: default; }
+    .preview-card .preview-action:hover { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); transform: none; }
   `]
 })
 export class ProductCardComponent {
