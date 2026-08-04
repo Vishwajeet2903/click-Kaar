@@ -7,7 +7,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   imports: [BreadcrumbComponent],
   template: `
     <app-breadcrumb label="About Us" />
-    <section class="container pb-5">
+    <section class="container about-shell pb-5">
       <div class="about-hero">
         <div>
           <p class="eyebrow">About Click-Kaar Pro Gear</p>
@@ -25,11 +25,11 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
         <article class="surface story">
           <h2>Our Services</h2>
           <p>At Click-Kaar Pro Gear, we are committed to delivering quality and reliability for every production. We offer professional camera and filmmaking equipment from leading global brands to meet the needs of photographers, filmmakers, and content creators.</p>
-          <div class="service-grid">
+          <ul class="service-list">
             @for (service of services; track service) {
-              <span>{{ service }}</span>
+              <li>{{ service }}</li>
             }
-          </div>
+          </ul>
         </article>
 
         <article class="surface story">
@@ -42,21 +42,19 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   `,
   styles: [`
     .about-hero { width: 100%; }
-    .section-title { font-size: clamp(2.1rem, 4vw, 3.85rem); letter-spacing: 0; line-height: 1.08; margin: 0 0 1rem; max-width: none; text-align: left; word-spacing: 0; }
+    :host ::ng-deep section.container.about-shell { border-radius: 32px !important; overflow: hidden; }
+    .section-title { font-size: clamp(1.85rem, 3.4vw, 3.25rem); letter-spacing: 0; line-height: 1.08; margin: 0 0 1rem; max-width: none; text-align: left; word-spacing: 0; }
     .intro { color: #242424; font-size: 1.1rem; line-height: 1.75; margin: 0; max-width: none; }
     .about-content { display: grid; gap: 1rem; margin-top: 1.75rem; }
     .story { padding: clamp(1.2rem, 3vw, 2rem); }
     h2 { color: #111; font-size: clamp(1.5rem, 2.4vw, 2.2rem); font-weight: 900; letter-spacing: 0; line-height: 1.12; margin: 0 0 .85rem; }
     .story p { color: #333; font-size: 1rem; line-height: 1.72; margin: 0; max-width: none; }
     .story p + p { margin-top: .85rem; }
-    .service-grid { display: grid; gap: .75rem; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 1.2rem; }
-    .service-grid span { background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 999px; color: #111; font-size: .92rem; font-weight: 800; padding: .75rem 1rem; }
-    @media (max-width: 991px) { .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .service-list { display: grid; gap: .65rem; list-style: disc; margin: 1.2rem 0 0; padding-left: 1.2rem; }
+    .service-list li { color: #111; font-size: .98rem; font-weight: 600; line-height: 1.5; padding-left: .25rem; }
     @media (max-width: 560px) {
       .section-title { font-size: clamp(1.9rem, 9vw, 2.55rem); line-height: 1.12; }
       .intro { font-size: 1rem; line-height: 1.65; }
-      .service-grid { grid-template-columns: 1fr; }
-      .service-grid span { border-radius: 14px; }
     }
   `]
 })
