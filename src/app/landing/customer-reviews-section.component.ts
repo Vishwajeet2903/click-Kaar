@@ -186,7 +186,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .rating-picker button:hover { color: #ff9700; transform: translateY(-1px); }
     .review-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .8rem; }
     .review-actions .btn-pill { background: #000; color: #fff; min-width: 150px; }
-    .review-actions .btn-pill:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,255,255,.14); color: #111; }
+    .review-actions .btn-pill:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,255,255,.14); color: #fff; }
     .review-actions .btn-pill:disabled { background: #d8d4cc; box-shadow: none; color: #777; cursor: not-allowed; transform: none; }
     .review-status,
     .review-error { color: #606060; font-size: .88rem; font-weight: 800; margin: 0; }

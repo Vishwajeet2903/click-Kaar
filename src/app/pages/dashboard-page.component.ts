@@ -201,7 +201,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .menu-btn { background: transparent; border: 0; border-radius: 8px; color: #555; display: block; font-weight: 800; padding: .75rem; text-align: left; width: 100%; }
     .menu-btn:hover, .menu-btn.active-menu { background: rgba(255,151,0,.1); color: #ff9700; }
     .logout-btn { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; margin-top: .8rem; min-height: 50px; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 100%; }
-    .logout-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .logout-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .profile { align-items: center; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1rem; }
     .profile h2 { margin-bottom: .35rem; }
     .profile-meta { align-items: flex-end; display: flex; flex-direction: column; gap: .55rem; text-align: right; }
@@ -216,7 +216,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .section-head h2 { font-size: 1.15rem; margin: 0; }
     .empty-state { margin: 0 auto; max-width: 680px; padding: 2rem; text-align: center; }
     .empty-state a, .empty-panel a { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; margin-top: 1rem; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
-    .empty-state a:hover, .empty-panel a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .empty-state a:hover, .empty-panel a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .empty-panel h2 { font-size: 1.15rem; margin: 0 0 .35rem; }
     .empty-panel.compact { margin-bottom: 0; }
     .password-panel { max-width: 620px; }
@@ -231,7 +231,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .field-error { color: #b42318; display: block; font-size: .78rem; font-weight: 850; line-height: 1.35; margin-top: .45rem; }
     .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 14px; color: #b42318; font-size: .9rem; font-weight: 800 !important; line-height: 1.45; margin: 1rem 0 0; padding: .85rem 1rem; }
     .save-btn { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: pointer; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: min(220px, 100%); }
-    .save-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .save-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .save-btn:disabled, .save-btn:disabled:hover { background: #111; color: #fff; cursor: not-allowed; opacity: .68; transform: none; }
     h2, h3 { font-weight: 900; }
     .booking { height: 100%; }

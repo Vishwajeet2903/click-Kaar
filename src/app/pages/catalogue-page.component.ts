@@ -86,7 +86,7 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
     .pagination-bar { align-items: center; display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
     .pagination-bar button { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
     .pagination-bar span { color: #333; font-size: .95rem; font-weight: 600; line-height: 1.4; }
-    .pagination-bar button:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .pagination-bar button:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .pagination-bar button:disabled, .pagination-bar button:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: not-allowed; opacity: .45; transform: none; }
   `]
 })

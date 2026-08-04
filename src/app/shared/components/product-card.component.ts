@@ -60,7 +60,7 @@ import { WishlistService } from '../../services/wishlist.service';
     strong { color: #111; font-size: 1.02rem; font-weight: 900; word-spacing: 0; }
     small { color: #666; font-size: .78rem; font-weight: 600; }
     .details { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; white-space: nowrap; }
-    .details:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .details:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
   `]
 })
 export class ProductCardComponent {

@@ -75,7 +75,7 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
     input:focus, select:focus, textarea:focus { border-color: #ff9700; box-shadow: 0 0 0 3px rgba(255,151,0,.14); }
     .primary-btn, .ghost-btn, .link-btn { align-items: center; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 900; justify-content: center; text-decoration: none; transition: transform .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease; white-space: nowrap; }
     .primary-btn { background: #111; border: 0; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; min-height: 50px; padding: .85rem 1.25rem; }
-    .primary-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .primary-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .ghost-btn, .link-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); box-shadow: 0 8px 22px rgba(0,0,0,.06); color: #111; min-height: 44px; padding: .72rem 1rem; }
     .ghost-btn:hover, .link-btn:hover { background: #111; color: #fff; transform: translateY(-2px); }
     .link-btn { font-size: .78rem; min-height: 34px; padding: .48rem .78rem; }

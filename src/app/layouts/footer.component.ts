@@ -92,7 +92,7 @@ import { RouterLink } from '@angular/router';
     h2 { color: #fff; font-size: clamp(2.1rem, 4.8vw, 4.4rem); font-weight: 900; letter-spacing: 0; line-height: 1; margin: 0; max-width: 780px; word-spacing: 0; }
     .footer-cta p { color: #eeeeee; font-size: 1rem; line-height: 1.65; margin: 0 0 1rem; }
     .footer-cta a, .contact-card a { align-items: center; background: #fff; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #111; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
-    .footer-cta a:hover, .contact-card a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .footer-cta a:hover, .contact-card a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .footer-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     nav, .contact-card { background: #303030; border: 1px solid rgba(255,255,255,.1); border-radius: 22px; padding: 1.2rem; }
     h3 { color: #fff; font-size: .82rem; font-weight: 900; letter-spacing: .04em; line-height: 1.25; margin: 0 0 1rem; text-transform: uppercase; word-spacing: 0; }

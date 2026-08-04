@@ -348,7 +348,7 @@ function notFutureDate(control: AbstractControl<string>): ValidationErrors | nul
     .file-field:hover b { border-color: rgba(255,151,0,.95); color: #111; }
     .file-field.invalid-file b { background: #fff4f2; border-color: rgba(180,35,24,.72); box-shadow: 0 0 0 4px rgba(180,35,24,.12); color: #b42318; }
     .submit { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: pointer; display: inline-flex; font-size: .96rem; font-weight: 900; justify-content: center; margin-top: .4rem; min-height: 52px; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 100%; }
-    .submit:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .submit:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .submit:disabled, .submit:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: not-allowed; opacity: .68; transform: none; }
     .signin { margin-top: 1.2rem; text-align: center; }
     .signin a { color: #111; font-weight: 900; text-decoration: underline; text-underline-offset: 4px; }

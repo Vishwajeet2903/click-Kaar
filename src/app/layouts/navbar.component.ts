@@ -115,7 +115,7 @@ import { ProductService } from '../services/product.service';
     .cart-link:hover .cart-line { stroke: #111; }
     .cart-link:hover .cart-wheel { fill: #fff; stroke: #fff; }
     .login-link { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; }
-    .login-link:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .login-link:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .avatar-link { align-items: center; background: #111; border: 2px solid transparent; border-radius: 50%; box-shadow: 0 10px 24px rgba(0,0,0,.12); color: #fff !important; display: inline-flex; font-size: .9rem; font-weight: 950; height: 38px; justify-content: center; line-height: 1; text-transform: uppercase; width: 38px; }
     .avatar-link:hover { background: #ff9700; color: #fff !important; transform: translateY(-1px); }
     .avatar-link:focus,

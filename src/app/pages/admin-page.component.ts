@@ -7,6 +7,7 @@ import { finalize } from 'rxjs';
 import { Product } from '../models/product.model';
 import {
   AdminBookingResponse,
+  AdminBlogPostResponse,
   AdminCouponResponse,
   AdminContentResponse,
   AdminPaymentResponse,
@@ -116,12 +117,17 @@ interface AdminGalleryImage {
 interface BlogPostAdmin {
   id: number;
   title: string;
+  slug: string;
+  coverImage: string;
   category: string;
   author: string;
   status: 'Draft' | 'Published';
   publishDate: string;
+  tags: string;
   seoTitle: string;
   metaDescription: string;
+  seoKeywords: string;
+  content: string;
 }
 
 interface StaticContentItem {
@@ -652,47 +658,73 @@ interface PaymentRemarkLogView {
               }
 
               @case ('content') {
-                <div class="split-grid">
-                  <section class="surface panel">
-                    <div class="panel-head"><h3>Blog & SEO</h3><button type="button" class="mini-btn" (click)="publishDraft()">Publish draft</button></div>
-                    <div class="dense-list">
-                      @for (post of pagedBlogPosts(); track post.id) {
-                        <article>
-                          <div><strong>{{ post.title }}</strong><span>{{ post.category }} - {{ post.author }} - {{ post.publishDate | date:'mediumDate' }}</span></div>
-                          <b class="status" [class]="statusClass(post.status)">{{ post.status }}</b>
-                        </article>
-                      }
-                    </div>
-                    <div class="pagination-row">
-                      <span>{{ pageSummary(blogPosts().length, blogPage) }}</span>
-                      <div>
-                        <button type="button" class="ghost-mini" [disabled]="blogPage === 1" (click)="changePage('blog', -1)">Previous</button>
-                        <button type="button" class="mini-btn" [disabled]="blogPage === pageCount(blogPosts().length)" (click)="changePage('blog', 1)">Next</button>
-                      </div>
-                    </div>
-                  </section>
-                  <section class="surface panel">
-                    <div class="panel-head"><h3>Static content</h3><button type="button" class="mini-btn" (click)="markContentReviewed()">Mark reviewed</button></div>
-                    <div class="dense-list">
-                      @for (item of pagedStaticContent(); track item.key) {
-                        <article>
-                          <div><strong>{{ item.title }}</strong><span>{{ item.owner }} - {{ item.updatedAt | date:'mediumDate' }}</span></div>
-                          <b class="status" [class]="statusClass(item.status)">{{ item.status }}</b>
-                        </article>
-                      }
-                    </div>
-                    <div class="pagination-row">
-                      <span>{{ pageSummary(staticContent().length, staticContentPage) }}</span>
-                      <div>
-                        <button type="button" class="ghost-mini" [disabled]="staticContentPage === 1" (click)="changePage('staticContent', -1)">Previous</button>
-                        <button type="button" class="mini-btn" [disabled]="staticContentPage === pageCount(staticContent().length)" (click)="changePage('staticContent', 1)">Next</button>
-                      </div>
-                    </div>
-                  </section>
+                <div class="content-switcher surface">
+                  <button type="button" [class.active]="activeContentSection() === 'blog'" (click)="activeContentSection.set('blog')">Blog & SEO</button>
+                  <button type="button" [class.active]="activeContentSection() === 'gallery'" (click)="activeContentSection.set('gallery')">Gallery</button>
                 </div>
 
-                <div class="split-grid content-gallery-grid">
-                  <form class="surface panel gallery-form" [formGroup]="galleryForm" (ngSubmit)="submitGalleryImage()">
+                @if (activeContentSection() === 'blog') {
+                  <div class="split-grid">
+                    <section class="surface panel blog-list-panel">
+                      <div class="panel-head"><h3>Blog & SEO</h3><button type="button" class="mini-btn" (click)="startNewBlogPost()">New post</button></div>
+                      <div class="dense-list blog-admin-list">
+                        @for (post of pagedBlogPosts(); track post.id) {
+                          <article class="clickable-review" [class.active]="editingBlogPostId === post.id" (click)="editBlogPost(post)" tabindex="0" role="button" [attr.aria-label]="'Edit blog post ' + post.title" (keydown.enter)="editBlogPost(post)" (keydown.space)="editBlogPost(post)">
+                            <div>
+                              <strong>{{ post.title }}</strong>
+                              <span>{{ post.category }} - {{ post.author }} - {{ post.publishDate | date:'mediumDate' }}</span>
+                            </div>
+                            <b class="status" [class]="statusClass(post.status)">{{ post.status }}</b>
+                          </article>
+                        } @empty {
+                          <p class="muted">No blog posts yet.</p>
+                        }
+                      </div>
+                      <div class="pagination-row">
+                        <span>{{ pageSummary(blogPosts().length, blogPage) }}</span>
+                        <div>
+                          <button type="button" class="ghost-mini" [disabled]="blogPage === 1" (click)="changePage('blog', -1)">Previous</button>
+                          <button type="button" class="mini-btn" [disabled]="blogPage === pageCount(blogPosts().length)" (click)="changePage('blog', 1)">Next</button>
+                        </div>
+                      </div>
+                    </section>
+                    <form class="surface panel blog-editor-form" [formGroup]="blogForm" (ngSubmit)="submitBlogPost()">
+                      <div class="panel-head">
+                        <h3>{{ editingBlogPostId ? 'Edit blog post' : 'Create blog post' }}</h3>
+                        @if (editingBlogPostId) {
+                          <button type="button" class="ghost-mini" (click)="startNewBlogPost()">Cancel edit</button>
+                        }
+                      </div>
+                      @if (blogFormError) {
+                        <p class="form-alert" role="alert">{{ blogFormError }}</p>
+                      }
+                      <div class="blog-form-grid">
+                        <label>Title<input formControlName="title" placeholder="Blog title" (input)="syncBlogSlug()"></label>
+                        <label>Slug<input formControlName="slug" placeholder="blog-post-slug"></label>
+                        <label>Category<input formControlName="category" placeholder="Guides"></label>
+                        <label>Author<input formControlName="authorName" placeholder="Clickkaar Team"></label>
+                        <label>Publish date<input type="date" formControlName="publishDate"></label>
+                        <label>Status<select formControlName="status"><option value="DRAFT">Draft</option><option value="PUBLISHED">Published</option></select></label>
+                        <label class="wide-field">Cover image URL<input formControlName="coverImage" placeholder="https://..."></label>
+                        <label class="wide-field">Tags<input formControlName="tags" placeholder="camera, lighting, rentals"></label>
+                        <label class="wide-field">SEO title<input formControlName="seoTitle" placeholder="Search title"></label>
+                        <label class="wide-field">Meta description<textarea formControlName="seoDescription" rows="2" placeholder="Short SEO description"></textarea></label>
+                        <label class="wide-field">SEO keywords<input formControlName="seoKeywords" placeholder="camera rental, pune"></label>
+                        <label class="wide-field">Content<textarea formControlName="content" rows="7" placeholder="Write the blog content. Use a new line for each paragraph."></textarea></label>
+                      </div>
+                      <div class="blog-form-actions">
+                        @if (editingBlogPostId) {
+                          <button type="button" class="danger-btn" [disabled]="isSubmittingBlog" (click)="deleteBlogPost()">Delete</button>
+                        }
+                        <button type="submit" class="primary-btn" [disabled]="isSubmittingBlog">{{ isSubmittingBlog ? 'Saving...' : editingBlogPostId ? 'Update post' : 'Create post' }}</button>
+                      </div>
+                    </form>
+                  </div>
+                }
+
+                @if (activeContentSection() === 'gallery') {
+                  <div class="split-grid content-gallery-grid">
+                    <form class="surface panel gallery-form" [formGroup]="galleryForm" (ngSubmit)="submitGalleryImage()">
                     <h3 class="gallery-card-title">Add gallery image</h3>
                     @if (galleryFormError) {
                       <p class="form-alert" role="alert">{{ galleryFormError }}</p>
@@ -748,8 +780,9 @@ interface PaymentRemarkLogView {
                         <p class="muted">No gallery images have been added yet.</p>
                       }
                     </div>
-                  </section>
-                </div>
+                    </section>
+                  </div>
+                }
               }
 
               @case ('reviews') {
@@ -976,12 +1009,12 @@ interface PaymentRemarkLogView {
     .remark-log-btn:disabled, .remark-log-btn:disabled:hover { color: var(--admin-muted); cursor: default; opacity: .65; }
     button, .primary-btn, .ghost-btn, .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 900; justify-content: center; transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease; white-space: nowrap; }
     .primary-btn { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; min-height: 50px; padding: .85rem 1.25rem; }
-    .primary-btn:hover { background: var(--admin-accent); box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .primary-btn:hover { background: var(--admin-accent); box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .ghost-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); box-shadow: 0 8px 22px rgba(0,0,0,.06); color: #111; min-height: 50px; padding: .85rem 1.25rem; }
     .ghost-btn:hover, .ghost-mini:hover, .link-btn:hover { background: #111; border-color: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; transform: translateY(-2px); }
     .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { font-size: .78rem; min-height: 34px; padding: .48rem .78rem; }
     .mini-btn { background: #111; box-shadow: 0 10px 22px rgba(0,0,0,.14); color: #fff; }
-    .mini-btn:hover { background: var(--admin-accent); box-shadow: 0 14px 28px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .mini-btn:hover { background: var(--admin-accent); box-shadow: 0 14px 28px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .danger-btn { background: #fff1f1; border: 1px solid rgba(180,35,24,.16); box-shadow: 0 8px 22px rgba(180,35,24,.08); color: #b42318; }
     .danger-btn:hover { background: #b42318; border-color: #b42318; box-shadow: 0 14px 28px rgba(180,35,24,.18); color: #fff; transform: translateY(-2px); }
     .return-btn { background: #ecfdf3; border: 1px solid rgba(2,122,72,.2); box-shadow: 0 8px 22px rgba(2,122,72,.08); color: #027a48; }
@@ -1049,7 +1082,7 @@ interface PaymentRemarkLogView {
     .document-lightbox-content { display: grid; gap: .65rem; max-height: 92vh; max-width: min(920px, 94vw); position: relative; width: 100%; }
     .lightbox-close, .lightbox-nav { align-items: center; background: rgba(255,255,255,.92); border: 1px solid rgba(255,255,255,.32); border-radius: 999px; box-shadow: 0 12px 28px rgba(0,0,0,.2); color: #111; display: inline-flex; font-size: 1.4rem; font-weight: 950; justify-content: center; min-height: 38px; padding: 0; width: 38px; }
     .lightbox-close { position: absolute; right: .65rem; top: .65rem; z-index: 2; }
-    .lightbox-close:hover, .lightbox-nav:hover { background: #ff9700; color: #111; transform: translateY(-1px); }
+    .lightbox-close:hover, .lightbox-nav:hover { background: #ff9700; color: #fff; transform: translateY(-1px); }
     .lightbox-image-row { align-items: center; display: grid; gap: .75rem; grid-template-columns: 40px minmax(0, 1fr) 40px; min-height: 360px; }
     .lightbox-image-row img { background: #fff; border-radius: 8px; box-shadow: 0 24px 80px rgba(0,0,0,.34); display: block; margin: 0 auto; max-height: 76vh; object-fit: contain; padding: .5rem; width: 100%; }
     .lightbox-nav { align-self: center; justify-self: center; }
@@ -1088,6 +1121,22 @@ interface PaymentRemarkLogView {
     .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 6px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1rem; padding: .85rem 1rem; }
     .form-grid { display: grid; gap: .9rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .coupon-form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .content-switcher { display: inline-flex; gap: .45rem; margin-bottom: 1rem; padding: .45rem; }
+    .content-switcher button { background: transparent; border: 1px solid transparent; border-radius: 999px; color: #555; font-size: .9rem; font-weight: 900; min-height: 40px; padding: .55rem 1rem; }
+    .content-switcher button.active,
+    .content-switcher button:hover { background: #111; border-color: #111; color: #fff; }
+    .blog-list-panel { align-content: start; }
+    .blog-admin-list article { align-items: center; display: flex; gap: 1rem; justify-content: space-between; }
+    .blog-admin-list article > div { min-width: 0; }
+    .blog-admin-list strong,
+    .blog-admin-list span { display: block; }
+    .blog-admin-list span { color: var(--admin-muted); font-size: .82rem; font-weight: 800; margin-top: .22rem; }
+    .blog-editor-form { align-content: start; }
+    .blog-form-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .blog-form-grid .wide-field { grid-column: 1 / -1; }
+    .blog-form-actions { align-items: center; display: flex; gap: .7rem; justify-content: flex-end; margin-top: .9rem; }
+    .blog-form-actions .primary-btn,
+    .blog-form-actions .danger-btn { min-width: 132px; }
     .content-gallery-grid { align-items: start; }
     .gallery-form { align-content: start; align-self: start; }
     .gallery-card-title { color: #111; font-size: 1rem; font-weight: 950; margin: 0 0 .5rem; }
@@ -1155,7 +1204,9 @@ interface PaymentRemarkLogView {
     }
     @media (max-width: 760px) {
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
-      .split-grid, .metric-grid, .card-grid, .form-grid, .detail-grid, .document-grid, .gallery-upload-flow, .gallery-toggle-row, .gallery-admin-grid, nav { grid-template-columns: 1fr; }
+      .split-grid, .metric-grid, .card-grid, .form-grid, .blog-form-grid, .detail-grid, .document-grid, .gallery-upload-flow, .gallery-toggle-row, .gallery-admin-grid, nav { grid-template-columns: 1fr; }
+      .blog-form-grid .wide-field { grid-column: auto; }
+      .blog-form-actions { align-items: stretch; flex-direction: column; }
       .gallery-upload-box { min-height: 110px; }
       .admin-sidebar nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #111; }
       .admin-sidebar nav button.active small { background: #111; color: #fff; }
@@ -1206,11 +1257,13 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly customerQuery = signal('');
   readonly reviewQuery = signal('');
   readonly reviewRatingFilter = signal('');
+  readonly activeContentSection = signal<'blog' | 'gallery'>('blog');
   editingProductId?: number;
   createdEmployee?: EmployeeResponse;
   productFormError = '';
   employeeFormError = '';
   couponFormError = '';
+  blogFormError = '';
   galleryFormError = '';
   galleryFileName = '';
   galleryPreviewUrl = '';
@@ -1227,7 +1280,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   pendingLoadError = '';
   isSubmitting = false;
   isSubmittingCoupon = false;
+  isSubmittingBlog = false;
   isSubmittingGallery = false;
+  editingBlogPostId?: number;
   isLoadingPending = false;
   verifyingRequestId?: number;
   selectedPendingCustomer?: CustomerVerificationResponse;
@@ -1299,6 +1354,21 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     wide: [false],
     tall: [false],
     active: [true]
+  });
+
+  readonly blogForm = this.fb.nonNullable.group({
+    title: ['', Validators.required],
+    slug: ['', Validators.required],
+    coverImage: [''],
+    authorName: ['', Validators.required],
+    publishDate: [new Date().toISOString().slice(0, 10), Validators.required],
+    category: ['', Validators.required],
+    tags: [''],
+    seoTitle: [''],
+    seoDescription: [''],
+    seoKeywords: [''],
+    content: ['', Validators.required],
+    status: ['DRAFT' as 'DRAFT' | 'PUBLISHED', Validators.required]
   });
 
   readonly settingsForm = this.fb.nonNullable.group({
@@ -1874,12 +1944,54 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return this.savingPaymentRemarkIds.has(paymentId);
   }
 
-  publishDraft(): void {
-    this.blogPosts.update((items) => items.map((item) => item.status === 'Draft' ? { ...item, status: 'Published' } : item));
-  }
-
   markContentReviewed(): void {
     this.staticContent.update((items) => items.map((item) => ({ ...item, status: 'Current' })));
+  }
+
+  startNewBlogPost(): void {
+    this.editingBlogPostId = undefined;
+    this.blogFormError = '';
+    this.blogForm.reset({
+      title: '',
+      slug: '',
+      coverImage: '',
+      authorName: '',
+      publishDate: new Date().toISOString().slice(0, 10),
+      category: '',
+      tags: '',
+      seoTitle: '',
+      seoDescription: '',
+      seoKeywords: '',
+      content: '',
+      status: 'DRAFT'
+    });
+  }
+
+  editBlogPost(post: BlogPostAdmin): void {
+    this.editingBlogPostId = post.id;
+    this.blogFormError = '';
+    this.blogForm.setValue({
+      title: post.title,
+      slug: post.slug,
+      coverImage: post.coverImage,
+      authorName: post.author,
+      publishDate: post.publishDate || new Date().toISOString().slice(0, 10),
+      category: post.category,
+      tags: post.tags,
+      seoTitle: post.seoTitle,
+      seoDescription: post.metaDescription,
+      seoKeywords: post.seoKeywords,
+      content: post.content,
+      status: post.status === 'Published' ? 'PUBLISHED' : 'DRAFT'
+    });
+  }
+
+  syncBlogSlug(): void {
+    if (this.editingBlogPostId || this.blogForm.controls.slug.value.trim()) {
+      return;
+    }
+
+    this.blogForm.controls.slug.setValue(this.slugify(this.blogForm.controls.title.value), { emitEvent: false });
   }
 
   normalizeCouponInput(): void {
@@ -1927,6 +2039,73 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.couponFormError = this.authService.getErrorMessage(error);
+        }
+      });
+  }
+
+  submitBlogPost(): void {
+    this.blogFormError = '';
+    this.blogForm.controls.slug.setValue(this.slugify(this.blogForm.controls.slug.value || this.blogForm.controls.title.value), { emitEvent: false });
+
+    if (this.blogForm.invalid || this.isSubmittingBlog) {
+      this.blogForm.markAllAsTouched();
+      this.blogFormError = 'Enter the title, slug, author, date, category, content, and status.';
+      return;
+    }
+
+    this.isSubmittingBlog = true;
+    const request = this.blogForm.getRawValue();
+    const save = this.editingBlogPostId
+      ? this.adminService.updateBlogPost(this.editingBlogPostId, request)
+      : this.adminService.createBlogPost(request);
+
+    save.pipe(finalize(() => {
+      this.isSubmittingBlog = false;
+    })).subscribe({
+      next: (post) => {
+        const mappedPost = this.mapBlogPostResponse(post);
+        if (this.editingBlogPostId) {
+          this.blogPosts.update((items) => items.map((item) => item.id === mappedPost.id ? mappedPost : item));
+          this.showTopMessage('Blog post updated.', 2200);
+        } else {
+          this.blogPosts.update((items) => [mappedPost, ...items]);
+          this.showTopMessage('Blog post created.', 2200);
+        }
+        this.updateContentTabCount();
+        this.startNewBlogPost();
+      },
+      error: (error) => {
+        this.blogFormError = this.authService.getErrorMessage(error);
+      }
+    });
+  }
+
+  deleteBlogPost(): void {
+    if (!this.editingBlogPostId || this.isSubmittingBlog) {
+      return;
+    }
+
+    const post = this.blogPosts().find((item) => item.id === this.editingBlogPostId);
+    if (post && !confirm(`Delete blog post "${post.title}"?`)) {
+      return;
+    }
+
+    const postId = this.editingBlogPostId;
+    this.isSubmittingBlog = true;
+    this.adminService.deleteBlogPost(postId)
+      .pipe(finalize(() => {
+        this.isSubmittingBlog = false;
+      }))
+      .subscribe({
+        next: () => {
+          this.blogPosts.update((items) => items.filter((item) => item.id !== postId));
+          this.clampAdminPages();
+          this.updateContentTabCount();
+          this.startNewBlogPost();
+          this.showTopMessage('Blog post deleted.', 2200);
+        },
+        error: (error) => {
+          this.blogFormError = this.authService.getErrorMessage(error);
         }
       });
   }
@@ -2266,6 +2445,24 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapBlogPostResponse(post: AdminBlogPostResponse): BlogPostAdmin {
+    return {
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      coverImage: post.coverImage ?? '',
+      category: post.category ?? '',
+      author: post.authorName ?? '',
+      status: post.status === 'PUBLISHED' ? 'Published' : 'Draft',
+      publishDate: post.publishDate ?? '',
+      tags: post.tags ?? '',
+      seoTitle: post.seoTitle ?? '',
+      metaDescription: post.seoDescription ?? '',
+      seoKeywords: post.seoKeywords ?? '',
+      content: post.content ?? ''
+    };
+  }
+
   private mapPaymentRemarkLog(log: PaymentRemarkLogResponse): PaymentRemarkLogView {
     return {
       id: log.id,
@@ -2280,12 +2477,17 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.blogPosts.set(content.blogPosts.map((post) => ({
       id: post.id,
       title: post.title,
+      slug: post.slug ?? '',
+      coverImage: post.coverImage ?? '',
       category: post.category ?? '',
       author: post.author ?? '',
       status: post.status === 'PUBLISHED' ? 'Published' : 'Draft',
       publishDate: post.publishDate ?? '',
+      tags: post.tags ?? '',
       seoTitle: post.seoTitle ?? '',
-      metaDescription: post.metaDescription ?? ''
+      metaDescription: post.metaDescription ?? '',
+      seoKeywords: post.seoKeywords ?? '',
+      content: post.content ?? ''
     })));
     this.staticContent.set(content.staticContent.map((item) => ({
       key: item.key,
@@ -2299,7 +2501,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   private updateContentTabCount(): void {
-    this.updateTabCount('content', String(this.blogPosts().length + this.staticContent().length + this.galleryImages().length));
+    this.updateTabCount('content', String(this.blogPosts().length + this.galleryImages().length));
   }
 
   private productRequestFromForm(): AdminProductRequest {
@@ -2447,6 +2649,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .map((part) => part.slice(0, 3))
       .join('-');
     return initials || 'Img';
+  }
+
+  private slugify(value: string): string {
+    return value
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
 
   private specificationsToText(specifications: Record<string, string>): string {

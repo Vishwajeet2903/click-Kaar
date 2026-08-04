@@ -58,7 +58,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     h2 a:hover { color: #ff9700; }
     .qty { align-items: center; display: flex; gap: .7rem; }
     .qty button, .remove { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-weight: 800; justify-content: center; min-height: 50px; min-width: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
-    .qty button:hover, .remove:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .qty button:hover, .remove:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .remove { display: block; margin-top: .6rem; width: 100%; }
     .summary { padding: 1.25rem; position: sticky; top: 92px; }
     .summary p { border-bottom: 1px solid rgba(148,163,184,.15); display: flex; justify-content: space-between; padding: .7rem 0; }

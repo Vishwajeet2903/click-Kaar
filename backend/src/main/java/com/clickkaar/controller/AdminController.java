@@ -345,12 +345,17 @@ public class AdminController {
         .map(post -> new AdminBlogPostResponse(
             post.getId(),
             post.getTitle(),
+            post.getSlug(),
+            post.getCoverImage(),
             post.getCategory(),
             post.getAuthorName(),
             post.getStatus(),
             post.getPublishDate(),
+            post.getTags(),
             post.getSeoTitle(),
-            post.getSeoDescription()
+            post.getSeoDescription(),
+            post.getSeoKeywords(),
+            post.getContent()
         ))
         .toList();
     List<AdminStaticContentResponse> staticPages = staticContentRepository.findAll().stream()
@@ -814,7 +819,7 @@ public class AdminController {
   public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt, String remark, long remarkChangeCount) {}
   public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, LocalDateTime createdAt) {}
   public record PaymentRemarkLogResponse(Long id, String oldRemark, String newRemark, String changedBy, LocalDateTime changedAt) {}
-  public record AdminBlogPostResponse(Long id, String title, String category, String author, BlogStatus status, LocalDate publishDate, String seoTitle, String metaDescription) {}
+  public record AdminBlogPostResponse(Long id, String title, String slug, String coverImage, String category, String author, BlogStatus status, LocalDate publishDate, String tags, String seoTitle, String metaDescription, String seoKeywords, String content) {}
   public record AdminStaticContentResponse(String key, String title, LocalDateTime updatedAt, String status) {}
   public record AdminContentResponse(List<AdminBlogPostResponse> blogPosts, List<AdminStaticContentResponse> staticContent) {}
   public record CategoryReportResponse(String name, long value) {}

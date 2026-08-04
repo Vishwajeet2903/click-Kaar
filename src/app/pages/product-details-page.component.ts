@@ -38,7 +38,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     mat-dialog-content { color: #666; display: block; font-size: .98rem; font-weight: 700; line-height: 1.6; margin: 0; padding: 0; }
     mat-dialog-actions { display: grid; gap: .7rem; grid-template-columns: 1fr 1fr; margin: 1.2rem 0 0; padding: 0; }
     .dialog-action { --mdc-text-button-label-text-color: #fff; --mdc-filled-button-container-color: #111; --mdc-filled-button-label-text-color: #fff; align-items: center; background: #111 !important; border-radius: 999px !important; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff !important; display: inline-flex; font-size: .92rem; font-weight: 950; justify-content: center; min-height: 46px; padding: .75rem 1rem; text-transform: none; width: 100%; }
-    .dialog-action:hover { --mdc-text-button-label-text-color: #111; --mdc-filled-button-container-color: #ff9700; --mdc-filled-button-label-text-color: #111; background: #ff9700 !important; color: #111 !important; transform: translateY(-1px); }
+    .dialog-action:hover { --mdc-text-button-label-text-color: #fff; --mdc-filled-button-container-color: #ff9700; --mdc-filled-button-label-text-color: #fff; background: #ff9700 !important; color: #fff !important; transform: translateY(-1px); }
     @media (max-width: 420px) {
       mat-dialog-actions { grid-template-columns: 1fr; }
     }
@@ -271,16 +271,16 @@ export class AddedDialogComponent {}
     .calendar-weekdays span { color: #ff9700; font-size: .66rem; font-weight: 950; text-align: center; text-transform: uppercase; }
     .calendar-days button, .calendar-days span { align-items: center; aspect-ratio: 1; border-radius: 999px; display: inline-flex; font-size: .82rem; justify-content: center; }
     .calendar-days button { background: #fff; border: 1px solid transparent; color: #111; cursor: pointer; font-weight: 900; }
-    .calendar-days button:hover, .calendar-days button.selected { background: #ff9700; border-color: #ff9700; color: #111; }
+    .calendar-days button:hover, .calendar-days button.selected { background: #ff9700; border-color: #ff9700; color: #fff; }
     .calendar-days button:disabled { background: #f5f5f3; color: #c7c7c0; cursor: not-allowed; }
     .calendar-days button.blocked:disabled { background: rgba(194,58,33,.1); border-color: rgba(194,58,33,.16); color: #c23a21; text-decoration: line-through; }
     .duration-options { display: grid; gap: .65rem; grid-template-columns: repeat(4, 1fr); margin: 0 0 1.1rem; }
     .duration-card { background: #fff; border: 1px solid rgba(255,151,0,.42); border-radius: 16px; color: #111; cursor: pointer; min-height: 62px; padding: .65rem .5rem; text-align: center; transition: transform .25s ease, border-color .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease; }
     .duration-card span { color: #ff9700; display: block; font-size: .68rem; font-weight: 950; line-height: 1.1; text-transform: uppercase; }
     .duration-card strong { color: #111; display: block; font-size: .88rem; line-height: 1.1; margin-top: .25rem; white-space: nowrap; }
-    .duration-card:hover, .duration-card.active { background: #ff9700; border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.2); color: #111; transform: translateY(-2px); }
+    .duration-card:hover, .duration-card.active { background: #ff9700; border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.2); color: #fff; transform: translateY(-2px); }
     .duration-card:hover span, .duration-card.active span { color: #fff; }
-    .duration-card:hover strong, .duration-card.active strong { color: #111; }
+    .duration-card:hover strong, .duration-card.active strong { color: #fff; }
     .total-panel { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 20px; display: flex; justify-content: space-between; margin: .1rem 0 1.15rem; padding: 1rem 1.1rem; }
     .total-panel span { color: #777; font-weight: 800; }
     .total-panel strong { color: #111; font-size: 1.35rem; }

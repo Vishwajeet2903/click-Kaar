@@ -131,7 +131,7 @@ declare global {
     .coupon-field input:focus { border-color: #ff9700; box-shadow: 0 0 0 4px rgba(255,151,0,.14); }
     .coupon-field input::placeholder { color: #9a9a9a; font-weight: 700; text-transform: none; }
     .apply-coupon-btn { background: #111; border: 0; border-radius: 14px; color: #fff; cursor: pointer; font-weight: 900; min-height: 48px; min-width: 96px; padding: .75rem 1rem; transition: background .2s ease, color .2s ease, transform .2s ease; }
-    .apply-coupon-btn:hover { background: #ff9700; color: #111; transform: translateY(-1px); }
+    .apply-coupon-btn:hover { background: #ff9700; color: #fff; transform: translateY(-1px); }
     .apply-coupon-btn:disabled, .apply-coupon-btn:disabled:hover { background: #111; color: #fff; cursor: not-allowed; opacity: .58; transform: none; }
     .coupon-error, .coupon-success { font-size: .8rem; font-weight: 850; line-height: 1.35; }
     .coupon-error { color: #b42318; }

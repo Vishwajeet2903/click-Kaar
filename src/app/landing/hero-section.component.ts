@@ -68,7 +68,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     .market-search input { border: 0; color: #111; font: inherit; min-width: 0; outline: 0; }
     .market-search a { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; height: 50px; justify-content: center; padding: 0; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 50px; }
     .market-search svg { fill: none; height: 21px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; width: 21px; }
-    .market-search a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .market-search a:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .category-row { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; margin: 0 auto; max-width: 720px; }
     .category-row a { background: #f4f4f1; border: 1px solid rgba(17,17,17,.06); border-radius: 999px; color: #111; font-size: .76rem; font-weight: 900; padding: .56rem .78rem; }
     .hero-collage { height: clamp(300px, 38vw, 450px); margin: -.2rem auto 0; max-width: 1000px; position: relative; }

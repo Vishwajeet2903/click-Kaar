@@ -141,12 +141,17 @@ export interface AdminContentResponse {
   blogPosts: Array<{
     id: number;
     title: string;
+    slug?: string;
+    coverImage?: string;
     category?: string;
     author?: string;
     status: string;
     publishDate?: string;
+    tags?: string;
     seoTitle?: string;
     metaDescription?: string;
+    seoKeywords?: string;
+    content?: string;
   }>;
   staticContent: Array<{
     key: string;
@@ -154,6 +159,37 @@ export interface AdminContentResponse {
     updatedAt: string;
     status: string;
   }>;
+}
+
+export interface AdminBlogPostRequest {
+  title: string;
+  slug: string;
+  coverImage: string;
+  authorName: string;
+  publishDate: string;
+  category: string;
+  tags: string;
+  seoTitle: string;
+  seoDescription: string;
+  seoKeywords: string;
+  content: string;
+  status: 'DRAFT' | 'PUBLISHED';
+}
+
+export interface AdminBlogPostResponse {
+  id: number;
+  title: string;
+  slug: string;
+  coverImage?: string;
+  authorName?: string;
+  publishDate?: string;
+  category?: string;
+  tags?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
+  content?: string;
+  status: string;
 }
 
 export interface AdminSettingsResponse {
@@ -302,6 +338,24 @@ export class AdminService {
 
   getContent(): Observable<AdminContentResponse> {
     return this.http.get<AdminContentResponse>(`${API_URL}/content`, {
+      headers: this.authHeaders()
+    });
+  }
+
+  createBlogPost(request: AdminBlogPostRequest): Observable<AdminBlogPostResponse> {
+    return this.http.post<AdminBlogPostResponse>(`${API_BASE_URL}/blog`, request, {
+      headers: this.authHeaders()
+    });
+  }
+
+  updateBlogPost(postId: number, request: AdminBlogPostRequest): Observable<AdminBlogPostResponse> {
+    return this.http.put<AdminBlogPostResponse>(`${API_BASE_URL}/blog/${postId}`, request, {
+      headers: this.authHeaders()
+    });
+  }
+
+  deleteBlogPost(postId: number): Observable<void> {
+    return this.http.delete<void>(`${API_BASE_URL}/blog/${postId}`, {
       headers: this.authHeaders()
     });
   }

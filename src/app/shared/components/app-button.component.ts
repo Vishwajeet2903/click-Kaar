@@ -27,11 +27,11 @@ import { Component, input } from '@angular/core';
       transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
       width: 100%;
     }
-    .ck-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255, 151, 0, .22); color: #111; transform: translateY(-2px); }
+    .ck-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255, 151, 0, .22); color: #fff; transform: translateY(-2px); }
     .ck-btn:disabled,
     .ck-btn:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0, 0, 0, .18); color: #ffffff; cursor: not-allowed; opacity: .68; transform: none; }
     .ck-btn.secondary { background: #111; color: #ffffff; }
-    .ck-btn.secondary:hover { background: #ff9700; color: #111; }
+    .ck-btn.secondary:hover { background: #ff9700; color: #fff; }
   `]
 })
 export class AppButtonComponent {

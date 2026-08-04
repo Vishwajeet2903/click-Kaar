@@ -232,8 +232,14 @@ main.page-shell [data-aos].aos-init:not(.aos-animate) {
 .btn-pill:hover {
   background: #ff9700;
   box-shadow: 0 16px 34px rgba(255, 151, 0, 0.22);
-  color: #111111;
+  color: #ffffff;
   transform: translateY(-2px);
+}
+
+:where(.btn-pill, .primary-btn, .mini-btn, .details, .login-link, .submit, .save-btn, .logout-btn):hover {
+  transform: translateY(-2px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+  will-change: transform;
 }
 
 .btn-pill.dark,
@@ -245,7 +251,7 @@ main.page-shell [data-aos].aos-init:not(.aos-animate) {
 .btn-pill.dark:hover,
 .btn-pill.light:hover {
   background: #ff9700;
-  color: #111111;
+  color: #ffffff;
 }
 
 .theme-arrow-button {

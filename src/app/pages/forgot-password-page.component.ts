@@ -130,7 +130,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
       transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
       width: 100%;
     }
-    .submit:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #111; transform: translateY(-2px); }
+    .submit:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .submit:disabled, .submit:disabled:hover { background: #111; color: #fff; cursor: not-allowed; opacity: .68; transform: none; }
     .back-link { color: #111; display: inline-block; font-weight: 900; margin-top: 1.25rem; text-decoration: underline; text-underline-offset: 4px; }
   `]
