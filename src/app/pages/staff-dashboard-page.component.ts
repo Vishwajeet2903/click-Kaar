@@ -19,10 +19,11 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   template: `
     <app-breadcrumb [label]="dashboardTitle()" />
     <section class="container staff-dashboard">
-      <header class="surface hero-panel">
+      <h1 class="section-title">{{ dashboardTitle() }}</h1>
+      <header class="surface profile-panel">
         <div class="hero-copy">
           <p class="eyebrow">{{ roleLabel() }}</p>
-          <h1>{{ dashboardTitle() }}</h1>
+          <h2>{{ dashboardTitle() }}</h2>
           <p>{{ dashboardIntro() }}</p>
         </div>
         <button type="button" class="logout-btn" (click)="logout()">Logout</button>
@@ -81,7 +82,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
           <div class="panel-head"><h2>Bookings</h2><span>{{ bookings().length }} total</span></div>
           <div class="list-grid">
             @for (booking of bookings().slice(0, 4); track booking.id) {
-              <article>
+              <article class="list-row">
                 <strong>{{ booking.bookingNumber }}</strong>
                 <span>{{ booking.customer }} - {{ booking.products.join(', ') }}</span>
                 <small>{{ booking.startDate | date:'mediumDate' }} to {{ booking.endDate | date:'mediumDate' }}</small>
@@ -96,7 +97,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
           <div class="panel-head"><h2>Customers</h2><span>{{ customers().length }} listed</span></div>
           <div class="list-grid compact">
             @for (customer of customers().slice(0, 6); track customer.id) {
-              <article>
+              <article class="list-row">
                 <strong>{{ customer.name }}</strong>
                 <span>{{ customer.email }}</span>
                 <small>{{ customer.city || 'City not added' }}</small>
@@ -111,7 +112,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
           <div class="panel-head"><h2>Payments</h2><span>{{ payments().length }} records</span></div>
           <div class="list-grid compact">
             @for (payment of payments().slice(0, 6); track payment.id) {
-              <article>
+              <article class="list-row">
                 <strong>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</strong>
                 <span>{{ payment.customer }} - {{ payment.bookingId }}</span>
                 <small>{{ payment.status }}</small>
@@ -126,14 +127,14 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
           <div class="panel-head"><h2>Content</h2><span>{{ contentCount() }} items</span></div>
           <div class="list-grid">
             @for (post of content()?.blogPosts?.slice(0, 4) ?? []; track post.id) {
-              <article>
+              <article class="list-row">
                 <strong>{{ post.title }}</strong>
                 <span>{{ post.category || 'Blog' }}</span>
                 <small>{{ post.status }}</small>
               </article>
             }
             @for (item of content()?.staticContent?.slice(0, 4) ?? []; track item.key) {
-              <article>
+              <article class="list-row">
                 <strong>{{ item.title }}</strong>
                 <span>Static content</span>
                 <small>{{ item.status }}</small>
@@ -146,21 +147,25 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   `,
   styles: [`
     .staff-dashboard { display: grid; gap: 1rem; max-width: 95vw !important; padding-bottom: 2rem; }
+    .staff-dashboard .section-title { font-size: clamp(1.75rem, 3.4vw, 3rem); letter-spacing: 0; line-height: 1.08; margin-bottom: .1rem; text-align: left; }
     .surface { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
-    .hero-panel { align-items: start; display: flex; gap: 1rem; justify-content: space-between; padding: clamp(1.2rem, 3vw, 2rem); }
+    .profile-panel { align-items: center; display: flex; gap: 1rem; justify-content: space-between; padding: 1.2rem; }
     .hero-copy { min-width: 0; }
-    h1 { color: #111; font-size: clamp(2.1rem, 4vw, 3.7rem); letter-spacing: 0; line-height: 1.08; margin: 0 0 .85rem; }
-    .hero-panel p:not(.eyebrow) { color: #333; font-size: 1.05rem; line-height: 1.7; margin: 0; }
-    .logout-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); border-radius: 999px; color: #111; cursor: pointer; flex: 0 0 auto; font-size: .86rem; font-weight: 900; padding: .7rem 1rem; }
-    .logout-btn:hover { background: #111; color: #fff; }
-    .metric-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .metric-card { display: grid; gap: .4rem; min-height: 120px; padding: 1rem; }
-    .metric-card span, .panel-head span, small { color: #777; font-size: .78rem; font-weight: 800; }
-    .metric-card strong { color: #111; font-size: 2rem; font-weight: 950; }
-    .panel { display: grid; gap: 1rem; padding: 1rem; }
+    h2 { color: #111827; font-size: 1.2rem; font-weight: 900; letter-spacing: 0; line-height: 1.25; margin: 0 0 .35rem; }
+    .profile-panel p:not(.eyebrow) { color: #555; font-size: .94rem; font-weight: 500; line-height: 1.55; margin: 0; }
+    .logout-btn, .panel-head a, .pager button { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 850; justify-content: center; min-height: 46px; padding: .75rem 1.1rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease, border-color .25s ease; }
+    .logout-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; flex: 0 0 auto; font-size: .9rem; }
+    .logout-btn:hover { background: #111; border-color: #111; color: #fff; transform: translateY(-2px); }
+    .metric-grid { display: grid; gap: .85rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .metric-card { display: grid; gap: .35rem; min-height: 104px; padding: 1.2rem; }
+    .metric-card span, .panel-head span, small { color: #777; font-size: .78rem; font-weight: 900; text-transform: uppercase; }
+    .metric-card strong { color: #111827; font-size: clamp(1.1rem, 2vw, 1.75rem); font-weight: 950; line-height: 1; overflow-wrap: anywhere; }
+    .metric-card small { line-height: 1.35; text-transform: none; }
+    .panel { display: grid; gap: 1rem; padding: 1.2rem; }
     .panel-head { align-items: center; display: flex; gap: 1rem; justify-content: space-between; }
-    h2 { color: #111; font-size: 1.25rem; font-weight: 900; margin: 0; }
-    .panel-head a { background: #111; border-radius: 999px; color: #fff; font-size: .86rem; font-weight: 900; padding: .65rem .9rem; }
+    .panel-head h2 { font-size: 1.08rem; margin: 0; }
+    .panel-head a { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .9rem; text-decoration: none; }
+    .panel-head a:hover, .pager button:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .table-wrap { overflow-x: auto; }
     table { border-collapse: collapse; min-width: 720px; width: 100%; }
     th, td { border-bottom: 1px solid rgba(17,17,17,.08); padding: .8rem; text-align: left; vertical-align: top; }
@@ -169,20 +174,20 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     td span, article span { color: #555; display: block; font-size: .9rem; margin-top: .2rem; }
     .empty-cell { color: #777; font-weight: 800; text-align: center; }
     .pager { align-items: center; display: flex; gap: 1rem; justify-content: space-between; }
-    .pager span { color: #777; font-size: .82rem; font-weight: 900; }
+    .pager span { color: #777; font-size: .82rem; font-weight: 850; }
     .pager div { display: flex; gap: .5rem; }
-    .pager button { background: #111; border: 0; border-radius: 999px; color: #fff; cursor: pointer; font-size: .82rem; font-weight: 900; padding: .62rem .9rem; }
-    .pager button:disabled { background: #dedbd3; color: #777; cursor: not-allowed; }
+    .pager button { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; font-size: .86rem; min-height: 42px; min-width: 92px; padding: .65rem 1rem; }
+    .pager button:disabled, .pager button:disabled:hover { background: #fff; border-color: rgba(17,17,17,.12); box-shadow: none; color: #777; cursor: not-allowed; opacity: .55; transform: none; }
     .list-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .list-grid.compact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .list-grid article { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 8px; padding: .9rem; }
+    .list-row { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); padding: 1rem; }
     @media (max-width: 900px) {
       .metric-grid, .list-grid.compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .list-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
       .staff-dashboard { max-width: calc(100vw - 18px) !important; }
-      .hero-panel { align-items: stretch; flex-direction: column; }
+      .profile-panel { align-items: stretch; flex-direction: column; }
       .logout-btn { width: 100%; }
       .metric-grid, .list-grid.compact { grid-template-columns: 1fr; }
       .pager { align-items: stretch; flex-direction: column; }

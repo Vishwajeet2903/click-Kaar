@@ -1,88 +1,90 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { useProductImageFallback } from '../services/product.service';
 import { WishlistService } from '../services/wishlist.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
-import { ProductCardComponent } from '../shared/components/product-card.component';
 
 @Component({
   selector: 'app-wishlist-page',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink, BreadcrumbComponent, ProductCardComponent],
+  imports: [CurrencyPipe, RouterLink, BreadcrumbComponent],
   template: `
     <app-breadcrumb label="Wishlist" />
     <section class="container wishlist-page pb-5">
-      <div class="wishlist-hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Saved gear</p>
-          <h1 class="section-title">Your wishlist</h1>
-          <p class="muted intro">Keep your favourite cameras, lenses, lights, and accessories ready for the next booking.</p>
-        </div>
-        <div class="surface wishlist-summary">
-          <span>{{ count() }} saved</span>
-          <strong>{{ totalDaily() | currency:'INR':'symbol':'1.0-0' }}</strong>
-          <small>Estimated daily rental total</small>
-        </div>
-      </div>
-
-      @if (count() > 0) {
-        <div class="wishlist-toolbar">
-          <p>{{ availableCount() }} available now</p>
-          <div class="toolbar-actions">
-            <a routerLink="/catalogue" class="btn-pill light">Add more</a>
-            <button type="button" class="clear-btn" (click)="wishlist.clear()">Clear wishlist</button>
-          </div>
-        </div>
-
-        <div class="row g-4 wishlist-grid">
+      <h1 class="section-title">Your Wishlist</h1>
+      <div class="row g-4">
+        <div class="col-lg-8">
           @for (product of wishlist.products(); track product.id) {
-            <div class="col-sm-6 col-xl-3">
-              <app-product-card [product]="product" />
-            </div>
+            <article class="surface item">
+              <a class="item-media" [routerLink]="['/products', product.id]" [attr.aria-label]="'View ' + product.name">
+                <img [src]="product.image" [alt]="product.name" (error)="useFallback($event)">
+              </a>
+              <div class="item-copy">
+                <p class="category">{{ product.category }}</p>
+                <h2><a [routerLink]="['/products', product.id]">{{ product.name }}</a></h2>
+                <p class="muted">{{ product.description }}</p>
+                <p class="stock-note" [class.unavailable]="!product.available">{{ product.available ? availableText(product.stock) : 'Currently unavailable' }}</p>
+              </div>
+              <div class="item-actions text-end">
+                <strong>{{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }}<small>/day</small></strong>
+                <a class="rent" [routerLink]="['/products', product.id]">Rent</a>
+                <button class="remove" type="button" (click)="wishlist.toggle(product)">Remove</button>
+              </div>
+            </article>
+          } @empty {
+            <div class="surface empty">Your wishlist is empty. <a routerLink="/catalogue">Browse equipment</a>.</div>
           }
         </div>
-      } @else {
-        <div class="surface empty-state">
-          <div class="empty-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 20.4s-7.2-4.5-9.4-8.7C.8 8.2 2.8 4.4 6.6 4.1c2.1-.2 3.8.9 5.4 2.8 1.6-1.9 3.3-3 5.4-2.8 3.8.3 5.8 4.1 4 7.6-2.2 4.2-9.4 8.7-9.4 8.7Z" />
-            </svg>
+        <aside class="col-lg-4">
+          <div class="surface summary">
+            <h2>Wishlist Summary</h2>
+            <p><span>Saved Items</span><strong>{{ count() }}</strong></p>
+            <p><span>Available Now</span><strong>{{ availableCount() }}</strong></p>
+            <p class="grand"><span>Daily Total</span><strong>{{ totalDaily() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+            <a routerLink="/catalogue" class="summary-action">Add more</a>
+            @if (count() > 0) {
+              <button type="button" class="clear-btn" (click)="wishlist.clear()">Clear wishlist</button>
+            }
           </div>
-          <h2>No saved gear yet</h2>
-          <p class="muted">Browse the catalogue and tap the heart on any product tile to build your shortlist.</p>
-          <a routerLink="/catalogue" class="btn-pill">Explore catalogue</a>
-        </div>
-      }
+        </aside>
+      </div>
     </section>
   `,
   styles: [`
-    .wishlist-page { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
-    .wishlist-hero { align-items: stretch; display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr) minmax(230px, 300px); }
-    .hero-copy { align-self: end; max-width: 720px; }
-    .section-title { margin-bottom: .8rem; text-align: left; }
-    .intro { font-size: clamp(1rem, 1.8vw, 1.18rem); margin: 0; max-width: 620px; }
-    .wishlist-summary { align-content: center; display: grid; gap: .35rem; min-height: 180px; padding: 1.4rem; }
-    .wishlist-summary span { color: #ff9700; font-size: .78rem; font-weight: 950; letter-spacing: .16em; text-transform: uppercase; }
-    .wishlist-summary strong { color: #111; font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: 0; line-height: .95; }
-    .wishlist-summary small { color: #777; font-weight: 700; }
-    .wishlist-toolbar { align-items: center; border-bottom: 1px solid rgba(17,17,17,.08); display: flex; gap: 1rem; justify-content: space-between; padding-bottom: 1.1rem; }
-    .wishlist-toolbar p { color: #171717; font-weight: 900; margin: 0; }
-    .toolbar-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: flex-end; }
-    .clear-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); border-radius: 999px; color: #111; font-size: .96rem; font-weight: 800; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, border-color .25s ease, background .25s ease, color .25s ease; }
-    .clear-btn:hover { background: #111; border-color: #111; color: #fff; transform: translateY(-2px); }
-    .wishlist-grid { align-items: stretch; }
-    .empty-state { align-items: center; display: grid; justify-items: center; min-height: 420px; padding: clamp(2rem, 6vw, 4rem); text-align: center; }
-    .empty-mark { align-items: center; background: #111; border-radius: 999px; color: #ff9700; display: inline-flex; height: 78px; justify-content: center; margin-bottom: 1.15rem; width: 78px; }
-    .empty-mark svg { fill: none; height: 36px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 36px; }
-    .empty-state h2 { color: #111; font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1; margin: 0 0 .75rem; }
-    .empty-state p { margin: 0 0 1.35rem; max-width: 420px; }
-    @media (max-width: 767px) {
-      .wishlist-hero { grid-template-columns: 1fr; }
-      .wishlist-summary { min-height: 150px; }
-      .wishlist-toolbar { align-items: stretch; flex-direction: column; }
-      .toolbar-actions { justify-content: flex-start; }
-      .toolbar-actions .btn-pill,
-      .clear-btn { width: 100%; }
+    .wishlist-page .section-title { font-size: clamp(1.75rem, 3.4vw, 3rem); letter-spacing: 0; line-height: 1.08; margin-bottom: 1.1rem; text-align: left; }
+    .item { align-items: center; display: grid; gap: 1rem; grid-template-columns: 124px minmax(0, 1fr) auto; margin-bottom: 1rem; padding: 1rem; }
+    .item-media { border-radius: 8px; display: block; overflow: hidden; width: 124px; }
+    .item img { aspect-ratio: 1/1; object-fit: cover; transition: transform .25s ease; width: 124px; }
+    .item-media:hover img { transform: scale(1.04); }
+    .item-copy { min-width: 0; }
+    .category { color: #d77d00; font-size: .76rem; font-weight: 900; letter-spacing: .08em; line-height: 1.35; margin: 0 0 .35rem; text-transform: uppercase; }
+    h2 { font-size: 1.08rem; font-weight: 900; line-height: 1.28; margin: 0 0 .5rem; }
+    h2 a { color: #111827; overflow-wrap: anywhere; text-decoration: none; }
+    h2 a:hover { color: #ff9700; }
+    .muted { color: #555; display: -webkit-box; font-size: .94rem; font-weight: 500; line-height: 1.55; margin-bottom: .4rem; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .stock-note { color: #027a48; font-size: .86rem; font-weight: 850; line-height: 1.45; margin: 0; }
+    .stock-note.unavailable { color: #b42318; }
+    .item-actions { min-width: 132px; }
+    .item-actions strong { color: #111827; display: block; font-size: 1.08rem; font-weight: 900; line-height: 1.2; }
+    .item-actions small { color: #666; font-size: .78rem; font-weight: 600; }
+    .rent, .remove, .summary-action, .clear-btn { align-items: center; border-radius: 999px; display: inline-flex; font-size: .9rem; font-weight: 800; justify-content: center; min-height: 46px; padding: .75rem 1.1rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease, border-color .25s ease; }
+    .rent, .summary-action { background: #111; border: 0; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; margin-top: .65rem; text-decoration: none; width: 100%; }
+    .rent:hover, .summary-action:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
+    .remove, .clear-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; margin-top: .55rem; width: 100%; }
+    .remove:hover, .clear-btn:hover { background: #111; border-color: #111; color: #fff; transform: translateY(-2px); }
+    .summary { padding: 1.2rem; position: sticky; top: 92px; }
+    .summary h2 { font-size: 1.08rem; margin-bottom: .5rem; }
+    .summary p { border-bottom: 1px solid rgba(148,163,184,.15); color: #555; display: flex; font-size: .94rem; gap: 1rem; justify-content: space-between; margin: 0; padding: .7rem 0; }
+    .summary p strong { color: #111827; font-size: 1rem; white-space: nowrap; }
+    .grand strong { color: #ff9700; font-size: 1.2rem; }
+    .empty { padding: 2rem; }
+    .empty a { color: #ff9700; font-weight: 900; }
+    @media (max-width: 575px) {
+      .item { align-items: start; grid-template-columns: 104px minmax(0, 1fr); }
+      .item-media, .item img { width: 104px; }
+      .item-actions { grid-column: 1 / -1; min-width: 0; text-align: left !important; }
+      .rent, .remove { width: auto; }
     }
   `]
 })
@@ -91,4 +93,12 @@ export class WishlistPageComponent {
   readonly count = computed(() => this.wishlist.products().length);
   readonly availableCount = computed(() => this.wishlist.products().filter((product) => product.available).length);
   readonly totalDaily = computed(() => this.wishlist.products().reduce((sum, product) => sum + product.dailyPrice, 0));
+
+  useFallback(event: Event): void {
+    useProductImageFallback(event);
+  }
+
+  availableText(stock?: number): string {
+    return `${stock ?? 1} units available`;
+  }
 }
