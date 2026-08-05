@@ -495,7 +495,7 @@ export class LoginPageComponent {
             duration: 2200,
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            panelClass: ['snackbar-success-top']
+            panelClass: ['snackbar-screen-center']
           });
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
           void this.router.navigateByUrl(returnUrl || this.authService.defaultDashboardUrl());

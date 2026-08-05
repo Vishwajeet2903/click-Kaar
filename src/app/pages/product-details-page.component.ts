@@ -19,7 +19,11 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
   imports: [MatButtonModule, MatDialogModule, RouterLink],
   template: `
     <div class="cart-dialog">
-      <div class="dialog-mark">✓</div>
+      <div class="dialog-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" focusable="false">
+          <path d="M8.5 16.8 13.7 22 24 10.6" />
+        </svg>
+      </div>
       <h2 mat-dialog-title>Added to booking cart</h2>
       <mat-dialog-content>
         Your selected gear and rental dates are ready for checkout.
@@ -31,9 +35,11 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     </div>
   `,
   styles: [`
-    .cart-dialog { background: #fff; border: 1px solid rgba(255,151,0,.22); border-radius: 24px; color: #111; font-family: var(--app-font); min-width: min(360px, calc(100vw - 48px)); padding: 1.35rem; text-align: center; }
+    .cart-dialog { background: #fff; border: 0; border-radius: 28px; color: #111; font-family: var(--app-font); min-width: min(360px, calc(100vw - 48px)); overflow: hidden; padding: 1.35rem; text-align: center; }
     .cart-dialog, .cart-dialog * { font-family: var(--app-font) !important; letter-spacing: 0; }
-    .dialog-mark { align-items: center; background: #ff9700; border-radius: 999px; color: #111; display: inline-flex; font-size: 1.35rem; font-weight: 950; height: 52px; justify-content: center; margin-bottom: .85rem; width: 52px; }
+    .dialog-mark { align-items: center; background: #ff9700; border-radius: 50%; display: inline-flex; height: 56px; justify-content: center; margin-bottom: .85rem; overflow: hidden; width: 56px; }
+    .dialog-mark svg { display: block; height: 32px; width: 32px; }
+    .dialog-mark path { fill: none; stroke: #111; stroke-linecap: round; stroke-linejoin: round; stroke-width: 5.2; }
     h2 { color: #111; font-family: var(--display-font) !important; font-size: 1.48rem; font-weight: 950; line-height: 1.05; margin: 0 0 .5rem; padding: 0; }
     mat-dialog-content { color: #666; display: block; font-size: .98rem; font-weight: 700; line-height: 1.6; margin: 0; padding: 0; }
     mat-dialog-actions { display: grid; gap: .7rem; grid-template-columns: 1fr 1fr; margin: 1.2rem 0 0; padding: 0; }
@@ -59,10 +65,6 @@ export class AddedDialogComponent {}
             <p class="eyebrow">{{ product()!.category }} / {{ product()!.brand }}</p>
             <h1>{{ product()!.name }}</h1>
             <p class="intro">{{ product()!.description }}</p>
-          </div>
-          <div class="hero-stats" aria-label="Rental highlights">
-            <div><span>Rating</span><strong class="rating-value">{{ product()!.rating }}</strong></div>
-            <div><span>Weekly</span><strong>{{ product()!.weeklyPrice | currency:'INR':'symbol':'1.0-0' }}</strong></div>
           </div>
         </div>
 
@@ -199,7 +201,7 @@ export class AddedDialogComponent {}
           <section class="surface info-card specs-card">
             <h2>Specifications</h2>
             @for (entry of specEntries(); track entry[0]) {
-              <div><span>{{ entry[0] }}</span><strong>{{ entry[1] }}</strong></div>
+              <div><span>{{ specLabel(entry[0]) }}</span><strong>{{ entry[1] }}</strong></div>
             }
           </section>
         </div>
@@ -208,15 +210,11 @@ export class AddedDialogComponent {}
   `,
   styles: [`
     .product-view { display: grid; gap: 1.35rem; }
-    .detail-hero { align-items: end; display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr) auto; }
-    .copy { max-width: 760px; }
-    h1 { color: #111; font-size: clamp(2.2rem, 6vw, 5.25rem); font-weight: 950; letter-spacing: 0; line-height: .92; margin: .35rem 0 .75rem; }
-    .intro { color: #575757; font-size: clamp(1rem, 1.7vw, 1.16rem); line-height: 1.65; margin: 0; max-width: 680px; }
-    .hero-stats { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(86px, 1fr)); min-width: min(100%, 260px); }
-    .hero-stats div { background: #fff; border-radius: 18px; color: #fff; padding: .85rem .95rem; }
-    .hero-stats span { color: #000; display: block; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
-    .hero-stats strong { color: #000; display: block; font-size: clamp(1rem, 2vw, 1.28rem); line-height: 1.1; margin-top: .35rem; }
-    .hero-stats strong.rating-value { color: #008000; }
+    .detail-hero { align-items: end; display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr); }
+    .copy { max-width: 820px; min-width: 0; }
+    .eyebrow { line-height: 1.35; }
+    h1 { color: #111; font-size: clamp(1.85rem, 4.2vw, 3.65rem); font-weight: 950; letter-spacing: 0; line-height: 1.08; margin: .35rem 0 .85rem; overflow-wrap: anywhere; }
+    .intro { color: #4f4f4c; font-size: clamp(1rem, 1.35vw, 1.12rem); font-weight: 650; line-height: 1.75; margin: 0; max-width: 72ch; overflow-wrap: anywhere; }
     .gallery { overflow: visible; padding: .65rem; position: sticky; top: 92px; }
     .media-frame { background: #ececea; border-radius: 18px; overflow: hidden; position: relative; touch-action: pan-y; }
     .main-img { aspect-ratio: 4/3; display: block; height: auto; object-fit: cover; width: 100%; }
@@ -228,14 +226,14 @@ export class AddedDialogComponent {}
     .booking-card { padding: 1.25rem; position: sticky; top: 92px; }
     .booking-head { align-items: start; display: flex; gap: 1.2rem; justify-content: space-between; margin-bottom: 1.25rem; }
     .booking-head span, .booking-head small { color: #777; display: block; font-size: .78rem; font-weight: 800; text-transform: uppercase; }
-    .booking-head strong { color: #111; display: block; font-size: 2rem; line-height: 1; margin: .2rem 0; }
+    .booking-head strong { color: #111; display: block; font-size: 2rem; line-height: 1.08; margin: .2rem 0; }
     .availability { background: rgba(24,134,75,.1); border-radius: 999px; color: #18864b; font-size: .78rem; font-weight: 950; padding: .55rem .75rem; text-align: center; white-space: nowrap; }
     .availability.out { background: rgba(194,58,33,.1); color: #c23a21; }
     .date-grid { display: grid; column-gap: 1.15rem; row-gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: .55rem; }
     .date-control { background: #fff; border: 1px solid rgba(255,151,0,.36); border-radius: 18px; cursor: pointer; display: grid; gap: .5rem; min-width: 0; padding: 1rem 1.05rem; text-align: left; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
     .date-control:hover, .date-control.active { border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.13); transform: translateY(-1px); }
     .date-control span { color: #ff9700; font-size: .72rem; font-weight: 950; text-transform: uppercase; }
-    .date-control strong { color: #111; font-size: 1rem; line-height: 1.1; }
+    .date-control strong { color: #111; font-size: 1rem; line-height: 1.25; overflow-wrap: anywhere; }
     .booking-alert { background: #fff8ed; border: 1px solid rgba(255,151,0,.34); border-left: 4px solid #ff9700; border-radius: 16px; color: #111; font-size: .9rem; font-weight: 850; line-height: 1.45; margin: .75rem 0 1rem; padding: .85rem 1rem; }
     .calendar-popover { background: #fff; border: 1px solid rgba(255,151,0,.36); border-radius: 22px; box-shadow: 0 18px 38px rgba(17,17,17,.1); margin: 1rem 0 1.2rem; padding: 1.1rem; }
     .calendar-head { align-items: center; display: flex; justify-content: space-between; margin-bottom: 1rem; }
@@ -277,7 +275,7 @@ export class AddedDialogComponent {}
     .duration-options { display: grid; gap: .65rem; grid-template-columns: repeat(4, 1fr); margin: 0 0 1.1rem; }
     .duration-card { background: #fff; border: 1px solid rgba(255,151,0,.42); border-radius: 16px; color: #111; cursor: pointer; min-height: 62px; padding: .65rem .5rem; text-align: center; transition: transform .25s ease, border-color .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease; }
     .duration-card span { color: #ff9700; display: block; font-size: .68rem; font-weight: 950; line-height: 1.1; text-transform: uppercase; }
-    .duration-card strong { color: #111; display: block; font-size: .88rem; line-height: 1.1; margin-top: .25rem; white-space: nowrap; }
+    .duration-card strong { color: #111; display: block; font-size: .88rem; line-height: 1.2; margin-top: .25rem; white-space: nowrap; }
     .duration-card:hover, .duration-card.active { background: #ff9700; border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.2); color: #fff; transform: translateY(-2px); }
     .duration-card:hover span, .duration-card.active span { color: #fff; }
     .duration-card:hover strong, .duration-card.active strong { color: #fff; }
@@ -286,21 +284,22 @@ export class AddedDialogComponent {}
     .total-panel strong { color: #111; font-size: 1.35rem; }
     .action-grid { display: grid; gap: .85rem; grid-template-columns: repeat(2, 1fr); }
     .trust-row { border-top: 1px solid rgba(17,17,17,.08); display: grid; gap: .75rem; grid-template-columns: repeat(3, 1fr); margin-top: 1.2rem; padding-top: 1.15rem; }
-    .trust-row span { color: #555; font-size: .76rem; font-weight: 800; line-height: 1.25; }
+    .trust-row span { color: #555; font-size: .76rem; font-weight: 800; line-height: 1.35; }
     .detail-panels { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .info-card { min-height: 210px; padding: 1.1rem; }
-    .info-card h2 { color: #111; font-size: 1.12rem; font-weight: 950; margin: 0 0 .35rem; }
-    .description-card p { color: #575757; line-height: 1.7; margin: .75rem 0 0; }
-    .specs-card div { align-items: center; border-top: 1px solid rgba(17,17,17,.08); display: flex; gap: 1rem; justify-content: space-between; padding: .82rem 0; }
-    .specs-card span { color: #777; font-weight: 800; }
-    .specs-card strong { color: #111; text-align: right; }
+    .info-card { min-height: 210px; padding: 1.2rem; }
+    .info-card h2 { color: #111; font-size: 1.16rem; font-weight: 950; line-height: 1.25; margin: 0 0 .55rem; }
+    .description-card p { color: #4f4f4c; font-size: 1rem; font-weight: 650; line-height: 1.8; margin: .75rem 0 0; max-width: 78ch; overflow-wrap: anywhere; }
+    .specs-card div { align-items: start; border-top: 1px solid rgba(17,17,17,.08); display: grid; gap: 1rem; grid-template-columns: minmax(120px, .75fr) minmax(0, 1.25fr); padding: .9rem 0; }
+    .specs-card span { color: #777; font-size: .82rem; font-weight: 900; line-height: 1.35; text-transform: uppercase; }
+    .specs-card strong { color: #111; font-size: .95rem; font-weight: 850; line-height: 1.45; overflow-wrap: anywhere; text-align: left; }
     @media (max-width: 991px) {
       .detail-hero { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
       .detail-panels { grid-template-columns: 1fr; }
       .gallery, .booking-card { position: static; }
     }
     @media (max-width: 575px) {
-      .hero-stats, .date-grid, .action-grid, .trust-row { grid-template-columns: 1fr; }
+      .date-grid, .action-grid, .trust-row { grid-template-columns: 1fr; }
       .date-grid { row-gap: .85rem; }
       .duration-options { grid-template-columns: repeat(2, 1fr); }
       .booking-head { display: grid; }
@@ -308,6 +307,10 @@ export class AddedDialogComponent {}
       .gallery { padding: .45rem; }
       .media-frame { cursor: grab; }
       .main-img { min-height: 280px; }
+      .product-view { gap: 1rem; }
+      h1 { line-height: 1.1; }
+      .intro, .description-card p { font-size: .96rem; line-height: 1.7; }
+      .specs-card div { grid-template-columns: 1fr; gap: .28rem; }
     }
   `]
 })
@@ -323,9 +326,18 @@ export class ProductDetailsPageComponent {
   readonly product = signal<Product | undefined>(undefined);
   readonly selectedImage = signal('');
   readonly startDate = signal(new Date());
-  readonly endDate = signal(new Date(Date.now() + 3 * 86_400_000));
+  readonly endDate = signal(new Date());
   readonly isCheckingAvailability = signal(false);
-  readonly blockedRanges = signal<Array<{ start: Date; end: Date }>>([]);
+  readonly bookedRanges = signal<Array<{ start: Date; end: Date }>>([]);
+  readonly blockedRanges = computed(() => {
+    const productId = this.product()?.id;
+    const cartRanges = productId
+      ? this.cart.items()
+          .filter((item) => item.product.id === productId)
+          .map((item) => ({ start: this.stripTime(item.startDate), end: this.stripTime(item.endDate) }))
+      : [];
+    return [...this.bookedRanges(), ...cartRanges];
+  });
   readonly bookingAlert = signal('');
   protected readonly activeDateField = signal<'start' | 'end' | undefined>(undefined);
   protected readonly calendarMonth = signal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
@@ -334,7 +346,7 @@ export class ProductDetailsPageComponent {
   private readonly monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private galleryTouchStartX = 0;
   private alertTimeout: ReturnType<typeof setTimeout> | undefined;
-  readonly duration = computed(() => Math.max(1, Math.ceil((this.endDate().getTime() - this.startDate().getTime()) / 86_400_000)));
+  readonly duration = computed(() => Math.max(1, Math.floor((this.endDate().getTime() - this.startDate().getTime()) / 86_400_000) + 1));
   readonly total = computed(() => (this.product()?.dailyPrice ?? 0) * this.duration());
   readonly specEntries = computed(() => Object.entries(this.product()?.specifications ?? {}));
 
@@ -353,6 +365,14 @@ export class ProductDetailsPageComponent {
 
   displayDate(date: Date): string {
     return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  specLabel(label: string): string {
+    return label
+      .replace(/[_-]+/g, ' ')
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   dateInputValue(date: Date): string {
@@ -374,7 +394,7 @@ export class ProductDetailsPageComponent {
     this.startDate.set(nextStart);
 
     const nextEnd = new Date(nextStart);
-    nextEnd.setDate(nextStart.getDate() + currentDuration);
+    nextEnd.setDate(nextStart.getDate() + currentDuration - 1);
     if (this.rangeOverlapsBlockedDates(nextStart, nextEnd)) {
       const availableWindow = this.firstAvailableWindow(currentDuration, nextStart);
       this.startDate.set(availableWindow.start);
@@ -466,7 +486,7 @@ export class ProductDetailsPageComponent {
   selectDuration(days: number): void {
     const start = this.startDate();
     const nextEndDate = new Date(start);
-    nextEndDate.setDate(start.getDate() + days);
+    nextEndDate.setDate(start.getDate() + days - 1);
     if (this.rangeOverlapsBlockedDates(start, nextEndDate)) {
       this.showTopMessage('Those rental days include already booked dates. Please choose another window.', 3600);
       return;
@@ -523,6 +543,10 @@ export class ProductDetailsPageComponent {
       this.showTopMessage('This product is already booked for one or more selected dates.', 3600);
       return;
     }
+    if (!this.cart.canAdd(product, this.startDate(), this.endDate())) {
+      this.showTopMessage(`Only ${this.cart.availableStock(product)} units are available for this product.`, 3200);
+      return;
+    }
 
     this.isCheckingAvailability.set(true);
     this.bookingService.checkAvailability(product.id, this.dateInputValue(this.startDate()), this.dateInputValue(this.endDate()))
@@ -534,7 +558,11 @@ export class ProductDetailsPageComponent {
             return;
           }
 
-          this.cart.add(product, this.startDate(), this.endDate());
+          if (!this.cart.add(product, this.startDate(), this.endDate())) {
+            this.showTopMessage(`Only ${this.cart.availableStock(product)} units are available for this product.`, 3200);
+            return;
+          }
+          this.moveSelectionToAvailableWindow();
           this.dialog.open(AddedDialogComponent);
         },
         error: (error) => {
@@ -555,7 +583,7 @@ export class ProductDetailsPageComponent {
       duration: 2200,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['snackbar-success-top']
+      panelClass: ['snackbar-screen-center']
     });
   }
 
@@ -588,14 +616,14 @@ export class ProductDetailsPageComponent {
   private loadBlockedRanges(productId: number): void {
     this.bookingService.getBlockedRanges(productId).subscribe({
       next: (ranges) => {
-        this.blockedRanges.set(ranges.map((range) => ({
+        this.bookedRanges.set(ranges.map((range) => ({
           start: this.parseDateInput(range.startDate),
           end: this.parseDateInput(range.endDate)
         })));
         this.moveSelectionToAvailableWindow();
       },
       error: () => {
-        this.blockedRanges.set([]);
+        this.bookedRanges.set([]);
         this.showTopMessage('Booked dates could not be loaded. Please refresh before selecting rental dates.', 4200);
       }
     });
@@ -622,7 +650,7 @@ export class ProductDetailsPageComponent {
 
     for (let attempt = 0; attempt < 730; attempt += 1) {
       const end = new Date(start);
-      end.setDate(start.getDate() + durationDays);
+      end.setDate(start.getDate() + durationDays - 1);
       if (!this.rangeOverlapsBlockedDates(start, end)) {
         return { start, end };
       }

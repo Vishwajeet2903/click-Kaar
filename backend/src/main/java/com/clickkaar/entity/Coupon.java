@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -35,4 +36,11 @@ public class Coupon extends AuditableEntity {
   @Column(nullable = false)
   @Builder.Default
   private boolean active = true;
+
+  private Integer usageLimit;
+
+  @Builder.Default
+  private Integer usedCount = 0;
+
+  private LocalDate validUntil;
 }

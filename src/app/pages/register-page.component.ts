@@ -649,7 +649,7 @@ export class RegisterPageComponent {
             duration: 3200,
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            panelClass: ['snackbar-success-top']
+            panelClass: ['snackbar-screen-center']
           });
           void this.router.navigateByUrl('/login');
         },

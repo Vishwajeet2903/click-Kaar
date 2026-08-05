@@ -35,71 +35,74 @@ Standard Commons Logging discovery in action with spring-jcl: please remove comm
 
  :: Spring Boot ::                (v3.3.5)
 
-2026-08-01T01:20:51.336+05:30  INFO 26708 --- [clickkaar-backend] [           main] c.clickkaar.ClickkaarBackendApplication  : Starting ClickkaarBackendApplication using Java 17.0.12 with PID 26708 (C:\click-Kaar\click-Kaar\backend\target\classes started by jeet in C:\click-Kaar\click-Kaar\backend)
-2026-08-01T01:20:51.351+05:30  INFO 26708 --- [clickkaar-backend] [           main] c.clickkaar.ClickkaarBackendApplication  : No active profile set, falling back to 1 default profile: "local"
-2026-08-01T01:20:51.352+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.boot.SpringApplication               : Loading source class com.clickkaar.ClickkaarBackendApplication
-2026-08-01T01:20:51.414+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] ConfigServletWebServerApplicationContext : Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@14fc1f0
-2026-08-01T01:20:52.406+05:30  INFO 26708 --- [clickkaar-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-08-01T01:20:52.433+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.b.a.AutoConfigurationPackages        : @EnableAutoConfiguration was declared on a class in the package 'com.clickkaar'. Automatic @Repository and @Entity scanning is enabled.
-2026-08-01T01:20:52.563+05:30  INFO 26708 --- [clickkaar-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 139 ms. Found 21 JPA repository interfaces.
-2026-08-01T01:20:53.266+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : Code archive: C:\Users\jeet\.m2\repository\org\springframework\boot\spring-boot\3.3.5\spring-boot-3.3.5.jar
-2026-08-01T01:20:53.267+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : Code archive: C:\Users\jeet\.m2\repository\org\springframework\boot\spring-boot\3.3.5\spring-boot-3.3.5.jar
-2026-08-01T01:20:53.268+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : None of the document roots [src/main/webapp, public, static] point to a directory and will be ignored.
-2026-08-01T01:20:53.292+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-08-01T01:20:53.309+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-08-01T01:20:53.309+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
-2026-08-01T01:20:53.452+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-08-01T01:20:53.453+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] w.s.c.ServletWebServerApplicationContext : Published root WebApplicationContext as ServletContext attribute with name [org.springframework.web.context.WebApplicationContext.ROOT]
-2026-08-01T01:20:53.454+05:30  INFO 26708 --- [clickkaar-backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2040 ms
+2026-08-05T14:04:55.915+05:30  INFO 23668 --- [clickkaar-backend] [           main] c.clickkaar.ClickkaarBackendApplication  : Starting ClickkaarBackendApplication using Java 17.0.12 with PID 23668 (C:\click-Kaar\click-Kaar\backend\target\classes started by jeet in C:\click-Kaar\click-Kaar\backend)
+2026-08-05T14:04:55.918+05:30  INFO 23668 --- [clickkaar-backend] [           main] c.clickkaar.ClickkaarBackendApplication  : No active profile set, falling back to 1 default profile: "local"
+2026-08-05T14:04:55.919+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.boot.SpringApplication               : Loading source class com.clickkaar.ClickkaarBackendApplication
+2026-08-05T14:04:55.978+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] ConfigServletWebServerApplicationContext : Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@130e116b
+2026-08-05T14:04:57.005+05:30  INFO 23668 --- [clickkaar-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-05T14:04:57.022+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.b.a.AutoConfigurationPackages        : @EnableAutoConfiguration was declared on a class in the package 'com.clickkaar'. Automatic @Repository and @Entity scanning is enabled.
+2026-08-05T14:04:57.159+05:30  INFO 23668 --- [clickkaar-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 146 ms. Found 22 JPA repository interfaces.
+2026-08-05T14:04:57.840+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : Code archive: C:\Users\jeet\.m2\repository\org\springframework\boot\spring-boot\3.3.5\spring-boot-3.3.5.jar
+2026-08-05T14:04:57.841+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : Code archive: C:\Users\jeet\.m2\repository\org\springframework\boot\spring-boot\3.3.5\spring-boot-3.3.5.jar
+2026-08-05T14:04:57.842+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : None of the document roots [src/main/webapp, public, static] point to a directory and will be ignored.
+2026-08-05T14:04:57.862+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-08-05T14:04:57.874+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-08-05T14:04:57.875+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-08-05T14:04:57.981+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-08-05T14:04:57.982+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] w.s.c.ServletWebServerApplicationContext : Published root WebApplicationContext as ServletContext attribute with name [org.springframework.web.context.WebApplicationContext.ROOT]
+2026-08-05T14:04:57.983+05:30  INFO 23668 --- [clickkaar-backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2004 ms
 Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
-2026-08-01T01:20:53.599+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-08-01T01:20:53.671+05:30  INFO 26708 --- [clickkaar-backend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2026-08-01T01:20:53.709+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-08-01T01:20:54.033+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-08-01T01:20:54.077+05:30  INFO 26708 --- [clickkaar-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-08-01T01:20:54.230+05:30  INFO 26708 --- [clickkaar-backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@53525379
-2026-08-01T01:20:54.232+05:30  INFO 26708 --- [clickkaar-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-08-01T01:20:54.284+05:30  WARN 26708 --- [clickkaar-backend] [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-08-01T01:20:55.971+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-08-01T01:20:56.045+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
-    alter table admin_notes 
-       modify column note TEXT
-2026-08-01T01:20:56.058+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:04:58.129+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-08-05T14:04:58.220+05:30  INFO 23668 --- [clickkaar-backend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-08-05T14:04:58.263+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-08-05T14:04:58.618+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-05T14:04:58.655+05:30  INFO 23668 --- [clickkaar-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-08-05T14:04:58.817+05:30  INFO 23668 --- [clickkaar-backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@cf984d9
+2026-08-05T14:04:58.819+05:30  INFO 23668 --- [clickkaar-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-08-05T14:04:58.875+05:30  WARN 23668 --- [clickkaar-backend] [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-08-05T14:05:00.696+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-05T14:05:00.797+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     alter table blog_posts 
        modify column content TEXT
-2026-08-01T01:20:56.068+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:00.821+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    alter table booking_notes 
+       modify column note TEXT
+2026-08-05T14:05:00.831+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     alter table contact_messages 
        modify column message TEXT
-2026-08-01T01:20:56.076+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:00.839+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    alter table customer_reviews 
+       modify column admin_reply TEXT
+2026-08-05T14:05:00.851+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     alter table customer_reviews 
        modify column quote TEXT not null
-2026-08-01T01:20:56.085+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:00.859+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     alter table faqs 
        modify column answer TEXT
-2026-08-01T01:20:56.095+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:00.869+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     alter table products 
        modify column full_description TEXT
-2026-08-01T01:20:56.113+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:00.898+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     alter table products 
        modify column specs TEXT
-2026-08-01T01:20:56.130+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:00.914+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     alter table static_contents 
        modify column content TEXT
-2026-08-01T01:20:56.271+05:30  INFO 26708 --- [clickkaar-backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-08-01T01:20:56.590+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: springSecurityFilterChain urls=[/*] order=-100, characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105, jwtAuthenticationFilter urls=[/*] order=2147483647
-2026-08-01T01:20:56.590+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
-2026-08-01T01:20:56.618+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.b.w.s.f.OrderedRequestContextFilter  : Filter 'requestContextFilter' configured for use
-2026-08-01T01:20:56.623+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] s.b.w.s.f.OrderedCharacterEncodingFilter : Filter 'characterEncodingFilter' configured for use
-2026-08-01T01:20:56.624+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] .DelegatingFilterProxyRegistrationBean$1 : Filter 'springSecurityFilterChain' configured for use
-2026-08-01T01:20:56.625+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.b.w.s.f.OrderedFormContentFilter     : Filter 'formContentFilter' configured for use
-2026-08-01T01:20:56.894+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-08-01T01:20:57.607+05:30  INFO 26708 --- [clickkaar-backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
-2026-08-01T01:20:57.990+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 71 mappings in 'requestMappingHandlerMapping'
-2026-08-01T01:20:58.049+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
-2026-08-01T01:20:58.170+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
-2026-08-01T01:20:58.215+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
-2026-08-01T01:20:58.442+05:30  INFO 26708 --- [clickkaar-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-08-01T01:20:58.464+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+2026-08-05T14:05:01.096+05:30  INFO 23668 --- [clickkaar-backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-05T14:05:01.409+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: springSecurityFilterChain urls=[/*] order=-100, characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105, jwtAuthenticationFilter urls=[/*] order=2147483647
+2026-08-05T14:05:01.409+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
+2026-08-05T14:05:01.433+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.b.w.s.f.OrderedRequestContextFilter  : Filter 'requestContextFilter' configured for use
+2026-08-05T14:05:01.437+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] s.b.w.s.f.OrderedCharacterEncodingFilter : Filter 'characterEncodingFilter' configured for use
+2026-08-05T14:05:01.438+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] .DelegatingFilterProxyRegistrationBean$1 : Filter 'springSecurityFilterChain' configured for use
+2026-08-05T14:05:01.438+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.b.w.s.f.OrderedFormContentFilter     : Filter 'formContentFilter' configured for use
+2026-08-05T14:05:01.628+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-08-05T14:05:02.412+05:30  INFO 23668 --- [clickkaar-backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-08-05T14:05:02.766+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 86 mappings in 'requestMappingHandlerMapping'
+2026-08-05T14:05:02.821+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-08-05T14:05:02.942+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-08-05T14:05:02.986+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-08-05T14:05:03.216+05:30  INFO 23668 --- [clickkaar-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-08-05T14:05:03.227+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
 
 
 ============================
@@ -1540,9 +1543,9 @@ Unconditional classes:
 
 
 
-2026-08-01T01:20:58.467+05:30  INFO 26708 --- [clickkaar-backend] [           main] c.clickkaar.ClickkaarBackendApplication  : Started ClickkaarBackendApplication in 7.642 seconds (process running for 8.287)
-2026-08-01T01:20:58.468+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
-2026-08-01T01:20:58.600+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.229+05:30  INFO 23668 --- [clickkaar-backend] [           main] c.clickkaar.ClickkaarBackendApplication  : Started ClickkaarBackendApplication in 7.837 seconds (process running for 8.466)
+2026-08-05T14:05:03.231+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2026-08-05T14:05:03.334+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.id,
         r1_0.name 
@@ -1550,7 +1553,7 @@ Unconditional classes:
         roles r1_0 
     where
         r1_0.name=?
-2026-08-01T01:20:58.614+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.348+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.id,
         r1_0.name 
@@ -1558,7 +1561,7 @@ Unconditional classes:
         roles r1_0 
     where
         r1_0.name=?
-2026-08-01T01:20:58.618+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.350+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.id,
         r1_0.name 
@@ -1566,7 +1569,7 @@ Unconditional classes:
         roles r1_0 
     where
         r1_0.name=?
-2026-08-01T01:20:58.620+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.352+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.id,
         r1_0.name 
@@ -1574,7 +1577,7 @@ Unconditional classes:
         roles r1_0 
     where
         r1_0.name=?
-2026-08-01T01:20:58.622+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.354+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.id,
         r1_0.name 
@@ -1582,7 +1585,7 @@ Unconditional classes:
         roles r1_0 
     where
         r1_0.name=?
-2026-08-01T01:20:58.625+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.355+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.id,
         r1_0.name 
@@ -1590,7 +1593,7 @@ Unconditional classes:
         roles r1_0 
     where
         r1_0.name=?
-2026-08-01T01:20:58.630+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.359+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         u1_0.id,
         u1_0.alternate_contact_number,
@@ -1624,7 +1627,7 @@ Unconditional classes:
         users u1_0 
     where
         u1_0.email=?
-2026-08-01T01:20:58.642+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.372+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.user_id,
         r1_1.id,
@@ -1636,7 +1639,7 @@ Unconditional classes:
             on r1_1.id=r1_0.role_id 
     where
         r1_0.user_id=?
-2026-08-01T01:20:58.648+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.377+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         u1_0.id,
         u1_0.alternate_contact_number,
@@ -1670,7 +1673,7 @@ Unconditional classes:
         users u1_0 
     where
         u1_0.email=?
-2026-08-01T01:20:58.650+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.379+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.user_id,
         r1_1.id,
@@ -1682,7 +1685,7 @@ Unconditional classes:
             on r1_1.id=r1_0.role_id 
     where
         r1_0.user_id=?
-2026-08-01T01:20:58.653+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.381+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         u1_0.id,
         u1_0.alternate_contact_number,
@@ -1716,7 +1719,7 @@ Unconditional classes:
         users u1_0 
     where
         u1_0.email=?
-2026-08-01T01:20:58.654+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.383+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.user_id,
         r1_1.id,
@@ -1728,7 +1731,7 @@ Unconditional classes:
             on r1_1.id=r1_0.role_id 
     where
         r1_0.user_id=?
-2026-08-01T01:20:58.657+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.384+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         u1_0.id,
         u1_0.alternate_contact_number,
@@ -1762,7 +1765,7 @@ Unconditional classes:
         users u1_0 
     where
         u1_0.email=?
-2026-08-01T01:20:58.659+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.388+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.user_id,
         r1_1.id,
@@ -1774,7 +1777,7 @@ Unconditional classes:
             on r1_1.id=r1_0.role_id 
     where
         r1_0.user_id=?
-2026-08-01T01:20:58.662+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.392+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1786,7 +1789,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.name=?
-2026-08-01T01:20:58.664+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.396+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1798,7 +1801,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.name=?
-2026-08-01T01:20:58.666+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.398+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1810,7 +1813,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.name=?
-2026-08-01T01:20:58.668+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.400+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1822,7 +1825,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.name=?
-2026-08-01T01:20:58.670+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.402+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1834,7 +1837,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.name=?
-2026-08-01T01:20:58.674+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.404+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1846,7 +1849,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.name=?
-2026-08-01T01:20:58.681+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.410+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -1862,6 +1865,7 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
@@ -1869,7 +1873,7 @@ Unconditional classes:
         products p1_0 
     where
         upper(p1_0.name)=upper(?)
-2026-08-01T01:20:58.686+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.419+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1881,7 +1885,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.691+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.423+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -1897,6 +1901,7 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
@@ -1904,7 +1909,7 @@ Unconditional classes:
         products p1_0 
     where
         upper(p1_0.name)=upper(?)
-2026-08-01T01:20:58.692+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.424+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1916,7 +1921,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.694+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.427+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -1932,6 +1937,7 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
@@ -1939,7 +1945,7 @@ Unconditional classes:
         products p1_0 
     where
         upper(p1_0.name)=upper(?)
-2026-08-01T01:20:58.697+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.428+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1951,7 +1957,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.699+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.430+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -1967,6 +1973,7 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
@@ -1974,7 +1981,7 @@ Unconditional classes:
         products p1_0 
     where
         upper(p1_0.name)=upper(?)
-2026-08-01T01:20:58.701+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.431+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -1986,7 +1993,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.703+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.434+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -2002,6 +2009,7 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
@@ -2009,7 +2017,7 @@ Unconditional classes:
         products p1_0 
     where
         upper(p1_0.name)=upper(?)
-2026-08-01T01:20:58.704+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.434+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2021,7 +2029,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.708+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.437+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -2037,6 +2045,7 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
@@ -2044,7 +2053,7 @@ Unconditional classes:
         products p1_0 
     where
         upper(p1_0.name)=upper(?)
-2026-08-01T01:20:58.710+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.438+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2056,7 +2065,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.714+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.440+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -2072,6 +2081,7 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
@@ -2079,7 +2089,7 @@ Unconditional classes:
         products p1_0 
     where
         upper(p1_0.name)=upper(?)
-2026-08-01T01:20:58.715+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.441+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2091,7 +2101,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.719+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.443+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -2107,6 +2117,7 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
@@ -2114,7 +2125,7 @@ Unconditional classes:
         products p1_0 
     where
         upper(p1_0.name)=upper(?)
-2026-08-01T01:20:58.720+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.444+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2126,7 +2137,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.724+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.447+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         bp1_0.id,
         bp1_0.author_name,
@@ -2147,7 +2158,7 @@ Unconditional classes:
         blog_posts bp1_0 
     where
         bp1_0.slug=?
-2026-08-01T01:20:58.729+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.451+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         bp1_0.id,
         bp1_0.author_name,
@@ -2168,7 +2179,7 @@ Unconditional classes:
         blog_posts bp1_0 
     where
         bp1_0.slug=?
-2026-08-01T01:20:58.732+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.454+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         bp1_0.id,
         bp1_0.author_name,
@@ -2189,7 +2200,7 @@ Unconditional classes:
         blog_posts bp1_0 
     where
         bp1_0.slug=?
-2026-08-01T01:20:58.735+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.456+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         bp1_0.id,
         bp1_0.author_name,
@@ -2210,7 +2221,7 @@ Unconditional classes:
         blog_posts bp1_0 
     where
         bp1_0.slug=?
-2026-08-01T01:20:58.739+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.459+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         bp1_0.id,
         bp1_0.author_name,
@@ -2231,12 +2242,17 @@ Unconditional classes:
         blog_posts bp1_0 
     where
         bp1_0.slug=?
-2026-08-01T01:20:58.757+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.476+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         count(*) 
     from
         faqs f1_0
-2026-08-01T01:20:58.763+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.482+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    select
+        count(*) 
+    from
+        gallery_images gi1_0
+2026-08-05T14:05:03.488+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         cr1_0.id 
     from
@@ -2246,7 +2262,7 @@ Unconditional classes:
         and upper(cr1_0.quote)=upper(?) 
     limit
         ?
-2026-08-01T01:20:58.766+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.491+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         cr1_0.id 
     from
@@ -2256,7 +2272,7 @@ Unconditional classes:
         and upper(cr1_0.quote)=upper(?) 
     limit
         ?
-2026-08-01T01:20:58.768+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.493+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         cr1_0.id 
     from
@@ -2266,7 +2282,7 @@ Unconditional classes:
         and upper(cr1_0.quote)=upper(?) 
     limit
         ?
-2026-08-01T01:20:58.770+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.495+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         cr1_0.id 
     from
@@ -2276,7 +2292,7 @@ Unconditional classes:
         and upper(cr1_0.quote)=upper(?) 
     limit
         ?
-2026-08-01T01:20:58.772+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.497+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         cr1_0.id 
     from
@@ -2286,7 +2302,7 @@ Unconditional classes:
         and upper(cr1_0.quote)=upper(?) 
     limit
         ?
-2026-08-01T01:20:58.774+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.499+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         cr1_0.id 
     from
@@ -2296,7 +2312,7 @@ Unconditional classes:
         and upper(cr1_0.quote)=upper(?) 
     limit
         ?
-2026-08-01T01:20:58.777+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.501+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         sc1_0.id,
         sc1_0.content,
@@ -2307,7 +2323,7 @@ Unconditional classes:
         static_contents sc1_0 
     where
         sc1_0.page_key=?
-2026-08-01T01:20:58.779+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.503+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         sc1_0.id,
         sc1_0.content,
@@ -2318,7 +2334,7 @@ Unconditional classes:
         static_contents sc1_0 
     where
         sc1_0.page_key=?
-2026-08-01T01:20:58.781+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.504+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         sc1_0.id,
         sc1_0.content,
@@ -2329,7 +2345,7 @@ Unconditional classes:
         static_contents sc1_0 
     where
         sc1_0.page_key=?
-2026-08-01T01:20:58.784+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.507+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         sc1_0.id,
         sc1_0.content,
@@ -2340,7 +2356,7 @@ Unconditional classes:
         static_contents sc1_0 
     where
         sc1_0.page_key=?
-2026-08-01T01:20:58.786+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.508+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         u1_0.id,
         u1_0.alternate_contact_number,
@@ -2374,7 +2390,7 @@ Unconditional classes:
         users u1_0 
     where
         u1_0.email=?
-2026-08-01T01:20:58.787+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.509+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.user_id,
         r1_1.id,
@@ -2386,7 +2402,7 @@ Unconditional classes:
             on r1_1.id=r1_0.role_id 
     where
         r1_0.user_id=?
-2026-08-01T01:20:58.789+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.511+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         u1_0.id,
         u1_0.alternate_contact_number,
@@ -2420,7 +2436,7 @@ Unconditional classes:
         users u1_0 
     where
         u1_0.email=?
-2026-08-01T01:20:58.791+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.512+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.user_id,
         r1_1.id,
@@ -2432,7 +2448,7 @@ Unconditional classes:
             on r1_1.id=r1_0.role_id 
     where
         r1_0.user_id=?
-2026-08-01T01:20:58.793+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.514+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         u1_0.id,
         u1_0.alternate_contact_number,
@@ -2466,7 +2482,7 @@ Unconditional classes:
         users u1_0 
     where
         u1_0.email=?
-2026-08-01T01:20:58.794+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.515+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.user_id,
         r1_1.id,
@@ -2478,7 +2494,7 @@ Unconditional classes:
             on r1_1.id=r1_0.role_id 
     where
         r1_0.user_id=?
-2026-08-01T01:20:58.796+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.518+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         u1_0.id,
         u1_0.alternate_contact_number,
@@ -2512,7 +2528,7 @@ Unconditional classes:
         users u1_0 
     where
         u1_0.email=?
-2026-08-01T01:20:58.799+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.520+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         r1_0.user_id,
         r1_1.id,
@@ -2524,7 +2540,7 @@ Unconditional classes:
             on r1_1.id=r1_0.role_id 
     where
         r1_0.user_id=?
-2026-08-01T01:20:58.803+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.522+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -2540,12 +2556,13 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
     from
         products p1_0
-2026-08-01T01:20:58.804+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.524+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2557,7 +2574,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.807+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.527+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2569,7 +2586,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.809+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.529+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2581,7 +2598,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.812+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.532+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2593,7 +2610,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.815+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.535+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2605,7 +2622,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.818+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.536+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2617,7 +2634,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.826+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.543+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         w1_0.id 
     from
@@ -2627,7 +2644,7 @@ Unconditional classes:
         and w1_0.product_id=? 
     limit
         ?
-2026-08-01T01:20:58.828+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.547+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         w1_0.id 
     from
@@ -2637,7 +2654,7 @@ Unconditional classes:
         and w1_0.product_id=? 
     limit
         ?
-2026-08-01T01:20:58.831+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.549+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         w1_0.id 
     from
@@ -2647,7 +2664,7 @@ Unconditional classes:
         and w1_0.product_id=? 
     limit
         ?
-2026-08-01T01:20:58.833+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.551+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         w1_0.id 
     from
@@ -2657,7 +2674,7 @@ Unconditional classes:
         and w1_0.product_id=? 
     limit
         ?
-2026-08-01T01:20:58.836+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.552+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -2673,12 +2690,13 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
     from
         products p1_0
-2026-08-01T01:20:58.837+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.553+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2690,7 +2708,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.839+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.554+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2702,7 +2720,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.841+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.556+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2714,7 +2732,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.843+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.558+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2726,7 +2744,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.846+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.561+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2738,7 +2756,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.848+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.562+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2750,7 +2768,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.853+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.567+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         w1_0.id 
     from
@@ -2760,7 +2778,7 @@ Unconditional classes:
         and w1_0.product_id=? 
     limit
         ?
-2026-08-01T01:20:58.855+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.569+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         w1_0.id 
     from
@@ -2770,7 +2788,7 @@ Unconditional classes:
         and w1_0.product_id=? 
     limit
         ?
-2026-08-01T01:20:58.859+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.571+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         p1_0.id,
         p1_0.availability_status,
@@ -2786,12 +2804,13 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
     from
         products p1_0
-2026-08-01T01:20:58.860+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.571+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2803,7 +2822,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.864+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.574+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2815,7 +2834,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.866+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.575+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2827,7 +2846,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.869+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.577+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2839,7 +2858,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.871+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.579+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2851,7 +2870,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.873+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.581+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
         c1_0.created_at,
@@ -2863,7 +2882,7 @@ Unconditional classes:
         categories c1_0 
     where
         c1_0.id=?
-2026-08-01T01:20:58.879+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.584+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         w1_0.id 
     from
@@ -2873,7 +2892,7 @@ Unconditional classes:
         and w1_0.product_id=? 
     limit
         ?
-2026-08-01T01:20:58.881+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.585+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         b1_0.id 
     from
@@ -2882,298 +2901,388 @@ Unconditional classes:
         b1_0.booking_number=? 
     limit
         ?
-2026-08-01T01:20:58.883+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+2026-08-05T14:05:03.590+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
-        b1_0.id 
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
     from
-        bookings b1_0 
+        products p1_0 
     where
-        b1_0.booking_number=? 
-    limit
-        ?
-2026-08-01T01:20:58.887+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
-    select
-        b1_0.id 
-    from
-        bookings b1_0 
-    where
-        b1_0.booking_number=? 
-    limit
-        ?
-2026-08-01T01:20:58.889+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
-    select
-        b1_0.id 
-    from
-        bookings b1_0 
-    where
-        b1_0.booking_number=? 
-    limit
-        ?
-2026-08-01T01:20:58.891+05:30 DEBUG 26708 --- [clickkaar-backend] [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
-2026-08-01T01:21:00.711+05:30  INFO 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-08-01T01:21:00.711+05:30  INFO 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-08-01T01:21:00.712+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
-2026-08-01T01:21:00.712+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
-2026-08-01T01:21:00.712+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
-2026-08-01T01:21:00.713+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@51386308
-2026-08-01T01:21:00.714+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@59632e3c
-2026-08-01T01:21:00.714+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
-2026-08-01T01:21:00.714+05:30  INFO 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
-2026-08-01T01:21:00.738+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/health", parameters={}
-2026-08-01T01:21:00.740+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.HealthController#health()
-2026-08-01T01:21:00.763+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-08-01T01:21:00.765+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [{status=UP, service=clickkaar-backend, timestamp=2026-07-31T19:51:00.748698300Z}]
-2026-08-01T01:21:00.780+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-08-01T01:21:00.861+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/bookings/coupons/FRIEND", parameters={}
-2026-08-01T01:21:00.862+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.BookingController#couponPreview(String)
-2026-08-01T01:21:00.878+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+        upper(p1_0.name)=upper(?)
+2026-08-05T14:05:03.591+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
-        c1_0.active,
-        c1_0.code,
         c1_0.created_at,
-        c1_0.discount_percent,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
         c1_0.updated_at 
     from
-        coupons c1_0 
+        categories c1_0 
     where
-        upper(c1_0.code)=upper(?) 
-        and c1_0.active
-2026-08-01T01:21:00.884+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
-2026-08-01T01:21:00.914+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json, application/*+json]
-2026-08-01T01:21:00.917+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-01T01:21:00.886776400, status=400, message=Coupon code is invalid or inac (truncated)...]
-2026-08-01T01:21:00.920+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Coupon code is invalid or inactive]
-2026-08-01T01:21:00.920+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
-2026-08-01T01:21:20.955+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+        c1_0.id=?
+2026-08-05T14:05:03.593+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
-        u1_0.id,
-        u1_0.alternate_contact_number,
-        u1_0.city,
-        u1_0.company_bonafide_letter_document_name,
-        u1_0.company_name,
-        u1_0.country,
-        u1_0.created_at,
-        u1_0.current_address,
-        u1_0.dob,
-        u1_0.driving_license_document_name,
-        u1_0.electricity_bill_document_name,
-        u1_0.email,
-        u1_0.enabled,
-        u1_0.first_name,
-        u1_0.full_name,
-        u1_0.gender,
-        u1_0.last_name,
-        u1_0.mobile,
-        u1_0.mobile_verified,
-        u1_0.occupation,
-        u1_0.password,
-        u1_0.photo_document_name,
-        u1_0.pincode,
-        u1_0.rent_agreement_document_name,
-        u1_0.residence_type,
-        u1_0.social_media_profile,
-        u1_0.state,
-        u1_0.updated_at 
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
     from
-        users u1_0 
+        products p1_0 
     where
-        u1_0.email=?
-2026-08-01T01:21:20.957+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
-    select
-        r1_0.user_id,
-        r1_1.id,
-        r1_1.name 
-    from
-        user_roles r1_0 
-    join
-        roles r1_1 
-            on r1_1.id=r1_0.role_id 
-    where
-        r1_0.user_id=?
-2026-08-01T01:21:20.964+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/bookings/coupons/FRIEND", parameters={}
-2026-08-01T01:21:20.965+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.BookingController#couponPreview(String)
-2026-08-01T01:21:20.967+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+        upper(p1_0.name)=upper(?)
+2026-08-05T14:05:03.594+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
-        c1_0.active,
-        c1_0.code,
         c1_0.created_at,
-        c1_0.discount_percent,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
         c1_0.updated_at 
     from
-        coupons c1_0 
+        categories c1_0 
     where
-        upper(c1_0.code)=upper(?) 
-        and c1_0.active
-2026-08-01T01:21:20.971+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
-2026-08-01T01:21:20.971+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
-2026-08-01T01:21:20.972+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-01T01:21:20.971137, status=400, message=Coupon code is invalid or inactiv (truncated)...]
-2026-08-01T01:21:20.972+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Coupon code is invalid or inactive]
-2026-08-01T01:21:20.973+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
-2026-08-01T01:21:25.504+05:30 DEBUG 26708 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+        c1_0.id=?
+2026-08-05T14:05:03.614+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        bookings
+        (booking_number, created_at, customer_id, rental_days, rental_end_date, rental_start_date, status, total_amount, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:05:03.640+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_items
+        (booking_id, daily_price, line_total, product_id) 
+    values
+        (?, ?, ?, ?)
+2026-08-05T14:05:03.643+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_items
+        (booking_id, daily_price, line_total, product_id) 
+    values
+        (?, ?, ?, ?)
+2026-08-05T14:05:03.660+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        payments
+        (amount, booking_id, created_at, razorpay_order_id, razorpay_payment_id, razorpay_signature, remark, status, type, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:05:03.668+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_notes
+        (admin_id, booking_id, created_at, note, updated_at) 
+    values
+        (?, ?, ?, ?, ?)
+2026-08-05T14:05:03.673+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
-        u1_0.id,
-        u1_0.alternate_contact_number,
-        u1_0.city,
-        u1_0.company_bonafide_letter_document_name,
-        u1_0.company_name,
-        u1_0.country,
-        u1_0.created_at,
-        u1_0.current_address,
-        u1_0.dob,
-        u1_0.driving_license_document_name,
-        u1_0.electricity_bill_document_name,
-        u1_0.email,
-        u1_0.enabled,
-        u1_0.first_name,
-        u1_0.full_name,
-        u1_0.gender,
-        u1_0.last_name,
-        u1_0.mobile,
-        u1_0.mobile_verified,
-        u1_0.occupation,
-        u1_0.password,
-        u1_0.photo_document_name,
-        u1_0.pincode,
-        u1_0.rent_agreement_document_name,
-        u1_0.residence_type,
-        u1_0.social_media_profile,
-        u1_0.state,
-        u1_0.updated_at 
+        b1_0.id 
     from
-        users u1_0 
+        bookings b1_0 
     where
-        u1_0.email=?
-2026-08-01T01:21:25.506+05:30 DEBUG 26708 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+        b1_0.booking_number=? 
+    limit
+        ?
+2026-08-05T14:05:03.675+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
-        r1_0.user_id,
-        r1_1.id,
-        r1_1.name 
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
     from
-        user_roles r1_0 
-    join
-        roles r1_1 
-            on r1_1.id=r1_0.role_id 
+        products p1_0 
     where
-        r1_0.user_id=?
-2026-08-01T01:21:25.510+05:30 DEBUG 26708 --- [clickkaar-backend] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/bookings/coupons/FRIENDS", parameters={}
-2026-08-01T01:21:25.512+05:30 DEBUG 26708 --- [clickkaar-backend] [io-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.BookingController#couponPreview(String)
-2026-08-01T01:21:25.515+05:30 DEBUG 26708 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+        upper(p1_0.name)=upper(?)
+2026-08-05T14:05:03.676+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
         c1_0.id,
-        c1_0.active,
-        c1_0.code,
         c1_0.created_at,
-        c1_0.discount_percent,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
         c1_0.updated_at 
     from
-        coupons c1_0 
+        categories c1_0 
     where
-        upper(c1_0.code)=upper(?) 
-        and c1_0.active
-2026-08-01T01:21:25.521+05:30 DEBUG 26708 --- [clickkaar-backend] [io-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
-2026-08-01T01:21:25.524+05:30 DEBUG 26708 --- [clickkaar-backend] [io-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing [CouponPreviewResponse[code=FRIENDS, discountPercent=50.00]]
-2026-08-01T01:21:25.536+05:30 DEBUG 26708 --- [clickkaar-backend] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-08-01T01:23:22.813+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+        c1_0.id=?
+2026-08-05T14:05:03.679+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        bookings
+        (booking_number, created_at, customer_id, rental_days, rental_end_date, rental_start_date, status, total_amount, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:05:03.681+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_items
+        (booking_id, daily_price, line_total, product_id) 
+    values
+        (?, ?, ?, ?)
+2026-08-05T14:05:03.686+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        payments
+        (amount, booking_id, created_at, razorpay_order_id, razorpay_payment_id, razorpay_signature, remark, status, type, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:05:03.691+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_notes
+        (admin_id, booking_id, created_at, note, updated_at) 
+    values
+        (?, ?, ?, ?, ?)
+2026-08-05T14:05:03.698+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
-        u1_0.id,
-        u1_0.alternate_contact_number,
-        u1_0.city,
-        u1_0.company_bonafide_letter_document_name,
-        u1_0.company_name,
-        u1_0.country,
-        u1_0.created_at,
-        u1_0.current_address,
-        u1_0.dob,
-        u1_0.driving_license_document_name,
-        u1_0.electricity_bill_document_name,
-        u1_0.email,
-        u1_0.enabled,
-        u1_0.first_name,
-        u1_0.full_name,
-        u1_0.gender,
-        u1_0.last_name,
-        u1_0.mobile,
-        u1_0.mobile_verified,
-        u1_0.occupation,
-        u1_0.password,
-        u1_0.photo_document_name,
-        u1_0.pincode,
-        u1_0.rent_agreement_document_name,
-        u1_0.residence_type,
-        u1_0.social_media_profile,
-        u1_0.state,
-        u1_0.updated_at 
+        b1_0.id 
     from
-        users u1_0 
+        bookings b1_0 
     where
-        u1_0.email=?
-2026-08-01T01:23:22.821+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+        b1_0.booking_number=? 
+    limit
+        ?
+2026-08-05T14:05:03.700+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
     select
-        r1_0.user_id,
-        r1_1.id,
-        r1_1.name 
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
     from
-        user_roles r1_0 
+        products p1_0 
+    where
+        upper(p1_0.name)=upper(?)
+2026-08-05T14:05:03.701+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-05T14:05:03.703+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        bookings
+        (booking_number, created_at, customer_id, rental_days, rental_end_date, rental_start_date, status, total_amount, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:05:03.704+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_items
+        (booking_id, daily_price, line_total, product_id) 
+    values
+        (?, ?, ?, ?)
+2026-08-05T14:05:03.709+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        payments
+        (amount, booking_id, created_at, razorpay_order_id, razorpay_payment_id, razorpay_signature, remark, status, type, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:05:03.712+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_notes
+        (admin_id, booking_id, created_at, note, updated_at) 
+    values
+        (?, ?, ?, ?, ?)
+2026-08-05T14:05:03.717+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    select
+        b1_0.id 
+    from
+        bookings b1_0 
+    where
+        b1_0.booking_number=? 
+    limit
+        ?
+2026-08-05T14:05:03.719+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        products p1_0 
+    where
+        upper(p1_0.name)=upper(?)
+2026-08-05T14:05:03.720+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-05T14:05:03.722+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        bookings
+        (booking_number, created_at, customer_id, rental_days, rental_end_date, rental_start_date, status, total_amount, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:05:03.724+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_items
+        (booking_id, daily_price, line_total, product_id) 
+    values
+        (?, ?, ?, ?)
+2026-08-05T14:05:03.728+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        payments
+        (amount, booking_id, created_at, razorpay_order_id, razorpay_payment_id, razorpay_signature, remark, status, type, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:05:03.733+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] org.hibernate.SQL                        : 
+    insert 
+    into
+        booking_notes
+        (admin_id, booking_id, created_at, note, updated_at) 
+    values
+        (?, ?, ?, ?, ?)
+2026-08-05T14:05:03.738+05:30 DEBUG 23668 --- [clickkaar-backend] [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2026-08-05T14:05:24.658+05:30  INFO 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-05T14:05:24.659+05:30  INFO 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-08-05T14:05:24.659+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-08-05T14:05:24.660+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-08-05T14:05:24.660+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-08-05T14:05:24.661+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@f562214
+2026-08-05T14:05:24.661+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@5962c1b8
+2026-08-05T14:05:24.661+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-08-05T14:05:24.663+05:30  INFO 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2026-08-05T14:05:24.700+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/bookings/availability?productId=109&startDate=2026-08-05&endDate=2026-08-05", parameters={masked}
+2026-08-05T14:05:24.702+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.BookingController#availability(Long, LocalDate, LocalDate)
+2026-08-05T14:05:24.732+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        products p1_0 
     join
-        roles r1_1 
-            on r1_1.id=r1_0.role_id 
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
     where
-        r1_0.user_id=?
-2026-08-01T01:23:22.833+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/dashboard/customer", parameters={}
-2026-08-01T01:23:22.835+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.CustomerDashboardController#customerDashboard()
-2026-08-01T01:23:22.882+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+        p1_0.id=?
+2026-08-05T14:05:24.747+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
     select
-        u1_0.id,
-        u1_0.alternate_contact_number,
-        u1_0.city,
-        u1_0.company_bonafide_letter_document_name,
-        u1_0.company_name,
-        u1_0.country,
-        u1_0.created_at,
-        u1_0.current_address,
-        u1_0.dob,
-        u1_0.driving_license_document_name,
-        u1_0.electricity_bill_document_name,
-        u1_0.email,
-        u1_0.enabled,
-        u1_0.first_name,
-        u1_0.full_name,
-        u1_0.gender,
-        u1_0.last_name,
-        u1_0.mobile,
-        u1_0.mobile_verified,
-        u1_0.occupation,
-        u1_0.password,
-        u1_0.photo_document_name,
-        u1_0.pincode,
-        u1_0.rent_agreement_document_name,
-        u1_0.residence_type,
-        u1_0.social_media_profile,
-        u1_0.state,
-        u1_0.updated_at 
-    from
-        users u1_0 
-    where
-        u1_0.email=?
-2026-08-01T01:23:22.885+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
-    select
-        r1_0.user_id,
-        r1_1.id,
-        r1_1.name 
-    from
-        user_roles r1_0 
-    join
-        roles r1_1 
-            on r1_1.id=r1_0.role_id 
-    where
-        r1_0.user_id=?
-2026-08-01T01:23:22.893+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
-    select
-        b1_0.id,
+        distinct b1_0.id,
         b1_0.booking_number,
         b1_0.created_at,
         b1_0.customer_id,
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
         b1_0.rental_days,
         b1_0.rental_end_date,
         b1_0.rental_start_date,
@@ -3182,46 +3291,277 @@ Unconditional classes:
         b1_0.updated_at 
     from
         bookings b1_0 
-    where
-        b1_0.customer_id=?
-2026-08-01T01:23:22.903+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
-    select
-        p1_0.id,
-        p1_0.amount,
-        p1_0.booking_id,
-        p1_0.created_at,
-        p1_0.razorpay_order_id,
-        p1_0.razorpay_payment_id,
-        p1_0.razorpay_signature,
-        p1_0.remark,
-        p1_0.status,
-        p1_0.type,
-        p1_0.updated_at 
-    from
-        payments p1_0 
     join
+        booking_items i1_0 
+            on b1_0.id=i1_0.booking_id 
+    where
+        i1_0.product_id=? 
+        and b1_0.status in ('CONFIRMED', 'ACTIVE', 'OVERDUE') 
+        and ?<=b1_0.rental_end_date 
+        and ?>=b1_0.rental_start_date
+2026-08-05T14:05:24.803+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-08-05T14:05:24.806+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [AvailabilityResponse[available=true, message=Rent Sony FE 24-70mm f/2.8 GM II Lens is available for  (truncated)...]
+2026-08-05T14:05:24.822+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-05T14:07:10.573+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-05T14:07:10.580+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-05T14:07:10.599+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/api/bookings", parameters={}
+2026-08-05T14:07:10.600+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.BookingController#create(BookingRequest)
+2026-08-05T14:07:10.673+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [BookingRequest[customerId=17, rentalStartDate=2026-08-05, rentalEndDate=2026-08-05, items=[BookingIt (truncated)...]
+2026-08-05T14:07:10.769+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-05T14:07:10.776+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.id=?
+2026-08-05T14:07:10.782+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        distinct b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
         bookings b1_0 
-            on b1_0.id=p1_0.booking_id 
+    join
+        booking_items i1_0 
+            on b1_0.id=i1_0.booking_id 
     where
-        b1_0.customer_id=?
-2026-08-01T01:23:22.915+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+        i1_0.product_id=? 
+        and b1_0.status in ('CONFIRMED', 'ACTIVE', 'OVERDUE') 
+        and ?<=b1_0.rental_end_date 
+        and ?>=b1_0.rental_start_date
+2026-08-05T14:07:10.786+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    insert 
+    into
+        bookings
+        (booking_number, created_at, customer_id, rental_days, rental_end_date, rental_start_date, status, total_amount, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:07:10.810+05:30  WARN 23668 --- [clickkaar-backend] [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1265, SQLState: 01000
+2026-08-05T14:07:10.810+05:30 ERROR 23668 --- [clickkaar-backend] [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : Data truncated for column 'status' at row 1
+2026-08-05T14:07:10.823+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleGeneric(Exception)
+2026-08-05T14:07:10.830+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-05T14:07:10.833+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-05T14:07:10.825498200, status=500, message=could not execute statement [D (truncated)...]
+2026-08-05T14:07:10.843+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.orm.jpa.JpaSystemException: could not execute statement [Data truncated for column 'status' at row 1] [insert into bookings (booking_number,created_at,customer_id,rental_days,rental_end_date,rental_start_date,status,total_amount,updated_at) values (?,?,?,?,?,?,?,?,?)]]
+2026-08-05T14:07:10.844+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2026-08-05T14:07:15.777+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
     select
-        w1_0.id,
-        w1_0.created_at,
-        w1_0.product_id,
-        w1_0.updated_at,
-        w1_0.user_id 
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
     from
-        wishlists w1_0 
+        users u1_0 
     where
-        w1_0.user_id=?
-2026-08-01T01:23:22.922+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+        u1_0.email=?
+2026-08-05T14:07:15.781+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
     select
-        i1_0.booking_id,
-        i1_0.id,
-        i1_0.daily_price,
-        i1_0.line_total,
-        i1_0.product_id,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-05T14:07:15.785+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : POST "/api/bookings", parameters={}
+2026-08-05T14:07:15.786+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.BookingController#create(BookingRequest)
+2026-08-05T14:07:15.787+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [BookingRequest[customerId=17, rentalStartDate=2026-08-05, rentalEndDate=2026-08-05, items=[BookingIt (truncated)...]
+2026-08-05T14:07:15.789+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-05T14:07:15.793+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
         p1_0.id,
         p1_0.availability_status,
         p1_0.brand,
@@ -3242,59 +3582,56 @@ Unconditional classes:
         p1_0.name,
         p1_0.short_description,
         p1_0.specs,
+        p1_0.stock,
         p1_0.updated_at,
         p1_0.warranty_date,
         p1_0.weekly_price 
     from
-        booking_items i1_0 
-    left join
         products p1_0 
-            on p1_0.id=i1_0.product_id 
-    left join
+    join
         categories c1_0 
             on c1_0.id=p1_0.category_id 
     where
-        i1_0.booking_id=?
-2026-08-01T01:23:22.961+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+        p1_0.id=?
+2026-08-05T14:07:15.795+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
     select
+        distinct b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
         i1_0.booking_id,
         i1_0.id,
         i1_0.daily_price,
         i1_0.line_total,
         i1_0.product_id,
-        p1_0.id,
-        p1_0.availability_status,
-        p1_0.brand,
-        p1_0.category_id,
-        c1_0.id,
-        c1_0.created_at,
-        c1_0.description,
-        c1_0.display_name,
-        c1_0.name,
-        c1_0.updated_at,
-        p1_0.created_at,
-        p1_0.daily_price,
-        p1_0.full_description,
-        p1_0.image_link,
-        p1_0.invoice_url,
-        p1_0.link_1,
-        p1_0.link_2,
-        p1_0.name,
-        p1_0.short_description,
-        p1_0.specs,
-        p1_0.updated_at,
-        p1_0.warranty_date,
-        p1_0.weekly_price 
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
     from
+        bookings b1_0 
+    join
         booking_items i1_0 
-    left join
-        products p1_0 
-            on p1_0.id=i1_0.product_id 
-    left join
-        categories c1_0 
-            on c1_0.id=p1_0.category_id 
+            on b1_0.id=i1_0.booking_id 
     where
-        i1_0.booking_id=?
-2026-08-01T01:23:22.983+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
-2026-08-01T01:23:23.008+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Writing [CustomerDashboardResponse[profile=CustomerProfileResponse[id=17, fullName=vishwajeet khadse, email=v (truncated)...]
-2026-08-01T01:23:23.026+05:30 DEBUG 26708 --- [clickkaar-backend] [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+        i1_0.product_id=? 
+        and b1_0.status in ('CONFIRMED', 'ACTIVE', 'OVERDUE') 
+        and ?<=b1_0.rental_end_date 
+        and ?>=b1_0.rental_start_date
+2026-08-05T14:07:15.800+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    insert 
+    into
+        bookings
+        (booking_number, created_at, customer_id, rental_days, rental_end_date, rental_start_date, status, total_amount, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-08-05T14:07:15.802+05:30  WARN 23668 --- [clickkaar-backend] [nio-8080-exec-5] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1265, SQLState: 01000
+2026-08-05T14:07:15.802+05:30 ERROR 23668 --- [clickkaar-backend] [nio-8080-exec-5] o.h.engine.jdbc.spi.SqlExceptionHelper   : Data truncated for column 'status' at row 1
+2026-08-05T14:07:15.805+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleGeneric(Exception)
+2026-08-05T14:07:15.806+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-05T14:07:15.807+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-05T14:07:15.806356400, status=500, message=could not execute statement [D (truncated)...]
+2026-08-05T14:07:15.808+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.orm.jpa.JpaSystemException: could not execute statement [Data truncated for column 'status' at row 1] [insert into bookings (booking_number,created_at,customer_id,rental_days,rental_end_date,rental_start_date,status,total_amount,updated_at) values (?,?,?,?,?,?,?,?,?)]]
+2026-08-05T14:07:15.808+05:30 DEBUG 23668 --- [clickkaar-backend] [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2026-08-05T18:07:58.910+05:30  WARN 23668 --- [clickkaar-backend] [l-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4h29s979ms102µs200ns).

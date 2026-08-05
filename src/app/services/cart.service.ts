@@ -31,8 +31,7 @@ export class CartService {
   readonly count = computed(() => this.items().reduce((sum, item) => sum + item.quantity, 0));
   readonly subtotal = computed(() => this.items().reduce((sum, item) => sum + this.itemTotal(item), 0));
   readonly securityDeposit = computed(() => Math.round(this.subtotal() * 0.3));
-  readonly tax = computed(() => Math.round(this.subtotal() * 0.18));
-  readonly grandTotal = computed(() => this.subtotal() + this.securityDeposit() + this.tax());
+  readonly grandTotal = computed(() => this.subtotal() + this.securityDeposit());
 
   constructor() {
     effect(() => {
@@ -40,22 +39,57 @@ export class CartService {
     });
   }
 
-  add(product: Product, startDate = tomorrow(), endDate = afterDays(3), quantity = 1): void {
+  add(product: Product, startDate = tomorrow(), endDate = afterDays(3), quantity = 1): boolean {
+    if (!this.canAdd(product, startDate, endDate, quantity)) {
+      return false;
+    }
+
     this.items.update((items) => {
-      const existing = items.find((item) => item.product.id === product.id);
+      const key = this.cartItemKey(product.id, startDate, endDate);
+      const existing = items.find((item) => this.cartItemKey(item.product.id, item.startDate, item.endDate) === key);
       if (existing) {
-        return items.map((item) => item.product.id === product.id ? { ...item, quantity: item.quantity + quantity, startDate, endDate } : item);
+        const nextQuantity = Math.min(this.availableStock(product), existing.quantity + quantity);
+        return items.map((item) => this.cartItemKey(item.product.id, item.startDate, item.endDate) === key ? { ...item, product, quantity: nextQuantity, startDate, endDate } : item);
       }
-      return [...items, { product, startDate, endDate, quantity }];
+      return [...items, { product, startDate, endDate, quantity: Math.min(this.availableStock(product), quantity) }];
     });
+    return true;
   }
 
-  updateQuantity(productId: number, quantity: number): void {
-    this.items.update((items) => items.map((item) => item.product.id === productId ? { ...item, quantity: Math.max(1, quantity) } : item));
+  updateQuantity(productId: number, startDate: Date, endDate: Date, quantity: number): void {
+    const key = this.cartItemKey(productId, startDate, endDate);
+    this.items.update((items) => items.map((item) => {
+      if (this.cartItemKey(item.product.id, item.startDate, item.endDate) !== key) {
+        return item;
+      }
+      return { ...item, quantity: Math.min(this.availableStock(item.product), Math.max(1, quantity)) };
+    }));
+  }
+
+  quantityFor(productId: number, startDate: Date, endDate: Date): number {
+    const key = this.cartItemKey(productId, startDate, endDate);
+    return this.items().find((item) => this.cartItemKey(item.product.id, item.startDate, item.endDate) === key)?.quantity ?? 0;
+  }
+
+  canAdd(product: Product, startDate = tomorrow(), endDate = afterDays(3), quantity = 1): boolean {
+    return this.quantityFor(product.id, startDate, endDate) + quantity <= this.availableStock(product);
+  }
+
+  availableStock(product: Product): number {
+    return Math.max(0, product.stock ?? (product.available ? 1 : 0));
+  }
+
+  itemKey(item: CartItem): string {
+    return this.cartItemKey(item.product.id, item.startDate, item.endDate);
   }
 
   remove(productId: number): void {
     this.items.update((items) => items.filter((item) => item.product.id !== productId));
+  }
+
+  removeItem(productId: number, startDate: Date, endDate: Date): void {
+    const key = this.cartItemKey(productId, startDate, endDate);
+    this.items.update((items) => items.filter((item) => this.cartItemKey(item.product.id, item.startDate, item.endDate) !== key));
   }
 
   clear(): void {
@@ -64,7 +98,7 @@ export class CartService {
 
   duration(item: CartItem): number {
     const diff = item.endDate.getTime() - item.startDate.getTime();
-    return Math.max(1, Math.ceil(diff / 86_400_000));
+    return Math.max(1, Math.floor(diff / 86_400_000) + 1);
   }
 
   itemTotal(item: CartItem): number {
@@ -87,8 +121,8 @@ export class CartService {
         product: item.product,
         startDate: new Date(item.startDate),
         endDate: new Date(item.endDate),
-        quantity: item.quantity
-      }));
+        quantity: Math.min(this.availableStock(item.product), Math.max(1, item.quantity))
+      })).filter((item) => this.availableStock(item.product) > 0);
     } catch {
       localStorage.removeItem(CART_STORAGE_KEY);
       return [];
@@ -116,5 +150,13 @@ export class CartService {
 
   private canUseStorage(): boolean {
     return isPlatformBrowser(this.platformId) && typeof localStorage !== 'undefined';
+  }
+
+  private cartItemKey(productId: number, startDate: Date, endDate: Date): string {
+    return `${productId}:${this.dateKey(startDate)}:${this.dateKey(endDate)}`;
+  }
+
+  private dateKey(date: Date): string {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   }
 }

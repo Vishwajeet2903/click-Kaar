@@ -20,6 +20,7 @@ import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.Utils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -33,6 +34,7 @@ import java.math.RoundingMode;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentService {
   private final BookingRepository bookingRepository;
   private final PaymentRepository paymentRepository;
@@ -89,6 +91,7 @@ public class PaymentService {
 
   private void verifyRazorpaySignature(VerifyPaymentRequest request) {
     if (razorpaySecret == null || razorpaySecret.isBlank()) {
+      log.warn("Skipping Razorpay signature verification because RAZORPAY_KEY_SECRET is not configured");
       return;
     }
     try {
@@ -98,11 +101,15 @@ public class PaymentService {
       attributes.put("razorpay_signature", request.razorpaySignature());
       Utils.verifyPaymentSignature(attributes, razorpaySecret);
     } catch (Exception ex) {
+      log.warn("Razorpay signature verification failed for order {}", request.razorpayOrderId(), ex);
       throw new BadRequestException("Invalid Razorpay payment signature");
     }
   }
 
   private void validateRequestedAmount(Booking booking, CreatePaymentOrderRequest request) {
+    if (booking.getTotalAmount() == null || booking.getTotalAmount().signum() <= 0) {
+      throw new BadRequestException("Booking total must be greater than zero");
+    }
     if (request.amount() != null && request.amount().compareTo(booking.getTotalAmount()) != 0) {
       throw new BadRequestException("Payment amount does not match the booking total");
     }
@@ -141,8 +148,10 @@ public class PaymentService {
       orderRequest.put("currency", "INR");
       orderRequest.put("receipt", booking.getBookingNumber() + "-" + UUID.randomUUID().toString().substring(0, 8));
       Order order = razorpayClient.orders.create(orderRequest);
+      log.info("Created Razorpay order {} for booking {}", order.get("id"), booking.getBookingNumber());
       return order.get("id");
     } catch (Exception exception) {
+      log.warn("Unable to create Razorpay order for booking {} with total {}", booking.getBookingNumber(), booking.getTotalAmount(), exception);
       throw new BadRequestException("Unable to create Razorpay order");
     }
   }

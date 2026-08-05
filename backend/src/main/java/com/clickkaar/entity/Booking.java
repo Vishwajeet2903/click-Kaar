@@ -3,6 +3,8 @@ package com.clickkaar.entity;
 import com.clickkaar.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -40,7 +42,8 @@ public class Booking extends AuditableEntity {
   private BigDecimal totalAmount;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @JdbcTypeCode(SqlTypes.VARCHAR)
+  @Column(nullable = false, length = 32)
   private BookingStatus status;
 
   @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)

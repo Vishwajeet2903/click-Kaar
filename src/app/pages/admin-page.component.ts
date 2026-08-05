@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, PercentPipe, formatDate } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -90,6 +90,9 @@ interface AdminCoupon {
   code: string;
   discountPercent: number;
   active: boolean;
+  usageLimit?: number | null;
+  usedCount: number;
+  validUntil?: string | null;
   createdAt: string;
 }
 
@@ -159,6 +162,19 @@ interface PaymentRemarkLogView {
   newRemark: string;
   changedBy: string;
   changedAt: string;
+}
+
+interface AdminConfirmDialog {
+  title: string;
+  message: string;
+  actionLabel: string;
+  tone: 'danger' | 'default';
+  onConfirm: () => void;
+}
+
+interface AdminNoteDialog {
+  booking: AdminBooking;
+  note: string;
 }
 
 @Component({
@@ -514,11 +530,13 @@ interface PaymentRemarkLogView {
                 <div class="card-grid">
                   @for (customer of pagedCustomers(); track customer.id) {
                     <article class="surface customer-card" [class.blocked]="customer.blocked">
-                      <div class="avatar">{{ customer.name.charAt(0) }}</div>
-                      <div>
-                        <h3>{{ customer.name }}</h3>
-                        <p>{{ customer.email }} - {{ customer.phone }}</p>
-                        <span>{{ customer.city }} / {{ customer.verified ? 'OTP verified' : 'OTP pending' }}</span>
+                      <div class="customer-card-head">
+                        <div class="avatar">{{ customer.name.charAt(0) }}</div>
+                        <div class="customer-card-info">
+                          <h3>{{ customer.name }}</h3>
+                          <p>{{ customer.email }} - {{ customer.phone || 'No phone added' }}</p>
+                          <span>{{ customer.city || 'City not added' }}</span>
+                        </div>
                       </div>
                       <dl>
                         <div><dt>Active</dt><dd>{{ customer.activeBookings }}</dd></div>
@@ -631,6 +649,8 @@ interface PaymentRemarkLogView {
                     <div class="form-grid coupon-form-grid">
                       <label>Coupon code<input formControlName="code" placeholder="WELCOME10" (input)="normalizeCouponInput()"></label>
                       <label>Discount percent<input type="number" min="1" max="100" formControlName="discountPercent"></label>
+                      <label>Usage limit<input type="number" min="1" formControlName="usageLimit" placeholder="Unlimited"></label>
+                      <label>Valid until<input type="date" formControlName="validUntil"></label>
                       <label class="checkbox-label"><input type="checkbox" formControlName="active"> Active coupon</label>
                     </div>
                     <button type="submit" class="primary-btn wide" [disabled]="isSubmittingCoupon">{{ isSubmittingCoupon ? 'Creating...' : 'Create coupon' }}</button>
@@ -642,17 +662,54 @@ interface PaymentRemarkLogView {
                       <button type="button" class="link-btn" (click)="loadCoupons()">Refresh</button>
                     </div>
                     <div class="dense-list coupon-list">
-                      @for (coupon of coupons(); track coupon.id) {
-                        <article>
-                          <div>
+                      @for (coupon of pagedCoupons(); track coupon.id; let index = $index) {
+                        <article [class.inactive]="!coupon.active" [style.--motion-index]="index">
+                          <div class="coupon-field">
+                            <small>Coupon code</small>
                             <strong>{{ coupon.code }}</strong>
-                            <span>{{ coupon.discountPercent }}% discount - Created {{ coupon.createdAt | date:'mediumDate' }}</span>
                           </div>
-                          <b class="status" [class]="coupon.active ? 'status-ok' : 'status-bad'">{{ coupon.active ? 'Active' : 'Inactive' }}</b>
+                          <div class="coupon-field">
+                            <small>Discount</small>
+                            <span>{{ coupon.discountPercent }}%</span>
+                          </div>
+                          <div class="coupon-field">
+                            <small>Usage</small>
+                            <span>{{ couponUsageLabel(coupon) }}</span>
+                          </div>
+                          <div class="coupon-field">
+                            <small>Valid until</small>
+                            <span>{{ couponExpiryLabel(coupon) }}</span>
+                          </div>
+                          <div class="coupon-field">
+                            <small>Created</small>
+                            <span>{{ coupon.createdAt | date:'mediumDate' }}</span>
+                          </div>
+                          <div class="row-actions coupon-actions">
+                            <button
+                              type="button"
+                              class="coupon-status-btn"
+                              [class.status-ok]="coupon.active"
+                              [class.status-bad]="!coupon.active"
+                              [disabled]="updatingCouponStatusId === coupon.id"
+                              (click)="toggleCouponActive(coupon)"
+                            >
+                              {{ updatingCouponStatusId === coupon.id ? 'Saving...' : coupon.active ? 'Active' : 'Inactive' }}
+                            </button>
+                            <button type="button" class="danger-btn" [disabled]="deletingCouponId === coupon.id" (click)="deleteCoupon(coupon)">
+                              {{ deletingCouponId === coupon.id ? 'Deleting...' : 'Delete' }}
+                            </button>
+                          </div>
                         </article>
                       } @empty {
                         <p class="muted">No coupons have been created yet.</p>
                       }
+                    </div>
+                    <div class="pagination-row">
+                      <span>{{ pageSummary(coupons().length, couponsPage) }}</span>
+                      <div>
+                        <button type="button" class="ghost-mini" [disabled]="couponsPage === 1" (click)="changePage('coupons', -1)">Previous</button>
+                        <button type="button" class="mini-btn" [disabled]="couponsPage === pageCount(coupons().length)" (click)="changePage('coupons', 1)">Next</button>
+                      </div>
                     </div>
                   </section>
                 </div>
@@ -788,8 +845,8 @@ interface PaymentRemarkLogView {
 
               @case ('reviews') {
                 <div class="tool-row inventory-filter-row">
-                  <input class="search-input" placeholder="Search reviewer, role, quote" [ngModel]="reviewQuery()" (ngModelChange)="reviewQuery.set($event)">
-                  <select [ngModel]="reviewRatingFilter()" (ngModelChange)="reviewRatingFilter.set($event)">
+                  <input class="search-input" placeholder="Search reviewer, role, quote" [ngModel]="reviewQuery()" (ngModelChange)="reviewQuery.set($event); reviewsPage = 1">
+                  <select [ngModel]="reviewRatingFilter()" (ngModelChange)="reviewRatingFilter.set($event); reviewsPage = 1">
                     <option value="">All ratings</option>
                     <option value="5">5 stars</option>
                     <option value="4">4 stars</option>
@@ -844,8 +901,8 @@ interface PaymentRemarkLogView {
                       <button type="button" class="link-btn" (click)="loadReviews()">Refresh</button>
                     </div>
                     <div class="dense-list review-list">
-                      @for (review of filteredReviews(); track review.id) {
-                        <article class="clickable-review" [class.active]="selectedReview?.id === review.id" (click)="viewReview(review)" tabindex="0" role="button" [attr.aria-label]="'View review by ' + review.name" (keydown.enter)="viewReview(review)" (keydown.space)="viewReview(review)">
+                      @for (review of pagedReviews(); track review.id; let index = $index) {
+                        <article class="clickable-review" [class.active]="selectedReview?.id === review.id" [style.--motion-index]="index" (click)="viewReview(review)" tabindex="0" role="button" [attr.aria-label]="'View review by ' + review.name" (keydown.enter)="viewReview(review)" (keydown.space)="viewReview(review)">
                           <div>
                             <strong>{{ review.name }}</strong>
                             <span>{{ review.role }} - {{ review.rating }} stars - {{ review.createdAt | date:'mediumDate' }}</span>
@@ -864,7 +921,11 @@ interface PaymentRemarkLogView {
                       }
                     </div>
                     <div class="pagination-row">
-                      <span>{{ filteredReviews().length ? 'Showing all ' + filteredReviews().length + ' reviews' : 'No reviews' }}</span>
+                      <span>{{ pageSummary(filteredReviews().length, reviewsPage) }}</span>
+                      <div>
+                        <button type="button" class="ghost-mini" [disabled]="reviewsPage === 1" (click)="changePage('reviews', -1)">Previous</button>
+                        <button type="button" class="mini-btn" [disabled]="reviewsPage === pageCount(filteredReviews().length)" (click)="changePage('reviews', 1)">Next</button>
+                      </div>
                     </div>
                   </section>
                 </div>
@@ -951,6 +1012,36 @@ interface PaymentRemarkLogView {
                 <span>{{ activeDocumentIndex() + 1 }} / {{ imagePreviews().length }}</span>
               </div>
             </div>
+          </div>
+        }
+        @if (confirmDialog) {
+          <div class="admin-confirm-backdrop" role="presentation" (click)="cancelConfirmDialog()">
+            <section class="surface admin-confirm-dialog" role="dialog" aria-modal="true" [attr.aria-label]="confirmDialog.title" (click)="$event.stopPropagation()">
+              <div>
+                <p class="eyebrow">Confirm action</p>
+                <h3>{{ confirmDialog.title }}</h3>
+                <p>{{ confirmDialog.message }}</p>
+              </div>
+              <div class="admin-confirm-actions">
+                <button type="button" class="ghost-btn" (click)="cancelConfirmDialog()">Cancel</button>
+                <button type="button" [class.danger-btn]="confirmDialog.tone === 'danger'" [class.primary-btn]="confirmDialog.tone !== 'danger'" (click)="acceptConfirmDialog()">{{ confirmDialog.actionLabel }}</button>
+              </div>
+            </section>
+          </div>
+        }
+        @if (noteDialog) {
+          <div class="admin-confirm-backdrop" role="presentation" (click)="cancelNoteDialog()">
+            <section class="surface admin-confirm-dialog" role="dialog" aria-modal="true" aria-label="Internal note" (click)="$event.stopPropagation()">
+              <div>
+                <p class="eyebrow">Internal note</p>
+                <h3>{{ noteDialog.booking.id }}</h3>
+                <textarea class="admin-note-editor" rows="4" [ngModel]="noteDialog.note" (ngModelChange)="noteDialog.note = $event"></textarea>
+              </div>
+              <div class="admin-confirm-actions">
+                <button type="button" class="ghost-btn" (click)="cancelNoteDialog()">Cancel</button>
+                <button type="button" class="primary-btn" (click)="saveNoteDialog()">Save note</button>
+              </div>
+            </section>
           </div>
         }
       } @else {
@@ -1103,6 +1194,14 @@ interface PaymentRemarkLogView {
     .lightbox-foot strong, .lightbox-foot span { text-shadow: 0 2px 14px rgba(0,0,0,.32); }
     .lightbox-foot strong { font-size: .88rem; }
     .lightbox-foot span { color: rgba(255,255,255,.75); font-size: .8rem; font-weight: 900; }
+    .admin-confirm-backdrop { align-items: center; backdrop-filter: blur(12px); background: rgba(17,17,17,.62); display: flex; inset: 0; justify-content: center; padding: 1rem; position: fixed; z-index: 5100; }
+    .admin-confirm-dialog { display: grid; gap: 1.15rem; max-width: 420px; padding: 1.1rem; width: min(100%, 420px); }
+    .admin-confirm-dialog .eyebrow { color: var(--admin-accent); margin: 0 0 .35rem; }
+    .admin-confirm-dialog h3 { color: #111; font-size: 1.12rem; letter-spacing: 0; line-height: 1.2; margin: 0; }
+    .admin-confirm-dialog p:not(.eyebrow) { color: #555; font-size: .9rem; font-weight: 750; line-height: 1.5; margin: .55rem 0 0; }
+    .admin-confirm-actions { align-items: center; display: grid; gap: .7rem; grid-template-columns: 1fr 1fr; }
+    .admin-confirm-actions button { width: 100%; }
+    .admin-note-editor { margin-top: .8rem; min-height: 110px; width: 100%; }
     .remark-log-table-row td { background: #fff7ec; padding: 0; }
     .remark-log-inline { display: grid; gap: 1rem; padding: 1rem; }
     .remark-log-head { border-bottom: 1px solid var(--admin-line); padding-right: 2.7rem; padding-bottom: .85rem; }
@@ -1174,6 +1273,7 @@ interface PaymentRemarkLogView {
     .selected-file { align-items: center; background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: .5rem; justify-content: space-between; min-width: 0; padding: .42rem .55rem; }
     .selected-file span { color: #333; font-size: .82rem; font-weight: 800; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .review-list article { align-items: start; }
+    .review-list article { animation: coupon-page-settle 420ms cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--motion-index, 0) * 42ms); }
     .clickable-review { cursor: pointer; }
     .clickable-review:focus-visible { outline: 3px solid rgba(255,151,0,.34); outline-offset: 3px; }
     .review-list small { color: #777; display: block; font-size: .82rem; font-weight: 700; line-height: 1.45; margin-top: .38rem; max-width: 70ch; }
@@ -1190,15 +1290,36 @@ interface PaymentRemarkLogView {
     label { color: #111; display: grid; font-size: .82rem; font-weight: 800; gap: .4rem; line-height: 1.35; }
     .checkbox-label { align-items: center; grid-template-columns: 18px 1fr; min-height: 42px; }
     .checkbox-label input { min-height: 18px; padding: 0; width: 18px; }
-    .coupon-list article strong { letter-spacing: .04em; }
+    .coupon-list article { align-items: stretch; display: grid; gap: .9rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .coupon-list article { animation: coupon-page-settle 420ms cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--motion-index, 0) * 42ms); }
+    .coupon-field { align-content: center; background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; display: grid; gap: .24rem; min-height: 68px; min-width: 0; padding: .7rem .8rem; }
+    .coupon-field strong { color: #111; font-size: .94rem; letter-spacing: .04em; line-height: 1.35; overflow-wrap: anywhere; }
+    .coupon-field span { color: #555; font-size: .84rem; font-weight: 850; line-height: 1.35; overflow-wrap: anywhere; }
+    .coupon-field small { color: var(--admin-muted); display: block; font-size: .7rem; font-weight: 900; line-height: 1.2; text-transform: uppercase; }
+    .coupon-list article.inactive .coupon-field strong,
+    .coupon-list article.inactive .coupon-field span,
+    .coupon-list article.inactive .coupon-field small { color: #b42318; }
+    .coupon-actions { align-items: center; display: grid; grid-column: 1 / -1; grid-template-columns: minmax(76px, .8fr) minmax(86px, 1fr); justify-content: stretch; }
+    .coupon-status-btn { align-items: center; border-radius: 999px; box-shadow: none; display: inline-flex; font-size: .7rem; font-weight: 900; justify-content: center; min-height: 34px; min-width: 86px; padding: .48rem .78rem; text-align: center; }
+    .coupon-status-btn:hover { box-shadow: 0 10px 22px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .coupon-actions .danger-btn { min-width: 86px; }
+    @keyframes coupon-page-settle {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .editor-panel > label { margin-top: 0; }
     .wide { margin-top: .85rem; width: 100%; }
-    .card-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .customer-card { align-content: start; display: grid; gap: .85rem; min-width: 0; padding: 1.05rem; }
+    .card-grid { align-items: stretch; display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .customer-card { align-content: stretch; display: grid; gap: .85rem; grid-template-rows: auto 1fr auto; height: 100%; min-width: 0; padding: 1.05rem; }
     .customer-card.blocked { opacity: .68; }
-    .customer-card p, .customer-card span { color: #777; font-size: .84rem; margin: 0; }
-    .avatar { align-items: center; background: #111; border-radius: 50%; color: #ff9700; display: inline-flex; font-weight: 950; height: 42px; justify-content: center; width: 42px; }
+    .customer-card-head { align-items: flex-start; display: grid; gap: .75rem; grid-template-columns: 42px minmax(0, 1fr); min-width: 0; }
+    .customer-card-info { display: grid; gap: .28rem; min-width: 0; }
+    .customer-card p, .customer-card span { color: #777; font-size: .84rem; line-height: 1.4; margin: 0; overflow-wrap: anywhere; }
+    .customer-card button { align-self: end; justify-self: stretch; min-height: 38px; width: 100%; }
+    .avatar { align-items: center; background: #111; border-radius: 50%; color: #ff9700; display: inline-flex; flex: 0 0 auto; font-weight: 950; height: 42px; justify-content: center; width: 42px; }
     dl { display: grid; gap: .5rem; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; }
+    .customer-card dl { align-self: end; }
+    .customer-card dl div { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; min-width: 0; padding: .62rem .5rem; }
     dt { color: #777; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
     dd { color: #111; font-size: 1.15rem; font-weight: 950; margin: 0; }
     .bar-list { display: grid; gap: .75rem; }
@@ -1226,6 +1347,9 @@ interface PaymentRemarkLogView {
       .admin-sidebar nav button.active small { background: #111; color: #fff; }
       .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input { max-width: none; width: 100%; }
       .request-list article { align-items: stretch; }
+      .coupon-list article { grid-template-columns: 1fr; }
+      .coupon-actions { align-items: stretch; display: grid; grid-template-columns: 1fr 1fr; justify-content: stretch; }
+      .coupon-actions .status, .coupon-actions .danger-btn { width: 100%; }
       .request-list .mini-btn { width: 100%; }
       .pagination-row { align-items: stretch; flex-direction: column; }
       .pagination-row div, .pagination-row button { width: 100%; }
@@ -1239,6 +1363,10 @@ interface PaymentRemarkLogView {
       .lightbox-image-row { gap: .45rem; grid-template-columns: 34px minmax(0, 1fr) 34px; min-height: 260px; }
       .lightbox-close, .lightbox-nav { font-size: 1.2rem; min-height: 34px; width: 34px; }
       .lightbox-foot { flex-direction: column; gap: .2rem; }
+      .admin-confirm-actions { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .coupon-list article, .review-list article { animation: none; }
     }
   `]
 })
@@ -1290,11 +1418,15 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   bookingsPage = 1;
   customersPage = 1;
   paymentsPage = 1;
+  couponsPage = 1;
+  reviewsPage = 1;
   blogPage = 1;
   staticContentPage = 1;
   pendingLoadError = '';
   isSubmitting = false;
   isSubmittingCoupon = false;
+  deletingCouponId?: number;
+  updatingCouponStatusId?: number;
   isSubmittingBlog = false;
   isSubmittingGallery = false;
   editingBlogPostId?: number;
@@ -1302,6 +1434,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   verifyingRequestId?: number;
   selectedPendingCustomer?: CustomerVerificationResponse;
   selectedReview?: AdminReview;
+  confirmDialog?: AdminConfirmDialog;
+  noteDialog?: AdminNoteDialog;
   reviewReplyDraft = '';
   isSavingReviewReply = false;
   registrationDetailPage = 1;
@@ -1361,6 +1495,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly couponForm = this.fb.nonNullable.group({
     code: ['', Validators.required],
     discountPercent: [10, [Validators.required, Validators.min(1), Validators.max(100)]],
+    usageLimit: [null as number | null, Validators.min(1)],
+    validUntil: [''],
     active: [true]
   });
 
@@ -1472,6 +1608,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return this.paginate(this.payments(), this.paymentsPage);
   }
 
+  pagedCoupons(): AdminCoupon[] {
+    return this.paginate(this.coupons(), this.couponsPage);
+  }
+
+  pagedReviews(): AdminReview[] {
+    return this.paginate(this.filteredReviews(), this.reviewsPage);
+  }
+
   pagedBlogPosts(): BlogPostAdmin[] {
     return this.paginate(this.blogPosts(), this.blogPage);
   }
@@ -1513,7 +1657,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.clampAdminPages();
         this.updateTabCount('inventory', String(products.length));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -1524,7 +1668,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.clampAdminPages();
         this.updateTabCount('bookings', String(bookings.length));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -1535,7 +1679,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.clampAdminPages();
         this.updateTabCount('customers', String(customers.length));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -1546,7 +1690,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.clampAdminPages();
         this.updateTabCount('payments', String(payments.length));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -1554,9 +1698,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.adminService.getCoupons().subscribe({
       next: (coupons) => {
         this.coupons.set(coupons.map((coupon) => this.mapCoupon(coupon)));
+        this.clampAdminPages();
         this.updateTabCount('coupons', String(coupons.length));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -1575,7 +1720,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.clampAdminPages();
         this.updateTabCount('reviews', String(reviews.length));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -1585,35 +1730,35 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.galleryImages.set(images.map((image) => this.mapGalleryImage(image)));
         this.updateContentTabCount();
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
   private loadContent(): void {
     this.adminService.getContent().subscribe({
       next: (content) => this.applyContent(content),
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
   private loadCategoryReports(): void {
     this.adminService.getCategoryReports().subscribe({
       next: (reports) => this.categoryReports.set(reports),
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
   private loadRolePermissions(): void {
     this.adminService.getRolePermissions().subscribe({
       next: (permissions) => this.rolePermissions.set(permissions),
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
   private loadSettings(): void {
     this.adminService.getSettings().subscribe({
       next: (settings) => this.settingsForm.patchValue(settings),
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -1643,7 +1788,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
           this.showTopMessage('Login access granted. The customer can now log in.', 2800);
         },
         error: (error) => {
-          this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+          this.showTopMessage(this.authService.getErrorMessage(error), 3600);
         }
       });
   }
@@ -1667,7 +1812,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.pendingLoadError = this.authService.getErrorMessage(error);
-          this.snackBar.open(this.pendingLoadError, 'Close', { duration: 3600 });
+          this.showTopMessage(this.pendingLoadError, 3600);
         }
       });
   }
@@ -1707,7 +1852,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return `Showing ${start}-${end} of ${total}`;
   }
 
-  changePage(section: 'inventory' | 'bookings' | 'customers' | 'payments' | 'blog' | 'staticContent', direction: number): void {
+  changePage(section: 'inventory' | 'bookings' | 'customers' | 'payments' | 'coupons' | 'reviews' | 'blog' | 'staticContent', direction: number): void {
     if (section === 'inventory') {
       this.inventoryPage = this.nextPage(this.inventoryPage, this.filteredProducts().length, direction);
       this.scrollToSectionTop();
@@ -1725,6 +1870,16 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     }
     if (section === 'payments') {
       this.paymentsPage = this.nextPage(this.paymentsPage, this.payments().length, direction);
+      this.scrollToSectionTop();
+      return;
+    }
+    if (section === 'coupons') {
+      this.couponsPage = this.nextPage(this.couponsPage, this.coupons().length, direction);
+      this.scrollToSectionTop();
+      return;
+    }
+    if (section === 'reviews') {
+      this.reviewsPage = this.nextPage(this.reviewsPage, this.filteredReviews().length, direction);
       this.scrollToSectionTop();
       return;
     }
@@ -1884,52 +2039,60 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   markMaintenance(product: AdminProduct): void {
-    if (!confirm(`Mark ${product.name} as under maintenance?`)) {
-      return;
-    }
+    this.openConfirmDialog('Mark product under maintenance?', product.name, 'Mark maintenance', 'default', () => {
     this.adminService.markProductMaintenance(product.id).subscribe({
       next: (updatedProduct) => {
         this.products.update((items) => items.map((item) => item.id === updatedProduct.id ? this.mapProduct(updatedProduct) : item));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+    });
     });
   }
 
   returnFromMaintenance(product: AdminProduct): void {
-    if (!confirm(`Mark ${product.name} as returned and available?`)) {
-      return;
-    }
+    this.openConfirmDialog('Return product to available?', product.name, 'Mark available', 'default', () => {
     this.adminService.updateProduct(product.id, this.productRequestFromProduct(product, 'Available')).subscribe({
       next: (updatedProduct) => {
         this.products.update((items) => items.map((item) => item.id === updatedProduct.id ? this.mapProduct(updatedProduct) : item));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+    });
     });
   }
 
   addNote(booking: AdminBooking): void {
-    const note = prompt('Internal note', booking.notes);
-    if (note === null) {
+    this.noteDialog = { booking, note: booking.notes };
+  }
+
+  cancelNoteDialog(): void {
+    this.noteDialog = undefined;
+  }
+
+  saveNoteDialog(): void {
+    const dialog = this.noteDialog;
+    if (!dialog) {
       return;
     }
-    this.adminService.addBookingNote(booking.backendId, note).subscribe({
+
+    this.noteDialog = undefined;
+    this.adminService.addBookingNote(dialog.booking.backendId, dialog.note).subscribe({
       next: (updatedBooking) => {
         this.bookings.update((items) => items.map((item) => item.backendId === updatedBooking.id ? this.mapBooking(updatedBooking) : item));
+        this.showTopMessage('Internal note saved.', 2200);
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
   toggleCustomerBlock(customer: AdminCustomer): void {
     const action = customer.blocked ? 'unblock' : 'block';
-    if (!confirm(`Are you sure you want to ${action} ${customer.name}?`)) {
-      return;
-    }
+    this.openConfirmDialog(`${action === 'block' ? 'Block' : 'Unblock'} customer?`, customer.name, action === 'block' ? 'Block customer' : 'Unblock customer', action === 'block' ? 'danger' : 'default', () => {
     this.adminService.setCustomerBlocked(customer.id, !customer.blocked).subscribe({
       next: (updatedCustomer) => {
         this.customers.update((items) => items.map((item) => item.id === updatedCustomer.id ? this.mapCustomer(updatedCustomer) : item));
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+    });
     });
   }
 
@@ -1953,7 +2116,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.payments.update((items) => items.map((item) => item.backendId === updatedPayment.id ? this.mapPayment(updatedPayment) : item));
         this.showTopMessage('Payment remark saved.', 1800);
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -2052,26 +2215,92 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.normalizeCouponInput();
     if (this.couponForm.invalid || this.isSubmittingCoupon) {
       this.couponForm.markAllAsTouched();
-      this.couponFormError = 'Enter a coupon code and a discount percent from 1 to 100.';
+      this.couponFormError = 'Enter a coupon code, discount percent from 1 to 100, and a usage limit of at least 1 if set.';
       return;
     }
 
     this.isSubmittingCoupon = true;
-    this.adminService.createCoupon(this.couponForm.getRawValue())
+    const formValue = this.couponForm.getRawValue();
+    const request = {
+      code: formValue.code,
+      discountPercent: formValue.discountPercent,
+      active: formValue.active,
+      usageLimit: formValue.usageLimit || null,
+      validUntil: formValue.validUntil || null
+    };
+    this.adminService.createCoupon(request)
       .pipe(finalize(() => {
         this.isSubmittingCoupon = false;
       }))
       .subscribe({
         next: (coupon) => {
           this.coupons.update((items) => [this.mapCoupon(coupon), ...items]);
+          this.couponsPage = 1;
           this.updateTabCount('coupons', String(this.coupons().length));
-          this.couponForm.reset({ code: '', discountPercent: 10, active: true });
+          this.couponForm.reset({ code: '', discountPercent: 10, usageLimit: null, validUntil: '', active: true });
           this.showTopMessage('Coupon code created.', 2600);
         },
         error: (error) => {
           this.couponFormError = this.authService.getErrorMessage(error);
         }
       });
+  }
+
+  deleteCoupon(coupon: AdminCoupon): void {
+    if (this.deletingCouponId) {
+      return;
+    }
+
+    this.openConfirmDialog('Delete coupon?', coupon.code, 'Delete', 'danger', () => {
+    this.deletingCouponId = coupon.id;
+    this.adminService.deleteCoupon(coupon.id)
+      .pipe(finalize(() => {
+        this.deletingCouponId = undefined;
+      }))
+      .subscribe({
+        next: () => {
+          this.coupons.update((items) => items.filter((item) => item.id !== coupon.id));
+          this.clampAdminPages();
+          this.updateTabCount('coupons', String(this.coupons().length));
+          this.showTopMessage('Coupon deleted.', 2600);
+        },
+        error: (error) => {
+          this.showTopMessage(this.authService.getErrorMessage(error), 3200);
+        }
+      });
+    });
+  }
+
+  toggleCouponActive(coupon: AdminCoupon): void {
+    if (this.updatingCouponStatusId) {
+      return;
+    }
+
+    const nextActive = !coupon.active;
+    this.updatingCouponStatusId = coupon.id;
+    this.coupons.update((items) => items.map((item) => item.id === coupon.id ? { ...item, active: nextActive } : item));
+    this.adminService.setCouponActive(coupon.id, nextActive)
+      .pipe(finalize(() => {
+        this.updatingCouponStatusId = undefined;
+      }))
+      .subscribe({
+        next: (updatedCoupon) => {
+          this.coupons.update((items) => items.map((item) => item.id === updatedCoupon.id ? this.mapCoupon(updatedCoupon) : item));
+          this.showTopMessage(`Coupon ${updatedCoupon.active ? 'activated' : 'deactivated'}.`, 2400);
+        },
+        error: (error) => {
+          this.coupons.update((items) => items.map((item) => item.id === coupon.id ? { ...item, active: coupon.active } : item));
+          this.showTopMessage(this.authService.getErrorMessage(error), 3200);
+        }
+      });
+  }
+
+  couponUsageLabel(coupon: AdminCoupon): string {
+    return coupon.usageLimit ? `${coupon.usedCount}/${coupon.usageLimit} used` : `${coupon.usedCount} used`;
+  }
+
+  couponExpiryLabel(coupon: AdminCoupon): string {
+    return coupon.validUntil ? formatDate(coupon.validUntil, 'mediumDate', 'en-IN') : 'No expiry date';
   }
 
   submitBlogPost(): void {
@@ -2135,11 +2364,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     }
 
     const post = this.blogPosts().find((item) => item.id === this.editingBlogPostId);
-    if (post && !confirm(`Delete blog post "${post.title}"?`)) {
-      return;
-    }
-
     const postId = this.editingBlogPostId;
+    this.openConfirmDialog('Delete blog post?', post?.title ?? 'This post will be removed.', 'Delete', 'danger', () => {
     this.isSubmittingBlog = true;
     this.adminService.deleteBlogPost(postId)
       .pipe(finalize(() => {
@@ -2157,6 +2383,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
           this.blogFormError = this.authService.getErrorMessage(error);
         }
       });
+    });
   }
 
   submitGalleryImage(): void {
@@ -2211,7 +2438,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.updateContentTabCount();
         this.showTopMessage('Gallery image deleted.', 2200);
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -2243,7 +2470,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
           this.reviewReplyDraft = mappedReview.adminReply;
           this.showTopMessage('Review reply saved.', 2200);
         },
-        error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+        error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
       });
   }
 
@@ -2253,10 +2480,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   deleteReview(review: AdminReview): void {
-    if (!confirm(`Delete review from ${review.name}?`)) {
-      return;
-    }
-
+    this.openConfirmDialog('Delete review?', review.name, 'Delete', 'danger', () => {
     this.adminService.deleteReview(review.id).subscribe({
       next: () => {
         this.reviews.update((items) => items.filter((item) => item.id !== review.id));
@@ -2268,7 +2492,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.updateTabCount('reviews', String(this.reviews().length));
         this.showTopMessage('Review deleted.', 2200);
       },
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+    });
     });
   }
 
@@ -2298,7 +2523,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
           this.showTopMessage('Employee account created.', 2600);
         },
         error: (error) => {
-          this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+          this.showTopMessage(this.authService.getErrorMessage(error), 3600);
         }
       });
   }
@@ -2306,7 +2531,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   saveSettings(): void {
     this.adminService.saveSettings(this.settingsForm.getRawValue()).subscribe({
       next: () => this.showTopMessage('Settings saved.', 2600),
-      error: (error) => this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 })
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -2451,6 +2676,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       code: coupon.code,
       discountPercent: Number(coupon.discountPercent),
       active: coupon.active,
+      usageLimit: coupon.usageLimit ?? null,
+      usedCount: coupon.usedCount ?? 0,
+      validUntil: coupon.validUntil ?? null,
       createdAt: coupon.createdAt
     };
   }
@@ -2616,6 +2844,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   private bookingStatusFromApi(status: string): BookingStatus {
     const labels: Record<string, BookingStatus> = {
       PENDING: 'Upcoming',
+      PAYMENT_PENDING: 'Upcoming',
       CONFIRMED: 'Upcoming',
       ACTIVE: 'Active',
       COMPLETED: 'Completed',
@@ -2848,8 +3077,24 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.bookingsPage = Math.min(this.pageCount(this.filteredBookings().length), Math.max(1, this.bookingsPage));
     this.customersPage = Math.min(this.pageCount(this.filteredCustomers().length), Math.max(1, this.customersPage));
     this.paymentsPage = Math.min(this.pageCount(this.payments().length), Math.max(1, this.paymentsPage));
+    this.couponsPage = Math.min(this.pageCount(this.coupons().length), Math.max(1, this.couponsPage));
+    this.reviewsPage = Math.min(this.pageCount(this.filteredReviews().length), Math.max(1, this.reviewsPage));
     this.blogPage = Math.min(this.pageCount(this.blogPosts().length), Math.max(1, this.blogPage));
     this.staticContentPage = Math.min(this.pageCount(this.staticContent().length), Math.max(1, this.staticContentPage));
+  }
+
+  private openConfirmDialog(title: string, message: string, actionLabel: string, tone: AdminConfirmDialog['tone'], onConfirm: () => void): void {
+    this.confirmDialog = { title, message, actionLabel, tone, onConfirm };
+  }
+
+  cancelConfirmDialog(): void {
+    this.confirmDialog = undefined;
+  }
+
+  acceptConfirmDialog(): void {
+    const action = this.confirmDialog?.onConfirm;
+    this.confirmDialog = undefined;
+    action?.();
   }
 
   private showTopMessage(message: string, duration: number): void {
@@ -2857,7 +3102,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       duration,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['snackbar-success-top']
+      panelClass: ['snackbar-screen-center']
     });
   }
 }

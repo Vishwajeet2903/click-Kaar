@@ -1,6 +1,7 @@
 package com.clickkaar.service;
 
 import com.clickkaar.dto.booking.BookingRequest;
+import com.clickkaar.dto.booking.BookingItemRequest;
 import com.clickkaar.dto.booking.BookingResponse;
 import com.clickkaar.dto.booking.AvailabilityResponse;
 import com.clickkaar.dto.booking.BlockedDateRangeResponse;
@@ -10,6 +11,7 @@ import com.clickkaar.entity.BookingItem;
 import com.clickkaar.entity.Coupon;
 import com.clickkaar.entity.Product;
 import com.clickkaar.entity.User;
+import com.clickkaar.enums.AvailabilityStatus;
 import com.clickkaar.enums.BookingStatus;
 import com.clickkaar.enums.PaymentStatus;
 import com.clickkaar.exception.BadRequestException;
@@ -19,9 +21,13 @@ import com.clickkaar.repository.CouponRepository;
 import com.clickkaar.repository.ProductRepository;
 import com.clickkaar.repository.StaticContentRepository;
 import com.clickkaar.repository.UserRepository;
+import com.clickkaar.security.CustomUserDetails;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.MailAuthenticationException;
@@ -37,8 +43,11 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -70,6 +79,9 @@ public class BookingService {
     }
     int days = (int) ChronoUnit.DAYS.between(request.rentalStartDate(), request.rentalEndDate()) + 1;
     User customer = userRepository.findById(request.customerId()).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    BookingStatus initialStatus = normalizedPaymentMethod(request.paymentMethod()).equals("razorpay")
+        ? BookingStatus.PENDING
+        : BookingStatus.CONFIRMED;
     Booking booking = Booking.builder()
         .bookingNumber("CK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase())
         .customer(customer)
@@ -77,15 +89,23 @@ public class BookingService {
         .rentalEndDate(request.rentalEndDate())
         .rentalDays(days)
         .totalAmount(BigDecimal.ZERO)
-        .status(BookingStatus.PENDING)
+        .status(initialStatus)
         .build();
 
-    BigDecimal total = BigDecimal.ZERO;
-    for (var item : request.items()) {
-      Product product = productRepository.findById(item.productId()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-      if (bookingRepository.existsOverlappingBooking(item.productId(), request.rentalStartDate(), request.rentalEndDate())) {
+    Map<Long, Long> requestedUnitsByProduct = request.items().stream()
+        .collect(Collectors.groupingBy(BookingItemRequest::productId, Collectors.counting()));
+    Map<Long, Product> productsById = new HashMap<>();
+    for (Map.Entry<Long, Long> entry : requestedUnitsByProduct.entrySet()) {
+      Product product = productRepository.findById(entry.getKey()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+      productsById.put(entry.getKey(), product);
+      if (isRangeFullyBooked(product, request.rentalStartDate(), request.rentalEndDate(), entry.getValue().intValue())) {
         throw new BadRequestException(unavailableMessage(product.getName(), request.rentalStartDate(), request.rentalEndDate()));
       }
+    }
+
+    BigDecimal rentalSubtotal = BigDecimal.ZERO;
+    for (var item : request.items()) {
+      Product product = productsById.get(item.productId());
       BigDecimal lineTotal = product.getDailyPrice().multiply(BigDecimal.valueOf(days));
       booking.getItems().add(BookingItem.builder()
           .booking(booking)
@@ -93,9 +113,10 @@ public class BookingService {
           .dailyPrice(product.getDailyPrice())
           .lineTotal(lineTotal)
           .build());
-      total = total.add(lineTotal);
+      rentalSubtotal = rentalSubtotal.add(lineTotal);
     }
-    booking.setTotalAmount(applyCouponDiscount(total, request.couponCode()));
+    BigDecimal securityDeposit = rentalSubtotal.multiply(BigDecimal.valueOf(0.3)).setScale(0, RoundingMode.HALF_UP);
+    booking.setTotalAmount(applyCouponDiscount(rentalSubtotal.add(securityDeposit), request.couponCode()));
     Booking saved = bookingRepository.save(booking);
     if (shouldSendBillOnCreate(request.paymentMethod())) {
       sendBookingBillEmail(saved, PaymentStatus.PENDING, displayPaymentMethod(request.paymentMethod()));
@@ -109,8 +130,7 @@ public class BookingService {
     }
 
     Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-    boolean booked = bookingRepository.existsOverlappingBooking(productId, startDate, endDate);
-    if (booked) {
+    if (isRangeFullyBooked(product, startDate, endDate, 1)) {
       return new AvailabilityResponse(false, unavailableMessage(product.getName(), startDate, endDate));
     }
 
@@ -119,13 +139,32 @@ public class BookingService {
 
   @Transactional(readOnly = true)
   public List<BlockedDateRangeResponse> blockedRanges(Long productId) {
-    if (!productRepository.existsById(productId)) {
-      throw new ResourceNotFoundException("Product not found");
-    }
+    Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    LocalDate today = LocalDate.now();
+    LocalDate horizon = today.plusMonths(12);
+    Map<LocalDate, Integer> bookedUnits = bookedUnitsByDate(product.getId(), today, horizon);
+    int stock = availableStock(product);
 
-    return bookingRepository.findBlockedRangesForProduct(productId, LocalDate.now()).stream()
-        .map(booking -> new BlockedDateRangeResponse(booking.getRentalStartDate(), booking.getRentalEndDate()))
-        .toList();
+    List<BlockedDateRangeResponse> ranges = new ArrayList<>();
+    LocalDate rangeStart = null;
+    LocalDate previousBlocked = null;
+    for (LocalDate day = today; !day.isAfter(horizon); day = day.plusDays(1)) {
+      boolean blocked = bookedUnits.getOrDefault(day, 0) >= stock;
+      if (blocked && rangeStart == null) {
+        rangeStart = day;
+      }
+      if (!blocked && rangeStart != null) {
+        ranges.add(new BlockedDateRangeResponse(rangeStart, previousBlocked));
+        rangeStart = null;
+      }
+      if (blocked) {
+        previousBlocked = day;
+      }
+    }
+    if (rangeStart != null) {
+      ranges.add(new BlockedDateRangeResponse(rangeStart, previousBlocked));
+    }
+    return ranges;
   }
 
   @Transactional(readOnly = true)
@@ -151,6 +190,17 @@ public class BookingService {
     return toResponse(booking);
   }
 
+  @Transactional
+  public BookingResponse cancelPending(Long bookingId) {
+    Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    assertCanAccessBooking(booking);
+    if (booking.getStatus() != BookingStatus.PENDING && booking.getStatus() != BookingStatus.PAYMENT_PENDING) {
+      throw new BadRequestException("Only pending bookings can be cancelled");
+    }
+    booking.setStatus(BookingStatus.CANCELLED);
+    return toResponse(booking);
+  }
+
   private BookingResponse toResponse(Booking booking) {
     return new BookingResponse(
         booking.getId(),
@@ -169,6 +219,65 @@ public class BookingService {
     return productName + " is already booked between " + dateRange(startDate, endDate) + ". Please choose another date range.";
   }
 
+  private boolean isRangeFullyBooked(Product product, LocalDate startDate, LocalDate endDate, int requestedUnits) {
+    int stock = availableStock(product);
+    if (stock <= 0 || requestedUnits > stock) {
+      return true;
+    }
+
+    Map<LocalDate, Integer> bookedUnits = bookedUnitsByDate(product.getId(), startDate, endDate);
+    for (LocalDate day = startDate; !day.isAfter(endDate); day = day.plusDays(1)) {
+      if (bookedUnits.getOrDefault(day, 0) + requestedUnits > stock) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void assertCanAccessBooking(Booking booking) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()) {
+      throw new AccessDeniedException("Login is required to update this booking");
+    }
+
+    boolean staffUser = authentication.getAuthorities().stream()
+        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN") || authority.getAuthority().equals("ROLE_MANAGER"));
+    if (staffUser) {
+      return;
+    }
+
+    Object principal = authentication.getPrincipal();
+    if (principal instanceof CustomUserDetails userDetails
+        && booking.getCustomer().getId().equals(userDetails.user().getId())) {
+      return;
+    }
+
+    throw new AccessDeniedException("You cannot update another customer's booking");
+  }
+
+  private Map<LocalDate, Integer> bookedUnitsByDate(Long productId, LocalDate startDate, LocalDate endDate) {
+    Map<LocalDate, Integer> bookedUnits = new HashMap<>();
+    for (Booking booking : bookingRepository.findOverlappingBookingsForProduct(productId, startDate, endDate)) {
+      int units = (int) booking.getItems().stream()
+          .filter(item -> item.getProduct().getId().equals(productId))
+          .count();
+      LocalDate start = booking.getRentalStartDate().isBefore(startDate) ? startDate : booking.getRentalStartDate();
+      LocalDate end = booking.getRentalEndDate().isAfter(endDate) ? endDate : booking.getRentalEndDate();
+      for (LocalDate day = start; !day.isAfter(end); day = day.plusDays(1)) {
+        bookedUnits.merge(day, units, Integer::sum);
+      }
+    }
+    return bookedUnits;
+  }
+
+  private int availableStock(Product product) {
+    return Math.max(0, product.getStock() == null ? defaultStock(product.getAvailabilityStatus()) : product.getStock());
+  }
+
+  private int defaultStock(AvailabilityStatus status) {
+    return status == AvailabilityStatus.AVAILABLE ? 1 : 0;
+  }
+
   private BigDecimal applyCouponDiscount(BigDecimal total, String couponCode) {
     String normalizedCode = couponCode == null ? "" : couponCode.trim();
     if (normalizedCode.isBlank()) {
@@ -179,6 +288,7 @@ public class BookingService {
     BigDecimal discount = total
         .multiply(coupon.getDiscountPercent())
         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+    coupon.setUsedCount(usedCount(coupon) + 1);
     return total.subtract(discount).max(BigDecimal.ZERO);
   }
 
@@ -187,8 +297,19 @@ public class BookingService {
     if (normalizedCode.isBlank()) {
       throw new BadRequestException("Enter a coupon code");
     }
-    return couponRepository.findByCodeIgnoreCaseAndActiveTrue(normalizedCode)
+    Coupon coupon = couponRepository.findByCodeIgnoreCaseAndActiveTrue(normalizedCode)
         .orElseThrow(() -> new BadRequestException("Coupon code is invalid or inactive"));
+    if (coupon.getValidUntil() != null && coupon.getValidUntil().isBefore(LocalDate.now())) {
+      throw new BadRequestException("Coupon code has expired");
+    }
+    if (coupon.getUsageLimit() != null && usedCount(coupon) >= coupon.getUsageLimit()) {
+      throw new BadRequestException("Coupon code usage limit has been reached");
+    }
+    return coupon;
+  }
+
+  private int usedCount(Coupon coupon) {
+    return coupon.getUsedCount() == null ? 0 : coupon.getUsedCount();
   }
 
   private String dateRange(LocalDate startDate, LocalDate endDate) {

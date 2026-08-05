@@ -178,7 +178,7 @@ export class ForgotPasswordPageComponent {
             duration: 4200,
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            panelClass: ['snackbar-success-top']
+            panelClass: ['snackbar-screen-center']
           });
         },
         error: (error) => this.showError(error)
@@ -208,7 +208,7 @@ export class ForgotPasswordPageComponent {
             duration: 3200,
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            panelClass: ['snackbar-success-top']
+            panelClass: ['snackbar-screen-center']
           });
           void this.router.navigateByUrl('/login');
         },

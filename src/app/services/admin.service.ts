@@ -213,6 +213,8 @@ export interface AdminCouponRequest {
   code: string;
   discountPercent: number;
   active: boolean;
+  usageLimit?: number | null;
+  validUntil?: string | null;
 }
 
 export interface AdminCouponResponse {
@@ -220,6 +222,9 @@ export interface AdminCouponResponse {
   code: string;
   discountPercent: number;
   active: boolean;
+  usageLimit?: number | null;
+  usedCount: number;
+  validUntil?: string | null;
   createdAt: string;
 }
 
@@ -412,6 +417,18 @@ export class AdminService {
 
   createCoupon(request: AdminCouponRequest): Observable<AdminCouponResponse> {
     return this.http.post<AdminCouponResponse>(`${API_URL}/coupons`, request, {
+      headers: this.authHeaders()
+    });
+  }
+
+  deleteCoupon(couponId: number): Observable<void> {
+    return this.http.delete<void>(`${API_URL}/coupons/${couponId}`, {
+      headers: this.authHeaders()
+    });
+  }
+
+  setCouponActive(couponId: number, active: boolean): Observable<AdminCouponResponse> {
+    return this.http.patch<AdminCouponResponse>(`${API_URL}/coupons/${couponId}/active`, { active }, {
       headers: this.authHeaders()
     });
   }

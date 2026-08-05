@@ -472,6 +472,9 @@ public class AdminController {
     if (discountPercent == null || discountPercent.compareTo(BigDecimal.ONE) < 0 || discountPercent.compareTo(BigDecimal.valueOf(100)) > 0) {
       throw new BadRequestException("Discount percent must be between 1 and 100");
     }
+    if (request.usageLimit() != null && request.usageLimit() < 1) {
+      throw new BadRequestException("Usage limit must be at least 1");
+    }
     if (couponRepository.existsByCodeIgnoreCase(code)) {
       throw new BadRequestException("Coupon code already exists");
     }
@@ -480,8 +483,31 @@ public class AdminController {
         .code(code)
         .discountPercent(discountPercent)
         .active(request.active() == null || request.active())
+        .usageLimit(request.usageLimit())
+        .validUntil(request.validUntil())
         .build();
     return adminCouponResponse(couponRepository.save(coupon));
+  }
+
+  @DeleteMapping("/coupons/{couponId}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Transactional
+  public void deleteCoupon(@PathVariable Long couponId) {
+    if (!couponRepository.existsById(couponId)) {
+      throw new ResourceNotFoundException("Coupon not found");
+    }
+    couponRepository.deleteById(couponId);
+  }
+
+  @PatchMapping("/coupons/{couponId}/active")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @Transactional
+  public AdminCouponResponse setCouponActive(@PathVariable Long couponId, @RequestBody CouponActiveRequest request) {
+    Coupon coupon = couponRepository.findById(couponId)
+        .orElseThrow(() -> new ResourceNotFoundException("Coupon not found"));
+    coupon.setActive(request.active());
+    return adminCouponResponse(coupon);
   }
 
   @PostMapping("/employees")
@@ -800,6 +826,9 @@ public class AdminController {
         coupon.getCode(),
         coupon.getDiscountPercent(),
         coupon.isActive(),
+        coupon.getUsageLimit(),
+        coupon.getUsedCount() == null ? 0 : coupon.getUsedCount(),
+        coupon.getValidUntil(),
         coupon.getCreatedAt()
     );
   }
@@ -872,11 +901,12 @@ public class AdminController {
   public record CustomerBlockRequest(boolean blocked) {}
   public record AdminRefundRequest(BigDecimal amount, String reason) {}
   public record ReviewReplyRequest(String reply) {}
-  public record AdminCouponRequest(String code, BigDecimal discountPercent, Boolean active) {}
+  public record AdminCouponRequest(String code, BigDecimal discountPercent, Boolean active, Integer usageLimit, LocalDate validUntil) {}
+  public record CouponActiveRequest(boolean active) {}
   public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes) {}
   public record AdminCustomerResponse(Long id, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}
   public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt, String remark, long remarkChangeCount) {}
-  public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, LocalDateTime createdAt) {}
+  public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, Integer usageLimit, int usedCount, LocalDate validUntil, LocalDateTime createdAt) {}
   public record PaymentRemarkLogResponse(Long id, String oldRemark, String newRemark, String changedBy, LocalDateTime changedAt) {}
   public record AdminBlogPostResponse(Long id, String title, String slug, String coverImage, String category, String author, BlogStatus status, LocalDate publishDate, String tags, String seoTitle, String metaDescription, String seoKeywords, String content) {}
   public record ImageUploadResponse(String imageUrl) {}

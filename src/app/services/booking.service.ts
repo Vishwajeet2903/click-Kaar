@@ -125,6 +125,12 @@ export class BookingService {
     });
   }
 
+  cancelPendingBooking(bookingId: number): Observable<BookingResponse> {
+    return this.http.patch<BookingResponse>(`${API_URL}/${bookingId}/cancel-pending`, {}, {
+      headers: this.authHeaders()
+    });
+  }
+
   getBookings(): Observable<Booking[]> {
     return this.getCustomerDashboard().pipe(
       map((dashboard) => dashboard.bookings.map((booking) => ({

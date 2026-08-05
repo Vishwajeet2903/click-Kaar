@@ -61,4 +61,10 @@ public class BookingController {
   public BookingResponse updateStatus(@PathVariable Long bookingId, @RequestParam BookingStatus status) {
     return bookingService.updateStatus(bookingId, status);
   }
+
+  @PatchMapping("/{bookingId}/cancel-pending")
+  @PreAuthorize("hasRole('CUSTOMER')")
+  public BookingResponse cancelPending(@PathVariable Long bookingId) {
+    return bookingService.cancelPending(bookingId);
+  }
 }

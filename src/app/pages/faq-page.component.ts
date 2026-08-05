@@ -27,9 +27,9 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 })
 export class FaqPageComponent {
   readonly questions = [
-    { q: 'Is this connected to a backend?', a: 'No. This version is frontend only and uses mock services.' },
+    { q: 'Is this connected to a backend?', a: 'Yes. Bookings, accounts, catalogue data, and payments are handled through the ClickKaar backend.' },
     { q: 'Can I choose rental dates?', a: 'Yes. Product details include datepickers and automatic duration pricing.' },
-    { q: 'Are payments real?', a: 'No. Checkout payment methods are UI-only for UPI, card, and net banking.' },
+    { q: 'Are payments real?', a: 'Yes. Online checkout uses Razorpay for UPI, card, net banking, and wallet payments.' },
     { q: 'Can products be filtered?', a: 'Yes. Catalogue supports category, brand, price, availability, search, sorting, and pagination.' }
   ];
 }

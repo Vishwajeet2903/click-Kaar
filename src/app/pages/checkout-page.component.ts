@@ -56,7 +56,7 @@ declare global {
   imports: [CurrencyPipe, MatSnackBarModule, AppButtonComponent, BreadcrumbComponent],
   template: `
     <app-breadcrumb label="Checkout" />
-    <section class="container pb-5">
+    <section class="container checkout-page pb-5">
       @if (success()) {
         <div class="surface success"><h1>Booking confirmed</h1><p class="muted">Your rental order has been placed successfully.</p><a href="/dashboard">Go to dashboard</a></div>
       } @else {
@@ -78,7 +78,9 @@ declare global {
           <div class="col-lg-5">
             <div class="surface panel">
               <h2>Order Summary</h2>
-              @for (item of cart.items(); track item.product.id) { <p><span>{{ item.product.name }} x {{ item.quantity }}</span><strong>{{ cart.itemTotal(item) | currency:'INR':'symbol':'1.0-0' }}</strong></p> }
+              @for (item of cart.items(); track cart.itemKey(item)) { <p><span>{{ item.product.name }} x {{ item.quantity }}</span><strong>{{ cart.itemTotal(item) | currency:'INR':'symbol':'1.0-0' }}</strong></p> }
+              <p><span>Rental Subtotal</span><strong>{{ cart.subtotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+              <p><span>Security Deposit</span><strong>{{ cart.securityDeposit() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
               <div class="coupon-field">
                 <label for="checkout-coupon">Coupon Code</label>
                 <div class="coupon-control">
@@ -103,7 +105,6 @@ declare global {
                   <small class="coupon-success">{{ appliedCoupon()?.code }} applied - {{ appliedCoupon()?.discountPercent }}% off</small>
                 }
               </div>
-              <p><span>Subtotal</span><strong>{{ cart.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
               @if (appliedCoupon()) {
                 <p class="discount-row"><span>Coupon discount</span><strong>-{{ discountAmount() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
               }
@@ -116,29 +117,33 @@ declare global {
     </section>
   `,
   styles: [`
-    .panel, .success { padding: 1.25rem; margin-bottom: 1rem; }
-    h2 { font-size: 1.2rem; font-weight: 900; margin-bottom: 1rem; }
-    .payment-option { background: #fff; border: 1px solid rgba(255,151,0,.28); border-radius: 18px; cursor: pointer; display: grid; gap: .35rem; margin-bottom: .85rem; padding: 1rem; text-align: left; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; width: 100%; }
+    .checkout-page .section-title { font-size: clamp(1.75rem, 3.4vw, 3rem); letter-spacing: 0; line-height: 1.08; margin-bottom: 1.1rem; text-align: left; }
+    .panel, .success { margin-bottom: 1rem; padding: 1.2rem; }
+    h2 { color: #111827; font-size: 1.08rem; font-weight: 900; line-height: 1.28; margin: 0 0 .85rem; }
+    .payment-option { background: #fff; border: 1px solid rgba(255,151,0,.28); border-radius: 8px; cursor: pointer; display: grid; gap: .4rem; margin-bottom: 1rem; padding: 1rem; text-align: left; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; width: 100%; }
     .payment-option:hover, .payment-option.active { border-color: #ff9700; box-shadow: 0 12px 24px rgba(255,151,0,.14); transform: translateY(-1px); }
     .payment-option.active { background: rgba(255,151,0,.08); }
-    .payment-option strong { color: #111; font-size: 1.02rem; }
-    .payment-option span { color: #777; line-height: 1.45; }
-    .panel p { display: flex; justify-content: space-between; gap: 1rem; }
-    .coupon-field { border-top: 1px solid rgba(148,163,184,.16); display: grid; gap: .45rem; margin-top: .85rem; padding-top: 1rem; }
-    .coupon-field label { color: #555; font-size: .92rem; font-weight: 850; }
-    .coupon-control { display: grid; gap: .55rem; grid-template-columns: minmax(0, 1fr) auto; }
-    .coupon-field input { background: #fff; border: 1px solid rgba(17,17,17,.14); border-radius: 14px; color: #111; font: inherit; font-weight: 800; min-height: 48px; outline: none; padding: .8rem .95rem; text-transform: uppercase; transition: border-color .2s ease, box-shadow .2s ease; width: 100%; }
+    .payment-option strong { color: #111827; font-size: 1.08rem; font-weight: 900; line-height: 1.28; }
+    .payment-option span { color: #555; font-size: .94rem; font-weight: 500; line-height: 1.55; }
+    .panel p { border-bottom: 1px solid rgba(148,163,184,.15); color: #555; display: flex; font-size: .94rem; gap: 1rem; justify-content: space-between; margin: 0; padding: .7rem 0; }
+    .panel p span { min-width: 0; overflow-wrap: anywhere; }
+    .panel p strong { color: #111827; font-size: 1rem; white-space: nowrap; }
+    .coupon-field { border-top: 1px solid rgba(148,163,184,.16); display: grid; gap: .55rem; margin-top: 1rem; padding-top: 1rem; }
+    .coupon-field label { color: #555; font-size: .94rem; font-weight: 850; line-height: 1.45; }
+    .coupon-control { display: grid; gap: .7rem; grid-template-columns: minmax(0, 1fr) auto; }
+    .coupon-field input { background: #fff; border: 1px solid rgba(17,17,17,.14); border-radius: 8px; color: #111; font: inherit; font-size: .94rem; font-weight: 800; min-height: 46px; outline: none; padding: .75rem 1rem; text-transform: uppercase; transition: border-color .2s ease, box-shadow .2s ease; width: 100%; }
     .coupon-field input:focus { border-color: #ff9700; box-shadow: 0 0 0 4px rgba(255,151,0,.14); }
     .coupon-field input::placeholder { color: #9a9a9a; font-weight: 700; text-transform: none; }
-    .apply-coupon-btn { background: #111; border: 0; border-radius: 14px; color: #fff; cursor: pointer; font-weight: 900; min-height: 48px; min-width: 96px; padding: .75rem 1rem; transition: background .2s ease, color .2s ease, transform .2s ease; }
+    .apply-coupon-btn { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: pointer; font-size: .9rem; font-weight: 900; min-height: 46px; min-width: 96px; padding: .75rem 1.1rem; transition: background .2s ease, box-shadow .2s ease, color .2s ease, transform .2s ease; }
     .apply-coupon-btn:hover { background: #ff9700; color: #fff; transform: translateY(-1px); }
     .apply-coupon-btn:disabled, .apply-coupon-btn:disabled:hover { background: #111; color: #fff; cursor: not-allowed; opacity: .58; transform: none; }
-    .coupon-error, .coupon-success { font-size: .8rem; font-weight: 850; line-height: 1.35; }
+    .coupon-error, .coupon-success { font-size: .86rem; font-weight: 850; line-height: 1.45; }
     .coupon-error { color: #b42318; }
     .coupon-success { color: #027a48; }
     .discount-row strong { color: #027a48; }
     .grand { border-top: 1px solid rgba(148,163,184,.16); padding-top: 1rem; }
-    .grand strong { color: #ff9700; }
+    .grand strong { color: #ff9700; font-size: 1.2rem; }
+    .panel app-button { display: block; margin-top: 1rem; }
     .success { margin: 4rem auto; max-width: 680px; text-align: center; }
     .success h1 { font-weight: 950; }
     .success a { color: #ff9700; font-weight: 900; }
@@ -202,7 +207,7 @@ export class CheckoutPageComponent {
         next: (coupon) => {
           this.appliedCoupon.set(coupon);
           this.couponCode.set(coupon.code);
-          this.snackBar.open('Coupon applied.', 'Close', { duration: 1800 });
+          this.showNotification('Coupon applied.', 1800);
         },
         error: (error) => {
           this.appliedCoupon.set(null);
@@ -217,7 +222,7 @@ export class CheckoutPageComponent {
     }
 
     if (this.cart.count() === 0) {
-      this.snackBar.open('Your cart is empty.', 'Close', { duration: 2400 });
+      this.showNotification('Your cart is empty.', 2400);
       return;
     }
 
@@ -255,16 +260,17 @@ export class CheckoutPageComponent {
           amount: booking.totalAmount,
           type: 'FULL_PAYMENT'
         }).subscribe({
-          next: (order) => this.openRazorpay(order),
+          next: (order) => this.openRazorpay(order, booking.id),
           error: (error) => {
             this.isPaying.set(false);
-            this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+            this.cancelPendingBooking(booking.id);
+            this.showNotification(this.authService.getErrorMessage(error), 3600);
           }
         });
       },
       error: (error) => {
         this.isPaying.set(false);
-        this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+        this.showNotification(this.authService.getErrorMessage(error), 3600);
       }
     });
   }
@@ -272,20 +278,16 @@ export class CheckoutPageComponent {
   private confirmCashBooking(): void {
     this.cart.clear();
     this.success.set(true);
-    this.snackBar.open('Booking confirmed. Please pay in cash at delivery.', 'Close', {
-      duration: 2600,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: ['snackbar-success-top']
-    });
+    this.showNotification('Booking confirmed. Please pay in cash at delivery.', 2600);
     setTimeout(() => void this.router.navigateByUrl('/dashboard'), 1800);
   }
 
-  private openRazorpay(order: PaymentOrderResponse): void {
+  private openRazorpay(order: PaymentOrderResponse, bookingId: number): void {
     this.loadRazorpayScript().then(() => {
       if (!window.Razorpay) {
         this.isPaying.set(false);
-        this.snackBar.open('Unable to load Razorpay checkout.', 'Close', { duration: 3200 });
+        this.cancelPendingBooking(bookingId);
+        this.showNotification('Unable to load Razorpay checkout.', 3200);
         return;
       }
 
@@ -309,18 +311,21 @@ export class CheckoutPageComponent {
         modal: {
           ondismiss: () => {
             this.isPaying.set(false);
+            this.cancelPendingBooking(bookingId);
           }
         }
       });
 
       razorpay.on('payment.failed', () => {
         this.isPaying.set(false);
-        this.snackBar.open('Razorpay payment failed. Please try again.', 'Close', { duration: 3200 });
+        this.cancelPendingBooking(bookingId);
+        this.showNotification('Razorpay payment failed. Please try again.', 3200);
       });
       razorpay.open();
     }).catch(() => {
       this.isPaying.set(false);
-      this.snackBar.open('Unable to load Razorpay checkout.', 'Close', { duration: 3200 });
+      this.cancelPendingBooking(bookingId);
+      this.showNotification('Unable to load Razorpay checkout.', 3200);
     });
   }
 
@@ -335,17 +340,27 @@ export class CheckoutPageComponent {
       next: () => {
         this.cart.clear();
         this.success.set(true);
-        this.snackBar.open('Payment successful. Booking confirmed.', 'Close', {
-          duration: 2600,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['snackbar-success-top']
-        });
+        this.showNotification('Payment successful. Booking confirmed.', 2600);
         setTimeout(() => void this.router.navigateByUrl('/dashboard'), 1800);
       },
       error: (error) => {
-        this.snackBar.open(this.authService.getErrorMessage(error), 'Close', { duration: 3600 });
+        this.showNotification(this.authService.getErrorMessage(error), 3600);
       }
+    });
+  }
+
+  private showNotification(message: string, duration: number): void {
+    this.snackBar.open(message, 'Close', {
+      duration,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-screen-center']
+    });
+  }
+
+  private cancelPendingBooking(bookingId: number): void {
+    this.bookingService.cancelPendingBooking(bookingId).subscribe({
+      error: () => undefined
     });
   }
 

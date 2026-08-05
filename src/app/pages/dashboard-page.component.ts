@@ -379,7 +379,7 @@ export class DashboardPageComponent {
             duration: 2600,
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            panelClass: ['snackbar-success-top']
+            panelClass: ['snackbar-screen-center']
           });
         },
         error: (error) => {

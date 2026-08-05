@@ -151,7 +151,7 @@ export class ContactPageComponent {
       duration: 2200,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['snackbar-success-top']
+      panelClass: ['snackbar-screen-center']
     });
   }
 }
