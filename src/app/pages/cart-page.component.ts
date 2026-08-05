@@ -94,6 +94,7 @@ export class CartPageComponent {
   }
 
   goToCheckout(): void {
+    this.cart.removeExpiredItems();
     if (this.cart.count() === 0) {
       void this.router.navigateByUrl('/catalogue');
       return;

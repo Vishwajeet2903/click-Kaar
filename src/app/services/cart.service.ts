@@ -72,7 +72,8 @@ export class CartService {
   }
 
   canAdd(product: Product, startDate = tomorrow(), endDate = afterDays(3), quantity = 1): boolean {
-    return this.quantityFor(product.id, startDate, endDate) + quantity <= this.availableStock(product);
+    return !this.hasPastDate(startDate, endDate)
+        && this.quantityFor(product.id, startDate, endDate) + quantity <= this.availableStock(product);
   }
 
   availableStock(product: Product): number {
@@ -94,6 +95,10 @@ export class CartService {
 
   clear(): void {
     this.items.set([]);
+  }
+
+  removeExpiredItems(): void {
+    this.items.update((items) => items.filter((item) => this.isCurrentRentalWindow(item.startDate, item.endDate)));
   }
 
   duration(item: CartItem): number {
@@ -122,7 +127,7 @@ export class CartService {
         startDate: new Date(item.startDate),
         endDate: new Date(item.endDate),
         quantity: Math.min(this.availableStock(item.product), Math.max(1, item.quantity))
-      })).filter((item) => this.availableStock(item.product) > 0);
+      })).filter((item) => this.availableStock(item.product) > 0 && this.isCurrentRentalWindow(item.startDate, item.endDate));
     } catch {
       localStorage.removeItem(CART_STORAGE_KEY);
       return [];
@@ -158,5 +163,23 @@ export class CartService {
 
   private dateKey(date: Date): string {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  }
+
+  private isCurrentRentalWindow(startDate: Date, endDate: Date): boolean {
+    return !this.hasPastDate(startDate, endDate);
+  }
+
+  private hasPastDate(startDate: Date, endDate: Date): boolean {
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+      return true;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+    return start < today || end < today;
   }
 }

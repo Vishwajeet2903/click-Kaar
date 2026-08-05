@@ -221,6 +221,7 @@ export class CheckoutPageComponent {
       return;
     }
 
+    this.cart.removeExpiredItems();
     if (this.cart.count() === 0) {
       this.showNotification('Your cart is empty.', 2400);
       return;
