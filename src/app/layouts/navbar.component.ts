@@ -62,21 +62,12 @@ import { ProductService } from '../services/product.service';
           <div class="actions">
             @if (canShowCustomerActions()) {
               <a href="/cart" class="cart-link" aria-label="Open cart" (click)="openCart($event)">
-                @if (cartDisplayCount() > 0) {
-                  <svg class="cart-full" viewBox="0 0 32 32" aria-hidden="true">
-                    <path class="cart-basket-fill" d="M8.7 11h18.1l-1.7 9.8a3 3 0 0 1-3 2.5H12.3a3 3 0 0 1-3-2.6L7.4 7.2H4.2" />
-                    <path class="cart-line" d="M12.5 15.2h11.2M13.3 19h9.6" />
-                    <circle class="cart-wheel" cx="12.4" cy="26.6" r="1.3" />
-                    <circle class="cart-wheel" cx="23.1" cy="26.6" r="1.3" />
-                  </svg>
-                } @else {
-                  <svg class="cart-empty" viewBox="0 0 32 32" aria-hidden="true">
-                    <path d="M8.7 11h18.1l-1.7 9.8a3 3 0 0 1-3 2.5H12.3a3 3 0 0 1-3-2.6L7.4 7.2H4.2" />
-                    <path d="M12.5 15.2h11.2M13.3 19h9.6" />
-                    <circle cx="12.4" cy="26.6" r="1.3" />
-                    <circle cx="23.1" cy="26.6" r="1.3" />
-                  </svg>
-                }
+                <svg class="cart-empty" viewBox="0 0 32 32" aria-hidden="true">
+                  <path d="M8.7 11h18.1l-1.7 9.8a3 3 0 0 1-3 2.5H12.3a3 3 0 0 1-3-2.6L7.4 7.2H4.2" />
+                  <path d="M12.5 15.2h11.2M13.3 19h9.6" />
+                  <circle cx="12.4" cy="26.6" r="1.3" />
+                  <circle cx="23.1" cy="26.6" r="1.3" />
+                </svg>
                 @if (cartDisplayCount() > 0) {
                   <b>{{ cartDisplayCount() }}</b>
                 }
@@ -111,15 +102,9 @@ import { ProductService } from '../services/product.service';
     .actions { align-items: center; display: flex; gap: .8rem; }
     .cart-link { align-items: center; background: #fff; border-radius: 999px; box-shadow: 0 8px 22px rgba(0,0,0,.06); color: #151515; display: inline-flex; height: 44px; justify-content: center; min-width: 44px; padding: .45rem .62rem; position: relative; }
     .cart-link svg { fill: none; height: 27px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; width: 27px; }
-    .cart-link .cart-full { stroke-width: 1.9; }
-    .cart-basket-fill { fill: #ff9700; stroke: #111; }
-    .cart-line { fill: none; stroke: #111; }
-    .cart-wheel { fill: #111; stroke: #111; }
     .cart-link b { align-items: center; background: #ff9700; border: 2px solid #fff; border-radius: 999px; color: #111; display: inline-flex; font-size: .66rem; font-weight: 950; height: 18px; justify-content: center; line-height: 1; min-width: 18px; padding: 0 .24rem; position: absolute; right: -4px; top: -5px; }
-    .cart-link:hover { background: #111; color: #fff; transform: translateY(-1px); }
-    .cart-link:hover .cart-basket-fill { fill: #ff9700; stroke: #fff; }
-    .cart-link:hover .cart-line { stroke: #111; }
-    .cart-link:hover .cart-wheel { fill: #fff; stroke: #fff; }
+    .cart-link:hover { background: #ff9700; color: #111; transform: translateY(-1px); }
+    .cart-link:hover b { background: #111; border-color: #ff9700; color: #fff; }
     .login-link { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; }
     .login-link:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .avatar-link { align-items: center; background: #111; border: 2px solid transparent; border-radius: 50%; box-shadow: 0 10px 24px rgba(0,0,0,.12); color: #fff !important; cursor: pointer; display: inline-flex; font-size: .9rem; font-weight: 950; height: 38px; justify-content: center; line-height: 1; padding: 0; text-transform: uppercase; width: 38px; }
@@ -230,6 +215,7 @@ export class NavbarComponent implements OnDestroy {
     return path === '/' || path === '';
   }
 }
+
 
 
 

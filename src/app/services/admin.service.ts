@@ -119,6 +119,23 @@ export interface AdminCustomerResponse {
   pastBookings: number;
 }
 
+export interface AdminCustomerDetailResponse extends AdminCustomerResponse {
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
+  dob?: string;
+  alternateContactNumber?: string;
+  currentAddress?: string;
+  state?: string;
+  pincode?: string;
+  country?: string;
+  residenceType?: string;
+  occupation?: string;
+  companyName?: string;
+  socialMediaProfile?: string;
+  documents: RegistrationDocumentResponse[];
+}
+
 export interface AdminPaymentResponse {
   id: number;
   bookingId: string;
@@ -331,6 +348,12 @@ export class AdminService {
     });
   }
 
+  getCustomerDetails(customerId: number): Observable<AdminCustomerDetailResponse> {
+    return this.http.get<AdminCustomerDetailResponse>(`${API_URL}/customers/${customerId}/details`, {
+      headers: this.authHeaders()
+    });
+  }
+
   setCustomerBlocked(customerId: number, blocked: boolean): Observable<AdminCustomerResponse> {
     return this.http.patch<AdminCustomerResponse>(`${API_URL}/customers/${customerId}/blocked`, { blocked }, {
       headers: this.authHeaders()
@@ -476,6 +499,13 @@ export class AdminService {
     });
   }
 
+  getVerifiedCustomerDocument(customerId: number, documentType: string): Observable<Blob> {
+    return this.http.get(`${API_URL}/customers/verified/${customerId}/documents/${documentType}`, {
+      headers: this.authHeaders(),
+      responseType: 'blob'
+    });
+  }
+
   private authHeaders(): HttpHeaders {
     const token = this.authService.getToken();
     return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
@@ -490,4 +520,5 @@ export class AdminService {
     return formData;
   }
 }
+
 

@@ -325,6 +325,29 @@ public class AdminController {
         .toList();
   }
 
+  @GetMapping("/customers/{customerId}/details")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  public AdminCustomerDetailResponse customerDetails(@PathVariable Long customerId) {
+    User customer = userRepository.findById(customerId)
+        .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    if (customer.getRoles().stream().noneMatch(role -> role.getName() == RoleName.CUSTOMER)) {
+      throw new ResourceNotFoundException("Customer not found");
+    }
+    return adminCustomerDetailResponse(customer);
+  }
+
+  @GetMapping("/customers/verified/{customerId}/documents/{documentType}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  public ResponseEntity<Resource> verifiedCustomerDocument(@PathVariable Long customerId, @PathVariable String documentType) {
+    User customer = userRepository.findById(customerId)
+        .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    if (customer.getRoles().stream().noneMatch(role -> role.getName() == RoleName.CUSTOMER)) {
+      throw new ResourceNotFoundException("Customer not found");
+    }
+    String documentName = documentNameForType(customer, documentType);
+    return registrationDocumentResponse(documentName);
+  }
+
   @PatchMapping("/customers/{customerId}/blocked")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @Transactional
@@ -580,31 +603,7 @@ public class AdminController {
   public ResponseEntity<Resource> pendingCustomerDocument(@PathVariable Long requestId, @PathVariable String documentType) {
     PendingRegistration pendingRegistration = pendingRegistrationRepository.findById(requestId)
         .orElseThrow(() -> new BadRequestException("Pending registration not found"));
-    String documentName = documentNameForType(pendingRegistration, documentType);
-    if (documentName == null || documentName.isBlank()) {
-      throw new BadRequestException("Registration document not found");
-    }
-
-    Path documentPath = Path.of(documentName).normalize();
-    Path uploadRoot = Path.of("uploads", "registration-documents").toAbsolutePath().normalize();
-    Path absoluteDocumentPath = documentPath.toAbsolutePath().normalize();
-    if (!absoluteDocumentPath.startsWith(uploadRoot) || !Files.exists(absoluteDocumentPath)) {
-      throw new BadRequestException("Registration document not found");
-    }
-
-    try {
-      Resource resource = new UrlResource(absoluteDocumentPath.toUri());
-      String contentType = Files.probeContentType(absoluteDocumentPath);
-      MediaType mediaType = contentType == null ? MediaType.APPLICATION_OCTET_STREAM : MediaType.parseMediaType(contentType);
-      return ResponseEntity.ok()
-          .contentType(mediaType)
-          .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + absoluteDocumentPath.getFileName() + "\"")
-          .body(resource);
-    } catch (MalformedURLException exception) {
-      throw new BadRequestException("Unable to read registration document");
-    } catch (Exception exception) {
-      throw new BadRequestException("Unable to read registration document");
-    }
+    return registrationDocumentResponse(documentNameForType(pendingRegistration, documentType));
   }
 
   @PatchMapping("/customers/{requestId}/verify")
@@ -783,6 +782,54 @@ public class AdminController {
     };
   }
 
+  private List<RegistrationDocumentResponse> documentsFor(User customer) {
+    List<RegistrationDocumentResponse> documents = new ArrayList<>();
+    addDocument(documents, "photo", "Photo", customer.getPhotoDocumentName());
+    addDocument(documents, "drivingLicense", "Driving license", customer.getDrivingLicenseDocumentName());
+    addDocument(documents, "electricityBill", "Electricity bill", customer.getElectricityBillDocumentName());
+    addDocument(documents, "rentAgreement", "Rent agreement", customer.getRentAgreementDocumentName());
+    addDocument(documents, "companyBonafideLetter", "Company bonafide letter", customer.getCompanyBonafideLetterDocumentName());
+    return documents;
+  }
+
+  private String documentNameForType(User customer, String documentType) {
+    return switch (documentType) {
+      case "photo" -> customer.getPhotoDocumentName();
+      case "drivingLicense" -> customer.getDrivingLicenseDocumentName();
+      case "electricityBill" -> customer.getElectricityBillDocumentName();
+      case "rentAgreement" -> customer.getRentAgreementDocumentName();
+      case "companyBonafideLetter" -> customer.getCompanyBonafideLetterDocumentName();
+      default -> null;
+    };
+  }
+
+  private ResponseEntity<Resource> registrationDocumentResponse(String documentName) {
+    if (documentName == null || documentName.isBlank()) {
+      throw new BadRequestException("Registration document not found");
+    }
+
+    Path documentPath = Path.of(documentName).normalize();
+    Path uploadRoot = Path.of("uploads", "registration-documents").toAbsolutePath().normalize();
+    Path absoluteDocumentPath = documentPath.toAbsolutePath().normalize();
+    if (!absoluteDocumentPath.startsWith(uploadRoot) || !Files.exists(absoluteDocumentPath)) {
+      throw new BadRequestException("Registration document not found");
+    }
+
+    try {
+      Resource resource = new UrlResource(absoluteDocumentPath.toUri());
+      String contentType = Files.probeContentType(absoluteDocumentPath);
+      MediaType mediaType = contentType == null ? MediaType.APPLICATION_OCTET_STREAM : MediaType.parseMediaType(contentType);
+      return ResponseEntity.ok()
+          .contentType(mediaType)
+          .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + absoluteDocumentPath.getFileName() + "\"")
+          .body(resource);
+    } catch (MalformedURLException exception) {
+      throw new BadRequestException("Unable to read registration document");
+    } catch (Exception exception) {
+      throw new BadRequestException("Unable to read registration document");
+    }
+  }
+
   private AdminBookingResponse adminBookingResponse(Booking booking) {
     List<Payment> payments = paymentRepository.findAll().stream()
         .filter(payment -> Objects.equals(payment.getBooking().getId(), booking.getId()))
@@ -833,6 +880,35 @@ public class AdminController {
     );
   }
 
+  private AdminCustomerDetailResponse adminCustomerDetailResponse(User customer) {
+    AdminCustomerResponse summary = adminCustomerResponse(customer);
+    return new AdminCustomerDetailResponse(
+        summary.id(),
+        summary.name(),
+        customer.getFirstName(),
+        customer.getLastName(),
+        summary.email(),
+        summary.phone(),
+        customer.getGender(),
+        customer.getDob(),
+        customer.getAlternateContactNumber(),
+        customer.getCurrentAddress(),
+        summary.city(),
+        customer.getState(),
+        customer.getPincode(),
+        customer.getCountry(),
+        customer.getResidenceType(),
+        customer.getOccupation(),
+        customer.getCompanyName(),
+        customer.getSocialMediaProfile(),
+        summary.verified(),
+        summary.blocked(),
+        summary.wishlist(),
+        summary.activeBookings(),
+        summary.pastBookings(),
+        documentsFor(customer)
+    );
+  }
   private String productName(BookingItem item) {
     try {
       return item.getProduct() == null ? "Unavailable product" : item.getProduct().getName();
@@ -942,6 +1018,7 @@ public class AdminController {
   public record CouponActiveRequest(boolean active) {}
   public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes, boolean deliveryOtpVerified) {}
   public record AdminCustomerResponse(Long id, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}
+  public record AdminCustomerDetailResponse(Long id, String name, String firstName, String lastName, String email, String phone, String gender, String dob, String alternateContactNumber, String currentAddress, String city, String state, String pincode, String country, String residenceType, String occupation, String companyName, String socialMediaProfile, boolean verified, boolean blocked, int wishlist, long activeBookings, long pastBookings, List<RegistrationDocumentResponse> documents) {}
   public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt, String remark, long remarkChangeCount) {}
   public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, Integer usageLimit, int usedCount, LocalDate validUntil, LocalDateTime createdAt) {}
   public record PaymentRemarkLogResponse(Long id, String oldRemark, String newRemark, String changedBy, LocalDateTime changedAt) {}
@@ -953,4 +1030,6 @@ public class AdminController {
   public record RolePermissionResponse(String module, String superAdmin, String manager, String inventory, String content) {}
   public record AdminSettingsRequest(String gateway, String paymentPolicy, Integer depositPercent, Integer gstPercent, String notificationEmail, String whatsappNumber, String recaptchaKey, String analyticsId) {}
 }
+
+
 

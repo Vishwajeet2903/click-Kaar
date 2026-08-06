@@ -10,6 +10,7 @@ import {
   AdminBlogPostResponse,
   AdminCouponResponse,
   AdminContentResponse,
+  AdminCustomerDetailResponse,
   AdminPaymentResponse,
   AdminProductRequest,
   AdminProductResponse,
@@ -196,7 +197,6 @@ interface AdminNoteDialog {
               @for (tab of tabs; track tab.id) {
                 <button type="button" [class.active]="activeTab() === tab.id" (click)="selectAdminTab(tab.id)">
                   <span>{{ tab.label }}</span>
-                  <small>{{ tab.count }}</small>
                 </button>
               }
             </nav>
@@ -414,7 +414,7 @@ interface AdminNoteDialog {
                                   <div class="document-frame">
                                     @if (documentPreviews[document.type]) {
                                       @if (documentPreviews[document.type].isImage) {
-                                        <button type="button" class="document-preview-btn" (click)="openDocumentPreview(documentPreviews[document.type])">
+                                        <button type="button" class="document-preview-btn" (click)="openDocumentPreview(documentPreviews[document.type], $event)">
                                           <img [src]="documentPreviews[document.type].url" [alt]="document.label">
                                         </button>
                                       } @else {
@@ -647,37 +647,129 @@ interface AdminNoteDialog {
               }
               @case ('customers') {
                 <div class="tool-row"><input class="search-input" placeholder="Search customer, email, city" [ngModel]="customerQuery()" (ngModelChange)="customerQuery.set($event); customersPage = 1"></div>
-                <div class="card-grid">
-                  @for (customer of pagedCustomers(); track customer.id) {
-                    <article class="surface customer-card" [class.blocked]="customer.blocked">
-                      <div class="customer-card-head">
-                        <div class="avatar">{{ customer.name.charAt(0) }}</div>
-                        <div class="customer-card-info">
-                          <h3>{{ customer.name }}</h3>
-                          <p>{{ customer.email }} - {{ customer.phone || 'No phone added' }}</p>
-                          <span>{{ customer.city || 'City not added' }}</span>
+                <div class="split-grid customer-management-grid">
+                  <section class="customer-list-panel">
+                    <div class="card-grid customer-card-grid">
+                      @for (customer of pagedCustomers(); track customer.id) {
+                        <article class="surface customer-card clickable-customer" [class.blocked]="customer.blocked" [class.active-customer]="selectedCustomerDetail?.id === customer.id" tabindex="0" role="button" [attr.aria-label]="'Open details for ' + customer.name" (click)="openCustomerDetails(customer)" (keydown.enter)="openCustomerDetails(customer)" (keydown.space)="openCustomerDetails(customer)">
+                          <div class="customer-card-head">
+                            <div class="avatar">{{ customer.name.charAt(0) }}</div>
+                            <div class="customer-card-info">
+                              <h3>{{ customer.name }}</h3>
+                              <p>{{ customer.email }} - {{ customer.phone || 'No phone added' }}</p>
+                              <span>{{ customer.city || 'City not added' }}</span>
+                            </div>
+                          </div>
+                          <dl>
+                            <div><dt>Active</dt><dd>{{ customer.activeBookings }}</dd></div>
+                            <div><dt>Past</dt><dd>{{ customer.pastBookings }}</dd></div>
+                            <div><dt>Wishlist</dt><dd>{{ customer.wishlist }}</dd></div>
+                          </dl>
+                          <button type="button" [class.danger-btn]="!customer.blocked" [class.mini-btn]="customer.blocked" (click)="$event.stopPropagation(); toggleCustomerBlock(customer)">
+                            {{ customer.blocked ? 'Unblock customer' : 'Block customer' }}
+                          </button>
+                        </article>
+                      } @empty {
+                        <div class="surface empty-cell customer-empty">No customers match this search.</div>
+                      }
+                    </div>
+                    <div class="pagination-row">
+                      <span>{{ pageSummary(filteredCustomers().length, customersPage) }}</span>
+                      <div>
+                        <button type="button" class="ghost-mini" [disabled]="customersPage === 1" (click)="changePage('customers', -1)">Previous</button>
+                        <button type="button" class="mini-btn" [disabled]="customersPage === pageCount(filteredCustomers().length)" (click)="changePage('customers', 1)">Next</button>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="surface panel customer-detail-panel">
+                    <div class="panel-head">
+                      <div>
+                        <h3>Customer details</h3>
+                        <span>{{ selectedCustomerDetail ? selectedCustomerDetail.email : 'Select a customer card' }}</span>
+                      </div>
+                      @if (selectedCustomerDetail) {
+                        <b class="status" [class]="selectedCustomerDetail.blocked ? 'status-bad' : 'status-ok'">{{ selectedCustomerDetail.blocked ? 'Blocked' : 'Active' }}</b>
+                      }
+                    </div>
+
+                    @if (loadingCustomerId) {
+                      <p class="muted">Loading customer details...</p>
+                    } @else if (selectedCustomerError) {
+                      <p class="error-text">{{ selectedCustomerError }}</p>
+                    } @else if (selectedCustomerDetail) {
+                      <div class="customer-detail-profile">
+                        <div class="customer-detail-avatar">{{ initials(selectedCustomerDetail.name) }}</div>
+                        <div>
+                          <h3>{{ selectedCustomerDetail.name }}</h3>
+                          <p>{{ selectedCustomerDetail.email }}</p>
+                          <span>{{ selectedCustomerDetail.phone || 'No phone added' }}</span>
                         </div>
                       </div>
-                      <dl>
-                        <div><dt>Active</dt><dd>{{ customer.activeBookings }}</dd></div>
-                        <div><dt>Past</dt><dd>{{ customer.pastBookings }}</dd></div>
-                        <div><dt>Wishlist</dt><dd>{{ customer.wishlist }}</dd></div>
+
+                      <dl class="customer-detail-grid">
+                        <div><dt>First name</dt><dd>{{ selectedCustomerDetail.firstName || '-' }}</dd></div>
+                        <div><dt>Last name</dt><dd>{{ selectedCustomerDetail.lastName || '-' }}</dd></div>
+                        <div><dt>Gender</dt><dd>{{ selectedCustomerDetail.gender || '-' }}</dd></div>
+                        <div><dt>Date of birth</dt><dd>{{ selectedCustomerDetail.dob || '-' }}</dd></div>
+                        <div><dt>Alternate contact</dt><dd>{{ selectedCustomerDetail.alternateContactNumber || '-' }}</dd></div>
+                        <div><dt>Residence type</dt><dd>{{ selectedCustomerDetail.residenceType || '-' }}</dd></div>
+                        <div class="wide-detail"><dt>Address</dt><dd>{{ selectedCustomerDetail.currentAddress || '-' }}</dd></div>
+                        <div><dt>City</dt><dd>{{ selectedCustomerDetail.city || '-' }}</dd></div>
+                        <div><dt>State</dt><dd>{{ selectedCustomerDetail.state || '-' }}</dd></div>
+                        <div><dt>Pincode</dt><dd>{{ selectedCustomerDetail.pincode || '-' }}</dd></div>
+                        <div><dt>Country</dt><dd>{{ selectedCustomerDetail.country || '-' }}</dd></div>
+                        <div><dt>Occupation</dt><dd>{{ selectedCustomerDetail.occupation || '-' }}</dd></div>
+                        <div><dt>Company</dt><dd>{{ selectedCustomerDetail.companyName || '-' }}</dd></div>
+                        <div class="wide-detail"><dt>Social profile</dt><dd>{{ selectedCustomerDetail.socialMediaProfile || '-' }}</dd></div>
+                        <div><dt>Active bookings</dt><dd>{{ selectedCustomerDetail.activeBookings }}</dd></div>
+                        <div><dt>Past bookings</dt><dd>{{ selectedCustomerDetail.pastBookings }}</dd></div>
+                        <div><dt>Wishlist</dt><dd>{{ selectedCustomerDetail.wishlist }}</dd></div>
                       </dl>
-                      <button type="button" [class.danger-btn]="!customer.blocked" [class.mini-btn]="customer.blocked" (click)="toggleCustomerBlock(customer)">
-                        {{ customer.blocked ? 'Unblock customer' : 'Block customer' }}
-                      </button>
-                    </article>
-                  }
-                </div>
-                <div class="pagination-row">
-                  <span>{{ pageSummary(filteredCustomers().length, customersPage) }}</span>
-                  <div>
-                    <button type="button" class="ghost-mini" [disabled]="customersPage === 1" (click)="changePage('customers', -1)">Previous</button>
-                    <button type="button" class="mini-btn" [disabled]="customersPage === pageCount(filteredCustomers().length)" (click)="changePage('customers', 1)">Next</button>
-                  </div>
+
+                      <div class="detail-section customer-document-section">
+                        <div class="detail-section-head">
+                          <h4>Uploaded documents</h4>
+                          <span>{{ selectedCustomerDetail.documents.length }} file{{ selectedCustomerDetail.documents.length === 1 ? '' : 's' }}</span>
+                        </div>
+                        @if (documentPreviewError) {
+                          <p class="error-text">{{ documentPreviewError }}</p>
+                        }
+                        @if (selectedCustomerDetail.documents.length) {
+                          <div class="document-grid customer-document-grid">
+                            @for (document of selectedCustomerDetail.documents; track document.type) {
+                              <article>
+                                <div class="document-frame">
+                                  @if (documentPreviews[document.type]) {
+                                    @if (documentPreviews[document.type].isImage) {
+                                      <button type="button" class="document-preview-btn" (click)="openDocumentPreview(documentPreviews[document.type], $event)">
+                                        <img [src]="documentPreviews[document.type].url" [alt]="document.label">
+                                      </button>
+                                    } @else {
+                                      <a [href]="documentPreviews[document.type].url" target="_blank" rel="noreferrer">Open file</a>
+                                    }
+                                  } @else {
+                                    <span>{{ isLoadingDocuments ? 'Loading...' : 'Preview unavailable' }}</span>
+                                  }
+                                </div>
+                                <strong>{{ document.label }}</strong>
+                                <span>{{ document.fileName }}</span>
+                              </article>
+                            }
+                          </div>
+                        } @else {
+                          <p class="muted">No documents are stored for this customer.</p>
+                        }
+                      </div>
+                    } @else {
+                      <div class="empty-detail">
+                        <h3>Select a customer</h3>
+                        <p class="muted">Open a customer card to view profile details and uploaded verification documents.</p>
+                      </div>
+                    }
+                  </section>
                 </div>
               }
-
               @case ('payments') {
                 <div class="surface table-panel">
                   <table>
@@ -773,7 +865,7 @@ interface AdminNoteDialog {
                       <label>Valid until<input type="date" formControlName="validUntil"></label>
                       <label class="checkbox-label"><input type="checkbox" formControlName="active"> Active coupon</label>
                     </div>
-                    <button type="submit" class="primary-btn wide" [disabled]="isSubmittingCoupon">{{ isSubmittingCoupon ? 'Creating...' : 'Create coupon' }}</button>
+                    <button type="submit" class="primary-btn coupon-submit-btn" [disabled]="isSubmittingCoupon">{{ isSubmittingCoupon ? 'Creating...' : 'Create coupon' }}</button>
                   </form>
 
                   <section class="surface panel">
@@ -1193,9 +1285,9 @@ interface AdminNoteDialog {
     nav { display: grid; gap: .25rem; }
     nav button { align-items: center; background: transparent; border: 1px solid transparent; border-radius: 6px; color: #555; display: flex; font-size: .9rem; font-weight: 800; justify-content: space-between; line-height: 1.25; min-height: 40px; padding: .62rem .7rem; text-align: left; }
     nav button small { background: #f6f6f4; border-radius: 999px; color: #666; font-size: .68rem; min-width: 26px; padding: .16rem .42rem; text-align: center; }
-    nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
+    nav button.active, nav button.active:hover { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
     nav button:hover { background: #f6f6f4; border-color: #e6e6e0; color: #111; }
-    nav button.active small { background: #111; color: #fff; }
+    nav button.active small, nav button.active:hover small { background: #111; color: #fff; }
     nav button:hover small { background: #e6e6e0; color: #555; }
     .admin-workspace { display: grid; gap: 1.25rem; min-width: 0; }
     .admin-topbar { align-items: end; background: #ffffff; border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: 1.25rem; justify-content: space-between; padding: 1.15rem 1.2rem; }
@@ -1299,7 +1391,7 @@ interface AdminNoteDialog {
     .request-list article { align-items: center; flex-direction: row; padding: .7rem; }
     .request-summary { align-items: center; background: transparent; border: 0; color: #111; display: grid; flex: 1 1 auto; font: inherit; gap: .7rem; grid-template-columns: 42px minmax(0, 1fr); justify-content: stretch; min-height: 44px; min-width: 0; padding: 0; text-align: left; white-space: normal; }
     .request-summary:hover { transform: none; }
-    .request-avatar { align-items: center; aspect-ratio: 1; background: #111; border-radius: 999px; color: #fff !important; display: inline-flex !important; font-size: .78rem !important; font-weight: 950; justify-content: center; letter-spacing: 0; margin: 0 !important; width: 42px; }
+    .request-avatar { align-items: center; aspect-ratio: 1; background: #eef4ff; border-radius: 999px; color: #ff9700 !important; display: inline-flex !important; font-size: .78rem !important; font-weight: 950; justify-content: center; letter-spacing: 0; margin: 0 !important; width: 42px; }
     .request-copy { display: block; min-width: 0; }
     .request-copy strong, .request-copy span, .request-copy small { overflow-wrap: anywhere; }
     .request-copy small { color: #9a6a00; display: block; font-size: .72rem; font-weight: 900; line-height: 1.35; margin-top: .25rem; }
@@ -1458,7 +1550,9 @@ interface AdminNoteDialog {
     .coupon-actions { align-items: center; display: grid; grid-column: 1 / -1; grid-template-columns: minmax(76px, .8fr) minmax(86px, 1fr); justify-content: stretch; }
     .coupon-status-btn { align-items: center; border-radius: 999px; box-shadow: none; display: inline-flex; font-size: .7rem; font-weight: 900; justify-content: center; min-height: 34px; min-width: 86px; padding: .48rem .78rem; text-align: center; }
     .coupon-status-btn:hover { box-shadow: 0 10px 22px rgba(0,0,0,.1); transform: translateY(-2px); }
-    .coupon-actions .danger-btn { min-width: 86px; }
+    .coupon-status-btn,
+    .coupon-actions .danger-btn { font-size: .78rem; min-height: 34px; min-width: 86px; padding: .48rem .78rem; width: 86px; }
+    .coupon-submit-btn { font-size: .82rem; justify-self: start; margin-top: .85rem; min-height: 40px; min-width: 132px; padding: .58rem .95rem; width: auto; }
     @keyframes coupon-page-settle {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
@@ -1466,13 +1560,30 @@ interface AdminNoteDialog {
     .editor-panel > label { margin-top: 0; }
     .wide { margin-top: .85rem; width: 100%; }
     .card-grid { align-items: stretch; display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .customer-management-grid { align-items: start; grid-template-columns: minmax(280px, .85fr) minmax(0, 1.15fr); }
+    .customer-card-grid { grid-template-columns: 1fr; }
+    .customer-list-panel { display: grid; gap: 1rem; min-width: 0; }
     .customer-card { align-content: stretch; display: grid; gap: .85rem; grid-template-rows: auto 1fr auto; height: 100%; min-width: 0; padding: 1.05rem; }
     .customer-card.blocked { opacity: .68; }
+    .clickable-customer { cursor: pointer; text-align: left; transition: transform .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease; }
+    .clickable-customer:hover, .active-customer { background: #fffaf2; border-color: rgba(255,151,0,.42); box-shadow: 0 18px 45px rgba(255,151,0,.11); transform: translateY(-1px); }
+    .clickable-customer:focus-visible { outline: 3px solid rgba(255,151,0,.34); outline-offset: 3px; }
     .customer-card-head { align-items: flex-start; display: grid; gap: .75rem; grid-template-columns: 42px minmax(0, 1fr); min-width: 0; }
     .customer-card-info { display: grid; gap: .28rem; min-width: 0; }
     .customer-card p, .customer-card span { color: #777; font-size: .84rem; line-height: 1.4; margin: 0; overflow-wrap: anywhere; }
     .customer-card button { align-self: end; justify-self: stretch; min-height: 38px; width: 100%; }
-    .avatar { align-items: center; background: #111; border-radius: 50%; color: #ff9700; display: inline-flex; flex: 0 0 auto; font-weight: 950; height: 42px; justify-content: center; width: 42px; }
+    .customer-detail-panel { align-content: start; }
+    .customer-detail-profile { align-items: center; background: #fffaf2; border: 1px solid rgba(255,151,0,.24); border-radius: 8px; display: grid; gap: .8rem; grid-template-columns: 54px minmax(0, 1fr); padding: .9rem; }
+    .customer-detail-profile h3 { color: #111; font-size: 1.08rem; line-height: 1.25; margin: 0 0 .2rem; overflow-wrap: anywhere; }
+    .customer-detail-profile p, .customer-detail-profile span { color: #555; display: block; font-size: .86rem; font-weight: 800; line-height: 1.4; margin: 0; overflow-wrap: anywhere; }
+    .customer-detail-avatar { align-items: center; aspect-ratio: 1; background: #ff9700; border-radius: 999px; color: #f6f6f4; display: inline-flex; font-weight: 950; justify-content: center; width: 54px; }
+    .customer-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .customer-detail-grid div { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; min-width: 0; padding: .72rem; }
+    .customer-detail-grid dd { font-size: .95rem; line-height: 1.38; overflow-wrap: anywhere; }
+    .customer-document-section { display: grid; gap: .75rem; }
+    .customer-document-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .customer-empty { padding: 1rem; }
+    .avatar { align-items: center; background: #ff9700 ; border-radius: 50%; color: #f6f6f4; display: inline-flex; flex: 0 0 auto; font-weight: 950; height: 42px; justify-content: center; width: 42px; }
     dl { display: grid; gap: .5rem; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; }
     .customer-card dl { align-self: end; }
     .customer-card dl div { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; min-width: 0; padding: .62rem .5rem; }
@@ -1509,12 +1620,14 @@ interface AdminNoteDialog {
       .admin-sidebar nav button span { overflow: visible; text-overflow: clip; white-space: nowrap; }
       .admin-sidebar nav button small { display: none; }
 
-      .admin-sidebar nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
+      .admin-sidebar nav button.active, .admin-sidebar nav button.active:hover { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
       .admin-sidebar nav button.active small { background: #111; color: #fff; }
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
       .admin-topbar { gap: .85rem; padding: .95rem; }
       .admin-topbar h2 { font-size: clamp(1.35rem, 8vw, 1.85rem); }
       .split-grid, .metric-grid, .card-grid, .form-grid, .blog-form-grid, .detail-grid, .document-grid, .gallery-upload-flow, .gallery-toggle-row, .gallery-admin-grid { grid-template-columns: 1fr; }
+      .customer-management-grid { grid-template-columns: 1fr; }
+
       .metric-card { gap: .45rem; min-height: auto; padding: .82rem; }
       .panel, .table-panel, .editor-panel, .employee-form, .access-card, .customer-card { padding: .82rem; width: 100%; }
       .panel-head, .detail-section-head { align-items: flex-start; flex-direction: column; gap: .55rem; }
@@ -1672,6 +1785,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   isLoadingPending = false;
   verifyingRequestId?: number;
   selectedPendingCustomer?: CustomerVerificationResponse;
+  selectedCustomerDetail?: AdminCustomerDetailResponse;
+  selectedCustomerError = '';
+  loadingCustomerId?: number;
   selectedReview?: AdminReview;
   confirmDialog?: AdminConfirmDialog;
   noteDialog?: AdminNoteDialog;
@@ -1684,6 +1800,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   documentPreviewError = '';
   isLoadingDocuments = false;
   activeDocumentPreview?: DocumentPreview;
+  private documentPreviewReturnTarget?: HTMLElement;
   private readonly savingPaymentRemarkIds = new Set<number>();
   activeRemarkLogPayment?: AdminPayment;
   activePaymentRemarkLogs: PaymentRemarkLogView[] = [];
@@ -2177,12 +2294,26 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('/login');
   }
 
-  openDocumentPreview(preview: DocumentPreview): void {
+  openDocumentPreview(preview: DocumentPreview, event?: Event): void {
+    this.documentPreviewReturnTarget = event?.currentTarget instanceof HTMLElement ? event.currentTarget : undefined;
     this.activeDocumentPreview = preview;
+    window.setTimeout(() => {
+      const target = document.querySelector('.document-lightbox');
+      if (target) {
+        target.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      }
+    });
   }
 
   closeDocumentPreview(): void {
+    const returnTarget = this.documentPreviewReturnTarget;
     this.activeDocumentPreview = undefined;
+    this.documentPreviewReturnTarget = undefined;
+    if (returnTarget) {
+      window.setTimeout(() => returnTarget.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+    }
   }
 
   togglePaymentRemarkLog(payment: AdminPayment): void {
@@ -2366,12 +2497,40 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  openCustomerDetails(customer: AdminCustomer): void {
+    this.selectedCustomerError = '';
+    this.loadingCustomerId = customer.id;
+    this.clearDocumentPreviews();
+    this.adminService.getCustomerDetails(customer.id)
+      .pipe(finalize(() => {
+        if (this.loadingCustomerId === customer.id) {
+          this.loadingCustomerId = undefined;
+        }
+      }))
+      .subscribe({
+        next: (detail) => {
+          this.selectedCustomerDetail = detail;
+          this.loadVerifiedCustomerDocumentPreviews(detail);
+        },
+        error: (error) => {
+          const message = this.authService.getErrorMessage(error);
+          this.selectedCustomerError = message.includes('No static resource')
+            ? 'Customer details API is not available in the running backend. Restart or redeploy the backend with the latest code.'
+            : message;
+          this.selectedCustomerDetail = undefined;
+        }
+      });
+  }
   toggleCustomerBlock(customer: AdminCustomer): void {
     const action = customer.blocked ? 'unblock' : 'block';
     this.openConfirmDialog(`${action === 'block' ? 'Block' : 'Unblock'} customer?`, customer.name, action === 'block' ? 'Block customer' : 'Unblock customer', action === 'block' ? 'danger' : 'default', () => {
     this.adminService.setCustomerBlocked(customer.id, !customer.blocked).subscribe({
       next: (updatedCustomer) => {
-        this.customers.update((items) => items.map((item) => item.id === updatedCustomer.id ? this.mapCustomer(updatedCustomer) : item));
+        const mappedCustomer = this.mapCustomer(updatedCustomer);
+        this.customers.update((items) => items.map((item) => item.id === updatedCustomer.id ? mappedCustomer : item));
+        if (this.selectedCustomerDetail?.id === updatedCustomer.id) {
+          this.selectedCustomerDetail = { ...this.selectedCustomerDetail, blocked: mappedCustomer.blocked };
+        }
       },
       error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
@@ -3274,6 +3433,44 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  private loadVerifiedCustomerDocumentPreviews(customer: AdminCustomerDetailResponse): void {
+    this.documentPreviewError = '';
+    this.isLoadingDocuments = customer.documents.length > 0;
+
+    if (!customer.documents.length) {
+      return;
+    }
+
+    let completed = 0;
+    const markComplete = () => {
+      completed += 1;
+      if (completed === customer.documents.length && this.selectedCustomerDetail?.id === customer.id) {
+        this.isLoadingDocuments = false;
+      }
+    };
+    customer.documents.forEach((document) => {
+      this.adminService.getVerifiedCustomerDocument(customer.id, document.type).subscribe({
+        next: (blob) => {
+          if (this.selectedCustomerDetail?.id !== customer.id) {
+            return;
+          }
+          this.documentPreviews = {
+            ...this.documentPreviews,
+            [document.type]: this.createDocumentPreview(document, blob)
+          };
+        },
+        error: (error) => {
+          if (this.selectedCustomerDetail?.id === customer.id) {
+            this.documentPreviewError = this.authService.getErrorMessage(error);
+          }
+          markComplete();
+        },
+        complete: () => {
+          markComplete();
+        }
+      });
+    });
+  }
   private createDocumentPreview(document: RegistrationDocumentResponse, blob: Blob): DocumentPreview {
     return {
       label: document.label,
@@ -3424,6 +3621,21 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
