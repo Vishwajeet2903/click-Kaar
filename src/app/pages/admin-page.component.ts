@@ -3375,7 +3375,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       const stickyOffset = isMobile ? 88 : 92;
       const start = window.scrollY;
       const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - stickyOffset);
-      const duration = isMobile ? 700 : 900;
+      if (isMobile) {
+        return;
+      }
+      const duration = 900;
       const startTime = performance.now();
       const animate = (now: number) => {
         const progress = Math.min((now - startTime) / duration, 1);
@@ -3421,6 +3424,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 }
+
+
 
 
 
