@@ -1,6 +1,7 @@
 package com.clickkaar.controller;
 
 import com.clickkaar.entity.Booking;
+import com.clickkaar.entity.BookingItem;
 import com.clickkaar.entity.Payment;
 import com.clickkaar.entity.User;
 import com.clickkaar.enums.BookingStatus;
@@ -10,6 +11,7 @@ import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PaymentRepository;
 import com.clickkaar.repository.UserRepository;
 import com.clickkaar.repository.WishlistRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,7 +82,7 @@ public class CustomerDashboardController {
         activeBookings,
         pastBookings,
         upcomingReturns,
-        wishlistRepository.findByUserId(customer.getId()).size(),
+        (int) wishlistRepository.countExistingProductsByUserId(customer.getId()),
         totalSpent,
         pendingPayments
     );
@@ -94,7 +96,7 @@ public class CustomerDashboardController {
 
   private CustomerBookingResponse bookingResponse(Booking booking) {
     List<String> products = booking.getItems().stream()
-        .map(item -> item.getProduct().getName())
+        .map(this::productName)
         .toList();
     return new CustomerBookingResponse(
         booking.getId(),
@@ -110,6 +112,14 @@ public class CustomerDashboardController {
         returnStatus(booking),
         booking.getTotalAmount()
     );
+  }
+
+  private String productName(BookingItem item) {
+    try {
+      return item.getProduct().getName();
+    } catch (EntityNotFoundException exception) {
+      return "Unavailable product";
+    }
   }
 
   private CustomerPaymentResponse paymentResponse(Payment payment) {

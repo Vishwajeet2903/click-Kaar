@@ -11,6 +11,7 @@ import com.clickkaar.dto.content.GalleryImageResponse;
 import com.clickkaar.dto.product.ProductRequest;
 import com.clickkaar.dto.product.ProductResponse;
 import com.clickkaar.entity.Booking;
+import com.clickkaar.entity.BookingItem;
 import com.clickkaar.entity.BookingNote;
 import com.clickkaar.entity.Coupon;
 import com.clickkaar.entity.PendingRegistration;
@@ -46,6 +47,7 @@ import com.clickkaar.service.ProductService;
 import com.clickkaar.service.ContentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -772,7 +774,7 @@ public class AdminController {
         booking.getBookingNumber(),
         booking.getCustomer().getFullName(),
         booking.getCustomer().getMobile(),
-        booking.getItems().stream().map(item -> item.getProduct().getName()).toList(),
+        booking.getItems().stream().map(this::productName).toList(),
         booking.getRentalStartDate(),
         booking.getRentalEndDate(),
         booking.getStatus(),
@@ -799,10 +801,18 @@ public class AdminController {
         customer.isMobileVerified(),
         !customer.isEnabled(),
         customer.getCity(),
-        wishlistRepository.findByUserId(customer.getId()).size(),
+        (int) wishlistRepository.countExistingProductsByUserId(customer.getId()),
         activeBookings,
         pastBookings
     );
+  }
+
+  private String productName(BookingItem item) {
+    try {
+      return item.getProduct().getName();
+    } catch (EntityNotFoundException exception) {
+      return "Unavailable product";
+    }
   }
 
   private AdminPaymentResponse adminPaymentResponse(Payment payment) {

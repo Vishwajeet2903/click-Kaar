@@ -1064,7 +1064,7 @@ interface AdminNoteDialog {
       --admin-accent: #ff9700;
     }
     :host ::ng-deep section.container.admin-shell { border-radius: 32px !important; overflow: hidden; }
-    .admin-page { color: var(--admin-ink); max-width: 95vw !important; padding-bottom: 2rem; }
+    .admin-page { color: var(--admin-ink); max-width: 95vw !important; padding-bottom: 2rem; word-spacing: 0; }
     .admin-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 240px minmax(0, 1fr); }
     .admin-page :where(.surface) { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
     .admin-sidebar { align-self: start; background: #ffffff !important; color: #111; padding: .9rem; position: static; }
@@ -1165,7 +1165,7 @@ interface AdminNoteDialog {
     .detail-stepper button.active, .detail-stepper button:hover { background: #111; box-shadow: 0 10px 22px rgba(0,0,0,.14); color: #fff; transform: none; }
     .detail-section { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; padding: 1rem; }
     .detail-section + .detail-section { margin-top: 0; }
-    .detail-section h4 { color: #9a6a00; font-size: .78rem; letter-spacing: .08em; margin: 0 0 .8rem; text-transform: uppercase; }
+    .detail-section h4 { color: #9a6a00; font-size: .78rem; letter-spacing: .02em; margin: 0 0 .8rem; text-transform: uppercase; word-spacing: 0; }
     .detail-grid { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
     .detail-grid div { background: #fff; border: 1px solid rgba(17,17,17,.06); border-radius: 6px; min-width: 0; padding: .72rem; }
     .detail-grid dt { color: #777; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
@@ -1216,12 +1216,12 @@ interface AdminNoteDialog {
     .remark-log-list dd { margin: .16rem 0 0; overflow-wrap: anywhere; }
     .table-panel { overflow-x: auto; padding: .85rem; }
     table { border-collapse: collapse; min-width: 920px; width: 100%; }
-    th { background: #f3f3ef; border-bottom: 1px solid var(--admin-line); color: var(--admin-muted); font-size: .7rem; letter-spacing: .08em; padding: .7rem .75rem; text-align: left; text-transform: uppercase; }
+    th { background: #f3f3ef; border-bottom: 1px solid var(--admin-line); color: var(--admin-muted); font-size: .7rem; letter-spacing: .02em; padding: .7rem .75rem; text-align: left; text-transform: uppercase; word-spacing: 0; }
     td { background: #fff; border-bottom: 1px solid rgba(17,17,17,.07); padding: .72rem .75rem; vertical-align: middle; }
     tr:hover td { background: #fffaf2; }
     .product-cell { align-items: center; display: flex; gap: .7rem; min-width: 230px; }
     .product-cell img { aspect-ratio: 1; border-radius: 6px; object-fit: cover; width: 52px; }
-    .image-short-name { align-items: center; aspect-ratio: 1; background: #f3f3ef; border: 1px solid rgba(17,17,17,.08); border-radius: 6px; color: #555; display: inline-flex; flex: 0 0 52px; font-size: .58rem; font-weight: 950; justify-content: center; line-height: 1.1; max-width: 52px; overflow: hidden; padding: .28rem; text-align: center; text-transform: uppercase; }
+    .image-short-name { align-items: center; aspect-ratio: 1; background: #f3f3ef; border: 1px solid rgba(17,17,17,.08); border-radius: 6px; color: #555; display: inline-flex; flex: 0 0 52px; font-size: .58rem; font-weight: 950; justify-content: center; line-height: 1.1; max-width: 52px; overflow: hidden; padding: .28rem; text-align: center; text-transform: uppercase; word-spacing: 0; }
     .status { border-radius: 999px; display: inline-flex; font-size: .7rem; font-weight: 900; padding: .3rem .52rem; }
     .status-ok { background: #ecfdf3; color: #027a48; }
     .status-warn { background: #fff7e6; color: #b35a00; }
@@ -1293,7 +1293,7 @@ interface AdminNoteDialog {
     .coupon-list article { align-items: stretch; display: grid; gap: .9rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .coupon-list article { animation: coupon-page-settle 420ms cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--motion-index, 0) * 42ms); }
     .coupon-field { align-content: center; background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; display: grid; gap: .24rem; min-height: 68px; min-width: 0; padding: .7rem .8rem; }
-    .coupon-field strong { color: #111; font-size: .94rem; letter-spacing: .04em; line-height: 1.35; overflow-wrap: anywhere; }
+    .coupon-field strong { color: #111; font-size: .94rem; letter-spacing: 0; line-height: 1.35; overflow-wrap: anywhere; word-spacing: 0; }
     .coupon-field span { color: #555; font-size: .84rem; font-weight: 850; line-height: 1.35; overflow-wrap: anywhere; }
     .coupon-field small { color: var(--admin-muted); display: block; font-size: .7rem; font-weight: 900; line-height: 1.2; text-transform: uppercase; }
     .coupon-list article.inactive .coupon-field strong,

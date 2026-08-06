@@ -21,6 +21,7 @@ public class DatabaseSchemaFixer implements ApplicationRunner {
   @Override
   public void run(ApplicationArguments args) {
     widenBookingStatusColumn();
+    allowEmailAndMobileOtpRows();
   }
 
   private void widenBookingStatusColumn() {
@@ -35,6 +36,22 @@ public class DatabaseSchemaFixer implements ApplicationRunner {
       log.info("Ensured bookings.status can store all booking statuses");
     } catch (Exception exception) {
       log.warn("Unable to widen bookings.status column automatically", exception);
+    }
+  }
+
+  private void allowEmailAndMobileOtpRows() {
+    try (Connection connection = dataSource.getConnection()) {
+      DatabaseMetaData metaData = connection.getMetaData();
+      String databaseName = metaData.getDatabaseProductName().toLowerCase();
+      if (!databaseName.contains("mysql") && !databaseName.contains("mariadb")) {
+        return;
+      }
+
+      jdbcTemplate.execute("alter table otps modify mobile varchar(255) null");
+      jdbcTemplate.execute("alter table otps modify email varchar(255) null");
+      log.info("Ensured otps.email and otps.mobile can be nullable");
+    } catch (Exception exception) {
+      log.warn("Unable to relax OTP contact columns automatically", exception);
     }
   }
 }
