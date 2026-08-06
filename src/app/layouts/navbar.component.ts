@@ -52,6 +52,9 @@ import { ProductService } from '../services/product.service';
             @if (canShowCustomerActions()) {
               <li class="nav-item"><a routerLink="/wishlist" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Wishlist</a></li>
             }
+            @if (authService.isCustomer()) {
+              <li class="nav-item"><a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Profile</a></li>
+            }
             @if (authService.isAdmin()) {
               <li class="nav-item"><a routerLink="/admin" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Admin</a></li>
             }
@@ -80,9 +83,9 @@ import { ProductService } from '../services/product.service';
               </a>
             }
             @if (currentUser(); as user) {
-              <a [routerLink]="accountLink()" class="avatar-link desktop-avatar" [attr.aria-label]="accountLabel(user.fullName)" [title]="accountLabel(user.fullName)" (click)="closeMenu()">
-                {{ getInitial(user.fullName) }}
-              </a>
+              <button type="button" class="logout-link desktop-avatar" [attr.aria-label]="'Logout ' + (user.fullName || user.email)" [title]="'Logout ' + (user.fullName || user.email)" (click)="logout()">
+                Logout
+              </button>
               @if (!isHomePage()) {
                 <button type="button" class="mobile-logout" (click)="logout()">Logout</button>
               }
@@ -119,10 +122,12 @@ import { ProductService } from '../services/product.service';
     .cart-link:hover .cart-wheel { fill: #fff; stroke: #fff; }
     .login-link { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; }
     .login-link:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
-    .avatar-link { align-items: center; background: #111; border: 2px solid transparent; border-radius: 50%; box-shadow: 0 10px 24px rgba(0,0,0,.12); color: #fff !important; display: inline-flex; font-size: .9rem; font-weight: 950; height: 38px; justify-content: center; line-height: 1; text-transform: uppercase; width: 38px; }
+    .avatar-link { align-items: center; background: #111; border: 2px solid transparent; border-radius: 50%; box-shadow: 0 10px 24px rgba(0,0,0,.12); color: #fff !important; cursor: pointer; display: inline-flex; font-size: .9rem; font-weight: 950; height: 38px; justify-content: center; line-height: 1; padding: 0; text-transform: uppercase; width: 38px; }
     .avatar-link:hover { background: #ff9700; color: #fff !important; transform: translateY(-1px); }
     .avatar-link:focus,
     .avatar-link:focus-visible { box-shadow: 0 10px 24px rgba(0,0,0,.12); color: #fff !important; outline: 0; }
+    .logout-link, .desktop-logout { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: pointer; display: inline-flex; font-size: .86rem; font-weight: 900; justify-content: center; line-height: 1.2; min-height: 40px; padding: .62rem 1rem; }
+    .logout-link:hover, .desktop-logout:hover { background: #ff9700; color: #fff; transform: translateY(-1px); }
     .mobile-logout { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); box-sizing: border-box; color: #fff; display: none; font-size: .86rem; font-weight: 900; justify-content: center; line-height: 1.2; max-width: 100%; min-height: 40px; min-width: 0; padding: .62rem .9rem; } 
     .mobile-logout:hover { background: #ff9700; color: #fff; transform: translateY(-1px); }
     .has-mega { position: relative; }
@@ -146,7 +151,7 @@ import { ProductService } from '../services/product.service';
       .navbar-nav { gap: .2rem; }
       .actions { align-items: stretch; box-sizing: border-box; flex-direction: column; margin-top: .85rem; max-width: 100%; width: 100%; }
       .cart-link { align-self: flex-start; }
-      .desktop-avatar { display: none; }
+      .desktop-avatar, .desktop-logout { display: none; }
       .mobile-logout { display: inline-flex; width: 100%; }
       .mega { min-width: auto; position: static; }
       .navbar > .container { border-radius: 18px; max-width: calc(100vw - 18px); padding: 1rem; }
@@ -212,6 +217,13 @@ export class NavbarComponent implements OnDestroy {
     return path === '/' || path === '';
   }
 }
+
+
+
+
+
+
+
 
 
 

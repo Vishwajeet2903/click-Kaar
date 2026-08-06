@@ -24,7 +24,7 @@ import { AuthService } from '../services/auth.service';
 import { GalleryImage, GalleryService } from '../services/gallery.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
-type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'customers' | 'payments' | 'coupons' | 'content' | 'reviews' | 'reports' | 'roles' | 'settings';
+type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'movement' | 'customers' | 'payments' | 'coupons' | 'content' | 'reviews' | 'reports' | 'roles' | 'settings';
 type BookingStatus = 'Upcoming' | 'Active' | 'Completed' | 'Cancelled' | 'Overdue';
 type PaymentStatus = 'Paid' | 'Pending' | 'Failed' | 'Refunded';
 type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
@@ -56,6 +56,7 @@ interface AdminBooking {
   returnStatus: 'Not due' | 'Due today' | 'Returned' | 'Late';
   total: number;
   notes: string;
+  deliveryOtpVerified: boolean;
 }
 
 interface AdminCustomer {
@@ -566,6 +567,84 @@ interface AdminNoteDialog {
                 </div>
               }
 
+              @case ('movement') {
+                <div class="movement-grid">
+                  <section class="surface panel movement-panel outward-panel">
+                    <div class="panel-head">
+                      <div>
+                        <h3>Outward deliveries</h3>
+                        <span>{{ outwardBookings().length }} booking{{ outwardBookings().length === 1 ? '' : 's' }} to release</span>
+                      </div>
+                    </div>
+                    <div class="movement-list">
+                      @for (booking of outwardBookings(); track booking.id) {
+                        <button type="button" class="movement-card clickable-movement" [class.selected-movement]="selectedOutwardBooking?.id === booking.id" (click)="openOutwardDetails(booking)">
+                          <div>
+                            <strong>{{ booking.id }}</strong>
+                            <span>{{ booking.customer }}{{ booking.phone ? ' - ' + booking.phone : '' }}</span>
+                          </div>
+                          <p>{{ booking.products.join(', ') }}</p>
+                          <small>Deliver on {{ booking.startDate | date:'mediumDate' }} - {{ booking.paymentStatus }}</small>
+                          <b class="status" [class]="statusClass(booking.status)">{{ booking.status }}</b>
+                        </button>
+                      } @empty {
+                        <div class="empty-cell movement-empty">No outward deliveries are pending.</div>
+                      }
+                    </div>
+                  </section>
+
+                  <section class="surface panel movement-panel inward-panel">
+                    <div class="panel-head">
+                      <div>
+                        <h3>Inward returns</h3>
+                        <span>{{ inwardBookings().length }} rental{{ inwardBookings().length === 1 ? '' : 's' }} to collect</span>
+                      </div>
+                    </div>
+                    <div class="movement-list">
+                      @for (booking of inwardBookings(); track booking.id) {
+                        <button type="button" class="movement-card clickable-movement" [class.selected-movement]="selectedOutwardBooking?.id === booking.id" (click)="openOutwardDetails(booking)">
+                          <div>
+                            <strong>{{ booking.id }}</strong>
+                            <span>{{ booking.customer }}{{ booking.phone ? ' - ' + booking.phone : '' }}</span>
+                          </div>
+                          <p>{{ booking.products.join(', ') }}</p>
+                          <small>Return by {{ booking.endDate | date:'mediumDate' }}</small>
+                          <b class="status" [class]="statusClass(booking.returnStatus)">{{ booking.returnStatus }}</b>
+                        </button>
+                      } @empty {
+                        <div class="empty-cell movement-empty">No equipment returns are pending.</div>
+                      }
+                    </div>
+                  </section>
+
+                  @if (selectedOutwardBooking) {
+                    <section class="surface panel outward-detail-panel">
+                      <div class="outward-detail-top">
+                        <div>
+                          <p class="eyebrow">Order details</p>
+                          <h3>{{ selectedOutwardBooking.id }}</h3>
+                        </div>
+                        <b class="status payment-status" [class]="statusClass(selectedOutwardBooking.paymentStatus)">{{ selectedOutwardBooking.paymentStatus }}</b>
+                      </div>
+                      <dl class="outward-detail-grid">
+                        <div><dt>Customer</dt><dd>{{ selectedOutwardBooking.customer }}</dd></div>
+                        <div><dt>Phone</dt><dd>{{ selectedOutwardBooking.phone || '-' }}</dd></div>
+                        <div><dt>Delivery date</dt><dd>{{ selectedOutwardBooking.startDate | date:'mediumDate' }}</dd></div>
+                        <div><dt>Return date</dt><dd>{{ selectedOutwardBooking.endDate | date:'mediumDate' }}</dd></div>
+                        <div><dt>Total</dt><dd>{{ selectedOutwardBooking.total | currency:'INR':'symbol':'1.0-0' }}</dd></div>
+                        <div><dt>Booking status</dt><dd>{{ selectedOutwardBooking.status }}</dd></div>
+                        <div><dt>Delivery OTP</dt><dd>{{ selectedOutwardBooking.deliveryOtpVerified ? 'Verified' : 'Pending verification' }}</dd></div>
+                        <div class="wide-detail"><dt>Equipment</dt><dd>{{ selectedOutwardBooking.products.join(', ') }}</dd></div>
+                      </dl>
+                      <div class="otp-panel">
+                        <label>Delivery OTP<input inputmode="numeric" maxlength="6" placeholder="Enter customer OTP" [ngModel]="deliveryOtpDraft" (ngModelChange)="deliveryOtpDraft = $event"></label>
+                        <button type="button" class="primary-btn" [disabled]="selectedOutwardBooking.deliveryOtpVerified" (click)="confirmDeliveryOtp()">{{ selectedOutwardBooking.deliveryOtpVerified ? 'OTP verified' : 'Confirm OTP' }}</button>
+                        <button type="button" class="ghost-mini" (click)="closeOutwardDetails()">Close</button>
+                      </div>
+                    </section>
+                  }
+                </div>
+              }
               @case ('customers') {
                 <div class="tool-row"><input class="search-input" placeholder="Search customer, email, city" [ngModel]="customerQuery()" (ngModelChange)="customerQuery.set($event); customersPage = 1"></div>
                 <div class="card-grid">
@@ -1127,6 +1206,29 @@ interface AdminNoteDialog {
     .inventory-action-cell .mini-btn,
     .inventory-action-cell .danger-btn,
     .inventory-action-cell .return-btn { flex: 0 0 auto; }
+    .movement-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .movement-panel { align-content: start; }
+    .movement-list { display: grid; gap: .75rem; }
+    .movement-card { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: .65rem; min-width: 0; padding: 1rem; }
+    .movement-card div { align-items: start; display: flex; gap: .75rem; justify-content: space-between; min-width: 0; }
+    .movement-card strong { color: #111; font-weight: 950; line-height: 1.2; }
+    .movement-card span, .movement-card small { color: #666; font-size: .82rem; font-weight: 850; line-height: 1.35; }
+    .movement-card p { color: #333; font-size: .92rem; font-weight: 700; line-height: 1.45; margin: 0; overflow-wrap: anywhere; }
+    .movement-card .status { justify-self: start; }
+    .movement-empty { border: 1px dashed rgba(17,17,17,.14); border-radius: 8px; padding: 1rem; }
+    .clickable-movement { cursor: pointer; text-align: left; width: 100%; }
+    .clickable-movement:hover, .selected-movement { background: #fffaf2; border-color: rgba(255,151,0,.42); transform: translateY(-1px); }
+    .outward-detail-panel { grid-column: 1 / -1; }
+    .outward-detail-top { align-items: center; border-bottom: 1px solid rgba(17,17,17,.08); display: flex; gap: 1rem; justify-content: space-between; padding-bottom: .85rem; }
+    .payment-status { font-size: .82rem; padding: .42rem .72rem; }
+    .outward-detail-grid { display: grid; gap: .75rem; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; }
+    .outward-detail-grid div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 8px; padding: .8rem; }
+    .outward-detail-grid dt { color: #777; font-size: .72rem; font-weight: 950; margin-bottom: .3rem; text-transform: uppercase; }
+    .outward-detail-grid dd { color: #111; font-weight: 850; line-height: 1.35; margin: 0; overflow-wrap: anywhere; }
+    .wide-detail { grid-column: 1 / -1; }
+    .otp-panel { align-items: end; display: grid; gap: .75rem; grid-template-columns: minmax(180px, 1fr) auto auto; }
+    .otp-panel label { color: #111; font-size: .82rem; font-weight: 900; }
+    .otp-panel input { background: #fff; border: 1px solid rgba(17,17,17,.14); border-radius: 8px; color: #111; display: block; font: inherit; font-weight: 700; min-height: 44px; margin-top: .45rem; padding: .65rem .8rem; width: 100%; }
     .booking-action-cell { flex-wrap: nowrap; min-width: 76px; }
     .booking-action-cell .mini-btn,
     .booking-action-cell .ghost-mini { flex: 0 0 auto; }
@@ -1543,6 +1645,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   selectedReview?: AdminReview;
   confirmDialog?: AdminConfirmDialog;
   noteDialog?: AdminNoteDialog;
+  selectedOutwardBooking?: AdminBooking;
+  deliveryOtpDraft = '';
   reviewReplyDraft = '';
   isSavingReviewReply = false;
   registrationDetailPage = 1;
@@ -1563,6 +1667,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     { id: 'registrations', label: 'Registrations', count: '0' },
     { id: 'inventory', label: 'Inventory', count: '8' },
     { id: 'bookings', label: 'Bookings', count: '4' },
+    { id: 'movement', label: 'Inward & Outward', count: '0' },
     { id: 'customers', label: 'Customers', count: '3' },
     { id: 'payments', label: 'Payments', count: '3' },
     { id: 'coupons', label: 'Coupons', count: '0' },
@@ -1648,6 +1753,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       registrations: 'Pending registration requests',
       inventory: 'Inventory management',
       bookings: 'Booking management',
+      movement: 'Inward & outward',
       customers: 'Customer management',
       payments: 'Payments & refunds',
       coupons: 'Coupon management',
@@ -1686,6 +1792,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .filter((item) => !query || [item.id, item.customer, ...item.products].some((value) => value.toLowerCase().includes(query)));
   });
 
+  readonly outwardBookings = computed(() => this.bookings().filter((booking) => this.isOutwardBooking(booking)));
+  readonly inwardBookings = computed(() => this.bookings().filter((booking) => this.isInwardBooking(booking)));
   readonly filteredCustomers = computed(() => {
     const query = this.customerQuery().trim().toLowerCase();
     return this.customers().filter((item) => !query || [item.name, item.email, item.city, item.phone].some((value) => value.toLowerCase().includes(query)));
@@ -1774,6 +1882,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.bookings.set(bookings.map((booking) => this.mapBooking(booking)));
         this.clampAdminPages();
         this.updateTabCount('bookings', String(bookings.length));
+        this.updateTabCount('movement', String(this.outwardBookings().length + this.inwardBookings().length));
       },
       error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
@@ -2169,6 +2278,37 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       },
       error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
+    });
+  }
+
+
+  openOutwardDetails(booking: AdminBooking): void {
+    this.selectedOutwardBooking = booking;
+    this.deliveryOtpDraft = '';
+    this.scrollToActiveSection('.admin-page .outward-detail-panel');
+  }
+
+  closeOutwardDetails(): void {
+    this.selectedOutwardBooking = undefined;
+    this.deliveryOtpDraft = '';
+  }
+
+  confirmDeliveryOtp(): void {
+    const otp = this.deliveryOtpDraft.trim();
+    const booking = this.selectedOutwardBooking;
+    if (!booking || otp.length < 4) {
+      this.showTopMessage('Enter a valid delivery OTP.', 2600);
+      return;
+    }
+    this.adminService.verifyDeliveryOtp(booking.backendId, otp).subscribe({
+      next: (updatedBooking) => {
+        const mappedBooking = this.mapBooking(updatedBooking);
+        this.bookings.update((items) => items.map((item) => item.backendId === mappedBooking.backendId ? mappedBooking : item));
+        this.selectedOutwardBooking = mappedBooking;
+        this.deliveryOtpDraft = '';
+        this.showTopMessage('Delivery OTP verified. Booking marked active.', 2600);
+      },
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
 
@@ -2693,6 +2833,13 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return bookingStart <= monthEnd && bookingEnd >= monthStart;
   }
 
+  private isOutwardBooking(booking: AdminBooking): boolean {
+    return booking.status === 'Upcoming';
+  }
+
+  private isInwardBooking(booking: AdminBooking): boolean {
+    return (booking.status === 'Active' || booking.status === 'Overdue') && booking.returnStatus !== 'Returned';
+  }
   statusClass(status: string): string {
     if (['Available', 'Paid', 'Completed', 'Published', 'Current'].includes(status)) {
       return 'status-ok';
@@ -2761,7 +2908,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       paymentStatus: this.paymentStatusFromApi(booking.paymentStatus),
       returnStatus: this.returnStatusFromApi(booking.returnStatus),
       total: Number(booking.total),
-      notes: booking.notes?.join('\n') ?? ''
+      notes: booking.notes?.join('\\n') ?? '',
+      deliveryOtpVerified: booking.deliveryOtpVerified
     };
   }
 
@@ -3186,12 +3334,13 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.scrollToActiveSection();
   }
 
-  private scrollToActiveSection(): void {
+  private scrollToActiveSection(preferredSelector?: string): void {
     window.setTimeout(() => {
       const isMobile = window.matchMedia('(max-width: 760px)').matches;
-      const target = isMobile
+      const preferredTarget = preferredSelector ? document.querySelector(preferredSelector) : null;
+      const target = preferredTarget ?? (isMobile
         ? document.querySelector('.admin-workspace') ?? document.querySelector('.admin-page')
-        : document.querySelector('.admin-page');
+        : document.querySelector('.admin-page'));
       if (!target) return;
       const stickyOffset = isMobile ? 88 : 92;
       const start = window.scrollY;
@@ -3242,6 +3391,23 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

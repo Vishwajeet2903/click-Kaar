@@ -22,6 +22,7 @@ public class DatabaseSchemaFixer implements ApplicationRunner {
   public void run(ApplicationArguments args) {
     widenBookingStatusColumn();
     allowEmailAndMobileOtpRows();
+    ensureBookingDeliveryOtpColumns();
   }
 
   private void widenBookingStatusColumn() {
@@ -52,6 +53,30 @@ public class DatabaseSchemaFixer implements ApplicationRunner {
       log.info("Ensured otps.email and otps.mobile can be nullable");
     } catch (Exception exception) {
       log.warn("Unable to relax OTP contact columns automatically", exception);
+    }
+  }
+
+  private void ensureBookingDeliveryOtpColumns() {
+    try (Connection connection = dataSource.getConnection()) {
+      DatabaseMetaData metaData = connection.getMetaData();
+      String databaseName = metaData.getDatabaseProductName().toLowerCase();
+      if (!databaseName.contains("mysql") && !databaseName.contains("mariadb")) {
+        return;
+      }
+
+      try {
+        jdbcTemplate.execute("alter table bookings add column delivery_otp varchar(12) null");
+      } catch (Exception ignored) {
+        log.debug("bookings.delivery_otp already exists or could not be added", ignored);
+      }
+      try {
+        jdbcTemplate.execute("alter table bookings add column delivery_otp_verified bit not null default 0");
+      } catch (Exception ignored) {
+        log.debug("bookings.delivery_otp_verified already exists or could not be added", ignored);
+      }
+      log.info("Ensured booking delivery OTP columns exist");
+    } catch (Exception exception) {
+      log.warn("Unable to ensure booking delivery OTP columns automatically", exception);
     }
   }
 }

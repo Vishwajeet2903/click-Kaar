@@ -41,6 +41,13 @@ public class Booking extends AuditableEntity {
   @Column(nullable = false, precision = 12, scale = 2)
   private BigDecimal totalAmount;
 
+  @Column(length = 12)
+  private String deliveryOtp;
+
+  @Column(nullable = false)
+  @Builder.Default
+  private boolean deliveryOtpVerified = false;
+
   @Enumerated(EnumType.STRING)
   @JdbcTypeCode(SqlTypes.VARCHAR)
   @Column(nullable = false, length = 32)
@@ -50,3 +57,5 @@ public class Booking extends AuditableEntity {
   @Builder.Default
   private List<BookingItem> items = new ArrayList<>();
 }
+
+

@@ -103,6 +103,7 @@ export interface AdminBookingResponse {
   returnStatus: string;
   total: number;
   notes: string[];
+  deliveryOtpVerified: boolean;
 }
 
 export interface AdminCustomerResponse {
@@ -311,6 +312,13 @@ export class AdminService {
     });
   }
 
+
+  verifyDeliveryOtp(bookingId: number, otp: string): Observable<AdminBookingResponse> {
+    return this.http.post<AdminBookingResponse>(`${API_URL}/bookings/${bookingId}/delivery-otp/verify`, { otp }, {
+      headers: this.authHeaders()
+    });
+  }
+
   addBookingNote(bookingId: number, note: string): Observable<AdminBookingResponse> {
     return this.http.post<AdminBookingResponse>(`${API_URL}/bookings/${bookingId}/notes`, { note }, {
       headers: this.authHeaders()
@@ -482,3 +490,4 @@ export class AdminService {
     return formData;
   }
 }
+

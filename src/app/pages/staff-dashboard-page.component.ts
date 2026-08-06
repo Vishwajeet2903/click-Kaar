@@ -1,6 +1,6 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -50,7 +50,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
 @Component({
   selector: 'app-staff-dashboard-page',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, RouterLink, ReactiveFormsModule, MatSnackBarModule, BreadcrumbComponent],
+  imports: [CurrencyPipe, DatePipe, RouterLink, FormsModule, ReactiveFormsModule, MatSnackBarModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb [label]="dashboardTitle()" />
     <section class="container staff-dashboard">
@@ -153,6 +153,71 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         </section>
       }
 
+      @if (canUseInwardOutward()) {
+        <section class="surface panel movement-panel">
+          <div class="panel-head"><h2>Inward & Outward</h2><span>{{ outwardBookings().length + inwardBookings().length }} active tasks</span></div>
+          <div class="movement-grid">
+            <section class="movement-column">
+              <div class="panel-head compact-head"><h2>Outward deliveries</h2><span>{{ outwardBookings().length }} to give</span></div>
+              <div class="list-grid single-list">
+                @for (booking of outwardBookings(); track booking.id) {
+                  <button type="button" class="list-row movement-row clickable-movement" [class.selected-movement]="selectedOutwardBooking?.id === booking.id" (click)="openOutwardDetails(booking)">
+                    <strong>{{ booking.bookingNumber }}</strong>
+                    <span>{{ booking.customer }}{{ booking.phone ? ' - ' + booking.phone : '' }}</span>
+                    <small>{{ booking.products.join(', ') }}</small>
+                    <b>Deliver on {{ booking.startDate | date:'mediumDate' }} - {{ formatReturnStatus(booking.paymentStatus) }}</b>
+                  </button>
+                } @empty {
+                  <p class="muted">No outward deliveries are pending.</p>
+                }
+              </div>
+            </section>
+
+            <section class="movement-column">
+              <div class="panel-head compact-head"><h2>Inward returns</h2><span>{{ inwardBookings().length }} to collect</span></div>
+              <div class="list-grid single-list">
+                @for (booking of inwardBookings(); track booking.id) {
+                  <button type="button" class="list-row movement-row clickable-movement" [class.selected-movement]="selectedOutwardBooking?.id === booking.id" (click)="openOutwardDetails(booking)">
+                    <strong>{{ booking.bookingNumber }}</strong>
+                    <span>{{ booking.customer }}{{ booking.phone ? ' - ' + booking.phone : '' }}</span>
+                    <small>{{ booking.products.join(', ') }}</small>
+                    <b>Return by {{ booking.endDate | date:'mediumDate' }} - {{ formatReturnStatus(booking.returnStatus) }}</b>
+                  </button>
+                } @empty {
+                  <p class="muted">No equipment returns are pending.</p>
+                }
+              </div>
+            </section>
+          </div>
+
+          @if (selectedOutwardBooking) {
+            <section class="outward-detail-panel">
+              <div class="outward-detail-top">
+                <div>
+                  <p class="eyebrow">Order details</p>
+                  <h2>{{ selectedOutwardBooking.bookingNumber }}</h2>
+                </div>
+                <b class="payment-status" [class]="paymentStatusClass(selectedOutwardBooking.paymentStatus)">{{ formatReturnStatus(selectedOutwardBooking.paymentStatus) }}</b>
+              </div>
+              <dl class="outward-detail-grid">
+                <div><dt>Customer</dt><dd>{{ selectedOutwardBooking.customer }}</dd></div>
+                <div><dt>Phone</dt><dd>{{ selectedOutwardBooking.phone || '-' }}</dd></div>
+                <div><dt>Delivery date</dt><dd>{{ selectedOutwardBooking.startDate | date:'mediumDate' }}</dd></div>
+                <div><dt>Return date</dt><dd>{{ selectedOutwardBooking.endDate | date:'mediumDate' }}</dd></div>
+                <div><dt>Payment status</dt><dd>{{ formatReturnStatus(selectedOutwardBooking.paymentStatus) }}</dd></div>
+                <div><dt>Booking status</dt><dd>{{ formatReturnStatus(selectedOutwardBooking.status) }}</dd></div>
+                <div><dt>Delivery OTP</dt><dd>{{ selectedOutwardBooking.deliveryOtpVerified ? 'Verified' : 'Pending verification' }}</dd></div>
+                <div class="wide-detail"><dt>Equipment</dt><dd>{{ selectedOutwardBooking.products.join(', ') }}</dd></div>
+              </dl>
+              <div class="otp-panel">
+                <label>Delivery OTP<input inputmode="numeric" maxlength="6" placeholder="Enter customer OTP" [ngModel]="deliveryOtpDraft" (ngModelChange)="deliveryOtpDraft = $event"></label>
+                <button type="button" class="save-btn" [disabled]="selectedOutwardBooking.deliveryOtpVerified" (click)="confirmDeliveryOtp()">{{ selectedOutwardBooking.deliveryOtpVerified ? 'OTP verified' : 'Confirm OTP' }}</button>
+                <button type="button" class="ghost-mini" (click)="closeOutwardDetails()">Close</button>
+              </div>
+            </section>
+          }
+        </section>
+      }
       @if (canUseBookings()) {
         <section class="surface panel">
           <div class="panel-head"><h2>Bookings</h2><span>{{ bookings().length }} total</span></div>
@@ -347,6 +412,29 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .list-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .list-grid.compact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .list-row { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); padding: 1rem; }
+    .movement-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .movement-column { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: .85rem; min-width: 0; padding: 1rem; }
+    .compact-head { align-items: flex-start; border-bottom: 1px solid rgba(17,17,17,.08); padding-bottom: .75rem; }
+    .single-list { grid-template-columns: 1fr; }
+    .movement-row { display: grid; gap: .35rem; }
+    .movement-row b { color: #027a48; font-size: .82rem; font-weight: 900; line-height: 1.35; }
+    .clickable-movement { cursor: pointer; text-align: left; width: 100%; }
+    .clickable-movement:hover, .selected-movement { background: #fffaf2; border-color: rgba(255,151,0,.42); transform: translateY(-1px); }
+    .outward-detail-panel { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: 1rem; padding: 1rem; }
+    .outward-detail-top { align-items: center; border-bottom: 1px solid rgba(17,17,17,.08); display: flex; gap: 1rem; justify-content: space-between; padding-bottom: .85rem; }
+    .payment-status { border-radius: 999px; font-size: .8rem; font-weight: 950; padding: .42rem .72rem; text-transform: uppercase; }
+    .status-paid { background: rgba(39,174,96,.13); color: #18864b; }
+    .status-pending { background: rgba(255,151,0,.16); color: #c66f00; }
+    .status-failed { background: rgba(180,35,24,.12); color: #b42318; }
+    .status-refunded, .status-neutral { background: rgba(17,17,17,.07); color: #555; }
+    .outward-detail-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+    .outward-detail-grid div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 8px; padding: .8rem; }
+    .outward-detail-grid dt { color: #777; font-size: .72rem; font-weight: 950; margin-bottom: .3rem; text-transform: uppercase; }
+    .outward-detail-grid dd { color: #111; font-weight: 850; line-height: 1.35; margin: 0; overflow-wrap: anywhere; }
+    .wide-detail { grid-column: 1 / -1; }
+    .otp-panel { align-items: end; display: grid; gap: .75rem; grid-template-columns: minmax(180px, 1fr) auto auto; }
+    .otp-panel label { color: #111; font-size: .82rem; font-weight: 900; }
+    .otp-panel input { background: #fff; border: 1px solid rgba(17,17,17,.14); border-radius: 8px; color: #111; display: block; font: inherit; font-weight: 700; min-height: 44px; margin-top: .45rem; padding: .65rem .8rem; width: 100%; }
     .password-panel { max-width: 720px; }
     .password-form { display: grid; gap: 1rem; margin-top: .25rem; }
     .password-form label { color: #111; display: block; font-size: .82rem; font-weight: 800; }
@@ -396,19 +484,19 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .gallery-admin-grid article { align-items: center; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: .7rem; grid-template-columns: 76px minmax(0, 1fr) auto; padding: .65rem; }
     .gallery-admin-grid img { aspect-ratio: 1; border-radius: 6px; object-fit: cover; width: 76px; }
     @media (max-width: 900px) {
-      .metric-grid, .list-grid.compact, .content-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric-grid, .list-grid.compact, .content-grid, .movement-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .list-grid, .editor-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
       .staff-dashboard, .staff-dashboard * { box-sizing: border-box; }
-      .staff-dashboard :where(.surface, .profile-panel, .metric-card, .panel, .list-row, .content-list, .content-editor-form, .gallery-admin-grid article) { max-width: 100%; min-width: 0; }
-      .staff-dashboard :where(.metric-grid, .list-grid, .content-grid, .editor-grid, .gallery-admin-grid, .profile-actions) { min-width: 0; width: 100%; }
+      .staff-dashboard :where(.surface, .profile-panel, .metric-card, .panel, .list-row, .content-list, .content-editor-form, .gallery-admin-grid article, .movement-column) { max-width: 100%; min-width: 0; }
+      .staff-dashboard :where(.metric-grid, .list-grid, .content-grid, .editor-grid, .gallery-admin-grid, .profile-actions, .movement-grid) { min-width: 0; width: 100%; }
       .staff-dashboard :where(h2, strong, span, small, p, button, a, label) { overflow-wrap: anywhere; }
       .staff-dashboard { max-width: calc(100vw - 18px) !important; }
       .profile-panel { align-items: stretch; flex-direction: column; }
       .profile-actions, .settings-btn { width: 100%; }
-      .metric-grid, .list-grid.compact, .content-grid { gap: .75rem; grid-template-columns: 1fr; }
-      .metric-card, .panel, .list-row, .content-list, .content-editor-form { padding: .85rem; }
+      .metric-grid, .list-grid.compact, .content-grid, .movement-grid, .outward-detail-grid, .otp-panel { gap: .75rem; grid-template-columns: 1fr; }
+      .metric-card, .panel, .list-row, .content-list, .content-editor-form, .movement-column { padding: .85rem; }
       .gallery-admin-grid article { grid-template-columns: 64px minmax(0, 1fr); }
       .gallery-admin-grid article .danger-btn { grid-column: 1 / -1; width: 100%; }
       .gallery-admin-grid img { width: 64px; }
@@ -448,6 +536,8 @@ export class StaffDashboardPageComponent implements OnInit {
   galleryFileName = '';
   galleryPreviewUrl = '';
   editingBlogPostId?: number;
+  selectedOutwardBooking?: AdminBookingResponse;
+  deliveryOtpDraft = '';
   isSubmittingBlog = false;
   isSubmittingGallery = false;
   private selectedBlogCoverFile?: File;
@@ -503,10 +593,13 @@ export class StaffDashboardPageComponent implements OnInit {
     const start = (safePage - 1) * this.inventoryPageSize;
     return this.inventory().slice(start, start + this.inventoryPageSize);
   });
+  readonly outwardBookings = computed(() => this.bookings().filter((booking) => this.isOutwardBooking(booking)));
+  readonly inwardBookings = computed(() => this.bookings().filter((booking) => this.isInwardBooking(booking)));
   readonly metrics = computed(() => {
     const items: Array<{ label: string; value: string; note: string }> = [];
     if (this.canUseInventory()) items.push({ label: 'Inventory', value: String(this.inventory().length), note: 'Catalogue items' });
     if (this.canUseBookings()) items.push({ label: 'Bookings', value: String(this.bookings().length), note: 'Visible orders' });
+    if (this.canUseInwardOutward()) items.push({ label: 'Inward & Outward', value: String(this.outwardBookings().length + this.inwardBookings().length), note: 'Delivery and return tasks' });
     if (this.canUseCustomers()) items.push({ label: 'Customers', value: String(this.customers().length), note: 'Customer records' });
     if (this.canUseContent()) items.push({ label: 'Content', value: String(this.contentCount()), note: 'Blog and gallery' });
     return items;
@@ -547,6 +640,10 @@ export class StaffDashboardPageComponent implements OnInit {
 
   canUseBookings(): boolean {
     return this.authService.hasRole('MANAGER') || this.authService.hasRole('INVENTORY_STAFF');
+  }
+
+  canUseInwardOutward(): boolean {
+    return this.authService.hasRole('MANAGER');
   }
 
   canUseCustomers(): boolean {
@@ -822,6 +919,61 @@ export class StaffDashboardPageComponent implements OnInit {
       });
   }
 
+
+  openOutwardDetails(booking: AdminBookingResponse): void {
+    this.selectedOutwardBooking = booking;
+    this.deliveryOtpDraft = '';
+    this.scrollToActiveSection('.staff-dashboard .outward-detail-panel');
+  }
+
+  closeOutwardDetails(): void {
+    this.selectedOutwardBooking = undefined;
+    this.deliveryOtpDraft = '';
+  }
+
+  confirmDeliveryOtp(): void {
+    const otp = this.deliveryOtpDraft.trim();
+    const booking = this.selectedOutwardBooking;
+    if (!booking || otp.length < 4) {
+      this.showMessage('Enter a valid delivery OTP.', 2600);
+      return;
+    }
+    this.adminService.verifyDeliveryOtp(booking.id, otp).subscribe({
+      next: (updatedBooking) => {
+        this.bookings.update((items) => items.map((item) => item.id === updatedBooking.id ? updatedBooking : item));
+        this.selectedOutwardBooking = updatedBooking;
+        this.deliveryOtpDraft = '';
+        this.showMessage('Delivery OTP verified. Booking marked active.', 2600);
+      },
+      error: (error) => this.showMessage(this.authService.getErrorMessage(error), 3600)
+    });
+  }
+
+  paymentStatusClass(status: string): string {
+    const normalized = this.normalizedStatus(status);
+    if (normalized === 'PAID') return 'status-paid';
+    if (normalized === 'PENDING') return 'status-pending';
+    if (normalized === 'FAILED') return 'status-failed';
+    if (normalized === 'REFUNDED') return 'status-refunded';
+    return 'status-neutral';
+  }
+
+  formatReturnStatus(value: string): string {
+    return value.toLowerCase().replaceAll('_', ' ');
+  }
+
+  private isOutwardBooking(booking: AdminBookingResponse): boolean {
+    return this.normalizedStatus(booking.status) === 'UPCOMING';
+  }
+
+  private isInwardBooking(booking: AdminBookingResponse): boolean {
+    const status = this.normalizedStatus(booking.status);
+    return (status === 'ACTIVE' || status === 'OVERDUE') && this.normalizedStatus(booking.returnStatus) !== 'RETURNED';
+  }
+
+  private normalizedStatus(value: string): string {
+    return value.trim().toUpperCase().replace(/\s+/g, '_');
+  }
   private passwordFieldLabel(field: PasswordField): string {
     return field === 'newPassword' ? 'New password' : 'Confirm password';
   }
@@ -963,6 +1115,15 @@ export class StaffDashboardPageComponent implements OnInit {
     void this.router.navigateByUrl('/login');
   }
 }
+
+
+
+
+
+
+
+
+
 
 
 

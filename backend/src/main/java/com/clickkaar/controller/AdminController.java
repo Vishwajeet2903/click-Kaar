@@ -291,6 +291,31 @@ public class AdminController {
     return adminBookingResponse(booking);
   }
 
+
+  @PostMapping("/bookings/{bookingId}/delivery-otp/verify")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @Transactional
+  public AdminBookingResponse verifyDeliveryOtp(@PathVariable Long bookingId, @RequestBody DeliveryOtpRequest request) {
+    Booking booking = bookingRepository.findById(bookingId)
+        .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    String expectedOtp = booking.getDeliveryOtp() == null ? "" : booking.getDeliveryOtp().trim();
+    String submittedOtp = request.otp() == null ? "" : request.otp().trim();
+    if (expectedOtp.isBlank()) {
+      throw new BadRequestException("Delivery OTP is not available for this booking");
+    }
+    if (booking.isDeliveryOtpVerified()) {
+      return adminBookingResponse(booking);
+    }
+    if (!expectedOtp.equals(submittedOtp)) {
+      throw new BadRequestException("Invalid delivery OTP");
+    }
+    booking.setDeliveryOtpVerified(true);
+    if (booking.getStatus() == BookingStatus.CONFIRMED) {
+      booking.setStatus(BookingStatus.ACTIVE);
+    }
+    return adminBookingResponse(booking);
+  }
+
   @GetMapping("/customers")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   public List<AdminCustomerResponse> customers() {
@@ -781,7 +806,8 @@ public class AdminController {
         paymentStatus,
         returnStatus,
         booking.getTotalAmount(),
-        notes
+        notes,
+        booking.isDeliveryOtpVerified()
     );
   }
 
@@ -907,13 +933,14 @@ public class AdminController {
 
   public record BookingStatusRequest(BookingStatus status) {}
   public record BookingNoteRequest(String note) {}
+  public record DeliveryOtpRequest(String otp) {}
   public record PaymentRemarkRequest(String remark) {}
   public record CustomerBlockRequest(boolean blocked) {}
   public record AdminRefundRequest(BigDecimal amount, String reason) {}
   public record ReviewReplyRequest(String reply) {}
   public record AdminCouponRequest(String code, BigDecimal discountPercent, Boolean active, Integer usageLimit, LocalDate validUntil) {}
   public record CouponActiveRequest(boolean active) {}
-  public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes) {}
+  public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes, boolean deliveryOtpVerified) {}
   public record AdminCustomerResponse(Long id, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}
   public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt, String remark, long remarkChangeCount) {}
   public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, Integer usageLimit, int usedCount, LocalDate validUntil, LocalDateTime createdAt) {}
@@ -926,3 +953,4 @@ public class AdminController {
   public record RolePermissionResponse(String module, String superAdmin, String manager, String inventory, String content) {}
   public record AdminSettingsRequest(String gateway, String paymentPolicy, Integer depositPercent, Integer gstPercent, String notificationEmail, String whatsappNumber, String recaptchaKey, String analyticsId) {}
 }
+

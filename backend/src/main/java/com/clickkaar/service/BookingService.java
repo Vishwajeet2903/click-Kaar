@@ -41,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -64,6 +65,7 @@ public class BookingService {
   private final JavaMailSender mailSender;
   private final PdfDocumentService pdfDocumentService;
   private static final DateTimeFormatter DISPLAY_DATE = DateTimeFormatter.ofPattern("dd MMM yyyy");
+  private static final SecureRandom OTP_RANDOM = new SecureRandom();
 
   @Value("${spring.mail.username:}")
   private String mailUsername;
@@ -84,7 +86,8 @@ public class BookingService {
       throw new BadRequestException("Rental duration can be maximum 7 days");
     }
     User customer = userRepository.findById(request.customerId()).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-    BookingStatus initialStatus = normalizedPaymentMethod(request.paymentMethod()).equals("razorpay")
+    String normalizedPaymentMethod = normalizedPaymentMethod(request.paymentMethod());
+    BookingStatus initialStatus = normalizedPaymentMethod.equals("razorpay")
         ? BookingStatus.PENDING
         : BookingStatus.CONFIRMED;
     Booking booking = Booking.builder()
@@ -94,6 +97,8 @@ public class BookingService {
         .rentalEndDate(request.rentalEndDate())
         .rentalDays(days)
         .totalAmount(BigDecimal.ZERO)
+        .deliveryOtp(normalizedPaymentMethod.equals("cash") ? generateDeliveryOtp() : null)
+        .deliveryOtpVerified(false)
         .status(initialStatus)
         .build();
 
@@ -370,7 +375,8 @@ public class BookingService {
               + "- Total Amount: Rs. " + booking.getTotalAmount().toPlainString() + "\n"
               + "- Bill Status: " + billStatus(paymentStatus) + "\n"
               + "- Payment Method: " + paymentMethod + "\n"
-              + "- Booking Status: " + booking.getStatus() + "\n\n"
+              + "- Booking Status: " + booking.getStatus() + "\n"
+              + deliveryOtpLine(booking) + "\n"
               + nextPaymentStep(paymentStatus, paymentMethod) + "\n\n"
               + "Your invoice and the ClickKaar Terms & Conditions PDF are attached with this email.\n\n"
               + "You can log in to your ClickKaar account to view your booking details.\n\n"
@@ -401,6 +407,19 @@ public class BookingService {
     } catch (MessagingException exception) {
       log.warn("Unable to prepare booking bill email for {}", booking.getCustomer().getEmail(), exception);
     }
+  }
+
+
+  private String generateDeliveryOtp() {
+    return String.valueOf(100000 + OTP_RANDOM.nextInt(900000));
+  }
+
+  private String deliveryOtpLine(Booking booking) {
+    if (booking.getDeliveryOtp() == null || booking.getDeliveryOtp().isBlank()) {
+      return "";
+    }
+    return "- Delivery OTP: " + booking.getDeliveryOtp() + "\n\n"
+        + "This OTP is mandatory at the time of delivery. Share it only with the Click-Kaar delivery/admin team after checking your order.";
   }
 
   private String bookedItems(Booking booking) {
@@ -601,3 +620,4 @@ public class BookingService {
 
       """;
 }
+
