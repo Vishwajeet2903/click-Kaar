@@ -500,6 +500,29 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
       .gallery-admin-grid article { grid-template-columns: 64px minmax(0, 1fr); }
       .gallery-admin-grid article .danger-btn { grid-column: 1 / -1; width: 100%; }
       .gallery-admin-grid img { width: 64px; }
+      .movement-panel { gap: .85rem; padding: .85rem; }
+      .movement-column { gap: .65rem; padding: .82rem; }
+      .compact-head { gap: .35rem; padding-bottom: .65rem; }
+      .movement-row { align-items: start !important; display: grid !important; gap: .32rem; grid-template-columns: minmax(0, 1fr); justify-content: stretch !important; justify-items: start !important; padding: .82rem; text-align: left !important; width: 100%; }
+      .movement-row strong { font-size: .94rem; line-height: 1.25; }
+      .movement-row span, .movement-row small { font-size: .8rem; line-height: 1.38; }
+      .movement-row b { font-size: .78rem; }
+      .movement-column .movement-row { align-items: start; justify-items: stretch; text-align: left; }
+      .movement-column .movement-row strong,
+      .movement-column .movement-row span,
+      .movement-column .movement-row small,
+      .movement-column .movement-row b { display: block !important; justify-self: start !important; min-width: 0; text-align: left !important; width: 100%; }
+      .outward-detail-panel { gap: .82rem; padding: .85rem; width: 100%; }
+      .outward-detail-top { align-items: flex-start; flex-direction: column; gap: .65rem; }
+      .outward-detail-top > div { min-width: 0; width: 100%; }
+      .outward-detail-top h2 { font-size: 1.05rem; line-height: 1.25; overflow-wrap: anywhere; }
+      .payment-status { justify-content: center; max-width: 100%; white-space: normal; }
+      .outward-detail-grid div { padding: .72rem; }
+      .outward-detail-grid dd { font-size: .9rem; }
+      .wide-detail { grid-column: auto; }
+      .otp-panel { align-items: stretch; }
+      .otp-panel label, .otp-panel .save-btn, .otp-panel .ghost-mini { width: 100%; }
+      .otp-panel input { min-height: 42px; }
       .form-actions { align-items: stretch; flex-direction: column; }
       .form-actions button, .content-switcher, .content-switcher button, .save-btn { width: 100%; }
       .pager { align-items: stretch; flex-direction: column; }
@@ -1115,6 +1138,12 @@ export class StaffDashboardPageComponent implements OnInit {
     void this.router.navigateByUrl('/login');
   }
 }
+
+
+
+
+
+
 
 
 

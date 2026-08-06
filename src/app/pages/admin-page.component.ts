@@ -1507,7 +1507,9 @@ interface AdminNoteDialog {
       .admin-sidebar nav::-webkit-scrollbar { display: none; }
       .admin-sidebar nav button { flex: 0 0 auto; font-size: .78rem; gap: .35rem; min-height: 40px; min-width: max-content; padding: .48rem .6rem; scroll-snap-align: start; }
       .admin-sidebar nav button span { overflow: visible; text-overflow: clip; white-space: nowrap; }
-      .admin-sidebar nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #111; }
+      .admin-sidebar nav button small { display: none; }
+
+      .admin-sidebar nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
       .admin-sidebar nav button.active small { background: #111; color: #fff; }
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
       .admin-topbar { gap: .85rem; padding: .95rem; }
@@ -1557,6 +1559,34 @@ interface AdminNoteDialog {
       .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { font-size: .74rem; line-height: 1.2; min-height: 36px; padding: .46rem .65rem; white-space: normal; }
       .panel-head .link-btn, .panel-head .mini-btn, .panel-head .ghost-mini { min-width: 0; width: auto; }
       .content-switcher button { font-size: .82rem; min-height: 38px; padding: .48rem .65rem; }
+      .movement-grid { grid-template-columns: 1fr; gap: .85rem; }
+      .movement-panel { padding: .85rem; }
+      .movement-list { gap: .62rem; }
+      .movement-card { align-items: start !important; display: grid !important; gap: .55rem; grid-template-columns: minmax(0, 1fr); justify-content: stretch !important; justify-items: start !important; padding: .82rem; text-align: left !important; width: 100%; }
+      .movement-card div { align-items: flex-start !important; flex-direction: column; gap: .3rem; justify-content: flex-start !important; text-align: left !important; width: 100%; }
+      .movement-card strong { font-size: .94rem; }
+      .movement-card span, .movement-card small { font-size: .78rem; }
+      .movement-card p { font-size: .86rem; line-height: 1.42; }
+      .movement-card .status { max-width: 100%; white-space: normal; }
+      .movement-panel .movement-card { align-items: start; justify-items: stretch; text-align: left; }
+      .movement-panel .movement-card > div,
+      .movement-panel .movement-card strong,
+      .movement-panel .movement-card span,
+      .movement-panel .movement-card p,
+      .movement-panel .movement-card small { display: block !important; justify-self: start !important; min-width: 0; text-align: left !important; width: 100%; }
+      .movement-panel .movement-card .status { align-self: start !important; justify-self: start !important; text-align: left !important; width: auto; }
+      .outward-detail-panel { padding: .85rem; width: 100%; }
+      .outward-detail-top { align-items: flex-start; flex-direction: column; gap: .65rem; }
+      .outward-detail-top > div { min-width: 0; width: 100%; }
+      .outward-detail-top h3 { font-size: 1rem; line-height: 1.25; overflow-wrap: anywhere; }
+      .payment-status { justify-content: center; max-width: 100%; white-space: normal; }
+      .outward-detail-grid { gap: .62rem; grid-template-columns: 1fr; }
+      .outward-detail-grid div { padding: .72rem; }
+      .outward-detail-grid dd { font-size: .9rem; }
+      .wide-detail { grid-column: auto; }
+      .otp-panel { align-items: stretch; grid-template-columns: 1fr; }
+      .otp-panel .primary-btn, .otp-panel .ghost-mini { width: 100%; }
+      .otp-panel input { min-height: 42px; }
       .admin-workspace { scroll-margin-top: 86px; }
       .document-lightbox { padding: .7rem; }
       .document-lightbox-content { max-height: 94vh; max-width: 96vw; }
@@ -3391,6 +3421,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 }
+
+
+
+
+
+
+
+
 
 
 
