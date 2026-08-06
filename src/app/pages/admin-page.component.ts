@@ -232,7 +232,7 @@ interface AdminNoteDialog {
                   <section class="surface panel">
                     <div class="panel-head">
                       <h3>Recent bookings</h3>
-                      <button type="button" class="link-btn" (click)="activeTab.set('bookings')">View all</button>
+                      <button type="button" class="link-btn" (click)="selectAdminTab('bookings')">View all</button>
                     </div>
                     <div class="dense-list">
                       @for (booking of bookings().slice(0, 5); track booking.id) {
@@ -253,7 +253,7 @@ interface AdminNoteDialog {
                         <h3>Pending registrations</h3>
                         <span>{{ pendingCustomers.length }} waiting for review</span>
                       </div>
-                      <button type="button" class="link-btn" (click)="activeTab.set('registrations')">View requests</button>
+                      <button type="button" class="link-btn" (click)="selectAdminTab('registrations')">View requests</button>
                     </div>
                     @if (isLoadingPending) {
                       <div class="queue-state compact-state">
@@ -1394,19 +1394,52 @@ interface AdminNoteDialog {
       .registration-grid { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 760px) {
-      .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
-      .split-grid, .metric-grid, .card-grid, .form-grid, .blog-form-grid, .detail-grid, .document-grid, .gallery-upload-flow, .gallery-toggle-row, .gallery-admin-grid, nav { grid-template-columns: 1fr; }
-      .blog-form-grid .wide-field { grid-column: auto; }
-      .blog-form-actions { align-items: stretch; flex-direction: column; }
-      .gallery-upload-box { min-height: 110px; }
+      :host ::ng-deep section.container.admin-shell { border-radius: 0 !important; overflow: visible; }
+      .admin-page { max-width: 100vw !important; padding-left: .65rem; padding-right: .65rem; }
+      .admin-page, .admin-page * { box-sizing: border-box; }
+      .admin-page :where(.surface, .panel, .table-panel, .editor-panel, .employee-form, .access-card, .metric-card, .customer-card, .coupon-field) { max-width: 100%; min-width: 0; }
+      .admin-page :where(.metric-grid, .split-grid, .card-grid, .dense-list, .coupon-list, .gallery-admin-grid, .admin-workspace) { min-width: 0; width: 100%; }
+      .admin-page :where(h2, h3, strong, span, small, p, dd, dt, button, a) { overflow-wrap: anywhere; }
+      .admin-layout, .admin-workspace { gap: .85rem; }
+      .admin-sidebar { margin-inline: -.65rem; padding: .75rem .65rem .65rem; position: sticky; top: 0; z-index: 20; }
+      .admin-sidebar h1 { font-size: 1.05rem; margin-bottom: .65rem; }
+      .admin-sidebar nav { display: flex; gap: .45rem; grid-template-columns: none; margin-inline: -.15rem; overflow-x: auto; padding: .1rem .15rem .35rem; scroll-snap-type: x proximity; scrollbar-width: none; }
+      .admin-sidebar nav::-webkit-scrollbar { display: none; }
+      .admin-sidebar nav button { flex: 0 0 auto; font-size: .78rem; gap: .35rem; min-height: 40px; min-width: max-content; padding: .48rem .6rem; scroll-snap-align: start; }
+      .admin-sidebar nav button span { overflow: visible; text-overflow: clip; white-space: nowrap; }
       .admin-sidebar nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #111; }
       .admin-sidebar nav button.active small { background: #111; color: #fff; }
-      .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input { max-width: none; width: 100%; }
+      .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
+      .admin-topbar { gap: .85rem; padding: .95rem; }
+      .admin-topbar h2 { font-size: clamp(1.35rem, 8vw, 1.85rem); }
+      .split-grid, .metric-grid, .card-grid, .form-grid, .blog-form-grid, .detail-grid, .document-grid, .gallery-upload-flow, .gallery-toggle-row, .gallery-admin-grid { grid-template-columns: 1fr; }
+      .metric-card { gap: .45rem; min-height: auto; padding: .82rem; }
+      .panel, .table-panel, .editor-panel, .employee-form, .access-card, .customer-card { padding: .82rem; width: 100%; }
+      .panel-head, .detail-section-head { align-items: flex-start; flex-direction: column; gap: .55rem; }
+      .panel-head button, .panel-head a, .detail-section-head button { align-self: flex-start; max-width: 100%; }
+      .blog-form-grid .wide-field { grid-column: auto; }
+      .blog-form-actions { align-items: stretch; flex-direction: column; }
+      .blog-form-actions button { width: 100%; }
+      .content-switcher { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+      .content-switcher button { width: 100%; }
+      .gallery-upload-box { min-height: 132px; }
+      .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input, .search-input { flex-basis: auto; max-width: none; width: 100%; }
+      .table-panel { margin-inline: -.15rem; overflow-x: auto; padding: .55rem; -webkit-overflow-scrolling: touch; }
+      table { min-width: 760px; }
+      th, td { padding: .62rem .65rem; }
+      .product-cell { min-width: 190px; }
+      .remark-cell { min-width: 280px; }
+      .remark-control { grid-template-columns: 1fr; }
+      .remark-input { min-width: 0; }
+      .inventory-action-cell, .booking-action-cell, .action-cell { align-items: stretch; flex-direction: column; flex-wrap: nowrap; min-width: 0; }
+      .inventory-action-cell .mini-btn, .inventory-action-cell .danger-btn, .inventory-action-cell .return-btn, .booking-action-cell .mini-btn, .booking-action-cell .ghost-mini { width: 100%; }
       .request-list article { align-items: stretch; flex-direction: column; }
+      .request-summary { grid-template-columns: 38px minmax(0, 1fr); }
+      .request-avatar { width: 38px; }
       .request-meta { align-items: stretch; grid-template-columns: 1fr; justify-items: stretch; }
       .status-chip { justify-content: center; width: 100%; }
-      .coupon-list article { grid-template-columns: 1fr; }
-      .coupon-actions { align-items: stretch; display: grid; grid-template-columns: 1fr 1fr; justify-content: stretch; }
+      .coupon-list article { gap: .65rem; grid-template-columns: 1fr; padding: .75rem; }
+      .coupon-actions { align-items: stretch; display: grid; gap: .5rem; grid-template-columns: 1fr 1fr; justify-content: stretch; }
       .coupon-actions .status, .coupon-actions .danger-btn { width: 100%; }
       .request-list .mini-btn { width: 100%; }
       .pagination-row { align-items: stretch; flex-direction: column; }
@@ -1414,14 +1447,32 @@ interface AdminNoteDialog {
       .detail-stepper { border-radius: 18px; grid-template-columns: 1fr; }
       .detail-actions { align-items: stretch; flex-direction: column; width: 100%; }
       .detail-actions button, .detail-actions .primary-btn { width: 100%; }
-      .topbar-actions { align-items: stretch; flex-direction: column; }
-      .topbar-actions button { width: 100%; }
+      .topbar-actions { align-items: flex-start; flex-direction: row; }
+      .topbar-actions button { flex: 0 1 auto; min-width: 0; }
+      .customer-card-head { grid-template-columns: 38px minmax(0, 1fr); }
+      .avatar { height: 38px; width: 38px; }
+      .customer-card dl, dl { grid-template-columns: 1fr; }
+      .bar-list div { grid-template-columns: 1fr; }
+      .primary-btn, .ghost-btn, .topbar-logout { font-size: .84rem; min-height: 42px; padding: .62rem .9rem; }
+      .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { font-size: .74rem; line-height: 1.2; min-height: 36px; padding: .46rem .65rem; white-space: normal; }
+      .panel-head .link-btn, .panel-head .mini-btn, .panel-head .ghost-mini { min-width: 0; width: auto; }
+      .content-switcher button { font-size: .82rem; min-height: 38px; padding: .48rem .65rem; }
+      .admin-workspace { scroll-margin-top: 86px; }
       .document-lightbox { padding: .7rem; }
       .document-lightbox-content { max-height: 94vh; max-width: 96vw; }
       .lightbox-image-row { gap: .45rem; grid-template-columns: 34px minmax(0, 1fr) 34px; min-height: 260px; }
       .lightbox-close, .lightbox-nav { font-size: 1.2rem; min-height: 34px; width: 34px; }
       .lightbox-foot { flex-direction: column; gap: .2rem; }
       .admin-confirm-actions { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 420px) {
+      .admin-page { padding-left: .5rem; padding-right: .5rem; }
+      .admin-sidebar { margin-inline: -.5rem; padding-left: .5rem; padding-right: .5rem; }
+      .admin-sidebar nav button { font-size: .75rem; min-width: max-content; padding-inline: .52rem; }
+      .admin-topbar, .panel, .editor-panel, .employee-form, .customer-card { padding: .75rem; }
+      .primary-btn, .ghost-btn, .topbar-logout { font-size: .82rem; min-height: 40px; padding: .56rem .78rem; }
+      .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { white-space: normal; }
+      table { min-width: 700px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .coupon-list article, .review-list article { animation: none; }
@@ -3129,19 +3180,29 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   private scrollToSectionTop(): void {
-    const target = document.querySelector('.admin-page');
-    if (!target) return;
-    const start = window.scrollY;
-    const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - 92);
-    const duration = 900;
-    const startTime = performance.now();
-    const animate = (now: number) => {
-      const progress = Math.min((now - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      window.scrollTo(0, start + (end - start) * eased);
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
+    this.scrollToActiveSection();
+  }
+
+  private scrollToActiveSection(): void {
+    window.setTimeout(() => {
+      const isMobile = window.matchMedia('(max-width: 760px)').matches;
+      const target = isMobile
+        ? document.querySelector('.admin-workspace') ?? document.querySelector('.admin-page')
+        : document.querySelector('.admin-page');
+      if (!target) return;
+      const stickyOffset = isMobile ? 88 : 92;
+      const start = window.scrollY;
+      const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - stickyOffset);
+      const duration = isMobile ? 700 : 900;
+      const startTime = performance.now();
+      const animate = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        window.scrollTo(0, start + (end - start) * eased);
+        if (progress < 1) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    });
   }
 
   private clampAdminPages(): void {
@@ -3178,3 +3239,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 }
+
+
+
+
+
+

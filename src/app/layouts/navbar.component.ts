@@ -80,9 +80,12 @@ import { ProductService } from '../services/product.service';
               </a>
             }
             @if (currentUser(); as user) {
-              <a [routerLink]="accountLink()" class="avatar-link" [attr.aria-label]="accountLabel(user.fullName)" [title]="accountLabel(user.fullName)" (click)="closeMenu()">
+              <a [routerLink]="accountLink()" class="avatar-link desktop-avatar" [attr.aria-label]="accountLabel(user.fullName)" [title]="accountLabel(user.fullName)" (click)="closeMenu()">
                 {{ getInitial(user.fullName) }}
               </a>
+              @if (!isHomePage()) {
+                <button type="button" class="mobile-logout" (click)="logout()">Logout</button>
+              }
             } @else {
               <a routerLink="/login" class="login-link" (click)="closeMenu()">Login</a>
             }
@@ -120,6 +123,8 @@ import { ProductService } from '../services/product.service';
     .avatar-link:hover { background: #ff9700; color: #fff !important; transform: translateY(-1px); }
     .avatar-link:focus,
     .avatar-link:focus-visible { box-shadow: 0 10px 24px rgba(0,0,0,.12); color: #fff !important; outline: 0; }
+    .mobile-logout { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); box-sizing: border-box; color: #fff; display: none; font-size: .86rem; font-weight: 900; justify-content: center; line-height: 1.2; max-width: 100%; min-height: 40px; min-width: 0; padding: .62rem .9rem; } 
+    .mobile-logout:hover { background: #ff9700; color: #fff; transform: translateY(-1px); }
     .has-mega { position: relative; }
     .mega { display: none; gap: .8rem; left: 0; min-width: 360px; padding: 1rem; position: absolute; top: 100%; z-index: 10; }
     .mega a { border: 1px solid rgba(21,21,21,.08); border-radius: 999px; color: #171717; font-size: .78rem; font-weight: 800; padding: .65rem .8rem; }
@@ -139,9 +144,10 @@ import { ProductService } from '../services/product.service';
       .navbar-collapse { align-items: stretch; display: none; flex-basis: 100%; flex-direction: column; margin-top: 1rem; }
       .navbar-collapse.show { display: flex; }
       .navbar-nav { gap: .2rem; }
-      .actions { align-items: stretch; flex-direction: column; margin-top: 1rem; }
+      .actions { align-items: stretch; box-sizing: border-box; flex-direction: column; margin-top: .85rem; max-width: 100%; width: 100%; }
       .cart-link { align-self: flex-start; }
-      .avatar-link { border-radius: 999px; height: 40px; width: 100%; }
+      .desktop-avatar { display: none; }
+      .mobile-logout { display: inline-flex; width: 100%; }
       .mega { min-width: auto; position: static; }
       .navbar > .container { border-radius: 18px; max-width: calc(100vw - 18px); padding: 1rem; }
     }
@@ -194,4 +200,20 @@ export class NavbarComponent implements OnDestroy {
     const user = this.authService.currentUser();
     return !user || this.authService.isCustomer();
   }
+
+  logout(): void {
+    this.closeMenu();
+    this.authService.logout();
+    void this.router.navigateByUrl('/login');
+  }
+
+  isHomePage(): boolean {
+    const path = this.router.url.split('?')[0].split('#')[0];
+    return path === '/' || path === '';
+  }
 }
+
+
+
+
+
