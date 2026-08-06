@@ -332,7 +332,7 @@ export class DashboardPageComponent {
     { id: 'past', label: 'Past Bookings' },
     { id: 'returns', label: 'Upcoming Returns' },
     { id: 'wishlist', label: 'Wishlist' },
-    { id: 'security', label: 'Security' }
+    { id: 'security', label: 'Settings' }
   ];
 
   readonly passwordForm = this.fb.nonNullable.group({

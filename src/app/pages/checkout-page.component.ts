@@ -78,7 +78,10 @@ declare global {
           <div class="col-lg-5">
             <div class="surface panel">
               <h2>Order Summary</h2>
-              @for (item of cart.items(); track cart.itemKey(item)) { <p><span>{{ item.product.name }} x {{ item.quantity }}</span><strong>{{ cart.itemTotal(item) | currency:'INR':'symbol':'1.0-0' }}</strong></p> }
+              @for (item of cart.items(); track cart.itemKey(item)) { <p><span>{{ item.product.name }} x {{ item.quantity }}</span><strong>{{ cart.itemBaseTotal(item) | currency:'INR':'symbol':'1.0-0' }}</strong></p> }
+              @if (durationDiscountAmount()) {
+                <p class="discount-row"><span>{{ durationDiscountLabel() }}</span><strong>-{{ durationDiscountAmount() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+              }
               <p><span>Rental Subtotal</span><strong>{{ cart.subtotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
               <p><span>Security Deposit</span><strong>{{ cart.securityDeposit() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
               <div class="coupon-field">
@@ -127,6 +130,7 @@ declare global {
     .payment-option span { color: #555; font-size: .94rem; font-weight: 500; line-height: 1.55; }
     .panel p { border-bottom: 1px solid rgba(148,163,184,.15); color: #555; display: flex; font-size: .94rem; gap: 1rem; justify-content: space-between; margin: 0; padding: .7rem 0; }
     .panel p span { min-width: 0; overflow-wrap: anywhere; }
+    .panel p small { color: #027a48; display: block; font-size: .78rem; font-weight: 900; line-height: 1.35; margin-top: .18rem; }
     .panel p strong { color: #111827; font-size: 1rem; white-space: nowrap; }
     .coupon-field { border-top: 1px solid rgba(148,163,184,.16); display: grid; gap: .55rem; margin-top: 1rem; padding-top: 1rem; }
     .coupon-field label { color: #555; font-size: .94rem; font-weight: 850; line-height: 1.45; }
@@ -140,7 +144,7 @@ declare global {
     .coupon-error, .coupon-success { font-size: .86rem; font-weight: 850; line-height: 1.45; }
     .coupon-error { color: #b42318; }
     .coupon-success { color: #027a48; }
-    .discount-row strong { color: #027a48; }
+    .discount-row span, .discount-row strong { color: #027a48; }
     .grand { border-top: 1px solid rgba(148,163,184,.16); padding-top: 1rem; }
     .grand strong { color: #ff9700; font-size: 1.2rem; }
     .panel app-button { display: block; margin-top: 1rem; }
@@ -159,6 +163,12 @@ export class CheckoutPageComponent {
   readonly couponCode = signal('');
   readonly appliedCoupon = signal<CouponPreviewResponse | null>(null);
   readonly couponError = signal('');
+  readonly durationDiscountAmount = computed(() => this.cart.items().reduce((sum, item) => sum + this.cart.itemDiscountAmount(item), 0));
+  readonly durationDiscountLabel = computed(() => {
+    const discounts = Array.from(new Set(this.cart.items().map((item) => this.cart.itemDiscountPercent(item)).filter(Boolean))).sort((a, b) => a - b);
+    if (!discounts.length) return 'Duration discount';
+    return 'Duration discount (' + discounts.map((discount) => discount + '%').join(', ') + ')';
+  });
   readonly discountAmount = computed(() => {
     const coupon = this.appliedCoupon();
     if (!coupon) {

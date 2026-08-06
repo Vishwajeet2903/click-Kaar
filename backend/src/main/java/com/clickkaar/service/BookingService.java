@@ -80,6 +80,9 @@ public class BookingService {
       throw new BadRequestException("Rental end date must be after start date");
     }
     int days = (int) ChronoUnit.DAYS.between(request.rentalStartDate(), request.rentalEndDate()) + 1;
+    if (days > 7) {
+      throw new BadRequestException("Rental duration can be maximum 7 days");
+    }
     User customer = userRepository.findById(request.customerId()).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     BookingStatus initialStatus = normalizedPaymentMethod(request.paymentMethod()).equals("razorpay")
         ? BookingStatus.PENDING
@@ -108,7 +111,7 @@ public class BookingService {
     BigDecimal rentalSubtotal = BigDecimal.ZERO;
     for (var item : request.items()) {
       Product product = productsById.get(item.productId());
-      BigDecimal lineTotal = product.getDailyPrice().multiply(BigDecimal.valueOf(days));
+      BigDecimal lineTotal = discountedRentalTotal(product.getDailyPrice(), days);
       booking.getItems().add(BookingItem.builder()
           .booking(booking)
           .product(product)
@@ -286,6 +289,24 @@ public class BookingService {
 
   private int defaultStock(AvailabilityStatus status) {
     return status == AvailabilityStatus.AVAILABLE ? 1 : 0;
+  }
+
+  private BigDecimal discountedRentalTotal(BigDecimal dailyPrice, int days) {
+    BigDecimal baseTotal = dailyPrice.multiply(BigDecimal.valueOf(days));
+    int discountPercent = rentalDiscountPercent(days);
+    if (discountPercent == 0) {
+      return baseTotal;
+    }
+    return baseTotal
+        .multiply(BigDecimal.valueOf(100 - discountPercent))
+        .divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP);
+  }
+
+  private int rentalDiscountPercent(int days) {
+    if (days >= 7) return 20;
+    if (days >= 5) return 15;
+    if (days >= 2) return 5;
+    return 0;
   }
 
   private BigDecimal applyCouponDiscount(BigDecimal total, String couponCode) {

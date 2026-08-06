@@ -34,6 +34,9 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
               </div>
               <div class="item-actions text-end">
                 <strong>{{ cart.itemTotal(item) | currency:'INR':'symbol':'1.0-0' }}</strong>
+                @if (cart.itemDiscountPercent(item)) {
+                  <small>{{ cart.itemDiscountPercent(item) }}% duration discount</small>
+                }
                 <button class="remove" (click)="cart.removeItem(item.product.id, item.startDate, item.endDate)">Remove</button>
               </div>
             </article>
@@ -44,7 +47,10 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
         <aside class="col-lg-4">
           <div class="surface summary">
             <h2>Booking Summary</h2>
-            <p><span>Subtotal</span><strong>{{ cart.subtotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+            <p><span>Subtotal</span><strong>{{ cart.baseSubtotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+            @if (cart.durationDiscountAmount()) {
+              <p class="discount-row"><span>Duration discount</span><strong>-{{ cart.durationDiscountAmount() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
+            }
             <p><span>Security Deposit</span><strong>{{ cart.securityDeposit() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
             <p class="grand"><span>Grand Total</span><strong>{{ cart.grandTotal() | currency:'INR':'symbol':'1.0-0' }}</strong></p>
             <app-button type="button" (click)="goToCheckout()">Checkout</app-button>
@@ -72,11 +78,13 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     .stock-note { color: #027a48; font-size: .86rem; font-weight: 850; line-height: 1.45; margin: 0 0 .75rem; }
     .item-actions { min-width: 132px; }
     .item-actions strong { color: #111827; display: block; font-size: 1.08rem; font-weight: 900; line-height: 1.2; }
+    .item-actions small { color: #027a48; display: block; font-size: .78rem; font-weight: 900; line-height: 1.35; margin-top: .25rem; }
     .remove { margin-top: .65rem; width: 100%; }
     .summary { padding: 1.2rem; position: sticky; top: 92px; }
     .summary h2 { font-size: 1.08rem; margin-bottom: .5rem; }
     .summary p { border-bottom: 1px solid rgba(148,163,184,.15); color: #555; display: flex; font-size: .94rem; gap: 1rem; justify-content: space-between; margin: 0; padding: .7rem 0; }
     .summary p strong { color: #111827; font-size: 1rem; white-space: nowrap; }
+    .discount-row span, .discount-row strong { color: #027a48 !important; }
     .grand strong { color: #ff9700; font-size: 1.2rem; }
     .summary app-button { display: block; margin-top: 1rem; }
     .empty { padding: 2rem; }

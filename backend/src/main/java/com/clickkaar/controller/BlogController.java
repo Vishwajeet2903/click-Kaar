@@ -27,20 +27,21 @@ public class BlogController {
   }
 
   @PostMapping
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
   public BlogPost create(@Valid @RequestBody BlogPostRequest request) {
     return blogService.create(request);
   }
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
   public BlogPost update(@PathVariable Long id, @Valid @RequestBody BlogPostRequest request) {
     return blogService.update(id, request);
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
   public void delete(@PathVariable Long id) {
     blogService.delete(id);
   }
 }
+

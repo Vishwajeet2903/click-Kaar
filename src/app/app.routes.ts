@@ -62,7 +62,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginPageComponent, title: 'Login | Clickkaar' },
   { path: 'forgot-password', component: ForgotPasswordPageComponent, title: 'Forgot Password | Clickkaar' },
   { path: 'register', component: RegisterPageComponent, title: 'Register | Clickkaar' },
-  { path: 'dashboard', component: DashboardPageComponent, title: 'Dashboard | Clickkaar' },
+  { path: 'dashboard', component: DashboardPageComponent, canActivate: [() => requireCustomer('/dashboard')], title: 'Dashboard | Clickkaar' },
   { path: 'admin/inventory/new', component: AdminProductCreatePageComponent, canActivate: [() => requireAnyRole(['ADMIN', 'MANAGER', 'INVENTORY_STAFF'], '/admin/inventory/new')], title: 'Add Product | Clickkaar' },
   { path: 'admin/inventory/edit/:id', component: AdminProductCreatePageComponent, canActivate: [() => requireAnyRole(['ADMIN', 'MANAGER', 'INVENTORY_STAFF'], '/admin/inventory/edit')], title: 'Edit Product | Clickkaar' },
   { path: 'admin', component: AdminPageComponent, canActivate: [requireAdmin], title: 'Admin | Clickkaar' },

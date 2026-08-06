@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Product } from '../models/product.model';
 import { AuthService } from '../services/auth.service';
 import { BookingService } from '../services/booking.service';
+import { discountedRentalPrice, rentalDiscountPercent } from '../services/rental-pricing';
 import { CartService } from '../services/cart.service';
 import { ProductService, useProductImageFallback } from '../services/product.service';
 import { WishlistService } from '../services/wishlist.service';
@@ -169,7 +170,7 @@ export class AddedDialogComponent {}
               </div>
 
               <div class="total-panel">
-                <span>{{ duration() }} day rental</span>
+                <span>{{ duration() }} day rental@if (discountPercent()) { <small>{{ discountPercent() }}% off</small> }</span>
                 <strong>{{ total() | currency:'INR':'symbol':'1.0-0' }}</strong>
               </div>
 
@@ -280,7 +281,8 @@ export class AddedDialogComponent {}
     .duration-card:hover span, .duration-card.active span { color: #fff; }
     .duration-card:hover strong, .duration-card.active strong { color: #fff; }
     .total-panel { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 20px; display: flex; justify-content: space-between; margin: .1rem 0 1.15rem; padding: 1rem 1.1rem; }
-    .total-panel span { color: #777; font-weight: 800; }
+    .total-panel span { color: #777; display: grid; font-weight: 800; gap: .2rem; }
+    .total-panel small { color: #027a48; font-size: .74rem; font-weight: 950; }
     .total-panel strong { color: #111; font-size: 1.35rem; }
     .action-grid { display: grid; gap: .85rem; grid-template-columns: repeat(2, 1fr); }
     .trust-row { border-top: 1px solid rgba(17,17,17,.08); display: grid; gap: .75rem; grid-template-columns: repeat(3, 1fr); margin-top: 1.2rem; padding-top: 1.15rem; }
@@ -342,12 +344,14 @@ export class ProductDetailsPageComponent {
   protected readonly activeDateField = signal<'start' | 'end' | undefined>(undefined);
   protected readonly calendarMonth = signal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   protected readonly rentalDurations = [1, 2, 5, 7];
+  private readonly maxRentalDays = 7;
   protected readonly weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   private readonly monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private galleryTouchStartX = 0;
   private alertTimeout: ReturnType<typeof setTimeout> | undefined;
   readonly duration = computed(() => Math.max(1, Math.floor((this.endDate().getTime() - this.startDate().getTime()) / 86_400_000) + 1));
-  readonly total = computed(() => (this.product()?.dailyPrice ?? 0) * this.duration());
+  readonly discountPercent = computed(() => rentalDiscountPercent(this.duration()));
+  readonly total = computed(() => discountedRentalPrice(this.product()?.dailyPrice ?? 0, this.duration()));
   readonly specEntries = computed(() => Object.entries(this.product()?.specifications ?? {}));
 
   constructor() {
@@ -360,7 +364,7 @@ export class ProductDetailsPageComponent {
   }
 
   rentalPrice(days: number): number {
-    return (this.product()?.dailyPrice ?? 0) * days;
+    return discountedRentalPrice(this.product()?.dailyPrice ?? 0, days);
   }
 
   displayDate(date: Date): string {
@@ -383,7 +387,7 @@ export class ProductDetailsPageComponent {
   }
 
   setStartDate(value: string): void {
-    const currentDuration = this.duration();
+    const currentDuration = Math.min(this.duration(), this.maxRentalDays);
     const selectedStart = this.parseDateInput(value);
     const today = this.today();
     const nextStart = selectedStart < today ? today : selectedStart;
@@ -408,7 +412,12 @@ export class ProductDetailsPageComponent {
   setEndDate(value: string): void {
     const nextEnd = this.parseDateInput(value);
     const minEndDate = this.startDate() < this.today() ? this.today() : this.startDate();
-    const adjustedEnd = nextEnd < minEndDate ? minEndDate : nextEnd;
+    const maxEndDate = this.maxEndDateForStart(this.startDate());
+    let adjustedEnd = nextEnd < minEndDate ? minEndDate : nextEnd;
+    if (adjustedEnd > maxEndDate) {
+      adjustedEnd = maxEndDate;
+      this.showTopMessage('Rental duration can be maximum 7 days.', 3200);
+    }
     if (this.rangeOverlapsBlockedDates(this.startDate(), adjustedEnd)) {
       this.showTopMessage('This rental range includes booked dates. Please choose an earlier available end date.', 3400);
       return;
@@ -470,6 +479,7 @@ export class ProductDetailsPageComponent {
   isDisabledCalendarDate(day: Date): boolean {
     if (day < this.today()) return true;
     if (this.isBlockedCalendarDate(day)) return true;
+    if (this.activeDateField() === 'end' && day > this.maxEndDateForStart(this.startDate())) return true;
     if (this.activeDateField() === 'end' && this.rangeOverlapsBlockedDates(this.startDate(), day)) return true;
 
     return this.activeDateField() === 'end' && this.dateInputValue(day) < this.dateInputValue(this.startDate());
@@ -537,6 +547,11 @@ export class ProductDetailsPageComponent {
     if (this.startDate() < this.today() || this.endDate() < this.today()) {
       this.showTopMessage('Choose today or a future date for booking.', 3200);
       this.setStartDate(this.dateInputValue(this.today()));
+      return;
+    }
+    if (this.duration() > this.maxRentalDays) {
+      this.showTopMessage('Rental duration can be maximum 7 days.', 3200);
+      this.endDate.set(this.maxEndDateForStart(this.startDate()));
       return;
     }
     if (this.rangeOverlapsBlockedDates(this.startDate(), this.endDate())) {
@@ -627,6 +642,12 @@ export class ProductDetailsPageComponent {
         this.showTopMessage('Booked dates could not be loaded. Please refresh before selecting rental dates.', 4200);
       }
     });
+  }
+
+  private maxEndDateForStart(startDate: Date): Date {
+    const maxEndDate = this.stripTime(startDate);
+    maxEndDate.setDate(maxEndDate.getDate() + this.maxRentalDays - 1);
+    return maxEndDate;
   }
 
   private rangeOverlapsBlockedDates(startDate: Date, endDate: Date): boolean {
