@@ -1,9 +1,9 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../models/product.model';
 import { AuthService } from '../services/auth.service';
 import { BookingService } from '../services/booking.service';
@@ -17,7 +17,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 @Component({
   selector: 'app-added-dialog',
   standalone: true,
-  imports: [MatButtonModule, MatDialogModule, RouterLink],
+  imports: [MatButtonModule, MatDialogModule],
   template: `
     <div class="cart-dialog">
       <div class="dialog-mark" aria-hidden="true">
@@ -31,7 +31,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
       </mat-dialog-content>
       <mat-dialog-actions>
         <button mat-button class="dialog-action" mat-dialog-close>Keep browsing</button>
-        <a mat-flat-button class="dialog-action" routerLink="/cart" mat-dialog-close>View cart</a>
+        <button mat-flat-button type="button" class="dialog-action" (click)="viewCart()">View cart</button>
       </mat-dialog-actions>
     </div>
   `,
@@ -51,7 +51,19 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     }
   `]
 })
-export class AddedDialogComponent {}
+export class AddedDialogComponent {
+  private readonly dialogRef = inject(MatDialogRef<AddedDialogComponent>);
+  private readonly router = inject(Router);
+
+  viewCart(): void {
+    this.dialogRef.close();
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    void this.router.navigateByUrl('/cart').then(() => {
+      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 0);
+      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 120);
+    });
+  }
+}
 
 @Component({
   selector: 'app-product-details-page',
@@ -713,3 +725,6 @@ export class ProductDetailsPageComponent {
     this.selectedImage.set(gallery[nextIndex]);
   }
 }
+
+
+

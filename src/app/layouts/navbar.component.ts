@@ -61,8 +61,8 @@ import { ProductService } from '../services/product.service';
           </ul>
           <div class="actions">
             @if (canShowCustomerActions()) {
-              <a routerLink="/cart" class="cart-link" aria-label="Open cart" (click)="closeMenu()">
-                @if (cart.count() > 0) {
+              <a href="/cart" class="cart-link" aria-label="Open cart" (click)="openCart($event)">
+                @if (cartDisplayCount() > 0) {
                   <svg class="cart-full" viewBox="0 0 32 32" aria-hidden="true">
                     <path class="cart-basket-fill" d="M8.7 11h18.1l-1.7 9.8a3 3 0 0 1-3 2.5H12.3a3 3 0 0 1-3-2.6L7.4 7.2H4.2" />
                     <path class="cart-line" d="M12.5 15.2h11.2M13.3 19h9.6" />
@@ -77,8 +77,8 @@ import { ProductService } from '../services/product.service';
                     <circle cx="23.1" cy="26.6" r="1.3" />
                   </svg>
                 }
-                @if (cart.count() > 0) {
-                  <b>{{ cart.count() }}</b>
+                @if (cartDisplayCount() > 0) {
+                  <b>{{ cartDisplayCount() }}</b>
                 }
               </a>
             }
@@ -189,6 +189,15 @@ export class NavbarComponent implements OnDestroy {
     this.menuOpen = false;
   }
 
+  openCart(event: Event): void {
+    event.preventDefault();
+    this.closeMenu();
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    void this.router.navigateByUrl('/cart').then(() => {
+      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 0);
+      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 120);
+    });
+  }
   getInitial(name: string): string {
     return name.trim().charAt(0) || 'U';
   }
@@ -206,6 +215,10 @@ export class NavbarComponent implements OnDestroy {
     return !user || this.authService.isCustomer();
   }
 
+  cartDisplayCount(): number {
+    return this.authService.isCustomer() ? this.cart.count() : 0;
+  }
+
   logout(): void {
     this.closeMenu();
     this.authService.logout();
@@ -217,6 +230,8 @@ export class NavbarComponent implements OnDestroy {
     return path === '/' || path === '';
   }
 }
+
+
 
 
 

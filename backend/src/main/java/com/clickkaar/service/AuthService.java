@@ -150,7 +150,7 @@ public class AuthService {
         .build());
 
     if (!isMailConfigured()) {
-      return "Password reset code generated for development: " + code;
+      throw new BadRequestException("Mail is not configured. Please set MAIL_USERNAME and MAIL_PASSWORD.");
     }
     sendPasswordResetEmail(email, code);
     return "Password reset code sent to your email.";
@@ -341,3 +341,4 @@ public class AuthService {
     }
   }
 }
+

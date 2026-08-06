@@ -87,6 +87,9 @@ public class BookingService {
     }
     User customer = userRepository.findById(request.customerId()).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     String normalizedPaymentMethod = normalizedPaymentMethod(request.paymentMethod());
+    if (normalizedPaymentMethod.equals("cash") && !isMailConfigured()) {
+      throw new BadRequestException("Mail is not configured. Cash delivery OTP email cannot be sent.");
+    }
     BookingStatus initialStatus = normalizedPaymentMethod.equals("razorpay")
         ? BookingStatus.PENDING
         : BookingStatus.CONFIRMED;
@@ -620,4 +623,5 @@ public class BookingService {
 
       """;
 }
+
 

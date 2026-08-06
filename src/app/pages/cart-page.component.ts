@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { CartService } from '../services/cart.service';
@@ -92,10 +92,15 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     @media (max-width: 575px) { .item { align-items: start; grid-template-columns: 104px minmax(0, 1fr); } .item-media, .item img { width: 104px; } .item-actions { grid-column: 1 / -1; min-width: 0; text-align: left !important; } .remove { width: auto; } }
   `]
 })
-export class CartPageComponent {
+export class CartPageComponent implements AfterViewInit {
   readonly cart = inject(CartService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+
+  ngAfterViewInit(): void {
+    window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 0);
+    window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 120);
+  }
 
   useFallback(event: Event, category: string): void {
     useProductImageFallback(event);
@@ -114,3 +119,5 @@ export class CartPageComponent {
     void this.router.navigateByUrl(this.authService.isCustomer() ? '/checkout' : this.authService.defaultDashboardUrl());
   }
 }
+
+
