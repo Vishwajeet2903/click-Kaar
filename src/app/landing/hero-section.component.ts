@@ -112,7 +112,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       .hero-section { min-height: auto; padding: 2rem 1rem 1.25rem; }
       .eyebrow { font-size: clamp(1rem, 1.5vw, 1.18rem); letter-spacing: .16em; line-height: 1.35; }
       h1 { font-size: clamp(2.35rem, 13vw, 3.05rem); line-height: .96; margin: .6rem auto .75rem; max-width: 10ch; }
-      h2 { color: #2b2b28; font-size: clamp(1rem, 4.4vw, 1.22rem); font-weight: 850; line-height: 1.32; margin: 0 auto .75rem; max-width: 27ch; text-wrap: balance; }
+      h2 { color: #2b2b28; font-size: clamp(.78rem, 3.7vw, 1.05rem); font-weight: 900; line-height: 1.25; margin: 0 auto .75rem; max-width: 100%; overflow-wrap: normal; padding: 0 .1rem; text-wrap: nowrap; white-space: nowrap; }
       .hero-subtitle { font-size: .96rem; margin-bottom: 1rem; max-width: 28ch; }
       .hero-actions { flex-direction: column; }
       .hero-actions .btn-pill { width: min(100%, 230px); }
@@ -139,7 +139,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 380px) {
       h1 { font-size: 2.28rem; }
-      h2 { font-size: 1rem; max-width: 25ch; }
+      h2 { font-size: .78rem; max-width: 100%; }
       .hero-collage { max-width: 312px; }
       .collage-card { height: 104px; width: 118px; }
     }
@@ -171,4 +171,6 @@ export class HeroSectionComponent implements AfterViewInit {
     return 'Cameras';
   }
 }
+
+
 

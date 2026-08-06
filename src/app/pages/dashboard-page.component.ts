@@ -348,6 +348,7 @@ export class DashboardPageComponent {
     this.activeSection.set(section);
     this.bookingPage.set(1);
     this.paymentPage.set(1);
+    this.scrollToActiveSection();
   }
 
   bookingsFor(dashboard: CustomerDashboardResponse): CustomerDashboardBooking[] {
@@ -510,6 +511,8 @@ export class DashboardPageComponent {
     void this.router.navigateByUrl('/login');
   }
 }
+
+
 
 
 
