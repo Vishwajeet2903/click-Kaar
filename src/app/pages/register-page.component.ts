@@ -86,7 +86,7 @@ function notFutureDate(control: AbstractControl<string>): ValidationErrors | nul
             <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1100&q=85" alt="">
           </figure>
           <div class="visual-copy">
-            <p class="eyebrow">Join ClickKar</p>
+            <p class="eyebrow">Join Click-Kaar</p>
             <h1>Create your verified rental profile.</h1>
             <p>Complete your profile once and keep bookings, rentals, and verification details ready for every shoot.</p>
           </div>
@@ -311,59 +311,77 @@ function notFutureDate(control: AbstractControl<string>): ValidationErrors | nul
     </section>
   `,
   styles: [`
-    .register-page { background: #f4f4f2; min-height: calc(100vh - 96px); padding: clamp(.55rem, 1.2vw, 1rem) clamp(1rem, 2vw, 1.5rem) clamp(1rem, 2vw, 1.5rem); transform: translateY(-28px); }
-    .register-shell { background: #fdfdfc; border-radius: 28px; box-shadow: 0 28px 80px rgba(20,20,20,.08); display: grid; gap: clamp(1.4rem, 3vw, 3rem); grid-template-columns: minmax(280px, .6fr) minmax(0, 1fr); min-height: calc(100vh - 112px); overflow: hidden; padding: clamp(1.1rem, 3vw, 3rem); position: relative; }
-    .register-shell::before { background: radial-gradient(circle, rgba(255,151,0,.24), transparent 64%); content: ""; height: 420px; position: absolute; right: -130px; top: -150px; width: 420px; }
-    .visual-panel, .register-form { position: relative; z-index: 1; }
-    .visual-panel { display: flex; flex-direction: column; gap: 2rem; justify-content: space-between; min-height: 640px; }
-    .hero-photo { border-radius: 24px; box-shadow: 0 28px 70px rgba(0,0,0,.18); height: min(48vh, 460px); margin: 0; overflow: hidden; }
+    .register-page { background: #f5f5f2; color: #111; min-height: calc(100vh - 96px); padding: clamp(.8rem, 1.6vw, 1.4rem) clamp(1rem, 2.2vw, 1.6rem) clamp(1.2rem, 2.4vw, 1.8rem); }
+    .register-shell { align-items: stretch; background: #fdfdfc; border: 1px solid rgba(17,17,17,.08); border-radius: 24px; box-shadow: 0 22px 60px rgba(17,17,17,.07); display: grid; gap: clamp(1rem, 2vw, 1.6rem); grid-template-columns: minmax(280px, 420px) minmax(0, 1fr); margin: 0 auto; max-width: 1280px; min-height: calc(100vh - 130px); overflow: hidden; padding: clamp(.9rem, 1.9vw, 1.5rem); }
+    .visual-panel, .register-form { min-width: 0; }
+    .visual-panel { align-content: stretch; background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 18px; color: #111; display: grid; gap: 1rem; grid-template-rows: minmax(260px, 1fr) auto; overflow: hidden; padding: .8rem; }
+    .hero-photo { border-radius: 12px; box-shadow: none; height: 100%; margin: 0; min-height: 320px; overflow: hidden; }
     .hero-photo img { height: 100%; object-fit: cover; width: 100%; }
+    .visual-copy { display: grid; gap: .75rem; padding: .55rem .4rem .25rem; }
     .visual-copy p, .signin { color: #5e5e5a; line-height: 1.6; margin: 0; }
-    .eyebrow { color: #ff9700; font-size: clamp(1rem, 1.5vw, 1.18rem); font-weight: 900; letter-spacing: .22rem; margin: 0 0 .8rem; text-transform: uppercase; }
-    h1, h2, h3 { color: #111; letter-spacing: 0; margin: 0; }
-    h1 { font-size: clamp(2.4rem, 4.8vw, 5.1rem); font-weight: 950; line-height: .98; }
-    h2 { font-size: clamp(2rem, 3vw, 3.2rem); font-weight: 950; line-height: 1; }
-    h3 { font-size: 1rem; font-weight: 950; margin-bottom: 1rem; }
-    .visual-copy p { font-size: 1rem; margin-top: 1rem; max-width: 520px; }
-    .register-form { align-self: start; background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px; box-shadow: 0 18px 60px rgba(0,0,0,.08); max-height: calc(100vh - 150px); overflow: auto; padding: clamp(1.1rem, 2.5vw, 2.2rem); }
-    .form-head { margin-bottom: 1.3rem; }
-    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 14px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0 0 1.1rem; padding: .85rem 1rem; }
-    .form-section { border-top: 1px solid rgba(17,17,17,.08); padding-top: 1.15rem; }
-    .form-section + .form-section { margin-top: 1.15rem; }
-    .field-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    label { color: #111; display: block; font-size: .82rem; font-weight: 800; margin-bottom: 1rem; }
-    label span { display: block; margin-bottom: .55rem; }
-    input, select, textarea { background: #f7f7f5; border: 1px solid transparent; border-radius: 14px; color: #111; display: block; font: inherit; font-weight: 600; min-height: 50px; outline: 0; padding: .9rem 1rem; transition: border-color .25s ease, box-shadow .25s ease, background .25s ease; width: 100%; }
-    textarea { min-height: 94px; resize: vertical; }
-    input:focus, select:focus, textarea:focus { background: #fff; border-color: rgba(255,151,0,.95); box-shadow: 0 0 0 4px rgba(255,151,0,.18); }
-    input.ng-invalid.ng-touched, select.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched, .password-mismatch input { background: #fff4f2; border-color: rgba(180,35,24,.72); box-shadow: 0 0 0 4px rgba(180,35,24,.12); }
+    .visual-copy p { color: #5e5e5a; font-size: .96rem; font-weight: 650; max-width: 42ch; }
+    .eyebrow { color: #ff9700; font-size: .74rem; font-weight: 950; letter-spacing: .12em; line-height: 1.35; margin: 0; text-transform: uppercase; }
+    h1, h2, h3 { color: #111; letter-spacing: 0; margin: 0; overflow-wrap: anywhere; }
+    .visual-copy h1 { color: #111; font-size: clamp(2rem, 3.5vw, 3.8rem); font-weight: 950; line-height: 1.02; max-width: 10ch; }
+    h2 { font-size: clamp(1.55rem, 2.2vw, 2.25rem); font-weight: 950; line-height: 1.08; }
+    h3 { align-items: center; color: #111; display: flex; font-size: .95rem; font-weight: 950; gap: .55rem; line-height: 1.25; margin: 0 0 .85rem; }
+    h3::before { background: #ff9700; border-radius: 999px; content: ""; height: 8px; width: 8px; }
+    .register-form { align-self: stretch; background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 18px; box-shadow: none; display: flex; flex-direction: column; height: 100%; min-height: 100%; max-height: calc(100vh - 150px); overflow: auto; padding: clamp(1rem, 2vw, 1.45rem); scrollbar-color: rgba(17,17,17,.24) transparent; }
+    .form-head { border-bottom: 1px solid rgba(17,17,17,.08); display: grid; gap: .35rem; margin-bottom: 1rem; padding-bottom: 1rem; }
+    .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 8px; color: #b42318; font-size: .88rem; font-weight: 850; line-height: 1.45; margin: 0 0 1rem; padding: .78rem .9rem; }
+    .form-section { background: #fff; border: 1px solid rgba(17,17,17,.08); border-radius: 12px; padding: 1rem; }
+    .form-section + .form-section { margin-top: .9rem; }
+    .field-grid { display: grid; gap: .85rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    label { color: #202020; display: block; font-size: .8rem; font-weight: 850; line-height: 1.35; margin: 0; min-width: 0; }
+    label span { color: #333; display: block; margin-bottom: .42rem; }
+    input, select, textarea { background: #f8f8f6; border: 1px solid rgba(17,17,17,.1); border-radius: 8px; color: #111; display: block; font: inherit; font-size: .92rem; font-weight: 650; line-height: 1.4; min-height: 46px; outline: 0; padding: .72rem .82rem; transition: border-color .2s ease, box-shadow .2s ease, background .2s ease; width: 100%; }
+    textarea { min-height: 96px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { background: #fff; border-color: rgba(255,151,0,.92); box-shadow: 0 0 0 3px rgba(255,151,0,.16); }
+    input.ng-invalid.ng-touched, select.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched, .password-mismatch input { background: #fff8f7; border-color: rgba(180,35,24,.72); box-shadow: 0 0 0 3px rgba(180,35,24,.11); }
     input.ng-invalid.ng-touched::placeholder, textarea.ng-invalid.ng-touched::placeholder { color: rgba(180,35,24,.68); }
     label:has(input.ng-invalid.ng-touched) span, label:has(select.ng-invalid.ng-touched) span, label:has(textarea.ng-invalid.ng-touched) span, .file-field.invalid-file span, .password-mismatch span { color: #b42318; }
-    .field-error { color: #b42318; display: block; font-size: .76rem; font-weight: 800; line-height: 1.35; margin-top: .42rem; }
-    .field-hint { color: #027a48; display: block; font-size: .76rem; font-weight: 800; line-height: 1.35; margin-top: .42rem; }
+    .field-error, .field-hint { display: block; font-size: .74rem; font-weight: 850; line-height: 1.35; margin-top: .36rem; }
+    .field-error { color: #b42318; }
+    .field-hint { color: #027a48; }
     .field-hint.error { color: #b42318; }
-    input::placeholder, textarea::placeholder { color: #a7a7a1; }
+    input::placeholder, textarea::placeholder { color: #85857f; font-weight: 600; }
+    .file-field { cursor: pointer; position: relative; }
     .file-field input { height: 1px; opacity: 0; padding: 0; position: absolute; width: 1px; }
-    .file-field b { align-items: center; background: #f7f7f5; border: 1px dashed rgba(17,17,17,.22); border-radius: 14px; color: #5e5e5a; display: flex; font-size: .82rem; font-weight: 800; min-height: 50px; overflow: hidden; padding: .9rem 1rem; text-overflow: ellipsis; white-space: nowrap; }
-    .file-field:hover b { border-color: rgba(255,151,0,.95); color: #111; }
-    .file-field.invalid-file b { background: #fff4f2; border-color: rgba(180,35,24,.72); box-shadow: 0 0 0 4px rgba(180,35,24,.12); color: #b42318; }
-    .submit { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: pointer; display: inline-flex; font-size: .96rem; font-weight: 900; justify-content: center; margin-top: .4rem; min-height: 52px; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 100%; }
+    .file-field b { align-items: center; background: #f8f8f6; border: 1px dashed rgba(17,17,17,.26); border-radius: 8px; color: #444; display: flex; font-size: .82rem; font-weight: 850; line-height: 1.3; min-height: 46px; min-width: 0; overflow: hidden; padding: .72rem .82rem; text-overflow: ellipsis; white-space: nowrap; }
+    .file-field:hover b { background: #fffaf2; border-color: rgba(255,151,0,.9); color: #111; }
+    .file-field.invalid-file b { background: #fff8f7; border-color: rgba(180,35,24,.72); box-shadow: 0 0 0 3px rgba(180,35,24,.11); color: #b42318; }
+    .submit { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: pointer; display: inline-flex; font-size: .95rem; font-weight: 950; justify-content: center; margin-top: 1rem; min-height: 50px; padding: .8rem 1.2rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 100%; }
     .submit:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .submit:disabled, .submit:disabled:hover { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: not-allowed; opacity: .68; transform: none; }
-    .signin { margin-top: 1.2rem; text-align: center; }
-    .signin a { color: #111; font-weight: 900; text-decoration: underline; text-underline-offset: 4px; }
+    .signin { color: #555; font-size: .92rem; font-weight: 650; margin-top: 1rem; text-align: center; }
+    .signin a { color: #111; font-weight: 950; text-decoration: underline; text-underline-offset: 4px; }
     @media (max-width: 980px) {
+      .register-page { padding: .85rem; }
       .register-shell { grid-template-columns: 1fr; min-height: auto; }
-      .visual-panel { min-height: auto; }
+      .visual-panel { grid-template-columns: minmax(180px, .72fr) minmax(0, 1fr); grid-template-rows: none; min-height: 0; }
+      .hero-photo { min-height: 220px; }
+      .visual-copy { align-content: end; padding: .75rem; }
+      .visual-copy h1 { max-width: 14ch; }
       .register-form { max-height: none; }
     }
     @media (max-width: 620px) {
-      .register-page { padding: .75rem; }
-      .register-shell { border-radius: 20px; padding: 1.2rem; }
-      .hero-photo { border-radius: 18px; height: 260px; }
-      .field-grid { gap: 0; grid-template-columns: 1fr; }
-      h1 { font-size: clamp(2.35rem, 13vw, 3.6rem); }
-      .register-form { border-radius: 20px; }
+      .register-page { padding: .55rem; }
+      .register-shell { border-radius: 16px; gap: .75rem; padding: .65rem; }
+      .visual-panel { border-radius: 12px; grid-template-columns: 1fr; padding: .6rem; }
+      .hero-photo { border-radius: 8px; height: 190px; min-height: 190px; }
+      .visual-copy { gap: .5rem; padding: .35rem .15rem .05rem; }
+      .visual-copy h1 { font-size: clamp(1.75rem, 8vw, 2.35rem); line-height: 1.06; max-width: 16ch; }
+      .visual-copy p { font-size: .9rem; line-height: 1.5; }
+      .register-form { border-radius: 12px; box-shadow: 0 12px 32px rgba(17,17,17,.06); padding: .85rem; }
+      .form-head { margin-bottom: .85rem; padding-bottom: .85rem; }
+      h2 { font-size: 1.45rem; }
+      h3 { font-size: .9rem; margin-bottom: .75rem; }
+      .form-section { border-radius: 10px; padding: .82rem; }
+      .form-section + .form-section { margin-top: .75rem; }
+      .field-grid { gap: .72rem; grid-template-columns: 1fr; }
+      label { font-size: .78rem; }
+      input, select, textarea, .file-field b { border-radius: 8px; font-size: .9rem; min-height: 44px; padding: .68rem .75rem; }
+      .submit { min-height: 48px; }
     }
   `]
 })
@@ -668,3 +686,6 @@ export class RegisterPageComponent {
     return key === 'photo' || key === 'drivingLicense' || key === this.residenceProofKey();
   }
 }
+
+
+
