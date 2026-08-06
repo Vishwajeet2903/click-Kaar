@@ -247,29 +247,46 @@ interface AdminNoteDialog {
                     </div>
                   </section>
 
-                  <section class="surface panel">
-                    <div class="panel-head">
-                      <h3>Pending registrations</h3>
+                  <section class="surface panel pending-dashboard-panel">
+                    <div class="panel-head registration-queue-head">
+                      <div>
+                        <h3>Pending registrations</h3>
+                        <span>{{ pendingCustomers.length }} waiting for review</span>
+                      </div>
                       <button type="button" class="link-btn" (click)="activeTab.set('registrations')">View requests</button>
                     </div>
                     @if (isLoadingPending) {
-                      <p class="muted">Loading pending registrations...</p>
+                      <div class="queue-state compact-state">
+                        <p class="muted">Loading pending registrations...</p>
+                      </div>
                     } @else if (pendingLoadError) {
-                      <p class="error-text">{{ pendingLoadError }}</p>
+                      <div class="queue-state compact-state">
+                        <p class="error-text">{{ pendingLoadError }}</p>
+                      </div>
                     } @else if (pendingCustomers.length) {
-                      <div class="dense-list">
-                        @for (customer of pendingCustomers; track customer.requestId) {
+                      <div class="dense-list request-list dashboard-request-list">
+                        @for (customer of pendingCustomers.slice(0, 4); track customer.requestId) {
                           <article>
-                            <div>
-                              <strong>{{ customer.fullName }}</strong>
-                              <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
+                            <button type="button" class="request-summary" (click)="openPendingDetails(customer)">
+                              <span class="request-avatar">{{ initials(customer.fullName) }}</span>
+                              <span class="request-copy">
+                                <strong>{{ customer.fullName }}</strong>
+                                <span>{{ customer.email }}</span>
+                                <small>{{ customer.mobile || 'Mobile not added' }} - {{ customer.city || 'City not added' }}</small>
+                              </span>
+                            </button>
+                            <div class="request-meta">
+                              <span class="status-chip">{{ customer.status }}</span>
+                              <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">Open</button>
                             </div>
-                            <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">Open</button>
                           </article>
                         }
                       </div>
                     } @else {
-                      <p class="muted">No customer registrations are waiting for approval.</p>
+                      <div class="queue-state compact-state empty-queue">
+                        <h3>All caught up</h3>
+                        <p class="muted">No customer registrations are waiting for approval.</p>
+                      </div>
                     }
                   </section>
                 </div>
@@ -277,25 +294,38 @@ interface AdminNoteDialog {
 
               @case ('registrations') {
                 <div class="split-grid registration-grid">
-                  <section class="surface panel">
-                    <div class="panel-head">
-                      <h3>Pending registration requests</h3>
+                  <section class="surface panel registration-queue">
+                    <div class="panel-head registration-queue-head">
+                      <div>
+                        <h3>Pending registration requests</h3>
+                        <span>{{ pendingCustomers.length }} waiting for review</span>
+                      </div>
                       <button type="button" class="link-btn" (click)="loadPendingCustomers()">Refresh</button>
                     </div>
                     @if (isLoadingPending) {
-                      <p class="muted">Loading pending registrations...</p>
+                      <div class="queue-state">
+                        <p class="muted">Loading pending registrations...</p>
+                      </div>
                     } @else if (pendingLoadError) {
-                      <p class="error-text">{{ pendingLoadError }}</p> 
+                      <div class="queue-state">
+                        <p class="error-text">{{ pendingLoadError }}</p>
+                      </div>
                     } @else if (pendingCustomers.length) {
                       <div class="dense-list request-list">
                         @for (customer of pendingPageItems(); track customer.requestId) {
                           <article [class.active]="selectedPendingCustomer?.requestId === customer.requestId">
                             <button type="button" class="request-summary" (click)="openPendingDetails(customer)">
-                              <strong>{{ customer.fullName }}</strong>
-                              <span>{{ customer.email }}{{ customer.mobile ? ' - ' + customer.mobile : '' }}</span>
-                              <small>{{ customer.city || 'City not added' }}{{ customer.state ? ', ' + customer.state : '' }}</small>
+                              <span class="request-avatar">{{ initials(customer.fullName) }}</span>
+                              <span class="request-copy">
+                                <strong>{{ customer.fullName }}</strong>
+                                <span>{{ customer.email }}</span>
+                                <small>{{ customer.mobile || 'Mobile not added' }} - {{ customer.city || 'City not added' }}{{ customer.state ? ', ' + customer.state : '' }}</small>
+                              </span>
                             </button>
-                            <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">View</button>
+                            <div class="request-meta">
+                              <span class="status-chip">{{ customer.status }}</span>
+                              <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">View</button>
+                            </div>
                           </article>
                         }
                       </div>
@@ -307,7 +337,10 @@ interface AdminNoteDialog {
                         </div>
                       </div>
                     } @else {
-                      <p class="muted">No customer registrations are waiting for approval.</p>
+                      <div class="queue-state empty-queue">
+                        <h3>All caught up</h3>
+                        <p class="muted">No customer registrations are waiting for approval.</p>
+                      </div>
                     }
                   </section>
 
@@ -316,9 +349,9 @@ interface AdminNoteDialog {
                       <div class="panel-head">
                         <div>
                           <h3>{{ selectedPendingCustomer.fullName }}</h3>
-                          <span>{{ selectedPendingCustomer.status }}</span>
+                          <span>{{ selectedPendingCustomer.email }}{{ selectedPendingCustomer.mobile ? ' - ' + selectedPendingCustomer.mobile : '' }}</span>
                         </div>
-                        <span class="detail-page-count">Page {{ registrationDetailPage }} of 3</span>
+                        <span class="detail-page-count">{{ selectedPendingCustomer.status }}</span>
                       </div>
 
                       <div class="detail-stepper" aria-label="Registration review pages">
@@ -329,7 +362,10 @@ interface AdminNoteDialog {
 
                       @if (registrationDetailPage === 1) {
                         <div class="detail-section">
-                          <h4>Personal details</h4>
+                          <div class="detail-section-head">
+                            <h4>Personal details</h4>
+                            <span>Page {{ registrationDetailPage }} of 3</span>
+                          </div>
                           <dl class="detail-grid">
                             <div><dt>First name</dt><dd>{{ selectedPendingCustomer.firstName || '-' }}</dd></div>
                             <div><dt>Last name</dt><dd>{{ selectedPendingCustomer.lastName || '-' }}</dd></div>
@@ -345,7 +381,10 @@ interface AdminNoteDialog {
 
                       @if (registrationDetailPage === 2) {
                         <div class="detail-section">
-                          <h4>Address & work</h4>
+                          <div class="detail-section-head">
+                            <h4>Address & work</h4>
+                            <span>Page {{ registrationDetailPage }} of 3</span>
+                          </div>
                           <dl class="detail-grid">
                             <div><dt>Address</dt><dd>{{ selectedPendingCustomer.currentAddress || '-' }}</dd></div>
                             <div><dt>City</dt><dd>{{ selectedPendingCustomer.city || '-' }}</dd></div>
@@ -361,7 +400,10 @@ interface AdminNoteDialog {
 
                       @if (registrationDetailPage === 3) {
                         <div class="detail-section">
-                          <h4>Uploaded images</h4>
+                          <div class="detail-section-head">
+                            <h4>Uploaded documents</h4>
+                            <span>{{ selectedPendingCustomer.documents.length }} file{{ selectedPendingCustomer.documents.length === 1 ? '' : 's' }}</span>
+                          </div>
                           @if (documentPreviewError) {
                             <p class="error-text">{{ documentPreviewError }}</p>
                           }
@@ -1149,10 +1191,22 @@ interface AdminNoteDialog {
     .dense-list strong, td strong { display: block; }
     .dense-list strong, td strong { color: #111; font-size: .94rem; line-height: 1.35; }
     .dense-list span, td span { color: #555; display: block; font-size: .82rem; line-height: 1.45; margin-top: .18rem; }
-    .request-list article { align-items: center; flex-direction: row; }
-    .request-summary { align-items: start; background: transparent; border: 0; color: #111; display: grid; flex: 1; font: inherit; justify-content: stretch; min-width: 0; padding: 0; text-align: left; white-space: normal; }
-    .request-summary small { color: #9a6a00; font-size: .72rem; font-weight: 900; margin-top: .25rem; }
+    .pending-dashboard-panel { align-content: start; }
+    .registration-queue-head > div { min-width: 0; }
+    .queue-state { align-content: center; background: var(--admin-soft); border: 1px dashed rgba(17,17,17,.14); border-radius: 6px; display: grid; min-height: 180px; padding: 1rem; text-align: center; }
+    .queue-state.compact-state { min-height: 162px; }
+    .queue-state h3 { color: #111; font-size: 1rem; line-height: 1.25; margin: 0 0 .35rem; }
+    .request-list article { align-items: center; flex-direction: row; padding: .7rem; }
+    .request-summary { align-items: center; background: transparent; border: 0; color: #111; display: grid; flex: 1 1 auto; font: inherit; gap: .7rem; grid-template-columns: 42px minmax(0, 1fr); justify-content: stretch; min-height: 44px; min-width: 0; padding: 0; text-align: left; white-space: normal; }
+    .request-summary:hover { transform: none; }
+    .request-avatar { align-items: center; aspect-ratio: 1; background: #111; border-radius: 999px; color: #fff !important; display: inline-flex !important; font-size: .78rem !important; font-weight: 950; justify-content: center; letter-spacing: 0; margin: 0 !important; width: 42px; }
+    .request-copy { display: block; min-width: 0; }
+    .request-copy strong, .request-copy span, .request-copy small { overflow-wrap: anywhere; }
+    .request-copy small { color: #9a6a00; display: block; font-size: .72rem; font-weight: 900; line-height: 1.35; margin-top: .25rem; }
+    .request-meta { align-items: end; display: grid; flex: 0 0 auto; gap: .45rem; justify-items: end; }
+    .status-chip { background: #fff7e6; border: 1px solid rgba(255,151,0,.22); border-radius: 999px; color: #9a6a00 !important; display: inline-flex !important; font-size: .68rem !important; font-weight: 950; line-height: 1.2; margin: 0 !important; padding: .28rem .5rem; text-transform: uppercase; }
     .request-list .mini-btn { flex: 0 0 auto; min-width: 74px; }
+    .dashboard-request-list article { background: #fff; }
     .pagination-row { align-items: center; border-top: 1px solid var(--admin-line); display: flex; gap: .85rem; justify-content: space-between; padding-top: .85rem; }
     .pagination-row span { color: #777; font-size: .78rem; font-weight: 900; }
     .pagination-row div { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; }
@@ -1165,7 +1219,9 @@ interface AdminNoteDialog {
     .detail-stepper button.active, .detail-stepper button:hover { background: #111; box-shadow: 0 10px 22px rgba(0,0,0,.14); color: #fff; transform: none; }
     .detail-section { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; padding: 1rem; }
     .detail-section + .detail-section { margin-top: 0; }
-    .detail-section h4 { color: #9a6a00; font-size: .78rem; letter-spacing: .02em; margin: 0 0 .8rem; text-transform: uppercase; word-spacing: 0; }
+    .detail-section-head { align-items: center; display: flex; gap: .75rem; justify-content: space-between; margin-bottom: .8rem; }
+    .detail-section-head span { color: #777; font-size: .72rem; font-weight: 900; }
+    .detail-section h4 { color: #9a6a00; font-size: .78rem; letter-spacing: .02em; margin: 0; text-transform: uppercase; word-spacing: 0; }
     .detail-grid { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
     .detail-grid div { background: #fff; border: 1px solid rgba(17,17,17,.06); border-radius: 6px; min-width: 0; padding: .72rem; }
     .detail-grid dt { color: #777; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
@@ -1346,7 +1402,9 @@ interface AdminNoteDialog {
       .admin-sidebar nav button.active { background: var(--admin-accent); border-color: var(--admin-accent); color: #111; }
       .admin-sidebar nav button.active small { background: #111; color: #fff; }
       .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input { max-width: none; width: 100%; }
-      .request-list article { align-items: stretch; }
+      .request-list article { align-items: stretch; flex-direction: column; }
+      .request-meta { align-items: stretch; grid-template-columns: 1fr; justify-items: stretch; }
+      .status-chip { justify-content: center; width: 100%; }
       .coupon-list article { grid-template-columns: 1fr; }
       .coupon-actions { align-items: stretch; display: grid; grid-template-columns: 1fr 1fr; justify-content: stretch; }
       .coupon-actions .status, .coupon-actions .danger-btn { width: 100%; }
@@ -2592,6 +2650,20 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       return 'status-bad';
     }
     return 'status-info';
+  }
+
+  initials(value?: string | null): string {
+    const parts = (value ?? '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+
+    if (!parts.length) return 'NA';
+
+    return parts
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('');
   }
 
   private mapProduct(product: AdminProductResponse): AdminProduct {
