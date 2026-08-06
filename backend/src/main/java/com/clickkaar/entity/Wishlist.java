@@ -2,6 +2,8 @@ package com.clickkaar.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Getter
 @Setter
@@ -21,5 +23,6 @@ public class Wishlist extends AuditableEntity {
   private User user;
 
   @ManyToOne(optional = false)
+  @NotFound(action = NotFoundAction.IGNORE)
   private Product product;
 }

@@ -809,7 +809,7 @@ public class AdminController {
 
   private String productName(BookingItem item) {
     try {
-      return item.getProduct().getName();
+      return item.getProduct() == null ? "Unavailable product" : item.getProduct().getName();
     } catch (EntityNotFoundException exception) {
       return "Unavailable product";
     }

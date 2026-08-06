@@ -2,6 +2,8 @@ package com.clickkaar.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.math.BigDecimal;
 
@@ -21,6 +23,7 @@ public class BookingItem {
   private Booking booking;
 
   @ManyToOne(optional = false)
+  @NotFound(action = NotFoundAction.IGNORE)
   private Product product;
 
   @Column(nullable = false, precision = 10, scale = 2)
