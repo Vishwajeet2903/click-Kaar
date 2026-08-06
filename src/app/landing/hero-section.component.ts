@@ -11,7 +11,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       <div class="hero-copy">
         <p class="eyebrow" appScrollReveal="fade-up">PREMIUM PHOTOGRAPHY EQUIPMENT RENTAL PUNE</p>
         <h1 appScrollReveal="fade-up" [revealDelay]="90">Create Your Next <h1 class="mast">MASTERPIECE<span class="mast-period">.</span></h1></h1>
-        <h2 appScrollReveal="fade-up" [revealDelay]="90">with the Best Camera Rental in Pune</h2> 
+        <h2 appScrollReveal="fade-up" [revealDelay]="90">with the best camera rental in Pune</h2> 
         <p class="hero-subtitle" appScrollReveal="fade-up" [revealDelay]="180">
           Rent the Right Gear, Right When You Need It.
         </p>
@@ -112,7 +112,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       .hero-section { min-height: auto; padding: 2rem 1rem 1.25rem; }
       .eyebrow { font-size: clamp(1rem, 1.5vw, 1.18rem); letter-spacing: .16em; line-height: 1.35; }
       h1 { font-size: clamp(2.35rem, 13vw, 3.05rem); line-height: .96; margin: .6rem auto .75rem; max-width: 10ch; }
-      h2 { font-size: clamp(1.15rem, 5vw, 1.45rem); line-height: 1.15; margin: 0 auto .7rem; max-width: 14ch; }
+      h2 { color: #2b2b28; font-size: clamp(1rem, 4.4vw, 1.22rem); font-weight: 850; line-height: 1.32; margin: 0 auto .75rem; max-width: 27ch; text-wrap: balance; }
       .hero-subtitle { font-size: .96rem; margin-bottom: 1rem; max-width: 28ch; }
       .hero-actions { flex-direction: column; }
       .hero-actions .btn-pill { width: min(100%, 230px); }
@@ -139,6 +139,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
     @media (max-width: 380px) {
       h1 { font-size: 2.28rem; }
+      h2 { font-size: 1rem; max-width: 25ch; }
       .hero-collage { max-width: 312px; }
       .collage-card { height: 104px; width: 118px; }
     }
@@ -170,3 +171,4 @@ export class HeroSectionComponent implements AfterViewInit {
     return 'Cameras';
   }
 }
+

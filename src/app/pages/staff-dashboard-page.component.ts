@@ -63,7 +63,6 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         </div>
         <div class="profile-actions">
           <button type="button" class="settings-btn" [class.active-settings]="showSettings()" (click)="toggleSettings()">Settings</button>
-          <button type="button" class="logout-btn" (click)="logout()">Logout</button>
         </div>
       </header>
 
@@ -203,8 +202,8 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         <section class="surface panel content-workbench">
           <div class="panel-head"><h2>Content</h2><span>{{ contentCount() }} items</span></div>
           <div class="content-switcher">
-            <button type="button" [class.active-content]="activeContentSection() === 'blog'" (click)="activeContentSection.set('blog')">Blog</button>
-            <button type="button" [class.active-content]="activeContentSection() === 'gallery'" (click)="activeContentSection.set('gallery')">Gallery</button>
+            <button type="button" [class.active-content]="activeContentSection() === 'blog'" (click)="setContentSection('blog')">Blog</button>
+            <button type="button" [class.active-content]="activeContentSection() === 'gallery'" (click)="setContentSection('gallery')">Gallery</button>
           </div>
 
           @if (activeContentSection() === 'blog') {
@@ -318,9 +317,9 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     h2 { color: #111827; font-size: 1.2rem; font-weight: 900; letter-spacing: 0; line-height: 1.25; margin: 0 0 .35rem; }
     .profile-panel p:not(.eyebrow) { color: #555; font-size: .94rem; font-weight: 500; line-height: 1.55; margin: 0; }
     .profile-actions { align-items: center; display: flex; flex: 0 0 auto; flex-wrap: wrap; gap: .6rem; justify-content: flex-end; }
-    .logout-btn, .settings-btn, .panel-head a, .pager button, .save-btn { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 850; justify-content: center; min-height: 46px; padding: .75rem 1.1rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease, border-color .25s ease; }
-    .logout-btn, .settings-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; flex: 0 0 auto; font-size: .9rem; }
-    .logout-btn:hover, .settings-btn:hover, .settings-btn.active-settings { background: #111; border-color: #111; color: #fff; transform: translateY(-2px); }
+    .settings-btn, .panel-head a, .pager button, .save-btn { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 850; justify-content: center; min-height: 46px; padding: .75rem 1.1rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease, border-color .25s ease; }
+    .settings-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; flex: 0 0 auto; font-size: .9rem; }
+    .settings-btn:hover, .settings-btn.active-settings { background: #111; border-color: #111; color: #fff; transform: translateY(-2px); }
     .metric-grid { display: grid; gap: .85rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .metric-card { display: grid; gap: .35rem; min-height: 104px; padding: 1.2rem; }
     .metric-card span, .panel-head span, small { color: #777; font-size: .78rem; font-weight: 900; text-transform: uppercase; }
@@ -401,10 +400,20 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
       .list-grid, .editor-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
+      .staff-dashboard, .staff-dashboard * { box-sizing: border-box; }
+      .staff-dashboard :where(.surface, .profile-panel, .metric-card, .panel, .list-row, .content-list, .content-editor-form, .gallery-admin-grid article) { max-width: 100%; min-width: 0; }
+      .staff-dashboard :where(.metric-grid, .list-grid, .content-grid, .editor-grid, .gallery-admin-grid, .profile-actions) { min-width: 0; width: 100%; }
+      .staff-dashboard :where(h2, strong, span, small, p, button, a, label) { overflow-wrap: anywhere; }
       .staff-dashboard { max-width: calc(100vw - 18px) !important; }
       .profile-panel { align-items: stretch; flex-direction: column; }
-      .profile-actions, .logout-btn, .settings-btn { width: 100%; }
-      .metric-grid, .list-grid.compact, .content-grid { grid-template-columns: 1fr; }
+      .profile-actions, .settings-btn { width: 100%; }
+      .metric-grid, .list-grid.compact, .content-grid { gap: .75rem; grid-template-columns: 1fr; }
+      .metric-card, .panel, .list-row, .content-list, .content-editor-form { padding: .85rem; }
+      .gallery-admin-grid article { grid-template-columns: 64px minmax(0, 1fr); }
+      .gallery-admin-grid article .danger-btn { grid-column: 1 / -1; width: 100%; }
+      .gallery-admin-grid img { width: 64px; }
+      .form-actions { align-items: stretch; flex-direction: column; }
+      .form-actions button, .content-switcher, .content-switcher button, .save-btn { width: 100%; }
       .pager { align-items: stretch; flex-direction: column; }
       .pager div { width: 100%; }
       .pager button { flex: 1; }
@@ -738,6 +747,12 @@ export class StaffDashboardPageComponent implements OnInit {
   }
   toggleSettings(): void {
     this.showSettings.update((value) => !value);
+    this.scrollToActiveSection(this.showSettings() ? '.staff-dashboard .password-panel' : undefined);
+  }
+
+  setContentSection(section: 'blog' | 'gallery'): void {
+    this.activeContentSection.set(section);
+    this.scrollToActiveSection();
   }
 
   passwordFieldError(field: PasswordField): string {
@@ -908,19 +923,30 @@ export class StaffDashboardPageComponent implements OnInit {
     });
   }
   private scrollToSectionTop(): void {
-    const target = document.querySelector('.staff-dashboard');
-    if (!target) return;
-    const start = window.scrollY;
-    const end = target.getBoundingClientRect().top + window.scrollY;
-    const duration = 900;
-    const startTime = performance.now();
-    const animate = (now: number) => {
-      const progress = Math.min((now - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      window.scrollTo(0, start + (end - start) * eased);
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
+    this.scrollToActiveSection();
+  }
+
+  private scrollToActiveSection(preferredSelector?: string): void {
+    window.setTimeout(() => {
+      const isMobile = window.matchMedia('(max-width: 560px)').matches;
+      const preferredTarget = preferredSelector ? document.querySelector(preferredSelector) : null;
+      const target = preferredTarget ?? (isMobile
+        ? document.querySelector('.staff-dashboard .content-workbench') ?? document.querySelector('.staff-dashboard .password-panel') ?? document.querySelector('.staff-dashboard')
+        : document.querySelector('.staff-dashboard'));
+      if (!target) return;
+      const stickyOffset = isMobile ? 88 : 92;
+      const start = window.scrollY;
+      const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - stickyOffset);
+      const duration = isMobile ? 700 : 900;
+      const startTime = performance.now();
+      const animate = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        window.scrollTo(0, start + (end - start) * eased);
+        if (progress < 1) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    });
   }
 
   inventoryPageSummary(): string {
@@ -937,6 +963,12 @@ export class StaffDashboardPageComponent implements OnInit {
     void this.router.navigateByUrl('/login');
   }
 }
+
+
+
+
+
+
 
 
 

@@ -212,7 +212,6 @@ interface AdminNoteDialog {
                 @if (activeTab() === 'inventory') {
                   <button type="button" class="primary-btn" (click)="addProduct()">Add product</button>
                 }
-                <button type="button" class="danger-btn topbar-logout" (click)="logout()">Logout</button>
               </div>
             </header>
 
@@ -759,8 +758,8 @@ interface AdminNoteDialog {
 
               @case ('content') {
                 <div class="content-switcher surface">
-                  <button type="button" [class.active]="activeContentSection() === 'blog'" (click)="activeContentSection.set('blog')">Blog & SEO</button>
-                  <button type="button" [class.active]="activeContentSection() === 'gallery'" (click)="activeContentSection.set('gallery')">Gallery</button>
+                  <button type="button" [class.active]="activeContentSection() === 'blog'" (click)="setAdminContentSection('blog')">Blog & SEO</button>
+                  <button type="button" [class.active]="activeContentSection() === 'gallery'" (click)="setAdminContentSection('gallery')">Gallery</button>
                 </div>
 
                 @if (activeContentSection() === 'blog') {
@@ -1163,7 +1162,6 @@ interface AdminNoteDialog {
     .danger-btn:hover { background: #b42318; border-color: #b42318; box-shadow: 0 14px 28px rgba(180,35,24,.18); color: #fff; transform: translateY(-2px); }
     .return-btn { background: #ecfdf3; border: 1px solid rgba(2,122,72,.2); box-shadow: 0 8px 22px rgba(2,122,72,.08); color: #027a48; }
     .return-btn:hover { background: #027a48; border-color: #027a48; box-shadow: 0 14px 28px rgba(2,122,72,.18); color: #fff; transform: translateY(-2px); }
-    .topbar-logout { min-height: 50px; padding: .85rem 1.25rem; }
     .ghost-mini, .link-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); box-shadow: 0 8px 22px rgba(0,0,0,.05); color: #111; }
     button:disabled, button:disabled:hover { cursor: not-allowed; opacity: .55; transform: none !important; }
     .metric-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -1453,7 +1451,7 @@ interface AdminNoteDialog {
       .avatar { height: 38px; width: 38px; }
       .customer-card dl, dl { grid-template-columns: 1fr; }
       .bar-list div { grid-template-columns: 1fr; }
-      .primary-btn, .ghost-btn, .topbar-logout { font-size: .84rem; min-height: 42px; padding: .62rem .9rem; }
+      .primary-btn, .ghost-btn { font-size: .84rem; min-height: 42px; padding: .62rem .9rem; }
       .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { font-size: .74rem; line-height: 1.2; min-height: 36px; padding: .46rem .65rem; white-space: normal; }
       .panel-head .link-btn, .panel-head .mini-btn, .panel-head .ghost-mini { min-width: 0; width: auto; }
       .content-switcher button { font-size: .82rem; min-height: 38px; padding: .48rem .65rem; }
@@ -1470,7 +1468,7 @@ interface AdminNoteDialog {
       .admin-sidebar { margin-inline: -.5rem; padding-left: .5rem; padding-right: .5rem; }
       .admin-sidebar nav button { font-size: .75rem; min-width: max-content; padding-inline: .52rem; }
       .admin-topbar, .panel, .editor-panel, .employee-form, .customer-card { padding: .75rem; }
-      .primary-btn, .ghost-btn, .topbar-logout { font-size: .82rem; min-height: 40px; padding: .56rem .78rem; }
+      .primary-btn, .ghost-btn { font-size: .82rem; min-height: 40px; padding: .56rem .78rem; }
       .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { white-space: normal; }
       table { min-width: 700px; }
     }
@@ -1936,6 +1934,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   selectAdminTab(tab: AdminTab): void {
     this.activeTab.set(tab);
     this.scrollToSectionTop();
+  }
+
+  setAdminContentSection(section: 'blog' | 'gallery'): void {
+    this.activeContentSection.set(section);
+    this.scrollToActiveSection();
   }
 
   setRegistrationDetailPage(page: number): void {
@@ -3239,6 +3242,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 }
+
+
+
+
+
 
 
 

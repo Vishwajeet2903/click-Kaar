@@ -32,7 +32,6 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
                 {{ item.label }}
               </button>
             }
-            <button type="button" class="logout-btn" (click)="logout()">Log out</button>
           </aside>
 
           <div class="content">
@@ -228,9 +227,8 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .sidebar-head strong { color: #111827; font-size: 1rem; font-weight: 900; line-height: 1.25; overflow-wrap: anywhere; }
     .menu-btn { background: transparent; border: 0; border-radius: 8px; color: #555; display: block; font-weight: 850; min-height: 46px; padding: .75rem; text-align: left; transition: background .2s ease, color .2s ease, transform .2s ease; width: 100%; }
     .menu-btn:hover, .menu-btn.active-menu { background: rgba(255,151,0,.1); color: #ff9700; transform: translateX(2px); }
-    .logout-btn, .empty-state a, .empty-panel a, .save-btn { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
-    .logout-btn { margin-top: .8rem; width: 100%; }
-    .logout-btn:hover, .empty-state a:hover, .empty-panel a:hover, .save-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
+    .empty-state a, .empty-panel a, .save-btn { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
+    .empty-state a:hover, .empty-panel a:hover, .save-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .profile { align-items: center; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1rem; }
     .profile h2 { color: #111827; font-size: 1.2rem; font-weight: 900; line-height: 1.25; margin-bottom: .35rem; }
     .profile-meta { align-items: flex-end; display: flex; flex-direction: column; gap: .55rem; text-align: right; }
@@ -291,18 +289,23 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .pagination-bar button:hover { background: #111; border-color: #111; color: #fff; transform: translateY(-2px); }
     .pagination-bar button:disabled, .pagination-bar button:disabled:hover { background: #fff; border-color: rgba(17,17,17,.12); color: #777; cursor: not-allowed; opacity: .55; transform: none; }
     @media (max-width: 767px) {
+      .dashboard-page, .dashboard-page * { box-sizing: border-box; }
+      .dashboard-page :where(.surface, .sidebar, .profile, .stat, .empty-panel, .password-panel, .item, .booking-badge) { max-width: 100%; min-width: 0; }
+      .dashboard-page :where(.dashboard, .content, .summary-grid, .booking-list, .payment-list) { min-width: 0; width: 100%; }
+      .dashboard-page :where(h2, h3, strong, span, small, p, button, a) { overflow-wrap: anywhere; }
       .dashboard { grid-template-columns: 1fr; }
       .sidebar { position: static; }
       .profile { align-items: flex-start; flex-direction: column; }
       .profile-meta { align-items: flex-start; text-align: left; }
-      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .item { align-items: start; grid-template-columns: 104px minmax(0, 1fr); }
-      .booking-badge { min-height: 92px; }
+      .summary-grid { gap: .7rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .item { align-items: start; gap: .75rem; grid-template-columns: 96px minmax(0, 1fr); padding: .85rem; }
+      .booking-badge { min-height: 86px; padding: .7rem; }
       .item-actions { grid-column: 1 / -1; min-width: 0; text-align: left !important; }
       .payment-row { grid-template-columns: 1fr; }
       .payment-list article > span { justify-self: start; }
       .pagination-bar { align-items: stretch; flex-direction: column; }
-      .pagination-bar div { justify-content: flex-start; }
+      .pagination-bar div { justify-content: flex-start; width: 100%; }
+      .pagination-bar button { flex: 1; min-width: 0; }
     }
     @media (min-width: 768px) and (max-width: 1199px) {
       .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -480,8 +483,34 @@ export class DashboardPageComponent {
     return items.slice(start, start + pageSize);
   }
 
+  private scrollToActiveSection(): void {
+    window.setTimeout(() => {
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      const target = isMobile
+        ? document.querySelector('.dashboard-page .content') ?? document.querySelector('.dashboard-page')
+        : document.querySelector('.dashboard-page');
+      if (!target) return;
+      const stickyOffset = isMobile ? 88 : 92;
+      const start = window.scrollY;
+      const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - stickyOffset);
+      const duration = isMobile ? 700 : 900;
+      const startTime = performance.now();
+      const animate = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        window.scrollTo(0, start + (end - start) * eased);
+        if (progress < 1) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    });
+  }
+
   logout(): void {
     this.authService.logout();
     void this.router.navigateByUrl('/login');
   }
 }
+
+
+
+
