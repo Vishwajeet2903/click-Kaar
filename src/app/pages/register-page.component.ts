@@ -86,7 +86,7 @@ function notFutureDate(control: AbstractControl<string>): ValidationErrors | nul
             <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1100&q=85" alt="">
           </figure>
           <div class="visual-copy">
-            <p class="eyebrow">Join Click-Kaar</p>
+            <p class="eyebrow" style='color:#ff9700'  >Join Click-Kaar</p>
             <h1>Create your verified rental profile.</h1>
             <p>Complete your profile once and keep bookings, rentals, and verification details ready for every shoot.</p>
           </div>
@@ -311,6 +311,7 @@ function notFutureDate(control: AbstractControl<string>): ValidationErrors | nul
     </section>
   `,
   styles: [`
+    .join{ color: #ff9700; font-size: .74rem; font-weight: 950; letter-spacing: .12em; line-height: 1.35; margin: 0; text-transform: uppercase; }
     .register-page { background: #f5f5f2; color: #111; min-height: calc(100vh - 96px); padding: clamp(.8rem, 1.6vw, 1.4rem) clamp(1rem, 2.2vw, 1.6rem) clamp(1.2rem, 2.4vw, 1.8rem); }
     .register-shell { align-items: stretch; background: #fdfdfc; border: 1px solid rgba(17,17,17,.08); border-radius: 24px; box-shadow: 0 22px 60px rgba(17,17,17,.07); display: grid; gap: clamp(1rem, 2vw, 1.6rem); grid-template-columns: minmax(280px, 420px) minmax(0, 1fr); margin: 0 auto; max-width: 1280px; min-height: calc(100vh - 130px); overflow: hidden; padding: clamp(.9rem, 1.9vw, 1.5rem); }
     .visual-panel, .register-form { min-width: 0; }
@@ -686,6 +687,8 @@ export class RegisterPageComponent {
     return key === 'photo' || key === 'drivingLicense' || key === this.residenceProofKey();
   }
 }
+
+
 
 
 
