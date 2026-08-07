@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe, PercentPipe, formatDate } from '@angular/common';
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -682,7 +682,7 @@ interface AdminNoteDialog {
                     </div>
                   </section>
 
-                  <section class="surface panel customer-detail-panel">
+                  <section #customerDetailPanel class="surface panel customer-detail-panel">
                     <div class="panel-head">
                       <div>
                         <h3>Customer details</h3>
@@ -1627,6 +1627,7 @@ interface AdminNoteDialog {
       .admin-topbar h2 { font-size: clamp(1.35rem, 8vw, 1.85rem); }
       .split-grid, .metric-grid, .card-grid, .form-grid, .blog-form-grid, .detail-grid, .document-grid, .gallery-upload-flow, .gallery-toggle-row, .gallery-admin-grid { grid-template-columns: 1fr; }
       .customer-management-grid { grid-template-columns: 1fr; }
+      .customer-detail-panel { scroll-margin-top: 7rem; }
 
       .metric-card { gap: .45rem; min-height: auto; padding: .82rem; }
       .panel, .table-panel, .editor-panel, .employee-form, .access-card, .customer-card { padding: .82rem; width: 100%; }
@@ -1723,6 +1724,8 @@ interface AdminNoteDialog {
   `]
 })
 export class AdminPageComponent implements OnInit, OnDestroy {
+  @ViewChild('customerDetailPanel') private customerDetailPanel?: ElementRef<HTMLElement>;
+
   readonly authService = inject(AuthService);
 
   private readonly adminService = inject(AdminService);
@@ -2501,6 +2504,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.selectedCustomerError = '';
     this.loadingCustomerId = customer.id;
     this.clearDocumentPreviews();
+    this.scrollToCustomerDetailsOnMobile();
     this.adminService.getCustomerDetails(customer.id)
       .pipe(finalize(() => {
         if (this.loadingCustomerId === customer.id) {
@@ -2521,6 +2525,17 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  private scrollToCustomerDetailsOnMobile(): void {
+    if (!window.matchMedia('(max-width: 760px)').matches) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      this.customerDetailPanel?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
   toggleCustomerBlock(customer: AdminCustomer): void {
     const action = customer.blocked ? 'unblock' : 'block';
     this.openConfirmDialog(`${action === 'block' ? 'Block' : 'Unblock'} customer?`, customer.name, action === 'block' ? 'Block customer' : 'Unblock customer', action === 'block' ? 'danger' : 'default', () => {
