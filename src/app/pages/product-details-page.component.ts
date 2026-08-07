@@ -228,9 +228,9 @@ export class AddedDialogComponent {
     .eyebrow { line-height: 1.35; }
     h1 { color: #111; font-size: clamp(1.85rem, 4.2vw, 3.65rem); font-weight: 950; letter-spacing: 0; line-height: 1.08; margin: .35rem 0 .85rem; overflow-wrap: anywhere; }
     .intro { color: #4f4f4c; font-size: clamp(1rem, 1.35vw, 1.12rem); font-weight: 650; line-height: 1.75; margin: 0; max-width: 72ch; overflow-wrap: anywhere; }
-    .gallery { overflow: visible; padding: .65rem; position: sticky; top: 92px; }
-    .media-frame { background: #ececea; border-radius: 18px; overflow: hidden; position: relative; touch-action: pan-y; }
-    .main-img { aspect-ratio: 4/3; display: block; height: auto; object-fit: cover; width: 100%; }
+    .gallery { max-width: 100%; overflow: hidden; padding: .65rem; position: sticky; top: 92px; }
+    .media-frame { aspect-ratio: 4 / 3; background: #ececea; border-radius: 18px; max-width: 100%; overflow: hidden; position: relative; touch-action: pan-y; width: 100%; }
+    .main-img { display: block; height: 100%; max-height: 100%; max-width: 100%; object-fit: cover; width: 100%; }
     .stock-chip { background: #ff9700; border-radius: 999px; bottom: 1rem; color: #111; font-size: .75rem; font-weight: 950; left: 1rem; padding: .5rem .8rem; position: absolute; text-transform: uppercase; }
     .stock-chip.out { background: #111; color: #fff; }
     .slider-dots { align-items: center; display: flex; gap: .45rem; justify-content: center; margin-top: .75rem; min-height: 22px; }
@@ -318,9 +318,9 @@ export class AddedDialogComponent {
       .duration-options { grid-template-columns: repeat(2, 1fr); }
       .booking-head { display: grid; }
       .availability { justify-self: start; }
-      .gallery { padding: .45rem; }
-      .media-frame { cursor: grab; }
-      .main-img { min-height: 280px; }
+      .gallery { max-width: 100%; overflow: hidden; padding: .45rem; }
+      .media-frame { border-radius: 14px; contain: paint; cursor: grab; }
+      .main-img { height: 100%; min-height: 0; }
       .product-view { gap: 1rem; }
       h1 { line-height: 1.1; }
       .intro, .description-card p { font-size: .96rem; line-height: 1.7; }
