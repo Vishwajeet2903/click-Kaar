@@ -57,10 +57,10 @@ export class AddedDialogComponent {
 
   viewCart(): void {
     this.dialogRef.close();
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     void this.router.navigateByUrl('/cart').then(() => {
-      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 0);
-      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 120);
+      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), 0);
+      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), 120);
     });
   }
 }

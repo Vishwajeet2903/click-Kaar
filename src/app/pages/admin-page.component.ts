@@ -1229,9 +1229,11 @@ interface AdminNoteDialog {
                               <span class="status-chip">{{ employeeRoleLabel(role) }}</span>
                             }
                           </div>
-                          <button type="button" class="danger-btn employee-delete-btn" [disabled]="employee.roles.includes('ADMIN') || deletingEmployeeId === employee.userId" (click)="deleteEmployee(employee)">
-                            {{ deletingEmployeeId === employee.userId ? 'Deleting...' : 'Delete' }}
-                          </button>
+                          <div class="row-actions employee-actions">
+                            <button type="button" class="danger-btn employee-delete-btn" [disabled]="employee.roles.includes('ADMIN') || deletingEmployeeId === employee.userId" (click)="deleteEmployee(employee)">
+                              {{ deletingEmployeeId === employee.userId ? 'Deleting...' : 'Delete' }}
+                            </button>
+                          </div>
                         </article>
                       } @empty {
                         <div class="queue-state compact-state empty-queue">
@@ -1292,6 +1294,21 @@ interface AdminNoteDialog {
                 </form>
               }
             }
+            @if (confirmDialog) {
+              <div class="admin-confirm-backdrop" role="presentation" (click)="cancelConfirmDialog()">
+                <section class="surface admin-confirm-dialog" role="dialog" aria-modal="true" [attr.aria-label]="confirmDialog.title" (click)="$event.stopPropagation()">
+                  <div>
+                    <p class="eyebrow">Confirm action</p>
+                    <h3>{{ confirmDialog.title }}</h3>
+                    <p>{{ confirmDialog.message }}</p>
+                  </div>
+                  <div class="admin-confirm-actions">
+                    <button type="button" class="ghost-btn" (click)="cancelConfirmDialog()">Cancel</button>
+                    <button type="button" [class.danger-btn]="confirmDialog.tone === 'danger'" [class.primary-btn]="confirmDialog.tone !== 'danger'" (click)="acceptConfirmDialog()">{{ confirmDialog.actionLabel }}</button>
+                  </div>
+                </section>
+              </div>
+            }
           </div>
         </div>
         @if (activeDocumentPreview) {
@@ -1308,21 +1325,6 @@ interface AdminNoteDialog {
                 <span>{{ activeDocumentIndex() + 1 }} / {{ imagePreviews().length }}</span>
               </div>
             </div>
-          </div>
-        }
-        @if (confirmDialog) {
-          <div class="admin-confirm-backdrop" role="presentation" (click)="cancelConfirmDialog()">
-            <section class="surface admin-confirm-dialog" role="dialog" aria-modal="true" [attr.aria-label]="confirmDialog.title" (click)="$event.stopPropagation()">
-              <div>
-                <p class="eyebrow">Confirm action</p>
-                <h3>{{ confirmDialog.title }}</h3>
-                <p>{{ confirmDialog.message }}</p>
-              </div>
-              <div class="admin-confirm-actions">
-                <button type="button" class="ghost-btn" (click)="cancelConfirmDialog()">Cancel</button>
-                <button type="button" [class.danger-btn]="confirmDialog.tone === 'danger'" [class.primary-btn]="confirmDialog.tone !== 'danger'" (click)="acceptConfirmDialog()">{{ confirmDialog.actionLabel }}</button>
-              </div>
-            </section>
           </div>
         }
         @if (noteDialog) {
@@ -1373,7 +1375,7 @@ interface AdminNoteDialog {
     nav button:hover { background: #f6f6f4; border-color: #e6e6e0; color: #111; }
     nav button.active small, nav button.active:hover small { background: #111; color: #fff; }
     nav button:hover small { background: #e6e6e0; color: #555; }
-    .admin-workspace { display: grid; gap: 1.25rem; min-width: 0; }
+    .admin-workspace { display: grid; gap: 1.25rem; min-width: 0; position: relative; }
     .admin-topbar { align-items: end; background: #ffffff; border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: 1.25rem; justify-content: space-between; padding: 1.15rem 1.2rem; }
     .admin-topbar .eyebrow { color: #ff9700; letter-spacing: .14em; margin: 0 0 .25rem; word-spacing: -.04em; }
     .admin-topbar h2 { font-size: clamp(1.08rem, 1.9vw, 1.65rem); font-weight: 600; letter-spacing: 0; line-height: 1.14; margin: 0; }
@@ -1507,6 +1509,7 @@ interface AdminNoteDialog {
     .employee-card-copy span { color: #555; font-size: .82rem; font-weight: 750; line-height: 1.4; margin-top: .18rem; }
     .employee-card-copy small { color: #9a6a00; font-size: .72rem; font-weight: 900; line-height: 1.35; margin-top: .2rem; }
     .employee-role-stack { align-items: end; display: grid; gap: .35rem; justify-items: end; }
+    .employee-actions { justify-content: flex-end; }
     .employee-delete-btn { min-width: 82px; }
     .employee-create-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .employee-create-grid label:last-child { grid-column: 1 / -1; }
@@ -1551,8 +1554,8 @@ interface AdminNoteDialog {
     .lightbox-foot strong, .lightbox-foot span { text-shadow: 0 2px 14px rgba(0,0,0,.32); }
     .lightbox-foot strong { font-size: .88rem; }
     .lightbox-foot span { color: rgba(255,255,255,.75); font-size: .8rem; font-weight: 900; }
-    .admin-confirm-backdrop { align-items: center; background: rgba(0,0,0,.18); display: grid; inset: 0; justify-items: center; padding: 1.5rem; position: fixed; z-index: 5100; }
-    .admin-confirm-dialog { background: #fff !important; border: 0; border-radius: 28px !important; box-shadow: 0 26px 70px rgba(0,0,0,.26); display: grid; gap: 1.15rem; max-width: 420px; min-width: min(360px, calc(100vw - 48px)); overflow: hidden; padding: 1.35rem; text-align: center; transform: translateY(-10vh); width: min(420px, calc(100vw - 48px)); }
+    .admin-confirm-backdrop { align-items: center; background: rgba(0,0,0,.18); display: grid; inset: 0; justify-items: center; padding: 1.5rem; position: absolute; z-index: 5100; }
+    .admin-confirm-dialog { background: #fff !important; border: 0; border-radius: 28px !important; box-shadow: 0 26px 70px rgba(0,0,0,.26); display: grid; gap: 1.15rem; max-width: 420px; min-width: min(360px, calc(100vw - 48px)); overflow: hidden; padding: 1.35rem; text-align: center; width: min(420px, calc(100vw - 48px)); }
     .admin-confirm-dialog .eyebrow { color: var(--admin-accent); letter-spacing: .14em; margin: 0 0 .35rem; word-spacing: -.04em; }
     .admin-confirm-dialog h3 { color: #111; font-size: 1.12rem; letter-spacing: 0; line-height: 1.2; margin: 0; }
     .admin-confirm-dialog p:not(.eyebrow) { color: #555; font-size: .9rem; font-weight: 750; line-height: 1.5; margin: .55rem 0 0; }
@@ -3154,7 +3157,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.openConfirmDialog('Delete employee?', `${employee.fullName} will lose staff access.`, 'Delete', 'danger', () => {
+    this.openConfirmDialog('Delete employee?', employee.fullName, 'Delete', 'danger', () => {
       this.deletingEmployeeId = employee.userId;
       this.adminService.deleteEmployee(employee.userId)
         .pipe(finalize(() => {
@@ -3834,6 +3837,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   private openConfirmDialog(title: string, message: string, actionLabel: string, tone: AdminConfirmDialog['tone'], onConfirm: () => void): void {
     this.confirmDialog = { title, message, actionLabel, tone, onConfirm };
+    window.setTimeout(() => {
+      document.querySelector('.admin-confirm-dialog')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
   }
 
   cancelConfirmDialog(): void {

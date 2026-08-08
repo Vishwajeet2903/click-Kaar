@@ -98,8 +98,8 @@ export class CartPageComponent implements AfterViewInit {
   private readonly router = inject(Router);
 
   ngAfterViewInit(): void {
-    window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 0);
-    window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 120);
+    window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), 0);
+    window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), 120);
   }
 
   useFallback(event: Event, category: string): void {

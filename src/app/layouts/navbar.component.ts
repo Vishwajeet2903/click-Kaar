@@ -177,10 +177,10 @@ export class NavbarComponent implements OnDestroy {
   openCart(event: Event): void {
     event.preventDefault();
     this.closeMenu();
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     void this.router.navigateByUrl('/cart').then(() => {
-      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 0);
-      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }), 120);
+      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), 0);
+      window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), 120);
     });
   }
   getInitial(name: string): string {
