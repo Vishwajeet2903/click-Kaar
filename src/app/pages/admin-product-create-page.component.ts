@@ -58,7 +58,7 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
             <div class="spec-section">
               <h2>Specifications</h2>
               <div class="spec-grid">
-                @for (field of specificationFields; track field.control) {
+                @for (field of visibleSpecificationFields(); track field.control) {
                   <label>{{ field.label }}<input [formControlName]="field.control"></label>
                 }
               </div>
@@ -189,6 +189,33 @@ export class AdminProductCreatePageComponent implements OnInit {
   }
   editingProductId?: number;
   readonly categories = ['Cameras', 'Lenses', 'Lighting', 'Audio Equipment', 'Tripods', 'Accessories'];
+  readonly categorySpecificationControls: Record<string, readonly string[]> = {
+    Cameras: [
+      'specCameraType', 'specSensor', 'specVideo', 'specMount', 'specStabilization', 'specProfiles', 'specSlots',
+      'specTotalPixels', 'specEffectivePixels', 'specOpticalLowPass', 'specImageSize', 'specRecognitionStill',
+      'specRecognitionMovies', 'specWirelessLan', 'specBluetooth', 'specWeight', 'specOperatingTemperature'
+    ],
+    Lenses: [
+      'specMount', 'specAperture', 'specMinimumAperture', 'specRange', 'specFilterDiameter', 'specFormat',
+      'specDimension', 'specElements', 'specFocus', 'specWeatherSealed', 'specWeight'
+    ],
+    Lighting: [
+      'specOutput', 'specColor', 'specControl', 'specPower', 'specBattery', 'specRuntime', 'specTlci', 'specCri',
+      'specBrightnessRange', 'specBluetoothControlDistance', 'specWorkingEnvironmentTemperature', 'specDimension', 'specWeight'
+    ],
+    'Audio Equipment': [
+      'specChannels', 'specRecording', 'specRange', 'specBattery', 'specRuntime', 'specPower', 'specControl',
+      'specFeatures', 'specDimension', 'specWeight'
+    ],
+    Tripods: [
+      'specPayload', 'specHead', 'specLegs', 'specPlate', 'specAxis', 'specFeatures', 'specDimension', 'specWeight'
+    ],
+    Accessories: [
+      'specPayload', 'specAxis', 'specRuntime', 'specFeatures', 'specFilterType', 'specThreadSize', 'specFilterFactor',
+      'specColorShift', 'specGlassMaterial', 'specFrameMaterial', 'specFrameThickness', 'specExactWeight', 'specGroup',
+      'specId', 'specFormat', 'specDimension', 'specWeight', 'specPower', 'specControl'
+    ]
+  };
   readonly specificationFields = [
     { control: 'specCameraType', label: 'Camera Type' },
     { control: 'specSensor', label: 'Sensor', aliases: ['Sensor Type'] },
@@ -247,6 +274,15 @@ export class AdminProductCreatePageComponent implements OnInit {
     { control: 'specWorkingEnvironmentTemperature', label: 'Working Environment Temperature' }
   ] as const;
 
+  visibleSpecificationFields(): readonly (typeof this.specificationFields[number])[] {
+    const category = this.productForm.controls.category.value;
+    const controls = this.categorySpecificationControls[category];
+    if (!controls) {
+      return [];
+    }
+    const allowedControls = new Set(controls);
+    return this.specificationFields.filter((field) => allowedControls.has(field.control));
+  }
   readonly productForm = this.fb.nonNullable.group({
     name: ['', Validators.required],
     brand: ['', Validators.required],
@@ -596,7 +632,12 @@ export class AdminProductCreatePageComponent implements OnInit {
   }
 
   private buildSpecifications(value: Record<string, unknown>): string {
-    const mappedSpecifications = this.specificationFields
+    const category = String(value['category'] ?? '');
+    const controls = this.categorySpecificationControls[category];
+    const fields = controls
+      ? this.specificationFields.filter((field) => controls.includes(field.control))
+      : this.specificationFields;
+    const mappedSpecifications = fields
       .map((field) => [field.label, value[field.control]] as const)
       .filter(([, specValue]) => String(specValue ?? '').trim())
       .map(([key, specValue]) => `${key}: ${String(specValue).trim()}`)

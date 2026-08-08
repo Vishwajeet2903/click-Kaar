@@ -40,7 +40,7 @@ import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
     .cart-dialog, .cart-dialog * { font-family: var(--app-font) !important; letter-spacing: 0; }
     .dialog-mark { align-items: center; background: #ff9700; border-radius: 50%; display: inline-flex; height: 56px; justify-content: center; margin-bottom: .85rem; overflow: hidden; width: 56px; }
     .dialog-mark svg { display: block; height: 32px; width: 32px; }
-    .dialog-mark path { fill: none; stroke: #111; stroke-linecap: round; stroke-linejoin: round; stroke-width: 5.2; }
+    .dialog-mark path { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 5.2; }
     h2 { color: #111; font-family: var(--display-font) !important; font-size: 1.48rem; font-weight: 950; line-height: 1.05; margin: 0 0 .5rem; padding: 0; }
     mat-dialog-content { color: #666; display: block; font-size: .98rem; font-weight: 700; line-height: 1.6; margin: 0; padding: 0; }
     mat-dialog-actions { display: grid; gap: .7rem; grid-template-columns: 1fr 1fr; margin: 1.2rem 0 0; padding: 0; }
