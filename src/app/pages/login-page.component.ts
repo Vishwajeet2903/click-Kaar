@@ -60,7 +60,24 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 
           <label>
             <span>Password</span>
-            <input type="password" placeholder="Enter password" formControlName="password">
+            <div class="password-field">
+              <input [type]="showPassword ? 'text' : 'password'" placeholder="Enter password" formControlName="password">
+              <button type="button" class="password-toggle" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'" (click)="showPassword = !showPassword">
+                @if (showPassword) {
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 3l18 18" />
+                    <path d="M10.7 5.1A10.8 10.8 0 0 1 12 5c5 0 9 4.5 10 7a13.3 13.3 0 0 1-3.1 4.4" />
+                    <path d="M6.6 6.6A13.2 13.2 0 0 0 2 12c1 2.5 5 7 10 7a10.8 10.8 0 0 0 4.2-.9" />
+                    <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+                  </svg>
+                } @else {
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                }
+              </button>
+            </div>
           </label>
 
           <a class="forgot" routerLink="/forgot-password" [queryParams]="{ email: form.controls.email.value }">Forgot password?</a>
@@ -340,6 +357,45 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       margin-bottom: .55rem;
     }
 
+    .password-field {
+      position: relative;
+    }
+
+    .password-field input {
+      padding-right: 3.25rem;
+    }
+
+    .password-toggle {
+      align-items: center;
+      background: transparent;
+      border: 0;
+      color: #5e5e5a;
+      cursor: pointer;
+      display: inline-flex;
+      height: 100%;
+      justify-content: center;
+      padding: 0;
+      position: absolute;
+      right: .85rem;
+      top: 0;
+      transition: color .25s ease;
+      width: 28px;
+    }
+
+    .password-toggle svg {
+      fill: none;
+      height: 20px;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+      width: 20px;
+    }
+
+    .password-toggle:hover {
+      color: #ff9700;
+    }
+
     input {
       background: #f7f7f5;
       border: 1px solid transparent;
@@ -469,6 +525,7 @@ export class LoginPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
   isSubmitting = false;
+  showPassword = false;
   formError = '';
 
   readonly form = this.fb.nonNullable.group({

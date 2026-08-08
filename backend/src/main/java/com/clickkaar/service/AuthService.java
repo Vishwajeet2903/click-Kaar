@@ -15,6 +15,8 @@ import com.clickkaar.util.OtpGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -47,6 +49,7 @@ public class AuthService {
   private final JwtService jwtService;
   private final OtpGenerator otpGenerator;
   private final JavaMailSender mailSender;
+  private final Environment environment;
 
   @Value("${spring.mail.username:}")
   private String mailUsername;
@@ -150,6 +153,10 @@ public class AuthService {
         .build());
 
     if (!isMailConfigured()) {
+      if (isLocalProfile()) {
+        log.warn("Mail is not configured. Returning password reset code in response for local development only: {}", email);
+        return "Password reset code for local development: " + code;
+      }
       throw new BadRequestException("Mail is not configured. Please set MAIL_USERNAME and MAIL_PASSWORD.");
     }
     sendPasswordResetEmail(email, code);
@@ -293,6 +300,10 @@ public class AuthService {
 
   private boolean isMailConfigured() {
     return !configuredMailUsername().isBlank() && !configuredMailPassword().isBlank();
+  }
+
+  private boolean isLocalProfile() {
+    return environment.acceptsProfiles(Profiles.of("local"));
   }
 
   private String configuredMailUsername() {

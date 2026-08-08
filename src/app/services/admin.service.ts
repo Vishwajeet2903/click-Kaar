@@ -281,6 +281,12 @@ export class AdminService {
     });
   }
 
+  getEmployees(): Observable<EmployeeResponse[]> {
+    return this.http.get<EmployeeResponse[]>(`${API_URL}/employees`, {
+      headers: this.authHeaders()
+    });
+  }
+
   getInventory(): Observable<AdminProductResponse[]> {
     return this.http.get<AdminProductResponse[]>(`${API_URL}/inventory`, {
       headers: this.authHeaders()

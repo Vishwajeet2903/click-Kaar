@@ -25,7 +25,7 @@ import { AuthService } from '../services/auth.service';
 import { GalleryImage, GalleryService } from '../services/gallery.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
-type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'movement' | 'customers' | 'payments' | 'coupons' | 'content' | 'reviews' | 'reports' | 'roles' | 'settings';
+type AdminTab = 'dashboard' | 'registrations' | 'inventory' | 'bookings' | 'movement' | 'customers' | 'payments' | 'coupons' | 'content' | 'reviews' | 'reports' | 'employees' | 'roles' | 'settings';
 type BookingStatus = 'Upcoming' | 'Active' | 'Completed' | 'Cancelled' | 'Overdue';
 type PaymentStatus = 'Paid' | 'Pending' | 'Failed' | 'Refunded';
 type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
@@ -1187,24 +1187,89 @@ interface AdminNoteDialog {
                     </tbody>
                   </table>
                 </section>
+              }
 
-                <form class="surface employee-form" [formGroup]="employeeForm" (ngSubmit)="submitEmployee()">
-                  <div class="panel-head"><h3>Create employee</h3><span>Manager or staff access</span></div>
-                  @if (employeeFormError) {
-                    <p class="form-alert" role="alert">{{ employeeFormError }}</p>
-                  }
-                  <div class="form-grid">
-                    <label>Full name<input formControlName="fullName"></label>
-                    <label>Email<input formControlName="email"></label>
-                    <label>Mobile<input formControlName="mobile"></label>
-                    <label>Dashboard role<select class="employee-role-select" formControlName="role"><option value="MANAGER">Manager</option><option value="INVENTORY_STAFF">Inventory Staff</option><option value="CONTENT_EDITOR">Content Editor</option></select></label>
-                    <label>Temporary password<input type="password" formControlName="password"></label>
+              @case ('employees') {
+                @if (employeeView() === 'manage') {
+                  <div class="metric-grid employee-metric-grid">
+                    <article class="surface metric-card"><span>Total team</span><strong>{{ employees().length }}</strong><small>Admin and staff accounts</small></article>
+                    <article class="surface metric-card green"><span>Managers</span><strong>{{ employeeCountByRole('MANAGER') }}</strong><small>Booking and customer operations</small></article>
+                    <article class="surface metric-card orange"><span>Inventory</span><strong>{{ employeeCountByRole('INVENTORY_STAFF') }}</strong><small>Gear release and returns</small></article>
+                    <article class="surface metric-card red"><span>Content</span><strong>{{ employeeCountByRole('CONTENT_EDITOR') }}</strong><small>Blog, gallery and reviews</small></article>
                   </div>
-                  <button type="submit" class="primary-btn wide" [disabled]="isSubmitting">{{ isSubmitting ? 'Creating...' : 'Create employee' }}</button>
-                  @if (createdEmployee) {
-                    <p class="success-text">{{ createdEmployee.fullName }} created with {{ createdEmployee.roles.join(', ') }} access.</p>
-                  }
-                </form>
+
+                  <section class="surface panel employee-roster-panel employee-full-panel">
+                    <div class="panel-head employee-page-head">
+                      <div>
+                        <h3>Manage employees</h3>
+                        <span>{{ filteredEmployees().length }} account{{ filteredEmployees().length === 1 ? '' : 's' }} found</span>
+                      </div>
+                      <div class="employee-head-actions">
+                        <button type="button" class="link-btn" (click)="loadEmployees()">Refresh</button>
+                        <button type="button" class="primary-btn compact-primary" (click)="employeeView.set('create'); employeeFormError = ''; createdEmployee = undefined">Create employee</button>
+                      </div>
+                    </div>
+                    @if (createdEmployee) {
+                      <p class="success-text">{{ createdEmployee.fullName }} created with {{ createdEmployee.roles.join(', ') }} access.</p>
+                    }
+                    <div class="tool-row employee-tool-row">
+                      <input class="search-input" type="search" placeholder="Search team by name, email, mobile or role" [ngModel]="employeeQuery()" (ngModelChange)="employeeQuery.set($event); employeesPage = 1" [ngModelOptions]="{ standalone: true }">
+                    </div>
+                    <div class="employee-roster-list">
+                      @for (employee of pagedEmployees(); track employee.userId) {
+                        <article class="employee-card">
+                          <div class="employee-avatar">{{ initials(employee.fullName) }}</div>
+                          <div class="employee-card-copy">
+                            <strong>{{ employee.fullName }}</strong>
+                            <span>{{ employee.email }}</span>
+                            <small>{{ employee.mobile || 'Mobile not added' }}</small>
+                          </div>
+                          <div class="employee-role-stack">
+                            @for (role of employee.roles; track role) {
+                              <span class="status-chip">{{ employeeRoleLabel(role) }}</span>
+                            }
+                          </div>
+                        </article>
+                      } @empty {
+                        <div class="queue-state compact-state empty-queue">
+                          <h3>No employees found</h3>
+                          <p class="muted">Create a manager, inventory staff member, or content editor to start building the team roster.</p>
+                        </div>
+                      }
+                    </div>
+                    <div class="pagination-row">
+                      <span>{{ employeesPageSummary() }}</span>
+                      <div>
+                        <button type="button" class="ghost-mini" [disabled]="employeesPage === 1" (click)="changeEmployeesPage(-1)">Previous</button>
+                        <button type="button" class="mini-btn" [disabled]="employeesPage === employeesPageCount()" (click)="changeEmployeesPage(1)">Next</button>
+                      </div>
+                    </div>
+                  </section>
+                } @else {
+                  <form class="surface employee-form employee-create-page" [formGroup]="employeeForm" (ngSubmit)="submitEmployee()">
+                    <div class="panel-head employee-page-head">
+                      <div>
+                        <h3>Create employee</h3>
+                        <span>Manager or staff access</span>
+                      </div>
+                      <button type="button" class="ghost-btn compact-primary" (click)="employeeView.set('manage'); employeeFormError = ''">Back to employees</button>
+                    </div>
+                    @if (employeeFormError) {
+                      <p class="form-alert" role="alert">{{ employeeFormError }}</p>
+                    }
+                    <div class="form-grid employee-create-grid">
+                      <label>Full name<input formControlName="fullName"></label>
+                      <label>Email<input formControlName="email"></label>
+                      <label>Mobile<input formControlName="mobile"></label>
+                      <label>Dashboard role<select class="employee-role-select" formControlName="role"><option value="MANAGER">Manager</option><option value="INVENTORY_STAFF">Inventory Staff</option><option value="CONTENT_EDITOR">Content Editor</option></select></label>
+                      <label>Temporary password<input type="password" formControlName="password"></label>
+                    </div>
+                    <div class="employee-form-actions">
+                      <button type="button" class="ghost-btn" (click)="employeeView.set('manage'); employeeFormError = ''">Cancel</button>
+                      <button type="submit" class="primary-btn" [disabled]="isSubmitting">{{ isSubmitting ? 'Creating...' : 'Create employee' }}</button>
+                    </div>
+                  </form>
+                }
               }
 
               @case ('settings') {
@@ -1423,6 +1488,25 @@ interface AdminNoteDialog {
     .pagination-row { align-items: center; border-top: 1px solid var(--admin-line); display: flex; gap: .85rem; justify-content: space-between; padding-top: .85rem; }
     .pagination-row span { color: #777; font-size: .78rem; font-weight: 900; }
     .pagination-row div { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; }
+    .employee-full-panel, .employee-create-page { width: 100%; }
+    .employee-roster-panel { align-content: start; }
+    .employee-page-head { align-items: center; }
+    .employee-head-actions, .employee-form-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .65rem; justify-content: flex-end; }
+    .compact-primary { min-height: 42px; padding: .65rem 1rem; }
+    .employee-tool-row { margin: 0; }
+    .employee-tool-row .search-input { max-width: none; }
+    .employee-roster-list { display: grid; gap: .7rem; }
+    .employee-card { align-items: center; background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; display: grid; gap: .8rem; grid-template-columns: 44px minmax(0, 1fr) auto; min-width: 0; padding: .78rem; }
+    .employee-avatar { align-items: center; aspect-ratio: 1; background: #111; border-radius: 999px; color: #fff; display: inline-flex; font-size: .78rem; font-weight: 950; justify-content: center; width: 44px; }
+    .employee-card-copy { min-width: 0; }
+    .employee-card-copy strong, .employee-card-copy span, .employee-card-copy small { display: block; overflow-wrap: anywhere; }
+    .employee-card-copy strong { color: #111; font-size: .95rem; line-height: 1.25; }
+    .employee-card-copy span { color: #555; font-size: .82rem; font-weight: 750; line-height: 1.4; margin-top: .18rem; }
+    .employee-card-copy small { color: #9a6a00; font-size: .72rem; font-weight: 900; line-height: 1.35; margin-top: .2rem; }
+    .employee-role-stack { align-items: end; display: grid; gap: .35rem; justify-items: end; }
+    .employee-create-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .employee-create-grid label:last-child { grid-column: 1 / -1; }
+    .employee-form-actions { border-top: 1px solid var(--admin-line); padding-top: .95rem; }
     .registration-grid { align-items: start; grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr); }
     .registration-detail { align-content: start; display: grid; gap: 1rem; }
     .registration-detail .panel-head { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 6px; margin-bottom: 0; padding: .85rem; }
@@ -1786,9 +1870,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly bookingMonthFilter = signal('');
   readonly paymentStatusFilter = signal('');
   readonly customerQuery = signal('');
+  readonly employeeQuery = signal('');
   readonly reviewQuery = signal('');
   readonly reviewRatingFilter = signal('');
   readonly activeContentSection = signal<'blog' | 'gallery'>('blog');
+  readonly employeeView = signal<'manage' | 'create'>('manage');
   editingProductId?: number;
   createdEmployee?: EmployeeResponse;
   productFormError = '';
@@ -1808,6 +1894,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   customersPage = 1;
   paymentsPage = 1;
   couponsPage = 1;
+  employeesPage = 1;
   reviewsPage = 1;
   blogPage = 1;
   staticContentPage = 1;
@@ -1858,12 +1945,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     { id: 'content', label: 'Content', count: '5' },
     { id: 'reviews', label: 'Reviews', count: '0' },
     { id: 'reports', label: 'Reports', count: 'CSV' },
+    { id: 'employees', label: 'Employees', count: '0' },
     { id: 'roles', label: 'Roles', count: 'RBAC' },
     { id: 'settings', label: 'Settings', count: 'Ops' }
   ];
 
   readonly categoryReports = signal<Array<{ name: string; value: number }>>([]);
   readonly rolePermissions = signal<RolePermission[]>([]);
+  readonly employees = signal<EmployeeResponse[]>([]);
 
   readonly productForm = this.fb.nonNullable.group({
     name: ['', Validators.required],
@@ -1944,6 +2033,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       content: 'Blog, content & gallery',
       reviews: 'Review management',
       reports: 'Reports & analytics',
+      employees: 'Employee management',
       roles: 'Roles & permissions',
       settings: 'Platform settings'
     };
@@ -1983,6 +2073,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return this.customers().filter((item) => !query || [item.name, item.email, item.city, item.phone].some((value) => value.toLowerCase().includes(query)));
   });
 
+  readonly filteredEmployees = computed(() => {
+    const query = this.employeeQuery().trim().toLowerCase();
+    return this.employees().filter((item) => {
+      const roleText = item.roles.map((role) => this.employeeRoleLabel(role)).join(' ');
+      return !query || [item.fullName, item.email, item.mobile, roleText].some((value) => value.toLowerCase().includes(query));
+    });
+  });
+
   readonly filteredReviews = computed(() => {
     const query = this.reviewQuery().trim().toLowerCase();
     const rating = Number(this.reviewRatingFilter());
@@ -2009,6 +2107,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   pagedCoupons(): AdminCoupon[] {
     return this.paginate(this.coupons(), this.couponsPage);
+  }
+
+  pagedEmployees(): EmployeeResponse[] {
+    return this.paginate(this.filteredEmployees(), this.employeesPage);
   }
 
   pagedReviews(): AdminReview[] {
@@ -2046,6 +2148,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.loadContent();
     this.loadCategoryReports();
     this.loadRolePermissions();
+    this.loadEmployees();
     this.loadSettings();
   }
 
@@ -2159,6 +2262,17 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   private loadRolePermissions(): void {
     this.adminService.getRolePermissions().subscribe({
       next: (permissions) => this.rolePermissions.set(permissions),
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+    });
+  }
+
+  loadEmployees(): void {
+    this.adminService.getEmployees().subscribe({
+      next: (employees) => {
+        this.employees.set(employees);
+        this.employeesPage = Math.min(this.employeesPageCount(), Math.max(1, this.employeesPage));
+        this.updateTabCount('employees', String(employees.length));
+      },
       error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
   }
@@ -3011,6 +3125,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (employee) => {
           this.createdEmployee = employee;
+          this.employees.update((items) => [employee, ...items.filter((item) => item.userId !== employee.userId)]);
+          this.updateTabCount('employees', String(this.employees().length));
+          this.employeeView.set('manage');
           this.employeeForm.reset({
             fullName: '',
             email: '',
@@ -3595,6 +3712,37 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   private csvCell(value: unknown): string {
     const text = Array.isArray(value) ? value.join('|') : typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value ?? '');
     return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  employeesPageCount(): number {
+    return this.pageCount(this.filteredEmployees().length);
+  }
+
+  changeEmployeesPage(direction: number): void {
+    this.employeesPage = this.nextPage(this.employeesPage, this.filteredEmployees().length, direction);
+    this.scrollToSectionTop();
+  }
+
+  employeesPageSummary(): string {
+    const total = this.filteredEmployees().length;
+    if (!total) return 'No employees';
+    const start = (this.employeesPage - 1) * this.adminPageSize + 1;
+    const end = Math.min(total, this.employeesPage * this.adminPageSize);
+    return `${start}-${end} of ${total}`;
+  }
+
+  employeeCountByRole(role: string): number {
+    return this.employees().filter((employee) => employee.roles.includes(role)).length;
+  }
+
+  employeeRoleLabel(role: string): string {
+    const labels: Record<string, string> = {
+      ADMIN: 'Admin',
+      MANAGER: 'Manager',
+      INVENTORY_STAFF: 'Inventory Staff',
+      CONTENT_EDITOR: 'Content Editor'
+    };
+    return labels[role] ?? role;
   }
 
   private updateTabCount(id: AdminTab, count: string): void {

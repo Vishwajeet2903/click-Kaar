@@ -586,8 +586,25 @@ public class AdminController {
         .build();
 
     User saved = userRepository.save(employee);
+    sendEmployeeWelcomeEmail(saved, request.password(), requestedRole);
     Set<String> roles = saved.getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet());
     return new EmployeeResponse(saved.getId(), saved.getFullName(), saved.getEmail(), saved.getMobile(), roles);
+  }
+
+  @GetMapping("/employees")
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<EmployeeResponse> employees() {
+    Set<RoleName> employeeRoles = Set.of(RoleName.ADMIN, RoleName.MANAGER, RoleName.INVENTORY_STAFF, RoleName.CONTENT_EDITOR);
+    return userRepository.findAll().stream()
+        .filter(user -> user.getRoles().stream().anyMatch(role -> employeeRoles.contains(role.getName())))
+        .map(user -> new EmployeeResponse(
+            user.getId(),
+            user.getFullName(),
+            user.getEmail(),
+            user.getMobile(),
+            user.getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet())
+        ))
+        .toList();
   }
 
   @GetMapping("/customers/pending")
@@ -737,6 +754,57 @@ public class AdminController {
     } catch (MailException exception) {
       log.warn("Unable to send account approval email to {}", customer.getEmail(), exception);
     }
+  }
+
+  private void sendEmployeeWelcomeEmail(User employee, String temporaryPassword, RoleName roleName) {
+    if (!isMailConfigured()) {
+      log.warn("Skipping employee welcome email for {} because MAIL_USERNAME or MAIL_PASSWORD is not configured", employee.getEmail());
+      return;
+    }
+
+    try {
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setFrom(configuredMailUsername());
+      message.setTo(employee.getEmail());
+      message.setSubject("Welcome On Board to ClickKaar");
+      message.setText(
+          "Dear " + employee.getFullName() + ",\n\n"
+              + "Welcome on board to ClickKaar. Your employee account has been created successfully by the ClickKaar admin team.\n\n"
+              + "Employee Details:\n\n"
+              + "- Name: " + employee.getFullName() + "\n"
+              + "- Email: " + employee.getEmail() + "\n"
+              + "- Mobile: " + (employee.getMobile() == null || employee.getMobile().isBlank() ? "Not added" : employee.getMobile()) + "\n"
+              + "- Role: " + employeeRoleLabel(roleName) + "\n\n"
+              + "Login Details:\n\n"
+              + "- Login URL: " + configuredLoginUrl() + "\n"
+              + "- Email: " + employee.getEmail() + "\n"
+              + "- Temporary Password: " + temporaryPassword + "\n\n"
+              + "Please log in and change your password after your first access.\n\n"
+              + "We are happy to have you with us and look forward to building a smoother creator rental experience together.\n\n"
+              + "Best Regards,\n"
+              + "The ClickKaar Team\n"
+              + "ClickKaar Support\n"
+              + "Email: support@clickkaar.com\n"
+              + "Website: https://clickkaar.com"
+      );
+      mailSender.send(message);
+      log.info("Employee welcome email sent to {}", employee.getEmail());
+    } catch (MailAuthenticationException exception) {
+      log.warn("Unable to send employee welcome email to {} because SMTP authentication failed for {}", employee.getEmail(), configuredMailUsername());
+    } catch (MailException exception) {
+      log.warn("Unable to send employee welcome email to {}", employee.getEmail(), exception);
+    }
+  }
+
+  private String employeeRoleLabel(RoleName roleName) {
+    return switch (roleName) {
+      case MANAGER -> "Manager";
+      case INVENTORY_STAFF -> "Inventory Staff";
+      case CONTENT_EDITOR -> "Content Editor";
+      case ADMIN -> "Admin";
+      case EMPLOYEE -> "Employee";
+      case CUSTOMER -> "Customer";
+    };
   }
 
   private boolean isMailConfigured() {
