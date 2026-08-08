@@ -287,6 +287,12 @@ export class AdminService {
     });
   }
 
+  deleteEmployee(employeeId: number): Observable<void> {
+    return this.http.delete<void>(`${API_URL}/employees/${employeeId}`, {
+      headers: this.authHeaders()
+    });
+  }
+
   getInventory(): Observable<AdminProductResponse[]> {
     return this.http.get<AdminProductResponse[]>(`${API_URL}/inventory`, {
       headers: this.authHeaders()

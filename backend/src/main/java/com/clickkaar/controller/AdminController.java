@@ -607,6 +607,23 @@ public class AdminController {
         .toList();
   }
 
+  @DeleteMapping("/employees/{employeeId}")
+  @PreAuthorize("hasRole('ADMIN')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Transactional
+  public void deleteEmployee(@PathVariable Long employeeId) {
+    User employee = userRepository.findById(employeeId)
+        .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+    Set<RoleName> roles = employee.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+    if (roles.contains(RoleName.ADMIN)) {
+      throw new BadRequestException("Admin account cannot be deleted");
+    }
+    if (roles.stream().noneMatch(role -> role == RoleName.MANAGER || role == RoleName.INVENTORY_STAFF || role == RoleName.CONTENT_EDITOR)) {
+      throw new ResourceNotFoundException("Employee not found");
+    }
+    userRepository.delete(employee);
+  }
+
   @GetMapping("/customers/pending")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   public List<CustomerVerificationResponse> pendingCustomers() {

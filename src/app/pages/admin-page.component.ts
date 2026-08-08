@@ -1229,6 +1229,9 @@ interface AdminNoteDialog {
                               <span class="status-chip">{{ employeeRoleLabel(role) }}</span>
                             }
                           </div>
+                          <button type="button" class="danger-btn employee-delete-btn" [disabled]="employee.roles.includes('ADMIN') || deletingEmployeeId === employee.userId" (click)="deleteEmployee(employee)">
+                            {{ deletingEmployeeId === employee.userId ? 'Deleting...' : 'Delete' }}
+                          </button>
                         </article>
                       } @empty {
                         <div class="queue-state compact-state empty-queue">
@@ -1496,7 +1499,7 @@ interface AdminNoteDialog {
     .employee-tool-row { margin: 0; }
     .employee-tool-row .search-input { max-width: none; }
     .employee-roster-list { display: grid; gap: .7rem; }
-    .employee-card { align-items: center; background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; display: grid; gap: .8rem; grid-template-columns: 44px minmax(0, 1fr) auto; min-width: 0; padding: .78rem; }
+    .employee-card { align-items: center; background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; display: grid; gap: .8rem; grid-template-columns: 44px minmax(0, 1fr) auto auto; min-width: 0; padding: .78rem; }
     .employee-avatar { align-items: center; aspect-ratio: 1; background: #111; border-radius: 999px; color: #fff; display: inline-flex; font-size: .78rem; font-weight: 950; justify-content: center; width: 44px; }
     .employee-card-copy { min-width: 0; }
     .employee-card-copy strong, .employee-card-copy span, .employee-card-copy small { display: block; overflow-wrap: anywhere; }
@@ -1504,6 +1507,7 @@ interface AdminNoteDialog {
     .employee-card-copy span { color: #555; font-size: .82rem; font-weight: 750; line-height: 1.4; margin-top: .18rem; }
     .employee-card-copy small { color: #9a6a00; font-size: .72rem; font-weight: 900; line-height: 1.35; margin-top: .2rem; }
     .employee-role-stack { align-items: end; display: grid; gap: .35rem; justify-items: end; }
+    .employee-delete-btn { min-width: 82px; }
     .employee-create-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .employee-create-grid label:last-child { grid-column: 1 / -1; }
     .employee-form-actions { border-top: 1px solid var(--admin-line); padding-top: .95rem; }
@@ -1902,6 +1906,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   isSubmittingCoupon = false;
   deletingCouponId?: number;
+  deletingEmployeeId?: number;
   updatingCouponStatusId?: number;
   isSubmittingBlog = false;
   isSubmittingGallery = false;
@@ -3141,6 +3146,30 @@ export class AdminPageComponent implements OnInit, OnDestroy {
           this.showTopMessage(this.authService.getErrorMessage(error), 3600);
         }
       });
+  }
+
+  deleteEmployee(employee: EmployeeResponse): void {
+    if (employee.roles.includes('ADMIN')) {
+      this.showTopMessage('Admin account cannot be deleted.', 2600);
+      return;
+    }
+
+    this.openConfirmDialog('Delete employee?', `${employee.fullName} will lose staff access.`, 'Delete', 'danger', () => {
+      this.deletingEmployeeId = employee.userId;
+      this.adminService.deleteEmployee(employee.userId)
+        .pipe(finalize(() => {
+          this.deletingEmployeeId = undefined;
+        }))
+        .subscribe({
+          next: () => {
+            this.employees.update((items) => items.filter((item) => item.userId !== employee.userId));
+            this.employeesPage = Math.min(this.employeesPageCount(), Math.max(1, this.employeesPage));
+            this.updateTabCount('employees', String(this.employees().length));
+            this.showTopMessage('Employee deleted.', 2400);
+          },
+          error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+        });
+    });
   }
 
   saveSettings(): void {
