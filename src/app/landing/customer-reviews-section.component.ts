@@ -149,7 +149,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     h2 { color: #111; font-size: clamp(2.15rem, 4vw, 3.75rem); font-weight: 900; letter-spacing: 0; line-height: 1.08; margin: 0; max-width: 900px; word-spacing: 0; }
     .carousel-controls { display: flex; gap: .5rem; }
     .carousel-controls .theme-arrow-button:disabled { opacity: .45; }
-    .reviews-window { --review-step: calc((-100% - 1rem) / 3); overflow: hidden; }
+    .reviews-window { --review-step: calc((-100% - 1rem) / 3); margin-top: -8px; overflow: hidden; padding-top: 8px; }
     .reviews-track { display: flex; gap: 1rem; transform: translateX(calc(var(--review-index) * var(--review-step))); transition: transform .62s cubic-bezier(.22, 1, .36, 1); }
     .reviews-track.no-transition { transition: none; }
     .reviews-empty { align-items: center; background: #f6f6f4; border: 1px dashed rgba(17,17,17,.16); border-radius: 24px; color: #666; display: flex; font-size: 1rem; font-weight: 800; min-height: 180px; padding: 1.25rem; }

@@ -1197,7 +1197,7 @@ interface AdminNoteDialog {
                     <label>Full name<input formControlName="fullName"></label>
                     <label>Email<input formControlName="email"></label>
                     <label>Mobile<input formControlName="mobile"></label>
-                    <label>Dashboard role<select formControlName="role"><option value="MANAGER">Manager</option><option value="INVENTORY_STAFF">Inventory Staff</option><option value="CONTENT_EDITOR">Content Editor</option></select></label>
+                    <label>Dashboard role<select class="employee-role-select" formControlName="role"><option value="MANAGER">Manager</option><option value="INVENTORY_STAFF">Inventory Staff</option><option value="CONTENT_EDITOR">Content Editor</option></select></label>
                     <label>Temporary password<input type="password" formControlName="password"></label>
                   </div>
                   <button type="submit" class="primary-btn wide" [disabled]="isSubmitting">{{ isSubmitting ? 'Creating...' : 'Create employee' }}</button>
@@ -1355,6 +1355,8 @@ interface AdminNoteDialog {
     input, select, textarea { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: var(--admin-ink); font: inherit; font-size: .92rem; font-weight: 500; line-height: 1.45; min-height: 42px; outline: 0; padding: .68rem .8rem; width: 100%; }
     textarea { min-height: 92px; resize: vertical; }
     input:focus, select:focus, textarea:focus { border-color: var(--admin-accent); box-shadow: 0 0 0 3px rgba(255,151,0,.14); }
+    .employee-role-select { appearance: none; -moz-appearance: none; -webkit-appearance: none; background-image: none; padding-right: .8rem; }
+    .employee-role-select::-ms-expand { display: none; }
     .table-link { color: var(--admin-accent); font-size: .78rem; font-weight: 900; text-decoration: none; white-space: nowrap; }
     .table-link:hover { color: #111; text-decoration: underline; }
     .remark-input { min-width: 220px; }
@@ -1461,8 +1463,8 @@ interface AdminNoteDialog {
     .lightbox-foot strong, .lightbox-foot span { text-shadow: 0 2px 14px rgba(0,0,0,.32); }
     .lightbox-foot strong { font-size: .88rem; }
     .lightbox-foot span { color: rgba(255,255,255,.75); font-size: .8rem; font-weight: 900; }
-    .admin-confirm-backdrop { align-items: center; backdrop-filter: blur(12px); background: rgba(17,17,17,.62); display: flex; inset: 0; justify-content: center; padding: 1rem; position: fixed; z-index: 5100; }
-    .admin-confirm-dialog { display: grid; gap: 1.15rem; max-width: 420px; padding: 1.1rem; width: min(100%, 420px); }
+    .admin-confirm-backdrop { align-items: center; background: rgba(0,0,0,.18); display: grid; inset: 0; justify-items: center; padding: 1.5rem; position: fixed; z-index: 5100; }
+    .admin-confirm-dialog { background: #fff !important; border: 0; border-radius: 28px !important; box-shadow: 0 26px 70px rgba(0,0,0,.26); display: grid; gap: 1.15rem; max-width: 420px; min-width: min(360px, calc(100vw - 48px)); overflow: hidden; padding: 1.35rem; text-align: center; transform: translateY(-10vh); width: min(420px, calc(100vw - 48px)); }
     .admin-confirm-dialog .eyebrow { color: var(--admin-accent); letter-spacing: .14em; margin: 0 0 .35rem; word-spacing: -.04em; }
     .admin-confirm-dialog h3 { color: #111; font-size: 1.12rem; letter-spacing: 0; line-height: 1.2; margin: 0; }
     .admin-confirm-dialog p:not(.eyebrow) { color: #555; font-size: .9rem; font-weight: 750; line-height: 1.5; margin: .55rem 0 0; }
@@ -2141,9 +2143,17 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   private loadCategoryReports(): void {
     this.adminService.getCategoryReports().subscribe({
-      next: (reports) => this.categoryReports.set(reports),
+      next: (reports) => this.categoryReports.set(reports.map((report) => ({
+        ...report,
+        name: this.reportCategoryName(report.name)
+      }))),
       error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
+  }
+
+  private reportCategoryName(name: string): string {
+    const normalized = name.trim().toUpperCase().replace(/[\s-]+/g, '_');
+    return normalized === 'TRIPOD_SUPPORT' || normalized === 'TRIPODS_SUPPORT' ? 'Tripod' : name;
   }
 
   private loadRolePermissions(): void {
@@ -3333,7 +3343,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       Lighting: 'LIGHTING',
       'Audio Equipment': 'AUDIO',
       Audio: 'AUDIO',
-      Tripods: 'TRIPODS_SUPPORT',
+      Tripods: 'TRIPODS',
       Accessories: 'ACCESSORIES'
     };
     return labels[category] ?? category.trim().toUpperCase().replace(/\s+/g, '_');

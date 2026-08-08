@@ -56,11 +56,11 @@ import { RouterLink } from '@angular/router';
           </div> -->
           <nav aria-label="Support links">
             <h3>Connect with us on</h3>
-            <a href="facebook.com">facebook</a>
-            <a href="instagaram.com">Instagram</a>
+            <a href="https://www.facebook.com/profile.php?id=61593104698739">facebook</a>
+            <a href="https://www.instagram.com/clickkaar_india?igsh=MTNiZTN4dGVnM3ZmeQ%3D%3D&utm_source=qr">Instagram</a>
             <a href="linkdin.com">linkdin</a>
-            <a href="youtube.com">Youtube</a>
-            <a href="pintrest.com">Pintrest</a>
+            <a href="https://www.youtube.com/channel/UCz8c9DXXTrmZdCZZ6Hi_dEg">Youtube</a>
+            <a href="https://in.pinterest.com/clickkaar/">Pintrest</a>
             
           </nav>
 

@@ -103,7 +103,7 @@ import { ProductService } from '../services/product.service';
     .cart-link { align-items: center; background: #fff; border-radius: 999px; box-shadow: 0 8px 22px rgba(0,0,0,.06); color: #151515; display: inline-flex; height: 44px; justify-content: center; min-width: 44px; padding: .45rem .62rem; position: relative; }
     .cart-link svg { fill: none; height: 27px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; width: 27px; }
     .cart-link b { align-items: center; background: #ff9700; border: 2px solid #fff; border-radius: 999px; color: #111; display: inline-flex; font-size: .66rem; font-weight: 950; height: 18px; justify-content: center; line-height: 1; min-width: 18px; padding: 0 .24rem; position: absolute; right: -4px; top: -5px; }
-    .cart-link:hover { background: #ff9700; color: #111; transform: translateY(-1px); }
+    .cart-link:hover { background: #ff9700; color: #fff; transform: translateY(-1px); }
     .cart-link:hover b { background: #111; border-color: #ff9700; color: #fff; }
     .login-link { align-items: center; background: #111; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; display: inline-flex; font-size: .96rem; font-weight: 800; justify-content: center; min-height: 50px; padding: .85rem 1.25rem; }
     .login-link:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
