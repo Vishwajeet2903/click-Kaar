@@ -166,8 +166,11 @@ export class ForgotPasswordPageComponent {
       return;
     }
 
+    const email = this.requestForm.controls.email.value.trim();
+    this.requestForm.controls.email.setValue(email);
+
     this.isRequesting = true;
-    this.authService.requestPasswordReset(this.requestForm.getRawValue())
+    this.authService.requestPasswordReset({ email })
       .pipe(finalize(() => {
         this.isRequesting = false;
       }))
@@ -196,8 +199,9 @@ export class ForgotPasswordPageComponent {
     }
 
     this.isResetting = true;
+    const email = this.requestForm.controls.email.value.trim();
     const { code, newPassword } = this.resetForm.getRawValue();
-    this.authService.resetPassword({ email: this.requestForm.controls.email.value, code, newPassword })
+    this.authService.resetPassword({ email, code, newPassword })
       .pipe(finalize(() => {
         this.isResetting = false;
       }))

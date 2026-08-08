@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "click-kaar"
-  }
+  },
+  "targets": {
+    "click-kaar": {
+      "hosting": {
+        "www": [
+          "click-kaar"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

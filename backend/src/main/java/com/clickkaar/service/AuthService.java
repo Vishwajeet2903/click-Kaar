@@ -59,7 +59,7 @@ public class AuthService {
 
   @Transactional
   public RegistrationResponse register(RegisterRequest request) {
-    String email = request.email().toLowerCase();
+    String email = normalizeEmail(request.email());
     if (userRepository.existsByEmail(email)) {
       throw new BadRequestException("Email is already registered");
     }
@@ -113,7 +113,7 @@ public class AuthService {
   }
 
   public AuthResponse login(LoginRequest request) {
-    String email = request.email().toLowerCase();
+    String email = normalizeEmail(request.email());
     if (pendingRegistrationRepository.existsByEmail(email)) {
       throw new BadRequestException("Your registration is pending admin verification.");
     }
@@ -122,7 +122,7 @@ public class AuthService {
     if (!user.isEnabled()) {
       throw new BadRequestException("Your registration is pending admin verification.");
     }
-    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, request.password()));
     return authResponse(user);
   }
 
@@ -136,7 +136,7 @@ public class AuthService {
 
   @Transactional
   public String requestPasswordReset(ForgotPasswordRequest request) {
-    String email = request.email().toLowerCase();
+    String email = normalizeEmail(request.email());
     User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new BadRequestException("No active account found for this email"));
     if (!user.isEnabled()) {
@@ -165,7 +165,7 @@ public class AuthService {
 
   @Transactional
   public String resetPassword(ResetPasswordRequest request) {
-    String email = request.email().toLowerCase();
+    String email = normalizeEmail(request.email());
     User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new BadRequestException("No active account found for this email"));
     if (!user.isEnabled()) {
@@ -189,7 +189,7 @@ public class AuthService {
 
   @Transactional
   public String changePassword(String email, ChangePasswordRequest request) {
-    User user = userRepository.findByEmail(email.toLowerCase())
+    User user = userRepository.findByEmail(normalizeEmail(email))
         .orElseThrow(() -> new BadRequestException("User not found"));
     if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
       throw new BadRequestException("Current password is incorrect");
@@ -235,6 +235,10 @@ public class AuthService {
           userRepository.save(user);
         });
     return "Mobile verified successfully";
+  }
+
+  private String normalizeEmail(String email) {
+    return email == null ? "" : email.trim().toLowerCase();
   }
 
   private AuthResponse authResponse(User user) {

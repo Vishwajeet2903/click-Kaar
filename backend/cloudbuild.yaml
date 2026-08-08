@@ -10,6 +10,8 @@ substitutions:
   _JWT_SECRET_SECRET: clickkaar-jwt-secret
   _RAZORPAY_KEY_ID_SECRET: clickkaar-razorpay-key-id
   _RAZORPAY_KEY_SECRET_SECRET: clickkaar-razorpay-key-secret
+  _MAIL_USERNAME_SECRET: clickkaar-mail-username
+  _MAIL_PASSWORD_SECRET: clickkaar-mail-password
 
 steps:
   - name: gcr.io/cloud-builders/docker
@@ -44,7 +46,7 @@ steps:
       - --set-env-vars
       - ^@^SPRING_PROFILES_ACTIVE=cloud@CORS_ALLOWED_ORIGINS=${_CORS_ALLOWED_ORIGINS}@FRONTEND_LOGIN_URL=${_FRONTEND_LOGIN_URL}
       - --set-secrets
-      - DB_URL=${_DB_URL_SECRET}:latest,DB_USERNAME=${_DB_USERNAME_SECRET}:latest,DB_PASSWORD=${_DB_PASSWORD_SECRET}:latest,JWT_SECRET=${_JWT_SECRET_SECRET}:latest,RAZORPAY_KEY_ID=${_RAZORPAY_KEY_ID_SECRET}:latest,RAZORPAY_KEY_SECRET=${_RAZORPAY_KEY_SECRET_SECRET}:latest
+      - DB_URL=${_DB_URL_SECRET}:latest,DB_USERNAME=${_DB_USERNAME_SECRET}:latest,DB_PASSWORD=${_DB_PASSWORD_SECRET}:latest,JWT_SECRET=${_JWT_SECRET_SECRET}:latest,RAZORPAY_KEY_ID=${_RAZORPAY_KEY_ID_SECRET}:latest,RAZORPAY_KEY_SECRET=${_RAZORPAY_KEY_SECRET_SECRET}:latest,MAIL_USERNAME=${_MAIL_USERNAME_SECRET}:latest,MAIL_PASSWORD=${_MAIL_PASSWORD_SECRET}:latest
 
 images:
   - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$SHORT_SHA
