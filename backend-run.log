@@ -78790,3 +78790,4329 @@ Unconditional classes:
 2026-08-09T01:52:15.484+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
 2026-08-09T01:52:15.487+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ProductResponse[id=105, name=Rent Sony a7 M5, brand=Sony, category=CAMERAS, shortDescription=Sony r (truncated)...]
 2026-08-09T01:52:15.489+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:52.945+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/content/reviews", parameters={}
+2026-08-09T01:57:52.948+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ContentController#reviews()
+2026-08-09T01:57:52.967+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        cr1_0.id,
+        cr1_0.admin_reply,
+        cr1_0.avatar,
+        cr1_0.created_at,
+        cr1_0.name,
+        cr1_0.quote,
+        cr1_0.rating,
+        cr1_0.role,
+        cr1_0.updated_at 
+    from
+        customer_reviews cr1_0 
+    order by
+        cr1_0.created_at desc
+2026-08-09T01:57:52.990+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:52.994+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Writing [[CustomerReviewResponse[id=9, name=Tara Shah, role=Content creator, rating=5, quote=Great recommenda (truncated)...]
+2026-08-09T01:57:53.000+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.020+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.020+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.020+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.020+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.021+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.023+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.032+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.032+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.033+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.033+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.033+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.034+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.050+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/payments", parameters={}
+2026-08-09T01:57:53.050+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/inventory", parameters={}
+2026-08-09T01:57:53.050+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/coupons", parameters={}
+2026-08-09T01:57:53.050+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers", parameters={}
+2026-08-09T01:57:53.050+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/bookings", parameters={}
+2026-08-09T01:57:53.051+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#payments()
+2026-08-09T01:57:53.051+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#inventory()
+2026-08-09T01:57:53.051+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#coupons()
+2026-08-09T01:57:53.052+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#customers()
+2026-08-09T01:57:53.052+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#bookings()
+2026-08-09T01:57:53.060+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/gallery", parameters={}
+2026-08-09T01:57:53.063+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#galleryImages()
+2026-08-09T01:57:53.077+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        gi1_0.id,
+        gi1_0.active,
+        gi1_0.alt_text,
+        gi1_0.created_at,
+        gi1_0.display_order,
+        gi1_0.image_url,
+        gi1_0.tall,
+        gi1_0.updated_at,
+        gi1_0.wide 
+    from
+        gallery_images gi1_0 
+    order by
+        gi1_0.display_order,
+        gi1_0.created_at desc
+2026-08-09T01:57:53.079+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.active,
+        c1_0.code,
+        c1_0.created_at,
+        c1_0.discount_percent,
+        c1_0.updated_at,
+        c1_0.usage_limit,
+        c1_0.used_count,
+        c1_0.valid_until 
+    from
+        coupons c1_0
+2026-08-09T01:57:53.079+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.079+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        products p1_0
+2026-08-09T01:57:53.079+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0
+2026-08-09T01:57:53.081+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0
+2026-08-09T01:57:53.085+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.086+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.086+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.087+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        c1_0.id,
+        c1_0.alternate_contact_number,
+        c1_0.city,
+        c1_0.company_bonafide_letter_document_name,
+        c1_0.company_name,
+        c1_0.country,
+        c1_0.created_at,
+        c1_0.current_address,
+        c1_0.dob,
+        c1_0.driving_license_document_name,
+        c1_0.electricity_bill_document_name,
+        c1_0.email,
+        c1_0.enabled,
+        c1_0.first_name,
+        c1_0.full_name,
+        c1_0.gender,
+        c1_0.last_name,
+        c1_0.mobile,
+        c1_0.mobile_verified,
+        c1_0.occupation,
+        c1_0.password,
+        c1_0.photo_document_name,
+        c1_0.pincode,
+        c1_0.rent_agreement_document_name,
+        c1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        c1_0.social_media_profile,
+        c1_0.state,
+        c1_0.updated_at,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    join
+        users c1_0 
+            on c1_0.id=b1_0.customer_id 
+    left join
+        user_roles r1_0 
+            on c1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        b1_0.id=?
+2026-08-09T01:57:53.087+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing [[GalleryImageResponse[id=1, imageUrl=https://images.unsplash.com/photo-1495707902641-75cac588d2e9?au (truncated)...]
+2026-08-09T01:57:53.088+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.088+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.089+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.089+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.090+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.091+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.091+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        c1_0.id,
+        c1_0.alternate_contact_number,
+        c1_0.city,
+        c1_0.company_bonafide_letter_document_name,
+        c1_0.company_name,
+        c1_0.country,
+        c1_0.created_at,
+        c1_0.current_address,
+        c1_0.dob,
+        c1_0.driving_license_document_name,
+        c1_0.electricity_bill_document_name,
+        c1_0.email,
+        c1_0.enabled,
+        c1_0.first_name,
+        c1_0.full_name,
+        c1_0.gender,
+        c1_0.last_name,
+        c1_0.mobile,
+        c1_0.mobile_verified,
+        c1_0.occupation,
+        c1_0.password,
+        c1_0.photo_document_name,
+        c1_0.pincode,
+        c1_0.rent_agreement_document_name,
+        c1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        c1_0.social_media_profile,
+        c1_0.state,
+        c1_0.updated_at,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    join
+        users c1_0 
+            on c1_0.id=b1_0.customer_id 
+    left join
+        user_roles r1_0 
+            on c1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        b1_0.id=?
+2026-08-09T01:57:53.092+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.093+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.093+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.093+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.093+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.095+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        c1_0.id,
+        c1_0.alternate_contact_number,
+        c1_0.city,
+        c1_0.company_bonafide_letter_document_name,
+        c1_0.company_name,
+        c1_0.country,
+        c1_0.created_at,
+        c1_0.current_address,
+        c1_0.dob,
+        c1_0.driving_license_document_name,
+        c1_0.electricity_bill_document_name,
+        c1_0.email,
+        c1_0.enabled,
+        c1_0.first_name,
+        c1_0.full_name,
+        c1_0.gender,
+        c1_0.last_name,
+        c1_0.mobile,
+        c1_0.mobile_verified,
+        c1_0.occupation,
+        c1_0.password,
+        c1_0.photo_document_name,
+        c1_0.pincode,
+        c1_0.rent_agreement_document_name,
+        c1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        c1_0.social_media_profile,
+        c1_0.state,
+        c1_0.updated_at,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    join
+        users c1_0 
+            on c1_0.id=b1_0.customer_id 
+    left join
+        user_roles r1_0 
+            on c1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        b1_0.id=?
+2026-08-09T01:57:53.095+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.095+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.095+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing [[AdminCouponResponse[id=1, code=FRIENDS, discountPercent=50.00, active=true, usageLimit=null, usedCo (truncated)...]
+2026-08-09T01:57:53.096+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.096+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.097+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.098+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.099+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.099+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        c1_0.id,
+        c1_0.alternate_contact_number,
+        c1_0.city,
+        c1_0.company_bonafide_letter_document_name,
+        c1_0.company_name,
+        c1_0.country,
+        c1_0.created_at,
+        c1_0.current_address,
+        c1_0.dob,
+        c1_0.driving_license_document_name,
+        c1_0.electricity_bill_document_name,
+        c1_0.email,
+        c1_0.enabled,
+        c1_0.first_name,
+        c1_0.full_name,
+        c1_0.gender,
+        c1_0.last_name,
+        c1_0.mobile,
+        c1_0.mobile_verified,
+        c1_0.occupation,
+        c1_0.password,
+        c1_0.photo_document_name,
+        c1_0.pincode,
+        c1_0.rent_agreement_document_name,
+        c1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        c1_0.social_media_profile,
+        c1_0.state,
+        c1_0.updated_at,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    join
+        users c1_0 
+            on c1_0.id=b1_0.customer_id 
+    left join
+        user_roles r1_0 
+            on c1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        b1_0.id=?
+2026-08-09T01:57:53.099+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.099+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.102+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.103+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.103+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.103+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.106+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.106+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.109+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.109+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.109+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/content", parameters={}
+2026-08-09T01:57:53.110+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#content()
+2026-08-09T01:57:53.111+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.111+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.113+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.114+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.117+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.118+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.121+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.121+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.121+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.123+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        bp1_0.id,
+        bp1_0.author_name,
+        bp1_0.category,
+        bp1_0.content,
+        bp1_0.cover_image,
+        bp1_0.created_at,
+        bp1_0.publish_date,
+        bp1_0.seo_description,
+        bp1_0.seo_keywords,
+        bp1_0.seo_title,
+        bp1_0.slug,
+        bp1_0.status,
+        bp1_0.tags,
+        bp1_0.title,
+        bp1_0.updated_at 
+    from
+        blog_posts bp1_0
+2026-08-09T01:57:53.124+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.124+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.126+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.126+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.126+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        count(prl1_0.id) 
+    from
+        payment_remark_logs prl1_0 
+    where
+        prl1_0.payment_id=?
+2026-08-09T01:57:53.126+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.128+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.133+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.133+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.136+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.136+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        count(prl1_0.id) 
+    from
+        payment_remark_logs prl1_0 
+    where
+        prl1_0.payment_id=?
+2026-08-09T01:57:53.137+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.137+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.139+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.139+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        count(prl1_0.id) 
+    from
+        payment_remark_logs prl1_0 
+    where
+        prl1_0.payment_id=?
+2026-08-09T01:57:53.139+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.141+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.143+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        count(prl1_0.id) 
+    from
+        payment_remark_logs prl1_0 
+    where
+        prl1_0.payment_id=?
+2026-08-09T01:57:53.143+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.143+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.146+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        sc1_0.id,
+        sc1_0.content,
+        sc1_0.created_at,
+        sc1_0.page_key,
+        sc1_0.updated_at 
+    from
+        static_contents sc1_0
+2026-08-09T01:57:53.147+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.149+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.150+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.152+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/roles/permissions", parameters={}
+2026-08-09T01:57:53.153+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.153+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.153+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Writing [[AdminPaymentResponse[id=13, bookingId=CKB-1048, customer=Aarav Mehta, gateway=Razorpay, mode=FULL_P (truncated)...]
+2026-08-09T01:57:53.153+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#rolePermissions()
+2026-08-09T01:57:53.153+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.156+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.156+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.159+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.161+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.162+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Writing [[RolePermissionResponse[module=Dashboard, superAdmin=View, manager=View, inventory=View, content=Vie (truncated)...]
+2026-08-09T01:57:53.163+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.163+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.165+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.166+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.169+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.170+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Writing [AdminContentResponse[blogPosts=[AdminBlogPostResponse[id=1, title=How to Choose a Camera Kit for You (truncated)...]
+2026-08-09T01:57:53.171+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.174+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.174+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.174+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.175+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.177+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.179+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.179+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.180+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.180+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.181+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.181+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.183+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.184+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.184+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.184+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/reports/categories", parameters={}
+2026-08-09T01:57:53.185+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.186+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.187+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#categoryReports()
+2026-08-09T01:57:53.188+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.188+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.188+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.190+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.190+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/employees", parameters={}
+2026-08-09T01:57:53.190+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.192+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#employees()
+2026-08-09T01:57:53.192+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        products p1_0
+2026-08-09T01:57:53.193+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.193+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/settings", parameters={}
+2026-08-09T01:57:53.194+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#settings()
+2026-08-09T01:57:53.195+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.195+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.197+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        sc1_0.id,
+        sc1_0.content,
+        sc1_0.created_at,
+        sc1_0.page_key,
+        sc1_0.updated_at 
+    from
+        static_contents sc1_0 
+    where
+        sc1_0.page_key=?
+2026-08-09T01:57:53.197+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0
+2026-08-09T01:57:53.197+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.197+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.199+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.202+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.202+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.202+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.204+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.205+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.205+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.206+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.206+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.206+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.207+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.207+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.208+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.209+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.209+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.209+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.209+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.210+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.210+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.211+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.211+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.212+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.212+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:57:53.213+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.213+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.213+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.214+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.216+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.216+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.216+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.216+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.217+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.217+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.217+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.219+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.219+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing [AdminSettingsRequest[gateway=Razorpay, paymentPolicy=Security deposit, depositPercent=30, gstPercent (truncated)...]
+2026-08-09T01:57:53.220+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.220+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.221+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.222+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.222+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.222+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.222+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.223+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.224+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Writing [[CategoryReportResponse[name=CAMERAS, value=7], CategoryReportResponse[name=TRIPODS SUPPORT, value=3 (truncated)...]
+2026-08-09T01:57:53.225+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.225+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.226+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.226+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.226+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.227+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.227+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.227+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.228+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.229+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.229+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.229+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.232+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.232+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.234+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.234+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.234+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:57:53.234+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.234+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.235+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.235+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.235+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.236+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.236+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.236+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.238+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.238+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.240+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.240+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.241+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/pending", parameters={}
+2026-08-09T01:57:53.241+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.241+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.241+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#pendingCustomers()
+2026-08-09T01:57:53.241+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.242+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.243+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.243+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.244+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.244+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.246+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.246+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.246+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.247+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.248+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.248+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.250+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        pr1_0.id,
+        pr1_0.alternate_contact_number,
+        pr1_0.city,
+        pr1_0.company_bonafide_letter_document_name,
+        pr1_0.company_name,
+        pr1_0.country,
+        pr1_0.created_at,
+        pr1_0.current_address,
+        pr1_0.dob,
+        pr1_0.driving_license_document_name,
+        pr1_0.electricity_bill_document_name,
+        pr1_0.email,
+        pr1_0.first_name,
+        pr1_0.full_name,
+        pr1_0.gender,
+        pr1_0.last_name,
+        pr1_0.mobile,
+        pr1_0.occupation,
+        pr1_0.password,
+        pr1_0.photo_document_name,
+        pr1_0.pincode,
+        pr1_0.rent_agreement_document_name,
+        pr1_0.residence_type,
+        pr1_0.social_media_profile,
+        pr1_0.state,
+        pr1_0.updated_at 
+    from
+        pending_registrations pr1_0
+2026-08-09T01:57:53.250+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.250+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.250+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.251+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.253+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:57:53.253+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.254+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.254+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.255+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.255+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.256+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.256+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.257+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.257+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.257+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Writing [[EmployeeResponse[userId=1, fullName=Clickkaar Admin, email=admin@clickkaar.com, mobile=9999999999,  (truncated)...]
+2026-08-09T01:57:53.257+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.257+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.258+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.258+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.259+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.259+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:57:53.260+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.261+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.261+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.261+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing [[CustomerVerificationResponse[requestId=3, fullName=akshat Estolkar, firstName=akshat, lastName=Esto (truncated)...]
+2026-08-09T01:57:53.263+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.263+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.264+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.265+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.267+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.268+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.269+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.270+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ProductResponse[id=105, name=Rent Sony a7 M5, brand=Sony, category=CAMERAS, shortDescription=Sony r (truncated)...]
+2026-08-09T01:57:53.270+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.272+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.amount,
+        p1_0.booking_id,
+        p1_0.created_at,
+        p1_0.razorpay_order_id,
+        p1_0.razorpay_payment_id,
+        p1_0.razorpay_signature,
+        p1_0.remark,
+        p1_0.status,
+        p1_0.type,
+        p1_0.updated_at 
+    from
+        payments p1_0
+2026-08-09T01:57:53.273+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.274+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.275+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        bn1_0.id,
+        bn1_0.admin_id,
+        bn1_0.booking_id,
+        bn1_0.created_at,
+        bn1_0.note,
+        bn1_0.updated_at 
+    from
+        booking_notes bn1_0 
+    where
+        bn1_0.booking_id=?
+2026-08-09T01:57:53.275+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.276+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        i1_0.booking_id,
+        i1_0.id,
+        i1_0.daily_price,
+        i1_0.line_total,
+        i1_0.product_id,
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        booking_items i1_0 
+    left join
+        products p1_0 
+            on p1_0.id=i1_0.product_id 
+    left join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        i1_0.booking_id=?
+2026-08-09T01:57:53.277+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.279+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.279+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.280+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Writing [[AdminBookingResponse[id=28, bookingNumber=CKB-1048, customer=Aarav Mehta, phone=9876543210, product (truncated)...]
+2026-08-09T01:57:53.281+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.282+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:57:53.284+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.288+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.290+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.294+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.296+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.302+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.304+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:57:53.306+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.310+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.312+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.313+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:57:53.315+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:57:53.318+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:57:53.321+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [[AdminCustomerResponse[id=2, name=MySQL Check, email=mysql-check-20260606135352@example.com, phone=6 (truncated)...]
+2026-08-09T01:57:53.322+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
