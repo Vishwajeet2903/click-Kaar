@@ -8,6 +8,7 @@ import com.clickkaar.dto.admin.RegistrationDocumentResponse;
 import com.clickkaar.dto.content.CustomerReviewResponse;
 import com.clickkaar.dto.content.GalleryImageRequest;
 import com.clickkaar.dto.content.GalleryImageResponse;
+import com.clickkaar.dto.product.ProductImportResponse;
 import com.clickkaar.dto.product.ProductRequest;
 import com.clickkaar.dto.product.ProductResponse;
 import com.clickkaar.entity.Booking;
@@ -43,6 +44,7 @@ import com.clickkaar.repository.RoleRepository;
 import com.clickkaar.repository.StaticContentRepository;
 import com.clickkaar.repository.UserRepository;
 import com.clickkaar.repository.WishlistRepository;
+import com.clickkaar.service.ProductImportService;
 import com.clickkaar.service.ProductService;
 import com.clickkaar.service.ContentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -116,6 +118,7 @@ public class AdminController {
   private final StaticContentRepository staticContentRepository;
   private final PasswordEncoder passwordEncoder;
   private final ProductService productService;
+  private final ProductImportService productImportService;
   private final ContentService contentService;
   private final ObjectMapper objectMapper;
   private final JavaMailSender mailSender;
@@ -163,6 +166,13 @@ public class AdminController {
       @RequestPart("image") MultipartFile image
   ) {
     return productService.create(productRequestWithImage(productJson, image));
+  }
+
+  @PostMapping(value = "/inventory/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @ResponseStatus(HttpStatus.CREATED)
+  public ProductImportResponse importInventoryProducts(@RequestPart("file") MultipartFile file) {
+    return productImportService.importProducts(file);
   }
 
   @PutMapping("/inventory/{productId}")

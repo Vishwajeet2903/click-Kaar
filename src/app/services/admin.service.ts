@@ -90,6 +90,13 @@ export interface AdminProductResponse {
   images: string[];
 }
 
+export interface ProductImportResponse {
+  importedCount: number;
+  skippedCount: number;
+  errors: string[];
+  products: AdminProductResponse[];
+}
+
 export interface AdminBookingResponse {
   id: number;
   bookingNumber: string;
@@ -307,6 +314,14 @@ export class AdminService {
 
   createProductWithImage(request: AdminProductRequest, image: File): Observable<AdminProductResponse> {
     return this.http.post<AdminProductResponse>(`${API_URL}/inventory/save`, this.productFormData(request, image), {
+      headers: this.authHeaders()
+    });
+  }
+
+  importProducts(file: File): Observable<ProductImportResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<ProductImportResponse>(`${API_URL}/inventory/import`, formData, {
       headers: this.authHeaders()
     });
   }

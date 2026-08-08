@@ -15,6 +15,7 @@ import {
   AdminProductRequest,
   AdminProductResponse,
   AdminReviewResponse,
+  ProductImportResponse,
   AdminService,
   CustomerVerificationResponse,
   EmployeeResponse,
@@ -464,7 +465,20 @@ interface AdminNoteDialog {
                     <option value="Unavailable">Unavailable</option>
                     <option value="Maintenance">Maintenance</option>
                   </select>
+                  <label class="sheet-import-control">
+                    <input type="file" accept=".xlsx,.xls,.csv" (change)="selectInventoryImportFile($event)">
+                    <span>{{ inventoryImportFileName || 'Choose Excel/CSV' }}</span>
+                  </label>
+                  <button type="button" class="primary-btn compact-primary" [disabled]="isImportingInventory || !selectedInventoryImportFile" (click)="importInventorySheet()">
+                    {{ isImportingInventory ? 'Importing...' : 'Import products' }}
+                  </button>
                 </div>
+                @if (inventoryImportMessage) {
+                  <p class="success-text import-status-text">{{ inventoryImportMessage }}</p>
+                }
+                @if (inventoryImportError) {
+                  <p class="error-text import-status-text">{{ inventoryImportError }}</p>
+                }
 
                 <div class="surface table-panel">
                   <table>
@@ -1381,6 +1395,10 @@ interface AdminNoteDialog {
     .admin-topbar h2 { font-size: clamp(1.08rem, 1.9vw, 1.65rem); font-weight: 600; letter-spacing: 0; line-height: 1.14; margin: 0; }
     .topbar-actions, .tool-row, .action-cell { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; }
     .inventory-action-cell { flex-wrap: nowrap; min-width: 178px; }
+    .sheet-import-control { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.12); border-radius: 999px; box-shadow: 0 8px 22px rgba(0,0,0,.05); color: #111; cursor: pointer; display: inline-flex; font-size: .78rem; font-weight: 900; min-height: 42px; max-width: min(260px, 100%); overflow: hidden; padding: .56rem .9rem; }
+    .sheet-import-control input { display: none; }
+    .sheet-import-control span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .import-status-text { margin: -.45rem 0 .1rem; }
     .inventory-action-cell .mini-btn,
     .inventory-action-cell .danger-btn,
     .inventory-action-cell .return-btn { flex: 0 0 auto; }
@@ -1885,6 +1903,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   editingProductId?: number;
   createdEmployee?: EmployeeResponse;
   productFormError = '';
+  inventoryImportFileName = '';
+  inventoryImportMessage = '';
+  inventoryImportError = '';
   employeeFormError = '';
   couponFormError = '';
   blogFormError = '';
@@ -1907,6 +1928,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   staticContentPage = 1;
   pendingLoadError = '';
   isSubmitting = false;
+  isImportingInventory = false;
   isSubmittingCoupon = false;
   deletingCouponId?: number;
   deletingEmployeeId?: number;
@@ -1938,6 +1960,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   activePaymentRemarkLogs: PaymentRemarkLogView[] = [];
   isLoadingPaymentRemarkLog = false;
   paymentRemarkLogError = '';
+  selectedInventoryImportFile?: File;
   private selectedGalleryFile?: File;
   private selectedBlogCoverFile?: File;
 
@@ -2523,6 +2546,52 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   showNextDocumentPreview(): void {
     this.showDocumentPreviewAt(this.activeDocumentIndex() + 1);
+  }
+
+  selectInventoryImportFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    this.inventoryImportMessage = '';
+    this.inventoryImportError = '';
+    this.selectedInventoryImportFile = file;
+    this.inventoryImportFileName = file?.name ?? '';
+  }
+
+  importInventorySheet(): void {
+    const file = this.selectedInventoryImportFile;
+    this.inventoryImportMessage = '';
+    this.inventoryImportError = '';
+    if (!file) {
+      this.inventoryImportError = 'Choose an Excel or CSV file first.';
+      return;
+    }
+
+    this.isImportingInventory = true;
+    this.adminService.importProducts(file)
+      .pipe(finalize(() => {
+        this.isImportingInventory = false;
+      }))
+      .subscribe({
+        next: (result) => this.applyInventoryImportResult(result),
+        error: (error) => {
+          this.inventoryImportError = this.authService.getErrorMessage(error);
+          this.showTopMessage(this.inventoryImportError, 4200);
+        }
+      });
+  }
+
+  private applyInventoryImportResult(result: ProductImportResponse): void {
+    this.products.update((items) => [
+      ...result.products.map((product) => this.mapProduct(product)),
+      ...items
+    ]);
+    this.inventoryPage = 1;
+    this.clampAdminPages();
+    this.updateTabCount('inventory', String(this.products().length));
+    const skipped = result.skippedCount ? ` ${result.skippedCount} row${result.skippedCount === 1 ? '' : 's'} skipped.` : '';
+    const warning = result.errors?.length ? ` ${result.errors[0]}` : '';
+    this.inventoryImportMessage = `${result.importedCount} product${result.importedCount === 1 ? '' : 's'} imported.${skipped}${warning}`;
+    this.showTopMessage(this.inventoryImportMessage, 4200);
   }
 
   saveProduct(): void {

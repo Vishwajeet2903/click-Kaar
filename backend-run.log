@@ -75358,3 +75358,3435 @@ Unconditional classes:
 2026-08-09T01:41:57.816+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
 2026-08-09T01:41:57.826+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ProductResponse[id=105, name=Rent Sony a7 M5, brand=Sony, category=CAMERAS, shortDescription=Sony r (truncated)...]
 2026-08-09T01:41:57.833+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:43:23.106+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:23.107+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:23.110+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/2/details", parameters={}
+2026-08-09T01:43:23.110+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#customerDetails(Long)
+2026-08-09T01:43:23.186+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:23.190+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:43:23.191+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:43:23.205+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:23.238+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Writing [AdminCustomerDetailResponse[id=2, name=MySQL Check, firstName=null, lastName=null, email=mysql-check (truncated)...]
+2026-08-09T01:43:23.240+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:43:26.866+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:26.868+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:26.871+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/7/details", parameters={}
+2026-08-09T01:43:26.872+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#customerDetails(Long)
+2026-08-09T01:43:26.873+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:26.876+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:43:26.878+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:43:26.880+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:26.880+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing [AdminCustomerDetailResponse[id=7, name=vidya bhosale, firstName=vidya , lastName=bhosale, email=vidy (truncated)...]
+2026-08-09T01:43:26.881+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:43:26.889+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:26.891+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:26.892+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:26.892+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:26.892+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:26.893+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:26.893+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:26.893+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/verified/7/documents/photo", parameters={}
+2026-08-09T01:43:26.893+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:26.894+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#verifiedCustomerDocument(Long, String)
+2026-08-09T01:43:26.894+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/verified/7/documents/drivingLicense", parameters={}
+2026-08-09T01:43:26.894+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/verified/7/documents/electricityBill", parameters={}
+2026-08-09T01:43:26.895+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#verifiedCustomerDocument(Long, String)
+2026-08-09T01:43:26.895+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/verified/7/documents/rentAgreement", parameters={}
+2026-08-09T01:43:26.895+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#verifiedCustomerDocument(Long, String)
+2026-08-09T01:43:26.896+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#verifiedCustomerDocument(Long, String)
+2026-08-09T01:43:26.978+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:26.978+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:26.978+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:26.978+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:27.002+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
+2026-08-09T01:43:27.002+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
+2026-08-09T01:43:27.002+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
+2026-08-09T01:43:27.002+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
+2026-08-09T01:43:27.021+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:27.021+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:27.021+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:27.021+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:27.023+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-09T01:43:27.017190400, status=400, message=Registration document not foun (truncated)...]
+2026-08-09T01:43:27.023+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-09T01:43:27.017190400, status=400, message=Registration document not foun (truncated)...]
+2026-08-09T01:43:27.023+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-09T01:43:27.017190400, status=400, message=Registration document not foun (truncated)...]
+2026-08-09T01:43:27.024+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-09T01:43:27.017190400, status=400, message=Registration document not foun (truncated)...]
+2026-08-09T01:43:27.028+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Registration document not found]
+2026-08-09T01:43:27.028+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Registration document not found]
+2026-08-09T01:43:27.028+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Registration document not found]
+2026-08-09T01:43:27.029+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2026-08-09T01:43:27.028+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Registration document not found]
+2026-08-09T01:43:27.028+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2026-08-09T01:43:27.029+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2026-08-09T01:43:27.030+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2026-08-09T01:43:32.807+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:32.820+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:32.822+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/6/details", parameters={}
+2026-08-09T01:43:32.824+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#customerDetails(Long)
+2026-08-09T01:43:32.825+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:32.827+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.booking_number,
+        b1_0.created_at,
+        b1_0.customer_id,
+        b1_0.delivery_otp,
+        b1_0.delivery_otp_verified,
+        b1_0.rental_days,
+        b1_0.rental_end_date,
+        b1_0.rental_start_date,
+        b1_0.status,
+        b1_0.total_amount,
+        b1_0.updated_at 
+    from
+        bookings b1_0 
+    where
+        b1_0.customer_id=?
+2026-08-09T01:43:32.827+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        count(w1_0.id) 
+    from
+        wishlists w1_0 
+    where
+        w1_0.user_id=?
+2026-08-09T01:43:32.829+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:32.830+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing [AdminCustomerDetailResponse[id=6, name=vishwajeet khadse, firstName=vishwajeet, lastName=khadse, ema (truncated)...]
+2026-08-09T01:43:32.830+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:43:32.836+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:32.838+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:32.839+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:32.839+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:32.840+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:32.840+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:32.840+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/verified/6/documents/photo", parameters={}
+2026-08-09T01:43:32.841+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-08-09T01:43:32.841+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#verifiedCustomerDocument(Long, String)
+2026-08-09T01:43:32.841+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/verified/6/documents/electricityBill", parameters={}
+2026-08-09T01:43:32.841+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/verified/6/documents/drivingLicense", parameters={}
+2026-08-09T01:43:32.842+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#verifiedCustomerDocument(Long, String)
+2026-08-09T01:43:32.842+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#verifiedCustomerDocument(Long, String)
+2026-08-09T01:43:32.842+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2026-08-09T01:43:32.844+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:32.844+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:32.844+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:32.845+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/customers/verified/6/documents/rentAgreement", parameters={}
+2026-08-09T01:43:32.846+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.AdminController#verifiedCustomerDocument(Long, String)
+2026-08-09T01:43:32.848+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.alternate_contact_number,
+        u1_0.city,
+        u1_0.company_bonafide_letter_document_name,
+        u1_0.company_name,
+        u1_0.country,
+        u1_0.created_at,
+        u1_0.current_address,
+        u1_0.dob,
+        u1_0.driving_license_document_name,
+        u1_0.electricity_bill_document_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.first_name,
+        u1_0.full_name,
+        u1_0.gender,
+        u1_0.last_name,
+        u1_0.mobile,
+        u1_0.mobile_verified,
+        u1_0.occupation,
+        u1_0.password,
+        u1_0.photo_document_name,
+        u1_0.pincode,
+        u1_0.rent_agreement_document_name,
+        u1_0.residence_type,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        u1_0.social_media_profile,
+        u1_0.state,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        u1_0.id=?
+2026-08-09T01:43:32.850+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
+2026-08-09T01:43:32.850+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
+2026-08-09T01:43:32.850+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
+2026-08-09T01:43:32.851+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:32.852+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:32.852+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.clickkaar.exception.GlobalExceptionHandler#handleBadRequest(RuntimeException)
+2026-08-09T01:43:32.851+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:32.852+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-09T01:43:32.851716900, status=400, message=Registration document not foun (truncated)...]
+2026-08-09T01:43:32.852+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-09T01:43:32.851716900, status=400, message=Registration document not foun (truncated)...]
+2026-08-09T01:43:32.852+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:32.854+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Registration document not found]
+2026-08-09T01:43:32.853+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-09T01:43:32.851716900, status=400, message=Registration document not foun (truncated)...]
+2026-08-09T01:43:32.854+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Registration document not found]
+2026-08-09T01:43:32.854+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiError[timestamp=2026-08-09T01:43:32.852732200, status=400, message=Registration document not foun (truncated)...]
+2026-08-09T01:43:32.854+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2026-08-09T01:43:32.855+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2026-08-09T01:43:32.855+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Registration document not found]
+2026-08-09T01:43:32.855+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.clickkaar.exception.BadRequestException: Registration document not found]
+2026-08-09T01:43:32.856+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2026-08-09T01:43:32.856+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2026-08-09T01:43:59.163+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/content/gallery", parameters={}
+2026-08-09T01:43:59.163+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/content/reviews", parameters={}
+2026-08-09T01:43:59.164+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ContentController#gallery()
+2026-08-09T01:43:59.164+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ContentController#reviews()
+2026-08-09T01:43:59.166+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        cr1_0.id,
+        cr1_0.admin_reply,
+        cr1_0.avatar,
+        cr1_0.created_at,
+        cr1_0.name,
+        cr1_0.quote,
+        cr1_0.rating,
+        cr1_0.role,
+        cr1_0.updated_at 
+    from
+        customer_reviews cr1_0 
+    order by
+        cr1_0.created_at desc
+2026-08-09T01:43:59.169+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:59.170+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing [[CustomerReviewResponse[id=9, name=Tara Shah, role=Content creator, rating=5, quote=Great recommenda (truncated)...]
+2026-08-09T01:43:59.170+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        gi1_0.id,
+        gi1_0.active,
+        gi1_0.alt_text,
+        gi1_0.created_at,
+        gi1_0.display_order,
+        gi1_0.image_url,
+        gi1_0.tall,
+        gi1_0.updated_at,
+        gi1_0.wide 
+    from
+        gallery_images gi1_0 
+    where
+        gi1_0.active 
+    order by
+        gi1_0.display_order,
+        gi1_0.created_at desc
+2026-08-09T01:43:59.171+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:43:59.174+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/products", parameters={}
+2026-08-09T01:43:59.175+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:59.175+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ProductController#all()
+2026-08-09T01:43:59.176+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Writing [[GalleryImageResponse[id=1, imageUrl=https://images.unsplash.com/photo-1495707902641-75cac588d2e9?au (truncated)...]
+2026-08-09T01:43:59.177+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:43:59.180+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        products p1_0
+2026-08-09T01:43:59.184+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:43:59.189+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:43:59.192+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:43:59.194+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:43:59.198+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:43:59.202+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:43:59.207+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.212+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.214+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.216+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.218+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.221+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.224+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.227+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.229+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.231+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.232+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.234+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.236+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.239+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.241+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.244+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.246+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.249+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.251+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.254+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.256+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.259+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.261+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.264+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.265+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.266+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.268+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.270+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.272+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.274+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.276+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.277+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.280+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.282+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.283+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.285+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.287+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.289+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.291+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.293+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.295+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.297+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.299+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.301+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.303+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.305+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.307+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.309+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.311+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.312+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.315+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.317+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.320+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.323+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.326+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.327+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.328+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:43:59.330+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:43:59.332+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ProductResponse[id=105, name=Rent Sony a7 M5, brand=Sony, category=CAMERAS, shortDescription=Sony r (truncated)...]
+2026-08-09T01:43:59.334+05:30 DEBUG 25464 --- [clickkaar-backend] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:51:32.947+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/content/reviews", parameters={}
+2026-08-09T01:51:32.947+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/content/gallery", parameters={}
+2026-08-09T01:51:32.947+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/products", parameters={}
+2026-08-09T01:51:32.967+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ContentController#reviews()
+2026-08-09T01:51:32.967+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ProductController#all()
+2026-08-09T01:51:32.967+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ContentController#gallery()
+2026-08-09T01:51:33.036+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        gi1_0.id,
+        gi1_0.active,
+        gi1_0.alt_text,
+        gi1_0.created_at,
+        gi1_0.display_order,
+        gi1_0.image_url,
+        gi1_0.tall,
+        gi1_0.updated_at,
+        gi1_0.wide 
+    from
+        gallery_images gi1_0 
+    where
+        gi1_0.active 
+    order by
+        gi1_0.display_order,
+        gi1_0.created_at desc
+2026-08-09T01:51:33.036+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        products p1_0
+2026-08-09T01:51:33.036+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cr1_0.id,
+        cr1_0.admin_reply,
+        cr1_0.avatar,
+        cr1_0.created_at,
+        cr1_0.name,
+        cr1_0.quote,
+        cr1_0.rating,
+        cr1_0.role,
+        cr1_0.updated_at 
+    from
+        customer_reviews cr1_0 
+    order by
+        cr1_0.created_at desc
+2026-08-09T01:51:33.046+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:51:33.050+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:51:33.053+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:51:33.057+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:51:33.060+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:51:33.060+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:51:33.060+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:51:33.063+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Writing [[GalleryImageResponse[id=1, imageUrl=https://images.unsplash.com/photo-1495707902641-75cac588d2e9?au (truncated)...]
+2026-08-09T01:51:33.063+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [[CustomerReviewResponse[id=9, name=Tara Shah, role=Content creator, rating=5, quote=Great recommenda (truncated)...]
+2026-08-09T01:51:33.063+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:51:33.068+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.071+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.073+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.075+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.077+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.079+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.079+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:51:33.080+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:51:33.081+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.084+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.086+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.088+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.089+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.090+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.091+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.093+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.094+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.096+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.098+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.100+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.101+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.103+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.104+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.105+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.106+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.107+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.110+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.112+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.114+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.115+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.116+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.117+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.119+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.120+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.121+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.123+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.124+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.125+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.128+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.129+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.131+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.132+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.133+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.134+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.136+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.137+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.138+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.140+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.142+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.146+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.147+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.149+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.151+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.153+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.155+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.169+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.171+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.173+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.190+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:51:33.214+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:51:33.255+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ProductResponse[id=105, name=Rent Sony a7 M5, brand=Sony, category=CAMERAS, shortDescription=Sony r (truncated)...]
+2026-08-09T01:51:33.264+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:52:15.405+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/content/gallery", parameters={}
+2026-08-09T01:52:15.406+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ContentController#gallery()
+2026-08-09T01:52:15.408+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/content/reviews", parameters={}
+2026-08-09T01:52:15.409+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ContentController#reviews()
+2026-08-09T01:52:15.409+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        gi1_0.id,
+        gi1_0.active,
+        gi1_0.alt_text,
+        gi1_0.created_at,
+        gi1_0.display_order,
+        gi1_0.image_url,
+        gi1_0.tall,
+        gi1_0.updated_at,
+        gi1_0.wide 
+    from
+        gallery_images gi1_0 
+    where
+        gi1_0.active 
+    order by
+        gi1_0.display_order,
+        gi1_0.created_at desc
+2026-08-09T01:52:15.410+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        cr1_0.id,
+        cr1_0.admin_reply,
+        cr1_0.avatar,
+        cr1_0.created_at,
+        cr1_0.name,
+        cr1_0.quote,
+        cr1_0.rating,
+        cr1_0.role,
+        cr1_0.updated_at 
+    from
+        customer_reviews cr1_0 
+    order by
+        cr1_0.created_at desc
+2026-08-09T01:52:15.413+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:52:15.413+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Writing [[GalleryImageResponse[id=1, imageUrl=https://images.unsplash.com/photo-1495707902641-75cac588d2e9?au (truncated)...]
+2026-08-09T01:52:15.415+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:52:15.415+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:52:15.417+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing [[CustomerReviewResponse[id=9, name=Tara Shah, role=Content creator, rating=5, quote=Great recommenda (truncated)...]
+2026-08-09T01:52:15.417+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/products", parameters={}
+2026-08-09T01:52:15.417+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.clickkaar.controller.ProductController#all()
+2026-08-09T01:52:15.418+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-08-09T01:52:15.419+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.availability_status,
+        p1_0.brand,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.daily_price,
+        p1_0.full_description,
+        p1_0.image_link,
+        p1_0.invoice_url,
+        p1_0.link_1,
+        p1_0.link_2,
+        p1_0.name,
+        p1_0.short_description,
+        p1_0.specs,
+        p1_0.stock,
+        p1_0.updated_at,
+        p1_0.warranty_date,
+        p1_0.weekly_price 
+    from
+        products p1_0
+2026-08-09T01:52:15.422+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:52:15.424+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:52:15.426+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:52:15.427+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:52:15.429+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:52:15.430+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.display_name,
+        c1_0.name,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-08-09T01:52:15.432+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.433+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.435+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.436+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.437+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.438+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.439+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.440+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.441+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.442+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.443+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.443+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.445+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.446+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.447+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.448+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.449+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.451+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.452+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.455+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.457+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.458+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.459+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.459+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.460+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.460+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.461+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.461+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.462+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.463+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.465+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.466+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.467+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.468+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.469+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.470+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.470+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.471+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.472+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.473+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.473+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.474+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.474+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.475+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.475+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.476+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.477+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.478+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.478+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.479+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.479+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.480+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.481+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.481+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.482+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.483+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.483+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        i1_0.product_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.primary_image,
+        i1_0.public_id 
+    from
+        product_images i1_0 
+    where
+        i1_0.product_id=?
+2026-08-09T01:52:15.484+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-08-09T01:52:15.487+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ProductResponse[id=105, name=Rent Sony a7 M5, brand=Sony, category=CAMERAS, shortDescription=Sony r (truncated)...]
+2026-08-09T01:52:15.489+05:30 DEBUG 25464 --- [clickkaar-backend] [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
