@@ -13,6 +13,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
   List<Booking> findByCustomerId(Long customerId);
   List<Booking> findByStatus(BookingStatus status);
   boolean existsByBookingNumber(String bookingNumber);
+  long countByBookingNumberStartingWith(String prefix);
+  boolean existsByCustomerIdAndRentalStartDateAndRentalEndDate(Long customerId, LocalDate rentalStartDate, LocalDate rentalEndDate);
 
   @Query("""
       select count(bi) > 0

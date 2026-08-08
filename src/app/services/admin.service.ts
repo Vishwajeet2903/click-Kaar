@@ -115,6 +115,7 @@ export interface AdminBookingResponse {
 
 export interface AdminCustomerResponse {
   id: number;
+  customerNumber: string;
   name: string;
   email: string;
   phone?: string;
@@ -145,6 +146,7 @@ export interface AdminCustomerDetailResponse extends AdminCustomerResponse {
 
 export interface AdminPaymentResponse {
   id: number;
+  paymentNumber: string;
   bookingId: string;
   customer: string;
   gateway: 'Razorpay' | 'PayU';

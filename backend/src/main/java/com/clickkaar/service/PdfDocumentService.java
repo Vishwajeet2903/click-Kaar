@@ -3,6 +3,7 @@ package com.clickkaar.service;
 import com.clickkaar.entity.Booking;
 import com.clickkaar.entity.BookingItem;
 import com.clickkaar.enums.PaymentStatus;
+import com.clickkaar.util.BusinessIdFormatter;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -28,7 +29,7 @@ public class PdfDocumentService {
     int y = 792;
     add(lines, "CLICK-KAAR LLP", 56, y, 18);
     y -= 30;
-    add(lines, "Invoice No: " + booking.getBookingNumber(), 56, y, 10);
+    add(lines, "Invoice No: " + BusinessIdFormatter.invoiceNumber(booking), 56, y, 10);
     add(lines, "Invoice Date: " + LocalDate.now().format(DISPLAY_DATE), 350, y, 10);
     y -= 24;
     add(lines, "Customer Name: " + safe(booking.getCustomer().getFullName()), 56, y, 10);

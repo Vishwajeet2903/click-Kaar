@@ -47,6 +47,7 @@ import com.clickkaar.repository.WishlistRepository;
 import com.clickkaar.service.ProductImportService;
 import com.clickkaar.service.ProductService;
 import com.clickkaar.service.ContentService;
+import com.clickkaar.util.BusinessIdFormatter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -963,6 +964,7 @@ public class AdminController {
         .count();
     return new AdminCustomerResponse(
         customer.getId(),
+        BusinessIdFormatter.customerNumber(customer),
         customer.getFullName(),
         customer.getEmail(),
         customer.getMobile(),
@@ -979,6 +981,7 @@ public class AdminController {
     AdminCustomerResponse summary = adminCustomerResponse(customer);
     return new AdminCustomerDetailResponse(
         summary.id(),
+        summary.customerNumber(),
         summary.name(),
         customer.getFirstName(),
         customer.getLastName(),
@@ -1015,6 +1018,7 @@ public class AdminController {
   private AdminPaymentResponse adminPaymentResponse(Payment payment) {
     return new AdminPaymentResponse(
         payment.getId(),
+        BusinessIdFormatter.paymentNumber(payment),
         payment.getBooking().getBookingNumber(),
         payment.getBooking().getCustomer().getFullName(),
         "Razorpay",
@@ -1112,9 +1116,9 @@ public class AdminController {
   public record AdminCouponRequest(String code, BigDecimal discountPercent, Boolean active, Integer usageLimit, LocalDate validUntil) {}
   public record CouponActiveRequest(boolean active) {}
   public record AdminBookingResponse(Long id, String bookingNumber, String customer, String phone, List<String> products, LocalDate startDate, LocalDate endDate, BookingStatus status, PaymentStatus paymentStatus, String returnStatus, BigDecimal total, List<String> notes, boolean deliveryOtpVerified) {}
-  public record AdminCustomerResponse(Long id, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}
-  public record AdminCustomerDetailResponse(Long id, String name, String firstName, String lastName, String email, String phone, String gender, String dob, String alternateContactNumber, String currentAddress, String city, String state, String pincode, String country, String residenceType, String occupation, String companyName, String socialMediaProfile, boolean verified, boolean blocked, int wishlist, long activeBookings, long pastBookings, List<RegistrationDocumentResponse> documents) {}
-  public record AdminPaymentResponse(Long id, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt, String remark, long remarkChangeCount) {}
+  public record AdminCustomerResponse(Long id, String customerNumber, String name, String email, String phone, boolean verified, boolean blocked, String city, int wishlist, long activeBookings, long pastBookings) {}
+  public record AdminCustomerDetailResponse(Long id, String customerNumber, String name, String firstName, String lastName, String email, String phone, String gender, String dob, String alternateContactNumber, String currentAddress, String city, String state, String pincode, String country, String residenceType, String occupation, String companyName, String socialMediaProfile, boolean verified, boolean blocked, int wishlist, long activeBookings, long pastBookings, List<RegistrationDocumentResponse> documents) {}
+  public record AdminPaymentResponse(Long id, String paymentNumber, String bookingId, String customer, String gateway, String mode, PaymentStatus status, BigDecimal amount, LocalDateTime paidAt, String remark, long remarkChangeCount) {}
   public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, Integer usageLimit, int usedCount, LocalDate validUntil, LocalDateTime createdAt) {}
   public record PaymentRemarkLogResponse(Long id, String oldRemark, String newRemark, String changedBy, LocalDateTime changedAt) {}
   public record AdminBlogPostResponse(Long id, String title, String slug, String coverImage, String category, String author, BlogStatus status, LocalDate publishDate, String tags, String seoTitle, String metaDescription, String seoKeywords, String content) {}

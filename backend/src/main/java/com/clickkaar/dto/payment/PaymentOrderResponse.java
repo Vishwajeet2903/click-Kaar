@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 public record PaymentOrderResponse(
     Long paymentId,
+    String paymentNumber,
     String razorpayKeyId,
     String razorpayOrderId,
     BigDecimal amount,

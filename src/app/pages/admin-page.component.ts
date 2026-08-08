@@ -63,6 +63,7 @@ interface AdminBooking {
 
 interface AdminCustomer {
   id: number;
+  customerNumber: string;
   name: string;
   email: string;
   phone: string;
@@ -672,7 +673,7 @@ interface AdminNoteDialog {
                             <div class="customer-card-info">
                               <h3>{{ customer.name }}</h3>
                               <p>{{ customer.email }} - {{ customer.phone || 'No phone added' }}</p>
-                              <span>{{ customer.city || 'City not added' }}</span>
+                              <span>{{ customer.customerNumber }} - {{ customer.city || 'City not added' }}</span>
                             </div>
                           </div>
                           <dl>
@@ -701,7 +702,7 @@ interface AdminNoteDialog {
                     <div class="panel-head">
                       <div>
                         <h3>Customer details</h3>
-                        <span>{{ selectedCustomerDetail ? selectedCustomerDetail.email : 'Select a customer card' }}</span>
+                        <span>{{ selectedCustomerDetail ? selectedCustomerDetail.customerNumber + ' - ' + selectedCustomerDetail.email : 'Select a customer card' }}</span>
                       </div>
                       @if (selectedCustomerDetail) {
                         <b class="status" [class]="selectedCustomerDetail.blocked ? 'status-bad' : 'status-ok'">{{ selectedCustomerDetail.blocked ? 'Blocked' : 'Active' }}</b>
@@ -717,7 +718,7 @@ interface AdminNoteDialog {
                         <div class="customer-detail-avatar">{{ initials(selectedCustomerDetail.name) }}</div>
                         <div>
                           <h3>{{ selectedCustomerDetail.name }}</h3>
-                          <p>{{ selectedCustomerDetail.email }}</p>
+                          <p>{{ selectedCustomerDetail.customerNumber }} - {{ selectedCustomerDetail.email }}</p>
                           <span>{{ selectedCustomerDetail.phone || 'No phone added' }}</span>
                         </div>
                       </div>
@@ -3377,9 +3378,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     };
   }
 
-  private mapCustomer(customer: { id: number; name: string; email: string; phone?: string; verified: boolean; blocked: boolean; city?: string; wishlist: number; activeBookings: number; pastBookings: number }): AdminCustomer {
+  private mapCustomer(customer: { id: number; customerNumber?: string; name: string; email: string; phone?: string; verified: boolean; blocked: boolean; city?: string; wishlist: number; activeBookings: number; pastBookings: number }): AdminCustomer {
     return {
       id: customer.id,
+      customerNumber: customer.customerNumber ?? `CRE-${new Date().getFullYear().toString().slice(-2)}-${String(1000 + customer.id).padStart(4, '0')}`,
       name: customer.name,
       email: customer.email,
       phone: customer.phone ?? '',
@@ -3395,7 +3397,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   private mapPayment(payment: AdminPaymentResponse): AdminPayment {
     return {
       backendId: payment.id,
-      id: String(payment.id),
+      id: payment.paymentNumber ?? String(payment.id),
       bookingId: payment.bookingId,
       customer: payment.customer,
       gateway: payment.gateway,

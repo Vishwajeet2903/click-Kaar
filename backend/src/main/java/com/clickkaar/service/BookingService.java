@@ -22,6 +22,7 @@ import com.clickkaar.repository.ProductRepository;
 import com.clickkaar.repository.StaticContentRepository;
 import com.clickkaar.repository.UserRepository;
 import com.clickkaar.security.CustomUserDetails;
+import com.clickkaar.util.BusinessIdFormatter;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -50,7 +52,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,7 +95,7 @@ public class BookingService {
         ? BookingStatus.PENDING
         : BookingStatus.CONFIRMED;
     Booking booking = Booking.builder()
-        .bookingNumber("CK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase())
+        .bookingNumber(generateOrderNumber())
         .customer(customer)
         .rentalStartDate(request.rentalStartDate())
         .rentalEndDate(request.rentalEndDate())
@@ -392,7 +393,7 @@ public class BookingService {
               + "Website: https://click-kaar.com"
       );
       helper.addAttachment(
-          booking.getBookingNumber() + "-invoice.pdf",
+          BusinessIdFormatter.invoiceNumber(booking) + ".pdf",
           new ByteArrayResource(pdfDocumentService.invoicePdf(booking, paymentStatus, paymentMethod)),
           "application/pdf"
       );
@@ -412,6 +413,18 @@ public class BookingService {
     }
   }
 
+
+  private String generateOrderNumber() {
+    LocalDateTime now = LocalDateTime.now();
+    String prefix = "ORD-" + now.format(DateTimeFormatter.ofPattern("yyMMdd")) + "-";
+    long sequence = bookingRepository.countByBookingNumberStartingWith(prefix) + 1;
+    String bookingNumber = BusinessIdFormatter.orderNumber(now, sequence);
+    while (bookingRepository.existsByBookingNumber(bookingNumber)) {
+      sequence += 1;
+      bookingNumber = BusinessIdFormatter.orderNumber(now, sequence);
+    }
+    return bookingNumber;
+  }
 
   private String generateDeliveryOtp() {
     return String.valueOf(100000 + OTP_RANDOM.nextInt(900000));

@@ -16,6 +16,7 @@ import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PaymentRepository;
 import com.clickkaar.repository.RefundRepository;
 import com.clickkaar.security.CustomUserDetails;
+import com.clickkaar.util.BusinessIdFormatter;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.Utils;
@@ -157,6 +158,6 @@ public class PaymentService {
   }
 
   private PaymentOrderResponse paymentOrderResponse(Payment payment) {
-    return new PaymentOrderResponse(payment.getId(), razorpayKeyId, payment.getRazorpayOrderId(), payment.getAmount(), "INR", payment.getStatus());
+    return new PaymentOrderResponse(payment.getId(), BusinessIdFormatter.paymentNumber(payment), razorpayKeyId, payment.getRazorpayOrderId(), payment.getAmount(), "INR", payment.getStatus());
   }
 }

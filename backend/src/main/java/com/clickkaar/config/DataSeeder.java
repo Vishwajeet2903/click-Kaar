@@ -363,11 +363,12 @@ public class DataSeeder {
 
   private void seedBooking(String bookingNumber, User customer, List<String> productNames, String start, String end, BookingStatus status,
                            String totalAmount, PaymentStatus paymentStatus, PaymentType paymentType, String note, User admin) {
-    if (bookingRepository.existsByBookingNumber(bookingNumber)) {
-      return;
-    }
     LocalDate startDate = LocalDate.parse(start);
     LocalDate endDate = LocalDate.parse(end);
+    if (bookingRepository.existsByBookingNumber(bookingNumber)
+        || bookingRepository.existsByCustomerIdAndRentalStartDateAndRentalEndDate(customer.getId(), startDate, endDate)) {
+      return;
+    }
     int days = (int) (endDate.toEpochDay() - startDate.toEpochDay()) + 1;
     Booking booking = Booking.builder()
         .bookingNumber(bookingNumber)

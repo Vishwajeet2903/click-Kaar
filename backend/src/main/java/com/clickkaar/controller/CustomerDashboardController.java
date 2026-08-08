@@ -11,6 +11,7 @@ import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PaymentRepository;
 import com.clickkaar.repository.UserRepository;
 import com.clickkaar.repository.WishlistRepository;
+import com.clickkaar.util.BusinessIdFormatter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,6 +72,7 @@ public class CustomerDashboardController {
 
     CustomerProfileResponse profile = new CustomerProfileResponse(
         customer.getId(),
+        BusinessIdFormatter.customerNumber(customer),
         customer.getFullName(),
         customer.getEmail(),
         customer.getMobile(),
@@ -125,6 +127,7 @@ public class CustomerDashboardController {
   private CustomerPaymentResponse paymentResponse(Payment payment) {
     return new CustomerPaymentResponse(
         payment.getId(),
+        BusinessIdFormatter.paymentNumber(payment),
         payment.getBooking().getBookingNumber(),
         payment.getType().name(),
         payment.getStatus(),
@@ -167,8 +170,8 @@ public class CustomerDashboardController {
   }
 
   public record CustomerDashboardResponse(CustomerProfileResponse profile, CustomerDashboardSummaryResponse summary, List<CustomerBookingResponse> bookings, List<CustomerPaymentResponse> payments) {}
-  public record CustomerProfileResponse(Long id, String fullName, String email, String mobile, boolean mobileVerified, String city, Set<String> roles) {}
+  public record CustomerProfileResponse(Long id, String customerNumber, String fullName, String email, String mobile, boolean mobileVerified, String city, Set<String> roles) {}
   public record CustomerDashboardSummaryResponse(long activeBookings, long pastBookings, long upcomingReturns, int wishlistCount, BigDecimal totalSpent, long pendingPayments) {}
   public record CustomerBookingResponse(Long id, String bookingNumber, List<String> products, String productName, LocalDate startDate, LocalDate endDate, String dateRange, int rentalDays, BookingStatus status, String group, String returnStatus, BigDecimal total) {}
-  public record CustomerPaymentResponse(Long id, String bookingNumber, String type, PaymentStatus status, BigDecimal amount, java.time.LocalDateTime paidAt) {}
+  public record CustomerPaymentResponse(Long id, String paymentNumber, String bookingNumber, String type, PaymentStatus status, BigDecimal amount, java.time.LocalDateTime paidAt) {}
 }

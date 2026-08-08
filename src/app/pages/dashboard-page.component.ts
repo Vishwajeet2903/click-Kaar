@@ -49,7 +49,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
                 </div>
 
                 <div class="profile-meta">
-                  <span>Customer ID #{{ dashboard.profile.id || user.userId }}</span>
+                  <span>{{ dashboard.profile.customerNumber || ('CRE-' + (dashboard.profile.id || user.userId)) }}</span>
                   @for (role of dashboard.profile.roles; track role) {
                     <strong>{{ role }}</strong>
                   }
@@ -175,8 +175,8 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
                     @for (payment of pagedPayments(dashboard.payments); track payment.id) {
                       <article class="surface item payment-row">
                         <div>
-                          <strong>{{ payment.bookingNumber }}</strong>
-                          <span>{{ formatPaymentType(payment.type) }}</span>
+                          <strong>{{ payment.paymentNumber || payment.bookingNumber }}</strong>
+                          <span>{{ payment.bookingNumber }} - {{ formatPaymentType(payment.type) }}</span>
                         </div>
                         <span [class]="payment.status.toLowerCase()">{{ payment.status }}</span>
                         <strong>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</strong>

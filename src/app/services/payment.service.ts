@@ -14,6 +14,7 @@ export interface CreatePaymentOrderRequest {
 
 export interface PaymentOrderResponse {
   paymentId: number;
+  paymentNumber: string;
   razorpayKeyId: string;
   razorpayOrderId: string;
   amount: number;

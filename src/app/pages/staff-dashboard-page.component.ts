@@ -255,7 +255,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
             @for (payment of payments().slice(0, 6); track payment.id) {
               <article class="list-row">
                 <strong>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</strong>
-                <span>{{ payment.customer }} - {{ payment.bookingId }}</span>
+                <span>{{ payment.paymentNumber || payment.id }} - {{ payment.customer }} - {{ payment.bookingId }}</span>
                 <small>{{ payment.status }}</small>
               </article>
             }

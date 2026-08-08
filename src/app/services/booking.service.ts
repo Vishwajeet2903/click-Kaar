@@ -57,6 +57,7 @@ export interface CustomerDashboardResponse {
 
 export interface CustomerDashboardProfile {
   id: number;
+  customerNumber: string;
   fullName: string;
   email: string;
   mobile?: string;
@@ -91,6 +92,7 @@ export interface CustomerDashboardBooking {
 
 export interface CustomerDashboardPayment {
   id: number;
+  paymentNumber: string;
   bookingNumber: string;
   type: string;
   status: string;
