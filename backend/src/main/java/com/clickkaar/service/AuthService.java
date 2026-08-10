@@ -128,7 +128,7 @@ public class AuthService {
 
   public AuthResponse adminLogin(LoginRequest request) {
     AuthResponse response = login(request);
-    if (!response.roles().contains("ADMIN")) {
+    if (!response.roles().contains("ADMIN") && !response.roles().contains("SUPER_ADMIN")) {
       throw new BadCredentialsException("Admin access required");
     }
     return response;

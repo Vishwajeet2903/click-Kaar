@@ -1445,6 +1445,7 @@ interface AdminNoteDialog {
                 @if (employeeView() === 'manage') {
                   <div class="metric-grid employee-metric-grid">
                     <article class="surface metric-card"><span>Total team</span><strong>{{ employees().length }}</strong><small>Admin and staff accounts</small></article>
+                    <article class="surface metric-card"><span>Admins</span><strong>{{ employeeCountByRole('ADMIN') + employeeCountByRole('SUPER_ADMIN') }}</strong><small>Super admin and admin access</small></article>
                     <article class="surface metric-card green"><span>Managers</span><strong>{{ employeeCountByRole('MANAGER') }}</strong><small>Booking and customer operations</small></article>
                     <article class="surface metric-card orange"><span>Inventory</span><strong>{{ employeeCountByRole('INVENTORY_STAFF') }}</strong><small>Gear release and returns</small></article>
                     <article class="surface metric-card red"><span>Content</span><strong>{{ employeeCountByRole('CONTENT_EDITOR') }}</strong><small>Blog, gallery and reviews</small></article>
@@ -1482,7 +1483,7 @@ interface AdminNoteDialog {
                             }
                           </div>
                           <div class="row-actions employee-actions">
-                            <button type="button" class="danger-btn delete-btn employee-delete-btn" [disabled]="employee.roles.includes('ADMIN') || deletingEmployeeId === employee.userId" (click)="deleteEmployee(employee)">
+                            <button type="button" class="danger-btn delete-btn employee-delete-btn" [disabled]="employee.roles.includes('SUPER_ADMIN') || (employee.roles.includes('ADMIN') && !authService.isSuperAdmin()) || deletingEmployeeId === employee.userId" (click)="deleteEmployee(employee)">
                               {{ deletingEmployeeId === employee.userId ? 'Deleting...' : 'Delete' }}
                             </button>
                           </div>
@@ -1507,7 +1508,7 @@ interface AdminNoteDialog {
                     <div class="panel-head employee-page-head">
                       <div>
                         <h3>Create employee</h3>
-                        <span>Manager or staff access</span>
+                        <span>{{ authService.isSuperAdmin() ? 'Admin, manager or staff access' : 'Manager or staff access' }}</span>
                       </div>
                       <button type="button" class="ghost-btn compact-primary" (click)="employeeView.set('manage'); employeeFormError = ''">Back to employees</button>
                     </div>
@@ -1518,7 +1519,7 @@ interface AdminNoteDialog {
                       <label>Full name<input formControlName="fullName"></label>
                       <label>Email<input formControlName="email"></label>
                       <label>Mobile<input formControlName="mobile"></label>
-                      <label>Dashboard role<select class="employee-role-select" formControlName="role"><option value="MANAGER">Manager</option><option value="INVENTORY_STAFF">Inventory Staff</option><option value="CONTENT_EDITOR">Content Editor</option></select></label>
+                      <label>Dashboard role<select class="employee-role-select" formControlName="role">@if (authService.isSuperAdmin()) {<option value="ADMIN">Admin</option>}<option value="MANAGER">Manager</option><option value="INVENTORY_STAFF">Inventory Staff</option><option value="CONTENT_EDITOR">Content Editor</option></select></label>
                       <label>Temporary password<input type="password" formControlName="password"></label>
                     </div>
                     <div class="employee-form-actions">
@@ -2514,11 +2515,12 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .filter((item) => !this.bookingStatusFilter() || item.status === this.bookingStatusFilter())
       .filter((item) => !this.paymentStatusFilter() || item.paymentStatus === this.paymentStatusFilter())
       .filter((item) => this.bookingOverlapsSelectedMonth(item))
-      .filter((item) => !query || [item.id, item.customer, ...item.products].some((value) => value.toLowerCase().includes(query)));
+      .filter((item) => !query || [item.id, item.customer, ...item.products].some((value) => value.toLowerCase().includes(query)))
+      .sort((a, b) => this.compareBookingsNewestFirst(a, b));
   });
 
-  readonly outwardBookings = computed(() => this.bookings().filter((booking) => this.isOutwardBooking(booking)));
-  readonly inwardBookings = computed(() => this.bookings().filter((booking) => this.isInwardBooking(booking)));
+  readonly outwardBookings = computed(() => [...this.bookings()].sort((a, b) => this.compareBookingsNewestFirst(a, b)).filter((booking) => this.isOutwardBooking(booking)));
+  readonly inwardBookings = computed(() => [...this.bookings()].sort((a, b) => this.compareBookingsNewestFirst(a, b)).filter((booking) => this.isInwardBooking(booking)));
   readonly filteredCustomers = computed(() => {
     const query = this.customerQuery().trim().toLowerCase();
     return this.customers().filter((item) => !query || [item.name, item.email, item.city, item.phone].some((value) => value.toLowerCase().includes(query)));
@@ -3798,8 +3800,12 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   deleteEmployee(employee: EmployeeResponse): void {
-    if (employee.roles.includes('ADMIN')) {
-      this.showTopMessage('Admin account cannot be deleted.', 2600);
+    if (employee.roles.includes('SUPER_ADMIN')) {
+      this.showTopMessage('Super Admin account cannot be deleted.', 2600);
+      return;
+    }
+    if (employee.roles.includes('ADMIN') && !this.authService.isSuperAdmin()) {
+      this.showTopMessage('Only Super Admin can delete an Admin account.', 2600);
       return;
     }
 
@@ -3844,6 +3850,19 @@ export class AdminPageComponent implements OnInit, OnDestroy {
                 ? this.reviews()
                 : this.metrics();
     this.downloadCsv(`clickkaar-${tab}.csv`, rows);
+  }
+
+  private compareBookingsNewestFirst(a: AdminBooking, b: AdminBooking): number {
+    const bookingNumberDiff = this.bookingNumberValue(b.id) - this.bookingNumberValue(a.id);
+    if (bookingNumberDiff !== 0) {
+      return bookingNumberDiff;
+    }
+    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+  }
+
+  private bookingNumberValue(value: string): number {
+    const match = value.match(/\d+/g);
+    return match?.length ? Number(match.at(-1)) : 0;
   }
 
   bookedDays(productName: string): number {
@@ -4422,6 +4441,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   employeeRoleLabel(role: string): string {
     const labels: Record<string, string> = {
+      SUPER_ADMIN: 'Super Admin',
       ADMIN: 'Admin',
       MANAGER: 'Manager',
       INVENTORY_STAFF: 'Inventory Staff',

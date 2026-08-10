@@ -259,7 +259,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         <section class="surface panel">
           <div class="panel-head"><h2>Bookings</h2><span>{{ bookings().length }} total</span></div>
           <div class="list-grid">
-            @for (booking of bookings().slice(0, 4); track booking.id) {
+            @for (booking of sortedBookings().slice(0, 4); track booking.id) {
               <article class="list-row">
                 <strong>{{ booking.bookingNumber }}</strong>
                 <span>{{ booking.customer }} - {{ booking.products.join(', ') }}</span>
@@ -762,8 +762,9 @@ export class StaffDashboardPageComponent implements OnInit {
     const start = (safePage - 1) * this.inventoryPageSize;
     return this.inventory().slice(start, start + this.inventoryPageSize);
   });
-  readonly outwardBookings = computed(() => this.bookings().filter((booking) => this.isOutwardBooking(booking)));
-  readonly inwardBookings = computed(() => this.bookings().filter((booking) => this.isInwardBooking(booking)));
+  readonly sortedBookings = computed(() => [...this.bookings()].sort((a, b) => this.compareBookingsNewestFirst(a, b)));
+  readonly outwardBookings = computed(() => this.sortedBookings().filter((booking) => this.isOutwardBooking(booking)));
+  readonly inwardBookings = computed(() => this.sortedBookings().filter((booking) => this.isInwardBooking(booking)));
   readonly metrics = computed(() => {
     const items: Array<{ label: string; value: string; note: string }> = [];
     if (this.canUseInventory()) items.push({ label: 'Inventory', value: String(this.inventory().length), note: 'Catalogue items' });
@@ -1156,6 +1157,19 @@ export class StaffDashboardPageComponent implements OnInit {
 
   formatReturnStatus(value: string): string {
     return value.toLowerCase().replaceAll('_', ' ');
+  }
+
+  private compareBookingsNewestFirst(a: AdminBookingResponse, b: AdminBookingResponse): number {
+    const bookingNumberDiff = this.bookingNumberValue(b.bookingNumber) - this.bookingNumberValue(a.bookingNumber);
+    if (bookingNumberDiff !== 0) {
+      return bookingNumberDiff;
+    }
+    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+  }
+
+  private bookingNumberValue(value: string): number {
+    const match = value.match(/\d+/g);
+    return match?.length ? Number(match.at(-1)) : 0;
   }
 
   private isOutwardBooking(booking: AdminBookingResponse): boolean {

@@ -6,5 +6,6 @@ public enum RoleName {
   MANAGER,
   INVENTORY_STAFF,
   CONTENT_EDITOR,
-  ADMIN
+  ADMIN,
+  SUPER_ADMIN
 }

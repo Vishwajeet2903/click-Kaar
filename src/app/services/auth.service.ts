@@ -118,7 +118,11 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.currentUser()?.roles.includes('ADMIN') ?? false;
+    return this.isSuperAdmin() || (this.currentUser()?.roles.includes('ADMIN') ?? false);
+  }
+
+  isSuperAdmin(): boolean {
+    return this.currentUser()?.roles.includes('SUPER_ADMIN') ?? false;
   }
 
   isCustomer(): boolean {
@@ -135,7 +139,7 @@ export class AuthService {
 
   defaultDashboardUrl(): string {
     const roles = this.currentUser()?.roles ?? [];
-    if (roles.includes('ADMIN')) {
+    if (roles.includes('SUPER_ADMIN') || roles.includes('ADMIN')) {
       return '/admin';
     }
     if (roles.includes('MANAGER')) {

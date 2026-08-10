@@ -65,6 +65,7 @@ public class BookingService {
   private final CouponRepository couponRepository;
   private final JavaMailSender mailSender;
   private final PdfDocumentService pdfDocumentService;
+  private final InvoiceWorkbookService invoiceWorkbookService;
   private static final DateTimeFormatter DISPLAY_DATE = DateTimeFormatter.ofPattern("dd MMM yyyy");
   private static final SecureRandom OTP_RANDOM = new SecureRandom();
 
@@ -382,7 +383,7 @@ public class BookingService {
               + "- Booking Status: " + booking.getStatus() + "\n"
               + deliveryOtpLine(booking) + "\n"
               + nextPaymentStep(paymentStatus, paymentMethod) + "\n\n"
-              + "Your invoice and the ClickKaar Terms & Conditions PDF are attached with this email.\n\n"
+              + "Your invoice workbook and the ClickKaar Terms & Conditions PDF are attached with this email.\n\n"
               + "You can log in to your ClickKaar account to view your booking details.\n\n"
               + "Login URL: " + configuredLoginUrl() + "\n\n"
               + "If you have any questions or need assistance, please contact our support team.\n\n"
@@ -393,9 +394,9 @@ public class BookingService {
               + "Website: https://click-kaar.com/"
       );
       helper.addAttachment(
-          BusinessIdFormatter.invoiceNumber(booking) + ".pdf",
-          new ByteArrayResource(pdfDocumentService.invoicePdf(booking, paymentStatus, paymentMethod)),
-          "application/pdf"
+          BusinessIdFormatter.invoiceNumber(booking) + ".xlsx",
+          new ByteArrayResource(invoiceWorkbookService.invoiceWorkbook(booking)),
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
       );
       helper.addAttachment(
           "clickkaar-terms-and-conditions.pdf",

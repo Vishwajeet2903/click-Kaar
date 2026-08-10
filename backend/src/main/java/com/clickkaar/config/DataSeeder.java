@@ -49,8 +49,11 @@ public class DataSeeder {
           .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.CONTENT_EDITOR).build()));
       Role admin = roleRepository.findByName(RoleName.ADMIN)
           .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.ADMIN).build()));
+      Role superAdmin = roleRepository.findByName(RoleName.SUPER_ADMIN)
+          .orElseGet(() -> roleRepository.save(Role.builder().name(RoleName.SUPER_ADMIN).build()));
 
-      User adminUser = seedUser("Clickkaar Admin", "admin@clickkaar.com", "9999999999", Set.of(admin), true);
+      User adminUser = seedUser("Clickkaar Admin", "admin@clickkaar.com", "9999999999", Set.of(superAdmin), true);
+      ensureUserHasRole(adminUser, superAdmin);
       seedUser("Clickkaar Manager", "manager@clickkaar.com", "9999999991", Set.of(manager), true);
       seedUser("Clickkaar Inventory Staff", "inventory@clickkaar.com", "9999999992", Set.of(inventoryStaff), true);
       seedUser("Clickkaar Content Editor", "content@clickkaar.com", "9999999993", Set.of(contentEditor), true);
@@ -338,6 +341,13 @@ public class DataSeeder {
           .roles(roles)
           .build());
     });
+  }
+
+  private void ensureUserHasRole(User user, Role role) {
+    if (user.getRoles().stream().noneMatch(existingRole -> existingRole.getName() == role.getName())) {
+      user.getRoles().add(role);
+      userRepository.save(user);
+    }
   }
 
   private void seedWishlists(User user, int count) {

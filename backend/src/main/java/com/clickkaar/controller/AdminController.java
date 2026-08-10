@@ -100,7 +100,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF','CONTENT_EDITOR')")
+@PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF','CONTENT_EDITOR')")
 @RequiredArgsConstructor
 @Slf4j
 public class AdminController {
@@ -153,14 +153,14 @@ public class AdminController {
   }
 
   @PostMapping("/inventory")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   @ResponseStatus(HttpStatus.CREATED)
   public ProductResponse createInventoryProduct(@Valid @RequestBody ProductRequest request) {
     return productService.create(request);
   }
 
   @PostMapping(value = "/inventory/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   @ResponseStatus(HttpStatus.CREATED)
   public ProductResponse createInventoryProductWithImage(
       @RequestPart("product") String productJson,
@@ -170,20 +170,20 @@ public class AdminController {
   }
 
   @PostMapping(value = "/inventory/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   @ResponseStatus(HttpStatus.CREATED)
   public ProductImportResponse importInventoryProducts(@RequestPart("file") MultipartFile file) {
     return productImportService.importProducts(file);
   }
 
   @PutMapping("/inventory/{productId}")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public ProductResponse updateInventoryProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequest request) {
     return productService.update(productId, request);
   }
 
   @PutMapping(value = "/inventory/{productId}/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public ProductResponse updateInventoryProductWithImage(
       @PathVariable Long productId,
       @RequestPart("product") String productJson,
@@ -193,39 +193,39 @@ public class AdminController {
   }
 
   @GetMapping("/reviews")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   public List<CustomerReviewResponse> reviews() {
     return contentService.reviews();
   }
 
   @DeleteMapping("/reviews/{reviewId}")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteReview(@PathVariable Long reviewId) {
     contentService.deleteReview(reviewId);
   }
 
   @PatchMapping("/reviews/{reviewId}/reply")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   public CustomerReviewResponse replyToReview(@PathVariable Long reviewId, @RequestBody ReviewReplyRequest request) {
     return contentService.replyToReview(reviewId, request.reply());
   }
 
   @GetMapping("/gallery")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   public List<GalleryImageResponse> galleryImages() {
     return contentService.allGalleryImages();
   }
 
   @PostMapping("/gallery")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   @ResponseStatus(HttpStatus.CREATED)
   public GalleryImageResponse createGalleryImage(@Valid @RequestBody GalleryImageRequest request) {
     return contentService.createGalleryImage(request);
   }
 
   @PostMapping(value = "/gallery/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   @ResponseStatus(HttpStatus.CREATED)
   public GalleryImageResponse uploadGalleryImage(
       @RequestParam("image") MultipartFile image,
@@ -239,21 +239,21 @@ public class AdminController {
   }
 
   @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF','CONTENT_EDITOR')")
   @ResponseStatus(HttpStatus.CREATED)
   public ImageUploadResponse uploadImage(@RequestParam("image") MultipartFile image) {
     return new ImageUploadResponse(contentService.uploadImage(image));
   }
 
   @DeleteMapping("/gallery/{imageId}")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteGalleryImage(@PathVariable Long imageId) {
     contentService.deleteGalleryImage(imageId);
   }
 
   @DeleteMapping("/inventory/{productId}")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Transactional
   public void deleteInventoryProduct(@PathVariable Long productId) {
@@ -261,7 +261,7 @@ public class AdminController {
   }
 
   @PatchMapping("/inventory/{productId}/maintenance")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   @Transactional
   public ProductResponse markProductMaintenance(@PathVariable Long productId) {
     Product product = productRepository.findById(productId)
@@ -271,7 +271,7 @@ public class AdminController {
   }
 
   @PatchMapping("/inventory/{productId}/available")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   @Transactional
   public ProductResponse markProductAvailable(@PathVariable Long productId) {
     Product product = productRepository.findById(productId)
@@ -287,7 +287,7 @@ public class AdminController {
   }
 
   @PatchMapping("/bookings/{bookingId}/status")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   @Transactional
   public AdminBookingResponse updateBookingStatus(@PathVariable Long bookingId, @RequestBody BookingStatusRequest request) {
     Booking booking = bookingRepository.findById(bookingId)
@@ -297,7 +297,7 @@ public class AdminController {
   }
 
   @PostMapping("/bookings/{bookingId}/notes")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @Transactional
   public AdminBookingResponse addBookingNote(@PathVariable Long bookingId, @RequestBody BookingNoteRequest request) {
     Booking booking = bookingRepository.findById(bookingId)
@@ -312,7 +312,7 @@ public class AdminController {
 
 
   @PostMapping("/bookings/{bookingId}/delivery-otp/verify")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @Transactional
   public AdminBookingResponse verifyDeliveryOtp(@PathVariable Long bookingId, @RequestBody DeliveryOtpRequest request) {
     Booking booking = bookingRepository.findById(bookingId)
@@ -336,7 +336,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public List<AdminCustomerResponse> customers() {
     return userRepository.findAll().stream()
         .filter(user -> user.getRoles().stream().anyMatch(role -> role.getName() == RoleName.CUSTOMER))
@@ -345,7 +345,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers/{customerId}/details")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public AdminCustomerDetailResponse customerDetails(@PathVariable Long customerId) {
     User customer = userRepository.findById(customerId)
         .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -356,7 +356,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers/verified/{customerId}/documents/{documentType}")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public ResponseEntity<Resource> verifiedCustomerDocument(@PathVariable Long customerId, @PathVariable String documentType) {
     User customer = userRepository.findById(customerId)
         .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -368,7 +368,7 @@ public class AdminController {
   }
 
   @PatchMapping("/customers/{customerId}/blocked")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @Transactional
   public AdminCustomerResponse setCustomerBlocked(@PathVariable Long customerId, @RequestBody CustomerBlockRequest request) {
     User customer = userRepository.findById(customerId)
@@ -381,7 +381,7 @@ public class AdminController {
   }
 
   @DeleteMapping("/customers/{customerId}")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Transactional
   public void deleteCustomer(@PathVariable Long customerId) {
@@ -398,13 +398,13 @@ public class AdminController {
   }
 
   @GetMapping("/payments")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public List<AdminPaymentResponse> payments() {
     return paymentRepository.findAll().stream().map(this::adminPaymentResponse).toList();
   }
 
   @PatchMapping("/payments/{paymentId}/remark")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @Transactional
   public AdminPaymentResponse updatePaymentRemark(@PathVariable Long paymentId, @RequestBody PaymentRemarkRequest request) {
     Payment payment = paymentRepository.findById(paymentId)
@@ -424,7 +424,7 @@ public class AdminController {
   }
 
   @GetMapping("/payments/{paymentId}/remark/logs")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public List<PaymentRemarkLogResponse> paymentRemarkLogs(@PathVariable Long paymentId) {
     if (!paymentRepository.existsById(paymentId)) {
       throw new ResourceNotFoundException("Payment not found");
@@ -441,7 +441,7 @@ public class AdminController {
   }
 
   @PostMapping("/payments/{paymentId}/refunds")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @Transactional
   public AdminPaymentResponse refundPayment(@PathVariable Long paymentId, @RequestBody AdminRefundRequest request) {
     Payment payment = paymentRepository.findById(paymentId)
@@ -457,7 +457,7 @@ public class AdminController {
   }
 
   @GetMapping("/content")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','CONTENT_EDITOR')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   public AdminContentResponse content() {
     List<AdminBlogPostResponse> posts = blogPostRepository.findAll().stream()
         .map(post -> new AdminBlogPostResponse(
@@ -488,7 +488,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports/categories")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public List<CategoryReportResponse> categoryReports() {
     return productRepository.findByDeletedFalse().stream()
         .collect(Collectors.groupingBy(product -> product.getCategory().getDisplayName(), Collectors.counting()))
@@ -498,7 +498,7 @@ public class AdminController {
   }
 
   @GetMapping("/roles/permissions")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
   public List<RolePermissionResponse> rolePermissions() {
     return List.of(
         new RolePermissionResponse("Dashboard", "View", "View", "View", "View"),
@@ -512,7 +512,7 @@ public class AdminController {
   }
 
   @GetMapping("/settings")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
   public AdminSettingsRequest settings() {
     return staticContentRepository.findByPageKey("admin-settings")
         .map(content -> {
@@ -526,7 +526,7 @@ public class AdminController {
   }
 
   @PutMapping("/settings")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
   @Transactional
   public AdminSettingsRequest saveSettings(@RequestBody AdminSettingsRequest request) {
     try {
@@ -541,7 +541,7 @@ public class AdminController {
   }
 
   @GetMapping("/coupons")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public List<AdminCouponResponse> coupons() {
     return couponRepository.findAll().stream()
         .map(this::adminCouponResponse)
@@ -549,7 +549,7 @@ public class AdminController {
   }
 
   @PostMapping("/coupons")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @ResponseStatus(HttpStatus.CREATED)
   @Transactional
   public AdminCouponResponse createCoupon(@RequestBody AdminCouponRequest request) {
@@ -579,7 +579,7 @@ public class AdminController {
   }
 
   @DeleteMapping("/coupons/{couponId}")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Transactional
   public void deleteCoupon(@PathVariable Long couponId) {
@@ -590,7 +590,7 @@ public class AdminController {
   }
 
   @PatchMapping("/coupons/{couponId}/active")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @Transactional
   public AdminCouponResponse setCouponActive(@PathVariable Long couponId, @RequestBody CouponActiveRequest request) {
     Coupon coupon = couponRepository.findById(couponId)
@@ -600,7 +600,7 @@ public class AdminController {
   }
 
   @PostMapping("/employees")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
   @ResponseStatus(HttpStatus.CREATED)
   public EmployeeResponse createEmployee(@Valid @RequestBody EmployeeRequest request) {
     if (userRepository.existsByEmail(request.email())) {
@@ -611,6 +611,9 @@ public class AdminController {
     }
 
     RoleName requestedRole = employeeRoleName(request.role());
+    if (requestedRole == RoleName.ADMIN && !currentAdminHasRole(RoleName.SUPER_ADMIN)) {
+      throw new BadRequestException("Only Super Admin can create an Admin account");
+    }
     Role employeeRole = ensureRole(requestedRole);
 
     User employee = User.builder()
@@ -630,9 +633,9 @@ public class AdminController {
   }
 
   @GetMapping("/employees")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
   public List<EmployeeResponse> employees() {
-    Set<RoleName> employeeRoles = Set.of(RoleName.ADMIN, RoleName.MANAGER, RoleName.INVENTORY_STAFF, RoleName.CONTENT_EDITOR);
+    Set<RoleName> employeeRoles = Set.of(RoleName.SUPER_ADMIN, RoleName.ADMIN, RoleName.MANAGER, RoleName.INVENTORY_STAFF, RoleName.CONTENT_EDITOR);
     return userRepository.findAll().stream()
         .filter(user -> user.getRoles().stream().anyMatch(role -> employeeRoles.contains(role.getName())))
         .map(user -> new EmployeeResponse(
@@ -646,24 +649,27 @@ public class AdminController {
   }
 
   @DeleteMapping("/employees/{employeeId}")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Transactional
   public void deleteEmployee(@PathVariable Long employeeId) {
     User employee = userRepository.findById(employeeId)
         .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
     Set<RoleName> roles = employee.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
-    if (roles.contains(RoleName.ADMIN)) {
-      throw new BadRequestException("Admin account cannot be deleted");
+    if (roles.contains(RoleName.SUPER_ADMIN)) {
+      throw new BadRequestException("Super Admin account cannot be deleted");
     }
-    if (roles.stream().noneMatch(role -> role == RoleName.MANAGER || role == RoleName.INVENTORY_STAFF || role == RoleName.CONTENT_EDITOR)) {
+    if (roles.contains(RoleName.ADMIN) && !currentAdminHasRole(RoleName.SUPER_ADMIN)) {
+      throw new BadRequestException("Only Super Admin can delete an Admin account");
+    }
+    if (roles.stream().noneMatch(role -> role == RoleName.ADMIN || role == RoleName.MANAGER || role == RoleName.INVENTORY_STAFF || role == RoleName.CONTENT_EDITOR)) {
       throw new ResourceNotFoundException("Employee not found");
     }
     userRepository.delete(employee);
   }
 
   @GetMapping("/customers/pending")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public List<CustomerVerificationResponse> pendingCustomers() {
     return pendingRegistrationRepository.findAll().stream()
         .map(this::customerVerificationResponse)
@@ -671,7 +677,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers/{requestId}/documents/{documentType}")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public ResponseEntity<Resource> pendingCustomerDocument(@PathVariable Long requestId, @PathVariable String documentType) {
     PendingRegistration pendingRegistration = pendingRegistrationRepository.findById(requestId)
         .orElseThrow(() -> new BadRequestException("Pending registration not found"));
@@ -679,7 +685,7 @@ public class AdminController {
   }
 
   @PatchMapping("/customers/{requestId}/verify")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   @Transactional
   public CustomerVerificationResponse verifyCustomer(@PathVariable Long requestId) {
     PendingRegistration pendingRegistration = pendingRegistrationRepository.findById(requestId)
@@ -852,6 +858,7 @@ public class AdminController {
 
   private String employeeRoleLabel(RoleName roleName) {
     return switch (roleName) {
+      case SUPER_ADMIN -> "Super Admin";
       case MANAGER -> "Manager";
       case INVENTORY_STAFF -> "Inventory Staff";
       case CONTENT_EDITOR -> "Content Editor";
@@ -1080,6 +1087,10 @@ public class AdminController {
         .orElseThrow(() -> new BadRequestException("Admin user not found"));
   }
 
+  private boolean currentAdminHasRole(RoleName roleName) {
+    return currentAdmin().getRoles().stream().anyMatch(role -> role.getName() == roleName);
+  }
+
   private Role ensureRole(RoleName roleName) {
     return roleRepository.findByName(roleName)
         .orElseGet(() -> roleRepository.save(Role.builder().name(roleName).build()));
@@ -1090,6 +1101,7 @@ public class AdminController {
       case "MANAGER" -> RoleName.MANAGER;
       case "INVENTORY_STAFF", "INVENTORY" -> RoleName.INVENTORY_STAFF;
       case "CONTENT_EDITOR", "CONTENT" -> RoleName.CONTENT_EDITOR;
+      case "ADMIN" -> RoleName.ADMIN;
       default -> throw new BadRequestException("Select a valid employee role");
     };
   }

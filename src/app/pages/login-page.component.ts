@@ -470,7 +470,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 
     @media (max-width: 620px) {
       .login-page {
-        padding: .75rem;
+        padding: 1.35rem .75rem .75rem;
+        transform: none;
       }
 
       .auth-shell {
@@ -514,6 +515,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 
       .login-form {
         border-radius: 20px;
+        margin-top: 1.4rem;
       }
     }
   `]
