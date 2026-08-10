@@ -159,11 +159,8 @@ export class AdminProductCreatePageComponent implements OnInit {
   readonly pageLabel = computed(() => this.isEditMode() ? 'Edit inventory' : 'Add inventory');
   readonly pageTitle = computed(() => this.isEditMode() ? 'Edit product' : 'Add product');
   readonly dashboardBackUrl = computed(() => this.authService.defaultDashboardUrl());
-  readonly dashboardBackLabel = computed(() => {
-    if (this.authService.hasRole('MANAGER') && !this.authService.hasRole('ADMIN')) return 'Back to manager dashboard';
-    if (this.authService.hasRole('INVENTORY_STAFF') && !this.authService.hasRole('ADMIN')) return 'Back to inventory dashboard';
-    return 'Back to admin';
-  });
+  readonly dashboardBackLabel = computed(() => 'Dashboard');
+
   readonly submitLabel = computed(() => {
     if (this.isSubmitting) {
       return this.isEditMode() ? 'Saving...' : 'Adding...';
