@@ -221,6 +221,19 @@ interface AdminNoteDialog {
 
             @switch (activeTab()) {
               @case ('dashboard') {
+                @if (newestBookingAlert(); as booking) {
+                  <section class="surface dashboard-booking-alert" role="alert">
+                    <div>
+                      <span>New booking</span>
+                      <strong>{{ booking.id }} - {{ booking.customer }}</strong>
+                      <p>{{ booking.products.join(', ') }} - {{ booking.startDate | date:'mediumDate' }} to {{ booking.endDate | date:'mediumDate' }} - {{ booking.total | currency:'INR':'symbol':'1.0-0' }}</p>
+                    </div>
+                    <div class="dashboard-alert-actions">
+                      <button type="button" class="mini-btn" (click)="openBookingAlert(booking)">View booking</button>
+                      <button type="button" class="ghost-mini" (click)="dismissBookingAlert(booking)">Dismiss</button>
+                    </div>
+                  </section>
+                }
                 <div class="metric-grid">
                   @for (metric of metrics(); track metric.label) {
                     <article class="surface metric-card" [class]="metric.tone">
@@ -1835,6 +1848,13 @@ interface AdminNoteDialog {
     .dense-list strong, td strong { display: block; }
     .dense-list strong, td strong { color: #111; font-size: .94rem; line-height: 1.35; }
     .dense-list span, td span { color: #555; display: block; font-size: .82rem; line-height: 1.45; margin-top: .18rem; }
+    .dashboard-booking-alert { align-items: center; background: #fff; border: 1px solid rgba(255,151,0,.42); color: #111; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1rem; padding: 1rem; }
+    .dashboard-booking-alert span { color: #ff9700; display: block; font-size: .75rem; font-weight: 950; letter-spacing: .08em; margin-bottom: .25rem; text-transform: uppercase; }
+    .dashboard-booking-alert strong { color: #111; display: block; font-size: 1rem; line-height: 1.25; }
+    .dashboard-booking-alert p { color: #555; font-size: .88rem; font-weight: 700; line-height: 1.45; margin: .25rem 0 0; }
+    .dashboard-alert-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; justify-content: flex-end; }
+    .dashboard-alert-actions .ghost-mini { background: transparent; border-color: rgba(17,17,17,.2); color: #111; }
+    .dashboard-alert-actions .ghost-mini:hover { background: #111; color: #fff; }
     .pending-dashboard-panel { align-content: start; }
     .registration-queue-head > div { min-width: 0; }
     .queue-state { align-content: center; background: var(--admin-soft); border: 1px dashed rgba(17,17,17,.14); border-radius: 6px; display: grid; min-height: 180px; padding: 1rem; text-align: center; }
@@ -2291,9 +2311,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
 
+  private readonly bookingAlertDismissKey = 'clickkaar_admin_booking_alert_dismissed';
   readonly activeTab = signal<AdminTab>('dashboard');
   readonly products = signal<AdminProduct[]>([]);
   readonly bookings = signal<AdminBooking[]>([]);
+  readonly dismissedBookingAlertIds = signal<string[]>(this.readDismissedBookingAlerts());
   readonly customers = signal<AdminCustomer[]>([]);
   readonly payments = signal<AdminPayment[]>([]);
   readonly coupons = signal<AdminCoupon[]>([]);
@@ -2491,6 +2513,15 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     };
     return titles[this.activeTab()];
   });
+  readonly newestBookingAlert = computed(() => {
+    if (!this.authService.isSuperAdmin() && !this.authService.hasRole('ADMIN')) {
+      return undefined;
+    }
+    const dismissed = new Set(this.dismissedBookingAlertIds());
+    return [...this.bookings()]
+      .sort((a, b) => this.compareBookingsNewestFirst(a, b))
+      .find((booking) => !dismissed.has(booking.id));
+  });
   readonly metrics = computed<AdminMetric[]>(() => [
     { label: 'Bookings this month', value: String(this.bookings().length), note: 'Includes walk-in and online bookings', tone: 'dark' },
     { label: 'Revenue this month', value: this.formatCurrency(this.payments().filter((item) => item.status === 'Paid').reduce((sum, item) => sum + item.amount, 0)), note: 'Paid transactions only', tone: 'green' },
@@ -2605,6 +2636,46 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.loadSettings();
   }
 
+  openBookingAlert(booking: AdminBooking): void {
+    this.bookingQuery.set(booking.id);
+    this.bookingStatusFilter.set('');
+    this.paymentStatusFilter.set('');
+    this.bookingMonthFilter.set('');
+    this.bookingsPage = 1;
+    this.dismissBookingAlert(booking);
+    this.selectAdminTab('bookings');
+  }
+
+  dismissBookingAlert(booking: AdminBooking): void {
+    this.dismissedBookingAlertIds.update((ids) => {
+      if (ids.includes(booking.id)) {
+        return ids;
+      }
+      const nextIds = [...ids, booking.id].slice(-50);
+      this.writeDismissedBookingAlerts(nextIds);
+      return nextIds;
+    });
+  }
+
+  private readDismissedBookingAlerts(): string[] {
+    if (typeof localStorage === 'undefined') {
+      return [];
+    }
+    try {
+      const value = localStorage.getItem(this.bookingAlertDismissKey);
+      return value ? JSON.parse(value) as string[] : [];
+    } catch {
+      localStorage.removeItem(this.bookingAlertDismissKey);
+      return [];
+    }
+  }
+
+  private writeDismissedBookingAlerts(ids: string[]): void {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+    localStorage.setItem(this.bookingAlertDismissKey, JSON.stringify(ids));
+  }
   private loadInventory(): void {
     this.adminService.getInventory().subscribe({
       next: (products) => {
