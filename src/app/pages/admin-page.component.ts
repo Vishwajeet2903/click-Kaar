@@ -681,9 +681,14 @@ interface AdminNoteDialog {
                             <div><dt>Past</dt><dd>{{ customer.pastBookings }}</dd></div>
                             <div><dt>Wishlist</dt><dd>{{ customer.wishlist }}</dd></div>
                           </dl>
-                          <button type="button" [class.danger-btn]="!customer.blocked" [class.mini-btn]="customer.blocked" (click)="$event.stopPropagation(); toggleCustomerBlock(customer)">
-                            {{ customer.blocked ? 'Unblock customer' : 'Block customer' }}
-                          </button>
+                          <div class="customer-card-actions">
+                            <button type="button" [class.danger-btn]="!customer.blocked" [class.mini-btn]="customer.blocked" (click)="$event.stopPropagation(); toggleCustomerBlock(customer)">
+                              {{ customer.blocked ? 'Unblock customer' : 'Block customer' }}
+                            </button>
+                            <button type="button" class="danger-btn" [disabled]="deletingCustomerId === customer.id" (click)="$event.stopPropagation(); deleteCustomer(customer)">
+                              {{ deletingCustomerId === customer.id ? 'Deleting...' : 'Delete customer' }}
+                            </button>
+                          </div>
                         </article>
                       } @empty {
                         <div class="surface empty-cell customer-empty">No customers match this search.</div>
@@ -1710,7 +1715,8 @@ interface AdminNoteDialog {
     .customer-card-head { align-items: flex-start; display: grid; gap: .75rem; grid-template-columns: 42px minmax(0, 1fr); min-width: 0; }
     .customer-card-info { display: grid; gap: .28rem; min-width: 0; }
     .customer-card p, .customer-card span { color: #777; font-size: .84rem; line-height: 1.4; margin: 0; overflow-wrap: anywhere; }
-    .customer-card button { align-self: end; justify-self: stretch; min-height: 38px; width: 100%; }
+    .customer-card-actions { align-self: end; display: grid; gap: .55rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .customer-card-actions button { justify-self: stretch; min-height: 38px; width: 100%; }
     .customer-detail-panel { align-content: start; }
     .customer-detail-profile { align-items: center; background: #fffaf2; border: 1px solid rgba(255,151,0,.24); border-radius: 8px; display: grid; gap: .8rem; grid-template-columns: 54px minmax(0, 1fr); padding: .9rem; }
     .customer-detail-profile h3 { color: #111; font-size: 1.08rem; line-height: 1.25; margin: 0 0 .2rem; overflow-wrap: anywhere; }
@@ -1812,6 +1818,7 @@ interface AdminNoteDialog {
       .customer-card-head { grid-template-columns: 38px minmax(0, 1fr); }
       .avatar { height: 38px; width: 38px; }
       .customer-card dl, dl { grid-template-columns: 1fr; }
+      .customer-card-actions { grid-template-columns: 1fr; }
       .category-chart-row { padding: .78rem; }
       .primary-btn, .ghost-btn { font-size: .84rem; min-height: 42px; padding: .62rem .9rem; }
       .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { font-size: .74rem; line-height: 1.2; min-height: 36px; padding: .46rem .65rem; white-space: normal; }
@@ -1933,6 +1940,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   isSubmittingCoupon = false;
   deletingCouponId?: number;
   deletingEmployeeId?: number;
+  deletingCustomerId?: number;
   updatingCouponStatusId?: number;
   isSubmittingBlog = false;
   isSubmittingGallery = false;
@@ -2773,16 +2781,41 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   toggleCustomerBlock(customer: AdminCustomer): void {
     const action = customer.blocked ? 'unblock' : 'block';
     this.openConfirmDialog(`${action === 'block' ? 'Block' : 'Unblock'} customer?`, customer.name, action === 'block' ? 'Block customer' : 'Unblock customer', action === 'block' ? 'danger' : 'default', () => {
-    this.adminService.setCustomerBlocked(customer.id, !customer.blocked).subscribe({
-      next: (updatedCustomer) => {
-        const mappedCustomer = this.mapCustomer(updatedCustomer);
-        this.customers.update((items) => items.map((item) => item.id === updatedCustomer.id ? mappedCustomer : item));
-        if (this.selectedCustomerDetail?.id === updatedCustomer.id) {
-          this.selectedCustomerDetail = { ...this.selectedCustomerDetail, blocked: mappedCustomer.blocked };
-        }
-      },
-      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+      this.adminService.setCustomerBlocked(customer.id, !customer.blocked).subscribe({
+        next: (updatedCustomer) => {
+          const mappedCustomer = this.mapCustomer(updatedCustomer);
+          this.customers.update((items) => items.map((item) => item.id === updatedCustomer.id ? mappedCustomer : item));
+          if (this.selectedCustomerDetail?.id === updatedCustomer.id) {
+            this.selectedCustomerDetail = { ...this.selectedCustomerDetail, blocked: mappedCustomer.blocked };
+          }
+        },
+        error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+      });
     });
+  }
+
+  deleteCustomer(customer: AdminCustomer): void {
+    this.openConfirmDialog('Delete customer?', `${customer.name} will be permanently removed if they have no booking history.`, 'Delete customer', 'danger', () => {
+      this.deletingCustomerId = customer.id;
+      this.adminService.deleteCustomer(customer.id)
+        .pipe(finalize(() => {
+          if (this.deletingCustomerId === customer.id) {
+            this.deletingCustomerId = undefined;
+          }
+        }))
+        .subscribe({
+          next: () => {
+            this.customers.update((items) => items.filter((item) => item.id !== customer.id));
+            this.updateTabCount('customers', String(this.customers().length));
+            this.customersPage = Math.min(this.pageCount(this.filteredCustomers().length), Math.max(1, this.customersPage));
+            if (this.selectedCustomerDetail?.id === customer.id) {
+              this.selectedCustomerDetail = undefined;
+              this.clearDocumentPreviews();
+            }
+            this.showTopMessage('Customer deleted.', 2200);
+          },
+          error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 4200)
+        });
     });
   }
 

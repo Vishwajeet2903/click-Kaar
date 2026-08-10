@@ -365,8 +365,28 @@ public class AdminController {
   public AdminCustomerResponse setCustomerBlocked(@PathVariable Long customerId, @RequestBody CustomerBlockRequest request) {
     User customer = userRepository.findById(customerId)
         .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    if (customer.getRoles().stream().noneMatch(role -> role.getName() == RoleName.CUSTOMER)) {
+      throw new ResourceNotFoundException("Customer not found");
+    }
     customer.setEnabled(!request.blocked());
     return adminCustomerResponse(customer);
+  }
+
+  @DeleteMapping("/customers/{customerId}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Transactional
+  public void deleteCustomer(@PathVariable Long customerId) {
+    User customer = userRepository.findById(customerId)
+        .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    if (customer.getRoles().stream().noneMatch(role -> role.getName() == RoleName.CUSTOMER)) {
+      throw new ResourceNotFoundException("Customer not found");
+    }
+    if (!bookingRepository.findByCustomerId(customerId).isEmpty()) {
+      throw new BadRequestException("Customer with booking history cannot be deleted. Block the customer instead.");
+    }
+    wishlistRepository.findByUserId(customerId).forEach(wishlistRepository::delete);
+    userRepository.delete(customer);
   }
 
   @GetMapping("/payments")

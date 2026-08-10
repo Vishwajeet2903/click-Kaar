@@ -389,6 +389,12 @@ export class AdminService {
     });
   }
 
+  deleteCustomer(customerId: number): Observable<void> {
+    return this.http.delete<void>(`${API_URL}/customers/${customerId}`, {
+      headers: this.authHeaders()
+    });
+  }
+
   getPayments(): Observable<AdminPaymentResponse[]> {
     return this.http.get<AdminPaymentResponse[]>(`${API_URL}/payments`, {
       headers: this.authHeaders()

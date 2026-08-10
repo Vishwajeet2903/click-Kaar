@@ -153,6 +153,9 @@ export class AuthService {
   getErrorMessage(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
       if (typeof error.error === 'string' && error.error.trim()) {
+        if (error.error.includes('No static resource')) {
+          return 'This backend endpoint is not available yet. Please restart or redeploy the backend.';
+        }
         if (/<\/?[a-z][\s\S]*>/i.test(error.error)) {
           return 'Backend server error. Please restart the backend and try again.';
         }
@@ -160,6 +163,10 @@ export class AuthService {
       }
 
       if (error.error && typeof error.error === 'object' && 'message' in error.error) {
+        const backendMessage = String(error.error.message);
+        if (backendMessage.includes('No static resource')) {
+          return 'This backend endpoint is not available yet. Please restart or redeploy the backend.';
+        }
         if ('errors' in error.error && error.error.errors && typeof error.error.errors === 'object') {
           const messages = Object.values(error.error.errors);
           const firstMessage = messages.find((message) => typeof message === 'string' && message.trim());
@@ -168,7 +175,7 @@ export class AuthService {
           }
         }
 
-        return String(error.error.message);
+        return backendMessage;
       }
 
       if (error.status === 0) {
