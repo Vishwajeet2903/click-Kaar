@@ -56,7 +56,7 @@ import { WishlistService } from '../../services/wishlist.service';
     </article>
   `,
   styles: [`
-    :host { display: block; height: 100%; min-width: 0; overflow: hidden; }
+    :host { display: block; height: 100%; min-width: 0; overflow: visible; }
     .product-card { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; box-shadow: none; display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: .65rem; position: relative; transition: box-shadow .28s ease, transform .28s ease; }
     .product-card:hover { box-shadow: 0 24px 48px rgba(0,0,0,.14); transform: translateY(-8px); }
     .media-link { aspect-ratio: 4 / 3; background: #ececea; border-radius: 19px; display: block; max-width: 100%; overflow: hidden; position: relative; width: 100%; }

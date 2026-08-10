@@ -91,7 +91,7 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
     </section>
   `,
   styles: [`
-    :host ::ng-deep section.container.product-create-page { border-radius: 32px !important; overflow: hidden; }
+    :host ::ng-deep section.container.product-create-page { border-radius: 32px !important; overflow: visible; }
     .product-create-page { max-width: 95vw !important; padding-bottom: 2rem; }
     .surface { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
     .page-head { align-items: end; background: linear-gradient(180deg, #fff, #faf9f6); display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1.25rem; padding: 1.15rem 1.2rem; }
@@ -118,8 +118,8 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
     .link-btn { font-size: .78rem; min-height: 34px; padding: .48rem .78rem; }
     .wide { width: 100%; }
     .form-actions { display: grid; gap: .75rem; grid-template-columns: minmax(120px, .35fr) minmax(160px, .65fr); }
-    .preview-card-wrap { max-width: 360px; }
-    .preview-panel { outline: none; position: sticky; top: 92px; }
+    .preview-card-wrap { max-width: 360px; overflow: visible; padding-top: .55rem; }
+    .preview-panel { overflow: visible; outline: none; position: sticky; top: 92px; }
     .preview-panel:focus-visible { box-shadow: 0 0 0 4px rgba(255,151,0,.24), 0 18px 45px rgba(17,17,17,.06); }
     .muted { color: #777; font-size: .9rem; font-weight: 800; margin: 0; }
     .form-alert { background: #fff4f2; border: 1px solid rgba(180,35,24,.24); border-radius: 6px; color: #b42318; font-size: .9rem; font-weight: 800; line-height: 1.45; margin: 0; padding: .85rem 1rem; }

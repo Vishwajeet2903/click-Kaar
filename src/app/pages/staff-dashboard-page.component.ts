@@ -403,7 +403,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     </section>
   `,
   styles: [`
-    :host ::ng-deep section.container.staff-shell { border-radius: 32px !important; overflow: hidden; }
+    :host ::ng-deep section.container.staff-shell { border-radius: 32px !important; overflow: visible; }
     .staff-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 240px minmax(0, 1fr); }
     .staff-workspace { display: grid; gap: 1.25rem; min-width: 0; position: relative; }
     .staff-sidebar { align-self: start; background: #fff !important; color: #111; padding: .9rem; position: static; }

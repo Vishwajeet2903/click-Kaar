@@ -67,7 +67,7 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
   `,
   styles: [`
     :host ::ng-deep .section-title { font-size: clamp(2rem, 4.2vw, 3.8rem); letter-spacing: 0; line-height: 1.08; text-align: left; }
-    :host ::ng-deep section.container.catalogue-shell { border-radius: 32px !important; overflow: hidden; }
+    :host ::ng-deep section.container.catalogue-shell { border-radius: 32px !important; overflow: visible; }
     .eyebrow { font-size: .92rem; letter-spacing: .1em; line-height: 1.2; }
     .form-control::placeholder{color: #777}
     .filters { display: grid; gap: 1rem; padding: 1rem; position: sticky; top: 92px; }
@@ -83,6 +83,8 @@ import { ProductCardComponent } from '../shared/components/product-card.componen
     .toggle { align-items: center; display: flex; gap: .5rem; }
     .toggle input { accent-color: #ff9700; height: 18px; width: 18px; }
     .empty { padding: 2rem; text-align: center; }
+    .catalogue-products-row { overflow: visible; padding-top: .55rem; }
+    .catalogue-products-row > * { overflow: visible; }
     .pagination-bar { align-items: center; display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
     .pagination-bar button { background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; font-size: .96rem; font-weight: 800; min-height: 50px; padding: .85rem 1.25rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
     .pagination-bar span { color: #333; font-size: .95rem; font-weight: 600; line-height: 1.4; }
@@ -109,7 +111,7 @@ export class CataloguePageComponent {
   readonly filtered = computed(() => {
     const q = this.query().toLowerCase();
     return this.catalogueProducts()
-      .filter((item) => !q || item.name.toLowerCase().includes(q) || item.brand.toLowerCase().includes(q))
+      .filter((item) => !q || [item.name, item.brand, item.category].some((value) => value.toLowerCase().includes(q)))
       .filter((item) => !this.category() || item.category === this.category())
       .filter((item) => !this.brand() || item.brand === this.brand())
       .filter((item) => !this.availableOnly() || item.available);
