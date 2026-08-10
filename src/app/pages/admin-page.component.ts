@@ -665,7 +665,7 @@ interface AdminNoteDialog {
                   </section>
 
                   @if (selectedOutwardBooking) {
-                    <section class="surface panel outward-detail-panel">
+                    <section #outwardDetailPanel class="surface panel outward-detail-panel">
                       <div class="outward-detail-top">
                         <div>
                           <p class="eyebrow">Order details</p>
@@ -1929,6 +1929,7 @@ interface AdminNoteDialog {
 })
 export class AdminPageComponent implements OnInit, OnDestroy {
   @ViewChild('customerDetailPanel') private customerDetailPanel?: ElementRef<HTMLElement>;
+  @ViewChild('outwardDetailPanel') private outwardDetailPanel?: ElementRef<HTMLElement>;
 
   readonly authService = inject(AuthService);
 
@@ -2746,11 +2747,24 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.selectedOutwardBooking = booking;
     this.deliveryOtpDraft = '';
     this.scrollToActiveSection('.admin-page .outward-detail-panel');
+    this.scrollToOutwardDetailsOnMobile();
   }
 
   closeOutwardDetails(): void {
     this.selectedOutwardBooking = undefined;
     this.deliveryOtpDraft = '';
+  }
+
+  private scrollToOutwardDetailsOnMobile(): void {
+    if (!window.matchMedia('(max-width: 760px)').matches) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      if (this.outwardDetailPanel?.nativeElement) {
+        this.smoothScrollToElement(this.outwardDetailPanel.nativeElement, 88, 760);
+      }
+    });
   }
 
   confirmDeliveryOtp(): void {
@@ -3972,22 +3986,24 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         ? document.querySelector('.admin-workspace') ?? document.querySelector('.admin-page')
         : document.querySelector('.admin-page'));
       if (!target) return;
-      const stickyOffset = isMobile ? 88 : 92;
-      const start = window.scrollY;
-      const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - stickyOffset);
       if (isMobile) {
         return;
       }
-      const duration = 900;
-      const startTime = performance.now();
-      const animate = (now: number) => {
-        const progress = Math.min((now - startTime) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        window.scrollTo(0, start + (end - start) * eased);
-        if (progress < 1) requestAnimationFrame(animate);
-      };
-      requestAnimationFrame(animate);
+      this.smoothScrollToElement(target, 92, 900);
     });
+  }
+
+  private smoothScrollToElement(target: Element, stickyOffset: number, duration: number): void {
+    const start = window.scrollY;
+    const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - stickyOffset);
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      window.scrollTo(0, start + (end - start) * eased);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
   }
 
   private clampAdminPages(): void {
