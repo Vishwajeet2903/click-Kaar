@@ -552,7 +552,7 @@ interface AdminNoteDialog {
                     <button type="button" class="ghost-mini" (click)="bookingMonthFilter.set(''); bookingsPage = 1">Clear month</button>
                   }
                 </div>
-                <div class="surface table-panel">
+                <div class="surface table-panel booking-table-panel">
                   <table>
                     <thead><tr><th>Booking</th><th>From date</th><th>To date</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th><th>Return</th><th class="booking-actions-heading">Actions</th></tr></thead>
                     <tbody>
@@ -573,6 +573,37 @@ interface AdminNoteDialog {
                       }
                     </tbody>
                   </table>
+                </div>
+                <div class="booking-mobile-list">
+                  @for (booking of pagedBookings(); track booking.id) {
+                    <article class="surface booking-mobile-card" [class.open]="isBookingCardOpen(booking)" tabindex="0" role="button" [attr.aria-expanded]="isBookingCardOpen(booking)" [attr.aria-label]="'Open order ' + booking.id" (click)="toggleBookingCard(booking)" (keydown.enter)="toggleBookingCard(booking)" (keydown.space)="$event.preventDefault(); toggleBookingCard(booking)">
+                      <div class="booking-card-top">
+                        <div>
+                          <strong>{{ booking.id }}</strong>
+                          <span>{{ booking.customer }}</span>
+                        </div>
+                        <b class="status" [class]="statusClass(booking.status)">{{ booking.status }}</b>
+                      </div>
+                      <p>{{ booking.products.join(', ') }}</p>
+                      <div class="booking-card-meta">
+                        <span>{{ booking.startDate | date:'MMM d' }} - {{ booking.endDate | date:'MMM d' }}</span>
+                        <strong>{{ booking.total | currency:'INR':'symbol':'1.0-0' }}</strong>
+                      </div>
+                      @if (isBookingCardOpen(booking)) {
+                        <div class="booking-card-details" (click)="$event.stopPropagation()">
+                          <dl>
+                            <div><dt>Phone</dt><dd>{{ booking.phone || '-' }}</dd></div>
+                            <div><dt>Payment</dt><dd><b class="status" [class]="statusClass(booking.paymentStatus)">{{ booking.paymentStatus }}</b></dd></div>
+                            <div><dt>Return</dt><dd>{{ booking.returnStatus }}</dd></div>
+                            <div><dt>Items</dt><dd>{{ booking.products.join(', ') }}</dd></div>
+                          </dl>
+                          <button type="button" class="ghost-mini" (click)="addNote(booking)">Note</button>
+                        </div>
+                      }
+                    </article>
+                  } @empty {
+                    <div class="surface empty-cell booking-mobile-empty">No bookings match those filters.</div>
+                  }
                 </div>
                 <div class="pagination-row">
                   <span>{{ pageSummary(filteredBookings().length, bookingsPage) }}</span>
@@ -1445,6 +1476,21 @@ interface AdminNoteDialog {
     .booking-filter-row .search-input { flex: 0 1 320px; max-width: 320px; }
     .booking-filter-row select { flex: 0 0 190px; width: 190px; }
     .booking-filter-row .month-input { flex: 0 0 170px; width: 170px; }
+    .booking-mobile-list { display: none; }
+    .booking-mobile-card { display: grid; gap: .72rem; padding: .9rem; }
+    .booking-card-top { align-items: start; display: flex; gap: .75rem; justify-content: space-between; }
+    .booking-card-top div { display: grid; gap: .18rem; min-width: 0; }
+    .booking-card-top strong { color: #111; font-size: .96rem; line-height: 1.2; }
+    .booking-card-top span, .booking-mobile-card p, .booking-card-meta span { color: #666; font-size: .82rem; font-weight: 800; line-height: 1.35; margin: 0; overflow-wrap: anywhere; }
+    .booking-mobile-card p { color: #333; }
+    .booking-card-meta { align-items: center; display: flex; gap: .75rem; justify-content: space-between; }
+    .booking-card-meta strong { color: #111; font-size: .92rem; }
+    .booking-card-details { border-top: 1px solid var(--admin-line); display: grid; gap: .75rem; padding-top: .78rem; }
+    .booking-card-details dl { display: grid; gap: .55rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+    .booking-card-details dl div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 6px; min-width: 0; padding: .62rem; }
+    .booking-card-details dt { color: #777; font-size: .68rem; font-weight: 950; text-transform: uppercase; }
+    .booking-card-details dd { color: #111; font-size: .82rem; font-weight: 850; line-height: 1.35; margin: .22rem 0 0; overflow-wrap: anywhere; }
+    .booking-card-details button { justify-self: stretch; width: 100%; }
 
     input, select, textarea { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; color: var(--admin-ink); font: inherit; font-size: .92rem; font-weight: 500; line-height: 1.45; min-height: 42px; outline: 0; padding: .68rem .8rem; width: 100%; }
     textarea { min-height: 92px; resize: vertical; }
@@ -1790,6 +1836,13 @@ interface AdminNoteDialog {
       .content-switcher button { width: 100%; }
       .gallery-upload-box { min-height: 132px; }
       .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input, .search-input { flex-basis: auto; max-width: none; width: 100%; }
+      .booking-table-panel { display: none; }
+      .booking-mobile-list { display: grid; gap: .75rem; }
+      .booking-mobile-card { border-radius: 8px; box-shadow: 0 12px 28px rgba(17,17,17,.06); cursor: pointer; }
+      .booking-mobile-card.open { background: #fffaf2; border-color: rgba(255,151,0,.34); }
+      .booking-card-top .status { flex: 0 0 auto; }
+      .booking-card-details dl { grid-template-columns: 1fr; }
+      .booking-mobile-empty { padding: 1rem; }
       .table-panel { margin-inline: -.15rem; overflow-x: auto; padding: .55rem; -webkit-overflow-scrolling: touch; }
       table { min-width: 760px; }
       th, td { padding: .62rem .65rem; }
@@ -1955,6 +2008,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   confirmDialog?: AdminConfirmDialog;
   noteDialog?: AdminNoteDialog;
   selectedOutwardBooking?: AdminBooking;
+  openBookingCardId?: string;
   deliveryOtpDraft = '';
   reviewReplyDraft = '';
   isSavingReviewReply = false;
@@ -2716,6 +2770,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       },
       error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
     });
+  }
+
+  toggleBookingCard(booking: AdminBooking): void {
+    this.openBookingCardId = this.openBookingCardId === booking.id ? undefined : booking.id;
+  }
+
+  isBookingCardOpen(booking: AdminBooking): boolean {
+    return this.openBookingCardId === booking.id;
   }
 
   addNote(booking: AdminBooking): void {
