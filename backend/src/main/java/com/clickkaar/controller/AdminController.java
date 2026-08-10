@@ -603,8 +603,7 @@ public class AdminController {
     }
 
     RoleName requestedRole = employeeRoleName(request.role());
-    Role employeeRole = roleRepository.findByName(requestedRole)
-        .orElseThrow(() -> new BadRequestException(requestedRole.name() + " role is not configured"));
+    Role employeeRole = ensureRole(requestedRole);
 
     User employee = User.builder()
         .fullName(request.fullName())
@@ -684,8 +683,7 @@ public class AdminController {
       throw new BadRequestException("Mobile is already registered");
     }
 
-    Role customerRole = roleRepository.findByName(RoleName.CUSTOMER)
-        .orElseThrow(() -> new BadRequestException("Customer role is not configured"));
+    Role customerRole = ensureRole(RoleName.CUSTOMER);
 
     User customer = User.builder()
         .fullName(pendingRegistration.getFullName())
@@ -1072,6 +1070,11 @@ public class AdminController {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     return userRepository.findByEmail(email)
         .orElseThrow(() -> new BadRequestException("Admin user not found"));
+  }
+
+  private Role ensureRole(RoleName roleName) {
+    return roleRepository.findByName(roleName)
+        .orElseGet(() -> roleRepository.save(Role.builder().name(roleName).build()));
   }
 
   private RoleName employeeRoleName(String role) {
