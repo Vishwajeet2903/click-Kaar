@@ -880,7 +880,7 @@ interface AdminNoteDialog {
                 </div>
               }
               @case ('payments') {
-                <div class="surface table-panel">
+                <div class="surface table-panel payments-table-panel">
                   <table>
                     <thead><tr><th>Transaction</th><th>Booking</th><th>Customer</th><th>Gateway</th><th>Policy</th><th>Amount</th><th>Status</th><th>Remark</th></tr></thead>
                     <tbody>
@@ -951,6 +951,93 @@ interface AdminNoteDialog {
                     </tbody>
                   </table>
                 </div>
+                <div class="payments-mobile-list">
+                  @for (payment of pagedPayments(); track payment.id) {
+                    <article class="surface payment-mobile-card" [class.active]="selectedPaymentDetail?.backendId === payment.backendId" tabindex="0" role="button" [attr.aria-label]="'Open payment ' + payment.id" (click)="openPaymentDetail(payment)" (keydown.enter)="openPaymentDetail(payment)" (keydown.space)="$event.preventDefault(); openPaymentDetail(payment)">
+                      <div class="payment-card-top">
+                        <div>
+                          <strong>{{ payment.id }}</strong>
+                          <span>{{ payment.bookingId }} - {{ payment.customer }}</span>
+                        </div>
+                        <b class="status" [class]="statusClass(payment.status)">{{ payment.status }}</b>
+                      </div>
+                      <div class="payment-card-meta">
+                        <span>{{ payment.gateway }} - {{ payment.mode }}</span>
+                        <strong>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</strong>
+                      </div>
+                      <small>{{ payment.paidAt | date:'mediumDate' }}</small>
+                    </article>
+                  } @empty {
+                    <div class="surface empty-cell payments-mobile-empty">No payments are available.</div>
+                  }
+                </div>
+
+                @if (selectedPaymentDetail) {
+                  <section #paymentDetailPanel class="surface panel payment-mobile-detail">
+                    <div class="payment-detail-head">
+                      <div>
+                        <p class="eyebrow">Payment details</p>
+                        <h3>{{ selectedPaymentDetail.id }}</h3>
+                        <span>{{ selectedPaymentDetail.bookingId }} - {{ selectedPaymentDetail.customer }}</span>
+                      </div>
+                      <b class="status payment-status" [class]="statusClass(selectedPaymentDetail.status)">{{ selectedPaymentDetail.status }}</b>
+                    </div>
+                    <dl class="payment-detail-grid">
+                      <div><dt>Gateway</dt><dd>{{ selectedPaymentDetail.gateway }}</dd></div>
+                      <div><dt>Policy</dt><dd>{{ selectedPaymentDetail.mode }}</dd></div>
+                      <div><dt>Amount</dt><dd>{{ selectedPaymentDetail.amount | currency:'INR':'symbol':'1.0-0' }}</dd></div>
+                      <div><dt>Paid at</dt><dd>{{ selectedPaymentDetail.paidAt | date:'mediumDate' }}</dd></div>
+                    </dl>
+                    <div class="payment-detail-remark">
+                      <label>Remark
+                        <input
+                          class="remark-input"
+                          placeholder="Remark"
+                          [ngModel]="selectedPaymentDetail.remark"
+                          [disabled]="isSavingPaymentRemark(selectedPaymentDetail.backendId)"
+                          (ngModelChange)="updatePaymentRemarkDraft(selectedPaymentDetail, $event)"
+                          (keydown.enter)="$event.preventDefault(); savePaymentRemark(selectedPaymentDetail.backendId)">
+                      </label>
+                      <button type="button" class="mini-btn" [disabled]="isSavingPaymentRemark(selectedPaymentDetail.backendId)" (click)="savePaymentRemark(selectedPaymentDetail.backendId)">
+                        {{ isSavingPaymentRemark(selectedPaymentDetail.backendId) ? 'Saving...' : 'Save remark' }}
+                      </button>
+                      <button type="button" class="remark-log-btn" [disabled]="selectedPaymentDetail.remarkChangeCount === 0" (click)="togglePaymentRemarkLog(selectedPaymentDetail)">
+                        View exact log ({{ selectedPaymentDetail.remarkChangeCount }})
+                      </button>
+                    </div>
+                    @if (activeRemarkLogPayment?.backendId === selectedPaymentDetail.backendId) {
+                      <div class="remark-log-inline payment-mobile-log">
+                        <div class="remark-log-head">
+                          <p class="eyebrow">Payment remark log</p>
+                          <h3>{{ selectedPaymentDetail.bookingId }}</h3>
+                          <span>{{ selectedPaymentDetail.customer }} - {{ selectedPaymentDetail.remarkChangeCount }} changes</span>
+                        </div>
+                        @if (isLoadingPaymentRemarkLog) {
+                          <p class="muted">Loading exact remark log...</p>
+                        } @else if (paymentRemarkLogError) {
+                          <p class="error-text">{{ paymentRemarkLogError }}</p>
+                        } @else if (activePaymentRemarkLogs.length) {
+                          <div class="remark-log-list">
+                            @for (log of activePaymentRemarkLogs; track log.id) {
+                              <article>
+                                <div>
+                                  <strong>{{ log.changedAt | date:'medium' }}</strong>
+                                  <span>{{ log.changedBy || 'Admin' }}</span>
+                                </div>
+                                <dl>
+                                  <div><dt>From</dt><dd>{{ log.oldRemark || '-' }}</dd></div>
+                                  <div><dt>To</dt><dd>{{ log.newRemark || '-' }}</dd></div>
+                                </dl>
+                              </article>
+                            }
+                          </div>
+                        } @else {
+                          <p class="muted">No saved remark changes were found.</p>
+                        }
+                      </div>
+                    }
+                  </section>
+                }
                 <div class="pagination-row">
                   <span>{{ pageSummary(payments().length, paymentsPage) }}</span>
                   <div>
@@ -1581,6 +1668,24 @@ interface AdminNoteDialog {
     .remark-log-btn { background: transparent; border: 0; box-shadow: none; color: var(--admin-muted); display: inline-flex; font-size: .72rem; font-weight: 900; justify-content: flex-start; margin-top: .32rem; min-height: auto; padding: 0; text-transform: uppercase; }
     .remark-log-btn:hover { color: var(--admin-accent); transform: none; }
     .remark-log-btn:disabled, .remark-log-btn:disabled:hover { color: var(--admin-muted); cursor: default; opacity: .65; }
+    .payments-mobile-list, .payment-mobile-detail { display: none; }
+    .payment-mobile-card { display: grid; gap: .6rem; padding: .85rem; }
+    .payment-mobile-card.active { background: #fffaf2; border-color: rgba(255,151,0,.34); }
+    .payment-card-top { align-items: start; display: flex; gap: .75rem; justify-content: space-between; }
+    .payment-card-top div { display: grid; gap: .2rem; min-width: 0; }
+    .payment-card-top strong, .payment-card-meta strong { color: #111; line-height: 1.2; }
+    .payment-card-top span, .payment-card-meta span, .payment-mobile-card small { color: #666; font-size: .82rem; font-weight: 800; line-height: 1.35; overflow-wrap: anywhere; }
+    .payment-card-meta { align-items: center; display: flex; gap: .75rem; justify-content: space-between; }
+    .payment-detail-head { align-items: start; border-bottom: 1px solid var(--admin-line); display: flex; gap: .75rem; justify-content: space-between; padding-bottom: .75rem; }
+    .payment-detail-head h3 { color: #111; font-size: 1.06rem; line-height: 1.24; margin: .12rem 0 .2rem; overflow-wrap: anywhere; }
+    .payment-detail-head span { color: #666; font-size: .84rem; font-weight: 800; line-height: 1.35; }
+    .payment-detail-grid { display: grid; gap: .58rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+    .payment-detail-grid div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 6px; min-width: 0; padding: .65rem; }
+    .payment-detail-grid dt { color: #777; font-size: .68rem; font-weight: 950; text-transform: uppercase; }
+    .payment-detail-grid dd { color: #111; font-size: .84rem; font-weight: 850; line-height: 1.35; margin: .22rem 0 0; overflow-wrap: anywhere; }
+    .payment-detail-remark { display: grid; gap: .62rem; }
+    .payment-detail-remark .mini-btn { width: 100%; }
+    .payment-mobile-log { background: #fff7ec; border: 1px solid var(--admin-line); border-radius: 8px; }
     button, .primary-btn, .ghost-btn, .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { align-items: center; border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; font-weight: 900; justify-content: center; transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease; white-space: nowrap; }
     .primary-btn { background: #111; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; min-height: 50px; padding: .85rem 1.25rem; }
     .primary-btn:hover { background: var(--admin-accent); box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
@@ -1931,6 +2036,14 @@ interface AdminNoteDialog {
       table { min-width: 760px; }
       th, td { padding: .62rem .65rem; }
       .product-cell { min-width: 190px; }
+      .payments-table-panel { display: none; }
+      .payments-mobile-list { display: grid; gap: .72rem; }
+      .payment-mobile-card { cursor: pointer; }
+      .payment-mobile-card .status { flex: 0 0 auto; }
+      .payment-mobile-detail { display: grid; gap: .85rem; scroll-margin-top: 7rem; }
+      .payment-detail-head { align-items: stretch; flex-direction: column; }
+      .payment-detail-grid { grid-template-columns: 1fr; }
+      .payments-mobile-empty { padding: 1rem; }
       .remark-cell { min-width: 280px; }
       .remark-control { grid-template-columns: 1fr; }
       .remark-input { min-width: 0; }
@@ -2015,6 +2128,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   @ViewChild('customerDetailPanel') private customerDetailPanel?: ElementRef<HTMLElement>;
   @ViewChild('outwardDetailPanel') private outwardDetailPanel?: ElementRef<HTMLElement>;
   @ViewChild('inventoryProductDetailPanel') private inventoryProductDetailPanel?: ElementRef<HTMLElement>;
+  @ViewChild('paymentDetailPanel') private paymentDetailPanel?: ElementRef<HTMLElement>;
 
   readonly authService = inject(AuthService);
 
@@ -2095,6 +2209,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   noteDialog?: AdminNoteDialog;
   selectedOutwardBooking?: AdminBooking;
   selectedInventoryProduct?: AdminProduct;
+  selectedPaymentDetail?: AdminPayment;
   openBookingCardId?: string;
   deliveryOtpDraft = '';
   reviewReplyDraft = '';
@@ -2656,6 +2771,22 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  openPaymentDetail(payment: AdminPayment): void {
+    this.selectedPaymentDetail = payment;
+    this.scrollToPaymentDetailOnMobile();
+  }
+
+  private scrollToPaymentDetailOnMobile(): void {
+    if (!window.matchMedia('(max-width: 760px)').matches) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      if (this.paymentDetailPanel?.nativeElement) {
+        this.smoothScrollToElement(this.paymentDetailPanel.nativeElement, 88, 760);
+      }
+    });
+  }
   togglePaymentRemarkLog(payment: AdminPayment): void {
     if (this.activeRemarkLogPayment?.backendId === payment.backendId) {
       this.closePaymentRemarkLog();
@@ -2999,6 +3130,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   updatePaymentRemarkDraft(payment: AdminPayment, remark: string): void {
     this.payments.update((items) => items.map((item) => item.backendId === payment.backendId ? { ...item, remark } : item));
+    if (this.selectedPaymentDetail?.backendId === payment.backendId) {
+      this.selectedPaymentDetail = { ...this.selectedPaymentDetail, remark };
+    }
   }
 
   savePaymentRemark(paymentId: number): void {
@@ -3014,7 +3148,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       }))
       .subscribe({
       next: (updatedPayment) => {
-        this.payments.update((items) => items.map((item) => item.backendId === updatedPayment.id ? this.mapPayment(updatedPayment) : item));
+        const mappedPayment = this.mapPayment(updatedPayment);
+        this.payments.update((items) => items.map((item) => item.backendId === updatedPayment.id ? mappedPayment : item));
+        if (this.selectedPaymentDetail?.backendId === mappedPayment.backendId) {
+          this.selectedPaymentDetail = mappedPayment;
+        }
         this.showTopMessage('Payment remark saved.', 1800);
       },
       error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
