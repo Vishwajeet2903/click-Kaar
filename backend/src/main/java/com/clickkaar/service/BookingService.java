@@ -74,7 +74,7 @@ public class BookingService {
   @Value("${spring.mail.password:}")
   private String mailPassword;
 
-  @Value("${app.frontend.login-url:https://clickkaar.com/login}")
+  @Value("${app.frontend.login-url:https://click-kaar.com/login}")
   private String loginUrl;
 
   @Transactional
@@ -390,7 +390,7 @@ public class BookingService {
               + "The ClickKaar Team\n"
               + "ClickKaar Support\n"
               + "Email: clickkaar@gmail.com\n"
-              + "Website: https://click-kaar.com"
+              + "Website: https://click-kaar.com/"
       );
       helper.addAttachment(
           BusinessIdFormatter.invoiceNumber(booking) + ".pdf",
@@ -496,7 +496,7 @@ public class BookingService {
   }
 
   private String configuredLoginUrl() {
-    return loginUrl == null || loginUrl.isBlank() ? "https://clickkaar.com/login" : loginUrl.trim();
+    return loginUrl == null || loginUrl.isBlank() ? "https://click-kaar.com/login" : loginUrl.trim();
   }
 
   private static final String DEFAULT_TERMS_AND_CONDITIONS = """
@@ -630,7 +630,7 @@ public class BookingService {
 
       31. Contact Details
       For questions, support or notices relating to this Agreement, contact us at:
-      Email: info@clickkaar.com
+      Email: clickkaar@gmail.com
       Phone: 91-9096820033
       Registered Office: Bld Road, Hatwane Complex, C/O Patil Steel, Malkapur, Malkapur, Buldhana, 443101
 

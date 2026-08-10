@@ -41,7 +41,7 @@ spring:
 
 app:
   frontend:
-    login-url: ${FRONTEND_LOGIN_URL:https://clickkaar.com/login}
+    login-url: ${FRONTEND_LOGIN_URL:https://click-kaar.com/login}
   jwt:
     secret: ${JWT_SECRET:replace-this-with-a-very-long-secret-key-for-dev-only}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}

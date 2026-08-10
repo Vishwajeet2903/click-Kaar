@@ -290,8 +290,8 @@ public class AuthService {
               + "Best Regards,\n"
               + "The ClickKaar Team\n"
               + "ClickKaar Support\n"
-              + "Email: support@clickkaar.com\n"
-              + "Website: https://clickkaar.com"
+              + "Email: clickkaar@gmail.com\n"
+              + "Website: https://click-kaar.com/"
       );
       mailSender.send(message);
       log.info("Registration email sent to {}", registration.getEmail());

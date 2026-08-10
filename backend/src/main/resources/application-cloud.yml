@@ -23,7 +23,7 @@ app:
   seed:
     enabled: ${APP_SEED_ENABLED:false}
   frontend:
-    login-url: ${FRONTEND_LOGIN_URL:https://click-kaar.web.app/login}
+    login-url: ${FRONTEND_LOGIN_URL:https://click-kaar.com/login}
   jwt:
     secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}

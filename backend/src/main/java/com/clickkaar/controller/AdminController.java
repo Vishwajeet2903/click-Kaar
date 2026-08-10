@@ -130,7 +130,7 @@ public class AdminController {
   @Value("${spring.mail.password:}")
   private String mailPassword;
 
-  @Value("${app.frontend.login-url:https://clickkaar.com/login}")
+  @Value("${app.frontend.login-url:https://click-kaar.com/login}")
   private String loginUrl;
 
   @GetMapping("/dashboard")
@@ -790,8 +790,8 @@ public class AdminController {
               + "Best Regards,\n"
               + "The ClickKaar Team\n"
               + "ClickKaar Support\n"
-              + "Email: support@clickkaar.com\n"
-              + "Website: https://clickkaar.com"
+              + "Email: clickkaar@gmail.com\n"
+              + "Website: https://click-kaar.com/"
       );
       mailSender.send(message);
       log.info("Account approval email sent to {}", customer.getEmail());
@@ -830,8 +830,8 @@ public class AdminController {
               + "Best Regards,\n"
               + "The ClickKaar Team\n"
               + "ClickKaar Support\n"
-              + "Email: support@clickkaar.com\n"
-              + "Website: https://clickkaar.com"
+              + "Email: clickkaar@gmail.com\n"
+              + "Website: https://click-kaar.com/"
       );
       mailSender.send(message);
       log.info("Employee welcome email sent to {}", employee.getEmail());
@@ -866,7 +866,7 @@ public class AdminController {
   }
 
   private String configuredLoginUrl() {
-    return loginUrl == null || loginUrl.isBlank() ? "https://clickkaar.com/login" : loginUrl.trim();
+    return loginUrl == null || loginUrl.isBlank() ? "https://click-kaar.com/login" : loginUrl.trim();
   }
 
   private List<RegistrationDocumentResponse> documentsFor(PendingRegistration pendingRegistration) {
