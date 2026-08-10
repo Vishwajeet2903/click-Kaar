@@ -1565,11 +1565,8 @@ interface AdminNoteDialog {
     .admin-sidebar h1 { color: #111; font-size: 1.28rem; font-weight: 600; letter-spacing: 0; line-height: 1.14; margin: 0 0 1rem; }
     nav { display: grid; gap: .25rem; }
     nav button { align-items: center; background: transparent; border: 1px solid transparent; border-radius: 6px; color: #555; display: flex; font-size: .9rem; font-weight: 800; justify-content: space-between; line-height: 1.25; min-height: 40px; padding: .62rem .7rem; text-align: left; }
-    nav button small { background: #f6f6f4; border-radius: 999px; color: #666; font-size: .68rem; min-width: 26px; padding: .16rem .42rem; text-align: center; }
     nav button.active, nav button.active:hover { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
     nav button:hover { background: #f6f6f4; border-color: #e6e6e0; color: #111; }
-    nav button.active small, nav button.active:hover small { background: #111; color: #fff; }
-    nav button:hover small { background: #e6e6e0; color: #555; }
     .admin-workspace { display: grid; gap: 1.25rem; min-width: 0; position: relative; }
     .admin-topbar { align-items: end; background: #ffffff; border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: 1.25rem; justify-content: space-between; padding: 1.15rem 1.2rem; }
     .admin-topbar .eyebrow { color: #ff9700; letter-spacing: .14em; margin: 0 0 .25rem; word-spacing: -.04em; }
@@ -1756,6 +1753,7 @@ interface AdminNoteDialog {
     .employee-avatar { align-items: center; aspect-ratio: 1; background: #111; border-radius: 999px; color: #fff; display: inline-flex; font-size: .78rem; font-weight: 950; justify-content: center; width: 44px; }
     .employee-card-copy { min-width: 0; }
     .employee-card-copy strong, .employee-card-copy span, .employee-card-copy small { display: block; overflow-wrap: anywhere; }
+    .employee-card-copy span, .employee-card-copy small { word-break: break-word; }
     .employee-card-copy strong { color: #111; font-size: .95rem; line-height: 1.25; }
     .employee-card-copy span { color: #555; font-size: .82rem; font-weight: 750; line-height: 1.4; margin-top: .18rem; }
     .employee-card-copy small { color: #9a6a00; font-size: .72rem; font-weight: 900; line-height: 1.35; margin-top: .2rem; }
@@ -1944,6 +1942,8 @@ interface AdminNoteDialog {
     .customer-card p, .customer-card span { color: #777; font-size: .84rem; line-height: 1.4; margin: 0; overflow-wrap: anywhere; }
     .customer-card-actions { align-self: end; display: grid; gap: .55rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .customer-card-actions button { justify-self: stretch; min-height: 38px; width: 100%; }
+    .customer-card-actions .danger-btn { border: 1px solid rgba(180,35,24,.22); }
+    .customer-card-actions .danger-btn:hover { border-color: rgba(180,35,24,.72); }
     .customer-detail-panel { align-content: start; }
     .customer-detail-profile { align-items: center; background: #fffaf2; border: 1px solid rgba(255,151,0,.24); border-radius: 8px; display: grid; gap: .8rem; grid-template-columns: 54px minmax(0, 1fr); padding: .9rem; }
     .customer-detail-profile h3 { color: #111; font-size: 1.08rem; line-height: 1.25; margin: 0 0 .2rem; overflow-wrap: anywhere; }
@@ -1995,10 +1995,7 @@ interface AdminNoteDialog {
       .admin-sidebar nav::-webkit-scrollbar { display: none; }
       .admin-sidebar nav button { flex: 0 0 auto; font-size: .78rem; gap: .35rem; min-height: 40px; min-width: max-content; padding: .48rem .6rem; scroll-snap-align: start; }
       .admin-sidebar nav button span { overflow: visible; text-overflow: clip; white-space: nowrap; }
-      .admin-sidebar nav button small { display: none; }
-
       .admin-sidebar nav button.active, .admin-sidebar nav button.active:hover { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
-      .admin-sidebar nav button.active small { background: #111; color: #fff; }
       .admin-topbar, .split-grid, .tool-row { align-items: stretch; grid-template-columns: 1fr; flex-direction: column; }
       .admin-topbar { gap: .85rem; padding: .95rem; }
       .admin-topbar h2 { font-size: clamp(.95rem, 5.6vw, 1.3rem); }
@@ -2006,7 +2003,23 @@ interface AdminNoteDialog {
       .customer-management-grid { grid-template-columns: 1fr; }
       .customer-detail-panel { scroll-margin-top: 7rem; }
 
-      .metric-card { gap: .45rem; min-height: auto; padding: .82rem; }
+      .employee-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .employee-page-head { align-items: stretch; }
+      .employee-page-head > div { min-width: 0; width: 100%; }
+      .employee-page-head h3 { font-size: 1.05rem; line-height: 1.25; }
+      .employee-head-actions { align-items: stretch; display: grid; grid-template-columns: 1fr; justify-content: stretch; width: 100%; }
+      .employee-head-actions button { width: 100%; }
+      .employee-roster-list { gap: .78rem; }
+      .employee-card { align-items: start; gap: .72rem; grid-template-columns: 42px minmax(0, 1fr); padding: .9rem; }
+      .employee-avatar { font-size: .76rem; width: 42px; }
+      .employee-card-copy { align-self: center; display: grid; gap: .22rem; min-width: 0; }
+      .employee-card-copy strong { font-size: 1rem; line-height: 1.25; }
+      .employee-card-copy span { color: #444; font-size: .86rem; font-weight: 800; line-height: 1.42; margin-top: 0; }
+      .employee-card-copy small { color: #7a5300; font-size: .78rem; line-height: 1.35; margin-top: 0; }
+      .employee-role-stack { align-items: stretch; display: flex; flex-wrap: wrap; gap: .45rem; grid-column: 1 / -1; justify-items: start; width: 100%; }
+      .employee-role-stack .status-chip { flex: 1 1 132px; min-height: 34px; width: auto; }
+      .employee-actions { grid-column: 1 / -1; justify-content: stretch; width: 100%; }
+      .employee-delete-btn { min-height: 38px; width: 100%; }      .metric-card { gap: .45rem; min-height: auto; padding: .82rem; }
       .panel, .table-panel, .editor-panel, .employee-form, .access-card, .customer-card { padding: .82rem; width: 100%; }
       .panel-head, .detail-section-head { align-items: flex-start; flex-direction: column; gap: .55rem; }
       .panel-head button, .panel-head a, .detail-section-head button { align-self: flex-start; max-width: 100%; }
@@ -2115,6 +2128,11 @@ interface AdminNoteDialog {
       .admin-sidebar { margin-inline: -.5rem; padding-left: .5rem; padding-right: .5rem; }
       .admin-sidebar nav button { font-size: .75rem; min-width: max-content; padding-inline: .52rem; }
       .admin-topbar, .panel, .editor-panel, .employee-form, .customer-card { padding: .75rem; }
+      .employee-metric-grid { grid-template-columns: 1fr; }
+      .employee-card { grid-template-columns: 38px minmax(0, 1fr); padding: .78rem; }
+      .employee-avatar { width: 38px; }
+      .employee-card-copy strong { font-size: .96rem; }
+      .employee-card-copy span { font-size: .82rem; }
       .primary-btn, .ghost-btn { font-size: .82rem; min-height: 40px; padding: .56rem .78rem; }
       .mini-btn, .danger-btn, .return-btn, .ghost-mini, .link-btn { white-space: normal; }
       table { min-width: 700px; }

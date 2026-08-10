@@ -22,7 +22,7 @@ type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
             <p class="eyebrow">Inventory</p>
             <h1>{{ pageTitle() }}</h1>
           </div>
-          <a routerLink="/admin" class="ghost-btn">Back to admin</a>
+          <a [routerLink]="dashboardBackUrl()" class="ghost-btn">{{ dashboardBackLabel() }}</a>
         </div>
 
         <div class="editor-layout">
@@ -158,6 +158,12 @@ export class AdminProductCreatePageComponent implements OnInit {
   readonly isEditMode = computed(() => !!this.editingProductId);
   readonly pageLabel = computed(() => this.isEditMode() ? 'Edit inventory' : 'Add inventory');
   readonly pageTitle = computed(() => this.isEditMode() ? 'Edit product' : 'Add product');
+  readonly dashboardBackUrl = computed(() => this.authService.defaultDashboardUrl());
+  readonly dashboardBackLabel = computed(() => {
+    if (this.authService.hasRole('MANAGER') && !this.authService.hasRole('ADMIN')) return 'Back to manager dashboard';
+    if (this.authService.hasRole('INVENTORY_STAFF') && !this.authService.hasRole('ADMIN')) return 'Back to inventory dashboard';
+    return 'Back to admin';
+  });
   readonly submitLabel = computed(() => {
     if (this.isSubmitting) {
       return this.isEditMode() ? 'Saving...' : 'Adding...';
@@ -384,7 +390,7 @@ export class AdminProductCreatePageComponent implements OnInit {
         ? this.adminService.updateProductWithImage(this.editingProductId, request, this.selectedProductImage)
         : this.adminService.createProductWithImage(request, this.selectedProductImage);
       saveRequest.subscribe({
-        next: () => this.router.navigateByUrl('/admin'),
+        next: () => this.router.navigateByUrl(this.dashboardBackUrl()),
         error: (error) => {
           this.isSubmitting = false;
           this.productFormError = this.authService.getErrorMessage(error);
@@ -428,7 +434,7 @@ export class AdminProductCreatePageComponent implements OnInit {
       : this.adminService.createProduct(request);
 
     saveRequest.subscribe({
-      next: () => this.router.navigateByUrl('/admin'),
+      next: () => this.router.navigateByUrl(this.dashboardBackUrl()),
       error: (error) => {
         this.isSubmitting = false;
         this.productFormError = this.authService.getErrorMessage(error);

@@ -45,6 +45,7 @@ interface StaffBlogPost {
   content: string;
 }
 type PasswordField = 'currentPassword' | 'newPassword' | 'confirmPassword';
+type StaffTab = 'dashboard' | 'inventory' | 'movement' | 'bookings' | 'customers' | 'payments' | 'content' | 'settings';
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,64}$/;
 
 @Component({
@@ -53,31 +54,57 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
   imports: [CurrencyPipe, DatePipe, RouterLink, FormsModule, ReactiveFormsModule, MatSnackBarModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb [label]="dashboardTitle()" />
-    <section class="container staff-dashboard">
-      <h1 class="section-title">{{ dashboardTitle() }}</h1>
-      <header class="surface profile-panel">
-        <div class="hero-copy">
-          <p class="eyebrow">{{ roleLabel() }}</p>
-          <h2>{{ dashboardTitle() }}</h2>
-          <p>{{ dashboardIntro() }}</p>
-        </div>
-        <div class="profile-actions">
-          <button type="button" class="settings-btn" [class.active-settings]="showSettings()" (click)="toggleSettings()">Settings</button>
-        </div>
-      </header>
+    <section class="container staff-dashboard staff-shell">
+      <div class="staff-layout">
+        <aside class="staff-sidebar surface">
+          <div>
+            <p class="eyebrow">{{ roleLabel() }} panel</p>
+            <h1>Click-Kaar Ops</h1>
+          </div>
+          <nav aria-label="Staff dashboard sections">
+            @for (tab of tabs(); track tab.id) {
+              <button type="button" [class.active]="activeTab() === tab.id" (click)="selectTab(tab.id)">
+                <span>{{ tab.label }}</span>
+              </button>
+            }
+          </nav>
+        </aside>
 
-      <div class="metric-grid">
-        @for (metric of metrics(); track metric.label) {
-          <article class="surface metric-card">
-            <span>{{ metric.label }}</span>
-            <strong>{{ metric.value }}</strong>
-            <small>{{ metric.note }}</small>
-          </article>
-        }
-      </div>
+        <div class="staff-workspace">
+          <header class="staff-topbar">
+            <div>
+              <p class="eyebrow">{{ activeTabLabel() }}</p>
+              <h2>{{ activeTitle() }}</h2>
+            </div>
+            <div class="topbar-actions">
+              @if (activeTab() === 'inventory' && canEditInventory()) {
+                <a class="primary-btn" routerLink="/admin/inventory/new">Add product</a>
+              }
+            </div>
+          </header>
 
-      @if (showSettings()) {
-        <section class="surface panel password-panel">
+          @if (activeTab() === 'dashboard') {
+            <header class="surface profile-panel">
+              <div class="hero-copy">
+                <p class="eyebrow">{{ roleLabel() }}</p>
+                <h2>{{ dashboardTitle() }}</h2>
+                <p>{{ dashboardIntro() }}</p>
+              </div>
+            </header>
+
+            <div class="metric-grid">
+              @for (metric of metrics(); track metric.label) {
+                <article class="surface metric-card">
+                  <span>{{ metric.label }}</span>
+                  <strong>{{ metric.value }}</strong>
+                  <small>{{ metric.note }}</small>
+                </article>
+              }
+            </div>
+          }
+
+          @if (activeTab() === 'settings') {
+            <section class="surface panel password-panel">
           <div class="panel-head"><h2>Change password</h2><span>Settings</span></div>
           <p class="muted">Update your password using your current password for verification.</p>
           @if (passwordError) {
@@ -112,7 +139,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         </section>
       }
 
-      @if (canUseInventory()) {
+      @if (activeTab() === 'inventory' && canUseInventory()) {
         <section class="surface panel">
           <div class="panel-head">
             <h2>Inventory</h2>
@@ -153,7 +180,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         </section>
       }
 
-      @if (canUseInwardOutward()) {
+      @if (activeTab() === 'movement' && canUseInwardOutward()) {
         <section class="surface panel movement-panel">
           <div class="panel-head"><h2>Inward & Outward</h2><span>{{ outwardBookings().length + inwardBookings().length }} active tasks</span></div>
           <div class="movement-grid">
@@ -218,7 +245,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
           }
         </section>
       }
-      @if (canUseBookings()) {
+      @if (activeTab() === 'bookings' && canUseBookings()) {
         <section class="surface panel">
           <div class="panel-head"><h2>Bookings</h2><span>{{ bookings().length }} total</span></div>
           <div class="list-grid">
@@ -233,7 +260,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         </section>
       }
 
-      @if (canUseCustomers()) {
+      @if (activeTab() === 'customers' && canUseCustomers()) {
         <section class="surface panel">
           <div class="panel-head"><h2>Customers</h2><span>{{ customers().length }} listed</span></div>
           <div class="list-grid compact">
@@ -248,7 +275,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         </section>
       }
 
-      @if (canUsePayments()) {
+      @if (activeTab() === 'payments' && canUsePayments()) {
         <section class="surface panel">
           <div class="panel-head"><h2>Payments</h2><span>{{ payments().length }} records</span></div>
           <div class="list-grid compact">
@@ -263,7 +290,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
         </section>
       }
 
-      @if (canUseContent()) {
+      @if (activeTab() === 'content' && canUseContent()) {
         <section class="surface panel content-workbench">
           <div class="panel-head"><h2>Content</h2><span>{{ contentCount() }} items</span></div>
           <div class="content-switcher">
@@ -370,10 +397,30 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
             </div>
           }
         </section>
-      }
+          }
+        </div>
+      </div>
     </section>
   `,
   styles: [`
+    :host ::ng-deep section.container.staff-shell { border-radius: 32px !important; overflow: hidden; }
+    .staff-layout { align-items: start; display: grid; gap: 1.25rem; grid-template-columns: 240px minmax(0, 1fr); }
+    .staff-workspace { display: grid; gap: 1.25rem; min-width: 0; position: relative; }
+    .staff-sidebar { align-self: start; background: #fff !important; color: #111; padding: .9rem; position: static; }
+    .staff-sidebar .eyebrow, .staff-topbar .eyebrow { color: #ff9700; letter-spacing: .14em; margin: 0 0 .35rem; word-spacing: -.04em; }
+    .staff-sidebar h1 { color: #111; font-size: 1.28rem; font-weight: 600; letter-spacing: 0; line-height: 1.14; margin: 0 0 1rem; }
+    .staff-sidebar nav { display: grid; gap: .25rem; }
+    .staff-sidebar nav button { align-items: center; background: transparent; border: 1px solid transparent; border-radius: 6px; color: #555; cursor: pointer; display: flex; font-size: .9rem; font-weight: 800; justify-content: space-between; line-height: 1.25; min-height: 40px; padding: .62rem .7rem; text-align: left; }
+    .staff-sidebar nav button small { background: #f6f6f4; border-radius: 999px; color: #666; font-size: .68rem; min-width: 26px; padding: .16rem .42rem; text-align: center; }
+    .staff-sidebar nav button.active, .staff-sidebar nav button.active:hover { background: #ff9700; border-color: #ff9700; color: #fff; }
+    .staff-sidebar nav button:hover { background: #f6f6f4; border-color: #e6e6e0; color: #111; }
+    .staff-sidebar nav button.active small, .staff-sidebar nav button.active:hover small { background: #111; color: #fff; }
+    .staff-sidebar nav button:hover small { background: #e6e6e0; color: #555; }
+    .staff-topbar { align-items: end; background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: flex; gap: 1.25rem; justify-content: space-between; padding: 1.15rem 1.2rem; }
+    .staff-topbar h2 { color: #111827; font-size: clamp(1.08rem, 1.9vw, 1.65rem); font-weight: 600; letter-spacing: 0; line-height: 1.14; margin: 0; }
+    .topbar-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .55rem; justify-content: flex-end; }
+    .primary-btn { align-items: center; background: #111; border: 0; border-radius: 999px; box-shadow: 0 14px 28px rgba(0,0,0,.18); color: #fff; cursor: pointer; display: inline-flex; font-size: .9rem; font-weight: 850; justify-content: center; min-height: 46px; padding: .75rem 1.1rem; text-decoration: none; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; }
+    .primary-btn:hover { background: #ff9700; box-shadow: 0 16px 34px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .staff-dashboard { display: grid; gap: 1rem; max-width: 95vw !important; padding-bottom: 2rem; }
     .staff-dashboard .section-title { font-size: clamp(1.75rem, 3.4vw, 3rem); letter-spacing: 0; line-height: 1.08; margin-bottom: .1rem; text-align: left; }
     .surface { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); }
@@ -483,18 +530,32 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .gallery-admin-grid { display: grid; gap: .75rem; }
     .gallery-admin-grid article { align-items: center; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: .7rem; grid-template-columns: 76px minmax(0, 1fr) auto; padding: .65rem; }
     .gallery-admin-grid img { aspect-ratio: 1; border-radius: 6px; object-fit: cover; width: 76px; }
-    @media (max-width: 900px) {
-      .metric-grid, .list-grid.compact, .content-grid, .movement-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .list-grid, .editor-grid { grid-template-columns: 1fr; }
+    @media (max-width: 1100px) {
+      .staff-layout { grid-template-columns: 1fr; }
+      .staff-sidebar { position: static; }
+      .staff-sidebar nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-    @media (max-width: 560px) {
+    @media (max-width: 760px) {
+      :host ::ng-deep section.container.staff-shell { border-radius: 0 !important; overflow: visible; }
       .staff-dashboard, .staff-dashboard * { box-sizing: border-box; }
-      .staff-dashboard :where(.surface, .profile-panel, .metric-card, .panel, .list-row, .content-list, .content-editor-form, .gallery-admin-grid article, .movement-column) { max-width: 100%; min-width: 0; }
-      .staff-dashboard :where(.metric-grid, .list-grid, .content-grid, .editor-grid, .gallery-admin-grid, .profile-actions, .movement-grid) { min-width: 0; width: 100%; }
-      .staff-dashboard :where(h2, strong, span, small, p, button, a, label) { overflow-wrap: anywhere; }
-      .staff-dashboard { max-width: calc(100vw - 18px) !important; }
+      .staff-dashboard { max-width: 100vw !important; padding-left: .65rem; padding-right: .65rem; }
+      .staff-dashboard :where(.surface, .staff-topbar, .profile-panel, .metric-card, .panel, .list-row, .content-list, .content-editor-form, .gallery-admin-grid article, .movement-column) { max-width: 100%; min-width: 0; }
+      .staff-dashboard :where(.staff-workspace, .metric-grid, .list-grid, .content-grid, .editor-grid, .gallery-admin-grid, .movement-grid) { min-width: 0; width: 100%; }
+      .staff-dashboard :where(h2, h3, strong, span, small, p, button, a, label) { overflow-wrap: anywhere; }
+      .staff-layout, .staff-workspace { gap: .85rem; }
+      .staff-sidebar { margin-inline: -.65rem; padding: .75rem .65rem .65rem; position: sticky; top: 0; z-index: 20; }
+      .staff-sidebar h1 { font-size: 1.05rem; margin-bottom: .65rem; }
+      .staff-sidebar nav { display: flex; gap: .45rem; grid-template-columns: none; margin-inline: -.15rem; overflow-x: auto; padding: .1rem .15rem .35rem; scroll-snap-type: x proximity; scrollbar-width: none; }
+      .staff-sidebar nav::-webkit-scrollbar { display: none; }
+      .staff-sidebar nav button { flex: 0 0 auto; font-size: .78rem; gap: .35rem; min-height: 40px; min-width: max-content; padding: .48rem .6rem; scroll-snap-align: start; }
+      .staff-sidebar nav button span { overflow: visible; text-overflow: clip; white-space: nowrap; }
+      .staff-sidebar nav button small { display: none; }
+      .staff-topbar { align-items: stretch; flex-direction: column; gap: .85rem; padding: .95rem; }
+      .staff-topbar h2 { font-size: clamp(.95rem, 5.6vw, 1.3rem); }
+      .topbar-actions, .primary-btn { width: 100%; }
+      .primary-btn { min-height: 42px; }
       .profile-panel { align-items: stretch; flex-direction: column; }
-      .profile-actions, .settings-btn { width: 100%; }
       .metric-grid, .list-grid.compact, .content-grid, .movement-grid, .outward-detail-grid, .otp-panel { gap: .75rem; grid-template-columns: 1fr; }
       .metric-card, .panel, .list-row, .content-list, .content-editor-form, .movement-column { padding: .85rem; }
       .gallery-admin-grid article { grid-template-columns: 64px minmax(0, 1fr); }
@@ -528,6 +589,14 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
       .pager { align-items: stretch; flex-direction: column; }
       .pager div { width: 100%; }
       .pager button { flex: 1; }
+      .staff-workspace { scroll-margin-top: 86px; }
+    }
+    @media (max-width: 420px) {
+      .staff-dashboard { padding-left: .5rem; padding-right: .5rem; }
+      .staff-sidebar { margin-inline: -.5rem; padding-left: .5rem; padding-right: .5rem; }
+      .staff-sidebar nav button { font-size: .75rem; min-width: max-content; padding-inline: .52rem; }
+      .staff-topbar, .panel, .content-editor-form { padding: .75rem; }
+      .primary-btn, .mini-btn, .danger-btn, .ghost-mini { white-space: normal; }
     }
   `]
 })
@@ -547,6 +616,7 @@ export class StaffDashboardPageComponent implements OnInit {
   readonly blogPosts = signal<StaffBlogPost[]>([]);
   readonly galleryImages = signal<StaffGalleryImage[]>([]);
   readonly inventoryPage = signal(1);
+  readonly activeTab = signal<StaffTab>('dashboard');
   readonly showSettings = signal(false);
   readonly activeContentSection = signal<'blog' | 'gallery'>('blog');
   readonly inventoryPageSize = 10;
@@ -609,6 +679,34 @@ export class StaffDashboardPageComponent implements OnInit {
     return 'Manage blog, SEO, and gallery content from one focused workspace.';
   });
 
+  readonly tabs = computed<Array<{ id: StaffTab; label: string; count?: string }>>(() => {
+    const tabs: Array<{ id: StaffTab; label: string; count?: string }> = [
+      { id: 'dashboard', label: 'Dashboard', count: 'Live' }
+    ];
+    if (this.canUseInventory()) tabs.push({ id: 'inventory', label: 'Inventory', count: String(this.inventory().length) });
+    if (this.canUseInwardOutward()) tabs.push({ id: 'movement', label: 'Inward & Outward', count: String(this.outwardBookings().length + this.inwardBookings().length) });
+    if (this.canUseBookings()) tabs.push({ id: 'bookings', label: 'Bookings', count: String(this.bookings().length) });
+    if (this.canUseCustomers()) tabs.push({ id: 'customers', label: 'Customers', count: String(this.customers().length) });
+    if (this.canUsePayments()) tabs.push({ id: 'payments', label: 'Payments', count: String(this.payments().length) });
+    if (this.canUseContent()) tabs.push({ id: 'content', label: 'Content', count: String(this.contentCount()) });
+    tabs.push({ id: 'settings', label: 'Settings' });
+    return tabs;
+  });
+
+  readonly activeTabLabel = computed(() => this.tabs().find((tab) => tab.id === this.activeTab())?.label ?? 'Dashboard');
+  readonly activeTitle = computed(() => {
+    const titles: Record<StaffTab, string> = {
+      dashboard: `${this.roleLabel()} overview`,
+      inventory: 'Inventory management',
+      movement: 'Inward and outward',
+      bookings: 'Booking operations',
+      customers: 'Customer records',
+      payments: 'Payment records',
+      content: 'Content workspace',
+      settings: 'Account settings'
+    };
+    return titles[this.activeTab()];
+  });
   readonly contentCount = computed(() => this.blogPosts().length + this.galleryImages().length);
   readonly inventoryPageCount = computed(() => Math.max(1, Math.ceil(this.inventory().length / this.inventoryPageSize)));
   readonly pagedInventory = computed(() => {
@@ -681,6 +779,14 @@ export class StaffDashboardPageComponent implements OnInit {
     return this.authService.hasRole('MANAGER') || this.authService.hasRole('CONTENT_EDITOR');
   }
 
+  selectTab(tab: StaffTab): void {
+    if (!this.tabs().some((item) => item.id === tab)) {
+      return;
+    }
+    this.activeTab.set(tab);
+    this.showSettings.set(tab === 'settings');
+    this.scrollToActiveSection();
+  }
   loadContent(): void {
     this.adminService.getContent().subscribe({
       next: (items) => {
@@ -866,8 +972,7 @@ export class StaffDashboardPageComponent implements OnInit {
     });
   }
   toggleSettings(): void {
-    this.showSettings.update((value) => !value);
-    this.scrollToActiveSection(this.showSettings() ? '.staff-dashboard .password-panel' : undefined);
+    this.selectTab(this.activeTab() === 'settings' ? 'dashboard' : 'settings');
   }
 
   setContentSection(section: 'blog' | 'gallery'): void {
@@ -1103,16 +1208,19 @@ export class StaffDashboardPageComponent implements OnInit {
 
   private scrollToActiveSection(preferredSelector?: string): void {
     window.setTimeout(() => {
-      const isMobile = window.matchMedia('(max-width: 560px)').matches;
+      const isMobile = window.matchMedia('(max-width: 760px)').matches;
       const preferredTarget = preferredSelector ? document.querySelector(preferredSelector) : null;
       const target = preferredTarget ?? (isMobile
-        ? document.querySelector('.staff-dashboard .content-workbench') ?? document.querySelector('.staff-dashboard .password-panel') ?? document.querySelector('.staff-dashboard')
+        ? document.querySelector('.staff-workspace') ?? document.querySelector('.staff-dashboard')
         : document.querySelector('.staff-dashboard'));
       if (!target) return;
-      const stickyOffset = isMobile ? 88 : 92;
+      if (isMobile) {
+        return;
+      }
+      const stickyOffset = 92;
       const start = window.scrollY;
       const end = Math.max(0, target.getBoundingClientRect().top + window.scrollY - stickyOffset);
-      const duration = isMobile ? 700 : 900;
+      const duration = 900;
       const startTime = performance.now();
       const animate = (now: number) => {
         const progress = Math.min((now - startTime) / duration, 1);
