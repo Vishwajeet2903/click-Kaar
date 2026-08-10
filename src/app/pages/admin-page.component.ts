@@ -481,7 +481,7 @@ interface AdminNoteDialog {
                   <p class="error-text import-status-text">{{ inventoryImportError }}</p>
                 }
 
-                <div class="surface table-panel">
+                <div class="surface table-panel inventory-table-panel">
                   <table>
                     <thead>
                       <tr><th>Product</th><th>Category</th><th>Price</th><th>Warranty</th><th>Invoice</th><th>Stock</th><th>Status</th><th>Booked days</th><th>Actions</th></tr>
@@ -527,6 +527,63 @@ interface AdminNoteDialog {
                     </tbody>
                   </table>
                 </div>
+                <div class="inventory-mobile-list">
+                  @for (product of pagedProducts(); track product.id) {
+                    <article class="surface inventory-mobile-card" [class.active]="selectedInventoryProduct?.id === product.id" tabindex="0" role="button" [attr.aria-label]="'Open product ' + product.name" (click)="openInventoryProduct(product)" (keydown.enter)="openInventoryProduct(product)" (keydown.space)="$event.preventDefault(); openInventoryProduct(product)">
+                      <div class="inventory-card-media">
+                        @if (product.image && !product.imageLoadFailed) {
+                          <img [src]="product.image" [alt]="product.name" (error)="markProductImageFailed(product.id)">
+                        } @else {
+                          <span class="image-short-name">{{ product.imageLabel }}</span>
+                        }
+                      </div>
+                      <div class="inventory-card-copy">
+                        <strong>{{ product.name }}</strong>
+                        <span>{{ product.brand }} - {{ product.category }}</span>
+                        <p>{{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }} / day</p>
+                      </div>
+                      <b class="status" [class]="statusClass(product.status)">{{ product.status }}</b>
+                    </article>
+                  } @empty {
+                    <div class="surface empty-cell inventory-mobile-empty">No inventory matches those filters.</div>
+                  }
+                </div>
+
+                @if (selectedInventoryProduct) {
+                  <section #inventoryProductDetailPanel class="surface panel inventory-mobile-detail">
+                    <div class="inventory-detail-head">
+                      <div class="inventory-detail-media">
+                        @if (selectedInventoryProduct.image && !selectedInventoryProduct.imageLoadFailed) {
+                          <img [src]="selectedInventoryProduct.image" [alt]="selectedInventoryProduct.name" (error)="markProductImageFailed(selectedInventoryProduct.id)">
+                        } @else {
+                          <span class="image-short-name">{{ selectedInventoryProduct.imageLabel }}</span>
+                        }
+                      </div>
+                      <div>
+                        <p class="eyebrow">Product details</p>
+                        <h3>{{ selectedInventoryProduct.name }}</h3>
+                        <span>{{ selectedInventoryProduct.brand }} - {{ selectedInventoryProduct.category }}</span>
+                      </div>
+                    </div>
+                    <dl class="inventory-detail-grid">
+                      <div><dt>Daily price</dt><dd>{{ selectedInventoryProduct.dailyPrice | currency:'INR':'symbol':'1.0-0' }}</dd></div>
+                      <div><dt>Weekly price</dt><dd>{{ selectedInventoryProduct.weeklyPrice | currency:'INR':'symbol':'1.0-0' }}</dd></div>
+                      <div><dt>Stock</dt><dd>{{ selectedInventoryProduct.stock }}</dd></div>
+                      <div><dt>Status</dt><dd><b class="status" [class]="statusClass(selectedInventoryProduct.status)">{{ selectedInventoryProduct.status }}</b></dd></div>
+                      <div><dt>Booked days</dt><dd>{{ bookedDays(selectedInventoryProduct.name) }}</dd></div>
+                      <div><dt>Warranty</dt><dd>{{ selectedInventoryProduct.warrantyDate ? (selectedInventoryProduct.warrantyDate | date:'mediumDate') : '-' }}</dd></div>
+                      <div class="wide-detail"><dt>Invoice</dt><dd>@if (selectedInventoryProduct.invoiceUrl) { <a class="table-link" [href]="selectedInventoryProduct.invoiceUrl" target="_blank" rel="noreferrer">View invoice</a> } @else { - }</dd></div>
+                    </dl>
+                    <div class="inventory-detail-actions">
+                      <button type="button" class="mini-btn" (click)="editProduct(selectedInventoryProduct)">Edit</button>
+                      @if (selectedInventoryProduct.status === 'Maintenance') {
+                        <button type="button" class="return-btn" (click)="returnFromMaintenance(selectedInventoryProduct)">Return</button>
+                      } @else {
+                        <button type="button" class="danger-btn" (click)="markMaintenance(selectedInventoryProduct)">Maintenance</button>
+                      }
+                    </div>
+                  </section>
+                }
                 <div class="pagination-row">
                   <span>{{ pageSummary(filteredProducts().length, inventoryPage) }}</span>
                   <div>
@@ -1436,6 +1493,25 @@ interface AdminNoteDialog {
     .sheet-import-control input { display: none; }
     .sheet-import-control span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .import-status-text { margin: -.45rem 0 .1rem; }
+    .inventory-mobile-list, .inventory-mobile-detail { display: none; }
+    .inventory-mobile-card { align-items: center; display: grid; gap: .75rem; grid-template-columns: 58px minmax(0, 1fr) auto; padding: .78rem; }
+    .inventory-mobile-card.active { background: #fffaf2; border-color: rgba(255,151,0,.34); }
+    .inventory-card-media, .inventory-detail-media { align-items: center; aspect-ratio: 1; background: #f3f3ef; border-radius: 6px; display: flex; justify-content: center; overflow: hidden; width: 58px; }
+    .inventory-card-media img, .inventory-detail-media img { height: 100%; object-fit: cover; width: 100%; }
+    .inventory-card-copy { display: grid; gap: .22rem; min-width: 0; }
+    .inventory-card-copy strong, .inventory-card-copy span, .inventory-card-copy p { display: block; margin: 0; overflow-wrap: anywhere; }
+    .inventory-card-copy strong { color: #111; font-size: .94rem; line-height: 1.25; }
+    .inventory-card-copy span, .inventory-card-copy p { color: #666; font-size: .8rem; font-weight: 800; line-height: 1.35; }
+    .inventory-detail-head { align-items: center; display: grid; gap: .8rem; grid-template-columns: 76px minmax(0, 1fr); }
+    .inventory-detail-media { width: 76px; }
+    .inventory-detail-head h3 { color: #111; font-size: 1.06rem; line-height: 1.24; margin: .12rem 0 .2rem; overflow-wrap: anywhere; }
+    .inventory-detail-head span { color: #666; font-size: .84rem; font-weight: 800; line-height: 1.35; }
+    .inventory-detail-grid { display: grid; gap: .58rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+    .inventory-detail-grid div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 6px; min-width: 0; padding: .65rem; }
+    .inventory-detail-grid dt { color: #777; font-size: .68rem; font-weight: 950; text-transform: uppercase; }
+    .inventory-detail-grid dd { color: #111; font-size: .84rem; font-weight: 850; line-height: 1.35; margin: .22rem 0 0; overflow-wrap: anywhere; }
+    .inventory-detail-actions { display: grid; gap: .55rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .inventory-detail-actions button { width: 100%; }
     .inventory-action-cell .mini-btn,
     .inventory-action-cell .danger-btn,
     .inventory-action-cell .return-btn { flex: 0 0 auto; }
@@ -1836,6 +1912,14 @@ interface AdminNoteDialog {
       .content-switcher button { width: 100%; }
       .gallery-upload-box { min-height: 132px; }
       .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input, .search-input { flex-basis: auto; max-width: none; width: 100%; }
+      .inventory-table-panel { display: none; }
+      .inventory-mobile-list { display: grid; gap: .72rem; }
+      .inventory-mobile-card { cursor: pointer; }
+      .inventory-mobile-card .status { justify-self: end; }
+      .inventory-mobile-detail { display: grid; gap: .85rem; scroll-margin-top: 7rem; }
+      .inventory-detail-grid { grid-template-columns: 1fr; }
+      .inventory-detail-actions { grid-template-columns: 1fr; }
+      .inventory-mobile-empty { padding: 1rem; }
       .booking-table-panel { display: none; }
       .booking-mobile-list { display: grid; gap: .75rem; }
       .booking-mobile-card { border-radius: 8px; box-shadow: 0 12px 28px rgba(17,17,17,.06); cursor: pointer; }
@@ -1930,6 +2014,7 @@ interface AdminNoteDialog {
 export class AdminPageComponent implements OnInit, OnDestroy {
   @ViewChild('customerDetailPanel') private customerDetailPanel?: ElementRef<HTMLElement>;
   @ViewChild('outwardDetailPanel') private outwardDetailPanel?: ElementRef<HTMLElement>;
+  @ViewChild('inventoryProductDetailPanel') private inventoryProductDetailPanel?: ElementRef<HTMLElement>;
 
   readonly authService = inject(AuthService);
 
@@ -2009,6 +2094,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   confirmDialog?: AdminConfirmDialog;
   noteDialog?: AdminNoteDialog;
   selectedOutwardBooking?: AdminBooking;
+  selectedInventoryProduct?: AdminProduct;
   openBookingCardId?: string;
   deliveryOtpDraft = '';
   reviewReplyDraft = '';
@@ -2693,6 +2779,22 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  openInventoryProduct(product: AdminProduct): void {
+    this.selectedInventoryProduct = product;
+    this.scrollToInventoryProductOnMobile();
+  }
+
+  private scrollToInventoryProductOnMobile(): void {
+    if (!window.matchMedia('(max-width: 760px)').matches) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      if (this.inventoryProductDetailPanel?.nativeElement) {
+        this.smoothScrollToElement(this.inventoryProductDetailPanel.nativeElement, 88, 760);
+      }
+    });
+  }
   editProduct(product: AdminProduct): void {
     this.router.navigateByUrl(`/admin/inventory/edit/${product.id}`);
   }
