@@ -1,9 +1,13 @@
 package com.clickkaar.service;
 
 import com.clickkaar.dto.payment.CreatePaymentOrderRequest;
+import com.clickkaar.dto.payment.CreateRazorpayOrderRequest;
 import com.clickkaar.dto.payment.PaymentOrderResponse;
+import com.clickkaar.dto.payment.RazorpayOrderResponse;
 import com.clickkaar.dto.payment.RefundRequest;
 import com.clickkaar.dto.payment.VerifyPaymentRequest;
+import com.clickkaar.dto.payment.VerifyRazorpayPaymentRequest;
+import com.clickkaar.dto.payment.VerifyRazorpayPaymentResponse;
 import com.clickkaar.entity.Booking;
 import com.clickkaar.entity.Payment;
 import com.clickkaar.entity.Refund;
@@ -11,6 +15,8 @@ import com.clickkaar.enums.BookingStatus;
 import com.clickkaar.enums.PaymentStatus;
 import com.clickkaar.enums.RefundStatus;
 import com.clickkaar.exception.BadRequestException;
+import com.clickkaar.exception.RazorpayApiException;
+import com.clickkaar.exception.RazorpayAuthenticationException;
 import com.clickkaar.exception.ResourceNotFoundException;
 import com.clickkaar.repository.BookingRepository;
 import com.clickkaar.repository.PaymentRepository;
@@ -19,24 +25,32 @@ import com.clickkaar.security.CustomUserDetails;
 import com.clickkaar.util.BusinessIdFormatter;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
-import com.razorpay.Utils;
+import com.razorpay.RazorpayException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.HexFormat;
+import java.util.Locale;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentService {
+  private static final long MINIMUM_RAZORPAY_AMOUNT_PAISE = 100L;
+
   private final BookingRepository bookingRepository;
   private final PaymentRepository paymentRepository;
   private final RefundRepository refundRepository;
@@ -64,18 +78,40 @@ public class PaymentService {
     return paymentOrderResponse(payment);
   }
 
+  public RazorpayOrderResponse createStandardOrder(CreateRazorpayOrderRequest request) {
+    long amount = request.amount();
+    if (amount < MINIMUM_RAZORPAY_AMOUNT_PAISE) {
+      throw new BadRequestException("Amount must be at least 100 paise");
+    }
+
+    String currency = request.currency() == null || request.currency().isBlank()
+        ? "INR"
+        : request.currency().trim().toUpperCase(Locale.ROOT);
+    String receipt = request.receipt() == null || request.receipt().isBlank()
+        ? "receipt-" + UUID.randomUUID().toString().substring(0, 8)
+        : request.receipt().trim();
+
+    Order order = createRazorpayOrder(amount, currency, receipt);
+    return new RazorpayOrderResponse(order.get("id"), ((Number) order.get("amount")).longValue(), order.get("currency"));
+  }
+
   @Transactional
   public PaymentOrderResponse verify(VerifyPaymentRequest request) {
     Payment payment = paymentRepository.findByRazorpayOrderId(request.razorpayOrderId())
         .orElseThrow(() -> new ResourceNotFoundException("Payment order not found"));
     assertCanAccessBookingPayment(payment.getBooking());
-    verifyRazorpaySignature(request);
+    verifyRazorpaySignature(request.razorpayOrderId(), request.razorpayPaymentId(), request.razorpaySignature());
     payment.setRazorpayPaymentId(request.razorpayPaymentId());
     payment.setRazorpaySignature(request.razorpaySignature());
     payment.setStatus(PaymentStatus.PAID);
     payment.getBooking().setStatus(BookingStatus.CONFIRMED);
     bookingService.sendBookingBillEmail(payment.getBooking(), PaymentStatus.PAID, "Razorpay online payment");
     return paymentOrderResponse(payment);
+  }
+
+  public VerifyRazorpayPaymentResponse verifyStandardPayment(VerifyRazorpayPaymentRequest request) {
+    verifyRazorpaySignature(request.razorpayOrderId(), request.razorpayPaymentId(), request.razorpaySignature());
+    return new VerifyRazorpayPaymentResponse(true);
   }
 
   @Transactional
@@ -90,19 +126,24 @@ public class PaymentService {
     return refund.getId();
   }
 
-  private void verifyRazorpaySignature(VerifyPaymentRequest request) {
-    if (razorpaySecret == null || razorpaySecret.isBlank()) {
-      log.warn("Skipping Razorpay signature verification because RAZORPAY_KEY_SECRET is not configured");
-      return;
-    }
+  private void verifyRazorpaySignature(String razorpayOrderId, String razorpayPaymentId, String razorpaySignature) {
+    assertRazorpayCredentialsConfigured();
     try {
-      JSONObject attributes = new JSONObject();
-      attributes.put("razorpay_order_id", request.razorpayOrderId());
-      attributes.put("razorpay_payment_id", request.razorpayPaymentId());
-      attributes.put("razorpay_signature", request.razorpaySignature());
-      Utils.verifyPaymentSignature(attributes, razorpaySecret);
-    } catch (Exception ex) {
-      log.warn("Razorpay signature verification failed for order {}", request.razorpayOrderId(), ex);
+      String payload = razorpayOrderId + "|" + razorpayPaymentId;
+      Mac hmac = Mac.getInstance("HmacSHA256");
+      hmac.init(new SecretKeySpec(razorpaySecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+      String generatedSignature = HexFormat.of().formatHex(hmac.doFinal(payload.getBytes(StandardCharsets.UTF_8)));
+      boolean matches = MessageDigest.isEqual(
+          generatedSignature.getBytes(StandardCharsets.UTF_8),
+          razorpaySignature.getBytes(StandardCharsets.UTF_8)
+      );
+      if (!matches) {
+        throw new BadRequestException("Invalid Razorpay payment signature");
+      }
+    } catch (BadRequestException exception) {
+      throw exception;
+    } catch (Exception exception) {
+      log.warn("Razorpay signature verification failed for order {}", razorpayOrderId, exception);
       throw new BadRequestException("Invalid Razorpay payment signature");
     }
   }
@@ -138,23 +179,53 @@ public class PaymentService {
   }
 
   private String createRazorpayOrderId(Booking booking) {
-    if (razorpayKeyId == null || razorpayKeyId.isBlank() || razorpaySecret == null || razorpaySecret.isBlank()) {
-      throw new BadRequestException("Razorpay credentials are not configured");
+    long amountInPaise = booking.getTotalAmount()
+        .multiply(java.math.BigDecimal.valueOf(100))
+        .setScale(0, RoundingMode.HALF_UP)
+        .longValueExact();
+    if (amountInPaise < MINIMUM_RAZORPAY_AMOUNT_PAISE) {
+      throw new BadRequestException("Amount must be at least 100 paise");
     }
 
+    Order order = createRazorpayOrder(
+        amountInPaise,
+        "INR",
+        booking.getBookingNumber() + "-" + UUID.randomUUID().toString().substring(0, 8)
+    );
+    log.info("Created Razorpay order {} for booking {}", order.get("id"), booking.getBookingNumber());
+    return order.get("id");
+  }
+
+  private Order createRazorpayOrder(long amount, String currency, String receipt) {
+    assertRazorpayCredentialsConfigured();
     try {
       RazorpayClient razorpayClient = new RazorpayClient(razorpayKeyId, razorpaySecret);
       JSONObject orderRequest = new JSONObject();
-      orderRequest.put("amount", booking.getTotalAmount().multiply(java.math.BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).longValueExact());
-      orderRequest.put("currency", "INR");
-      orderRequest.put("receipt", booking.getBookingNumber() + "-" + UUID.randomUUID().toString().substring(0, 8));
-      Order order = razorpayClient.orders.create(orderRequest);
-      log.info("Created Razorpay order {} for booking {}", order.get("id"), booking.getBookingNumber());
-      return order.get("id");
+      orderRequest.put("amount", amount);
+      orderRequest.put("currency", currency);
+      orderRequest.put("receipt", receipt);
+      return razorpayClient.orders.create(orderRequest);
+    } catch (RazorpayException exception) {
+      log.warn("Unable to create Razorpay order for receipt {} and amount {}", receipt, amount, exception);
+      if (isRazorpayAuthFailure(exception)) {
+        throw new RazorpayAuthenticationException("Razorpay authentication failed");
+      }
+      throw new RazorpayApiException("Unable to create Razorpay order");
     } catch (Exception exception) {
-      log.warn("Unable to create Razorpay order for booking {} with total {}", booking.getBookingNumber(), booking.getTotalAmount(), exception);
-      throw new BadRequestException("Unable to create Razorpay order");
+      log.warn("Unable to create Razorpay order for receipt {} and amount {}", receipt, amount, exception);
+      throw new RazorpayApiException("Unable to create Razorpay order");
     }
+  }
+
+  private void assertRazorpayCredentialsConfigured() {
+    if (razorpayKeyId == null || razorpayKeyId.isBlank() || razorpaySecret == null || razorpaySecret.isBlank()) {
+      throw new RazorpayAuthenticationException("Razorpay credentials are not configured");
+    }
+  }
+
+  private boolean isRazorpayAuthFailure(RazorpayException exception) {
+    String message = exception.getMessage();
+    return message != null && (message.toLowerCase(Locale.ROOT).contains("auth") || message.contains("401"));
   }
 
   private PaymentOrderResponse paymentOrderResponse(Payment payment) {

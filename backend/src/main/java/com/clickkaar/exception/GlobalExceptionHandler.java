@@ -25,6 +25,16 @@ public class GlobalExceptionHandler {
     return error(HttpStatus.BAD_REQUEST, ex.getMessage(), Map.of());
   }
 
+  @ExceptionHandler(RazorpayAuthenticationException.class)
+  ResponseEntity<ApiError> handleRazorpayAuthentication(RazorpayAuthenticationException ex) {
+    return error(HttpStatus.UNAUTHORIZED, ex.getMessage(), Map.of());
+  }
+
+  @ExceptionHandler(RazorpayApiException.class)
+  ResponseEntity<ApiError> handleRazorpayApi(RazorpayApiException ex) {
+    return error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), Map.of());
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
     Map<String, String> fields = new HashMap<>();
