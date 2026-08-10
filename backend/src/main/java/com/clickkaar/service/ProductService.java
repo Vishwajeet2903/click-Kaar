@@ -24,24 +24,24 @@ public class ProductService {
 
   @Transactional(readOnly = true)
   public List<ProductResponse> findAll() {
-    return productRepository.findAll().stream().map(this::toResponse).toList();
+    return productRepository.findByDeletedFalse().stream().map(this::toResponse).toList();
   }
 
   @Transactional(readOnly = true)
   public ProductResponse findById(Long id) {
-    return toResponse(productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found")));
+    return toResponse(productRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new ResourceNotFoundException("Product not found")));
   }
 
   @Transactional(readOnly = true)
   public List<ProductResponse> search(String keyword) {
-    return productRepository.findByNameContainingIgnoreCaseOrBrandContainingIgnoreCase(keyword, keyword).stream()
+    return productRepository.findByNameContainingIgnoreCaseAndDeletedFalseOrBrandContainingIgnoreCaseAndDeletedFalse(keyword, keyword).stream()
         .map(this::toResponse)
         .toList();
   }
 
   @Transactional(readOnly = true)
   public List<ProductResponse> byCategory(ProductCategory category) {
-    return productRepository.findByCategoryName(category).stream().map(this::toResponse).toList();
+    return productRepository.findByCategoryNameAndDeletedFalse(category).stream().map(this::toResponse).toList();
   }
 
   @Transactional
@@ -78,7 +78,7 @@ public class ProductService {
 
   @Transactional
   public ProductResponse update(Long id, ProductRequest request) {
-    Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    Product product = productRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     Category category = categoryRepository.findByName(request.category())
         .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     product.setName(request.name());
@@ -107,8 +107,13 @@ public class ProductService {
     return toResponse(product);
   }
 
+  @Transactional
   public void delete(Long id) {
-    productRepository.deleteById(id);
+    Product product = productRepository.findByIdAndDeletedFalse(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    product.setDeleted(true);
+    product.setAvailabilityStatus(AvailabilityStatus.UNAVAILABLE);
+    product.setStock(0);
   }
 
   private ProductResponse toResponse(Product product) {

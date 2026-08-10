@@ -64,6 +64,10 @@ public class Product extends AuditableEntity {
   @Column(nullable = false)
   private AvailabilityStatus availabilityStatus;
 
+  @Builder.Default
+  @Column(nullable = false)
+  private boolean deleted = false;
+
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   private List<ProductImage> images = new ArrayList<>();

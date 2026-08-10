@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-  Optional<Product> findByNameIgnoreCase(String name);
-  List<Product> findByNameContainingIgnoreCaseOrBrandContainingIgnoreCase(String name, String brand);
-  List<Product> findByCategoryName(ProductCategory category);
-  List<Product> findByBrandIgnoreCase(String brand);
-  List<Product> findByAvailabilityStatus(AvailabilityStatus status);
-  List<Product> findByDailyPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
+  List<Product> findByDeletedFalse();
+  Optional<Product> findByIdAndDeletedFalse(Long id);
+  Optional<Product> findByNameIgnoreCaseAndDeletedFalse(String name);
+  List<Product> findByNameContainingIgnoreCaseAndDeletedFalseOrBrandContainingIgnoreCaseAndDeletedFalse(String name, String brand);
+  List<Product> findByCategoryNameAndDeletedFalse(ProductCategory category);
+  List<Product> findByBrandIgnoreCaseAndDeletedFalse(String brand);
+  List<Product> findByAvailabilityStatusAndDeletedFalse(AvailabilityStatus status);
+  List<Product> findByDailyPriceBetweenAndDeletedFalse(BigDecimal minPrice, BigDecimal maxPrice);
 }

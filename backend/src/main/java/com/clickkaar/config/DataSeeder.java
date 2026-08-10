@@ -137,7 +137,7 @@ public class DataSeeder {
 
   private Product seedProduct(String name, String brand, ProductCategory categoryName, String shortDescription, String fullDescription, String specs,
                               String dailyPrice, String weeklyPrice, AvailabilityStatus status, List<String> images) {
-    return productRepository.findByNameIgnoreCase(name).orElseGet(() -> {
+    return productRepository.findByNameIgnoreCaseAndDeletedFalse(name).orElseGet(() -> {
       Category category = categoryRepository.findByName(categoryName).orElseThrow();
       Product product = Product.builder()
           .name(name)
@@ -341,7 +341,7 @@ public class DataSeeder {
   }
 
   private void seedWishlists(User user, int count) {
-    List<Product> products = productRepository.findAll();
+    List<Product> products = productRepository.findByDeletedFalse();
     for (int index = 0; index < Math.min(count, products.size()); index += 1) {
       Product product = products.get(index);
       if (!wishlistRepository.existsByUserIdAndProductId(user.getId(), product.getId())) {
@@ -380,7 +380,7 @@ public class DataSeeder {
         .status(status)
         .build();
     productNames.forEach(productName -> {
-      Product product = productRepository.findByNameIgnoreCase(productName).orElseThrow();
+      Product product = productRepository.findByNameIgnoreCaseAndDeletedFalse(productName).orElseThrow();
       BigDecimal lineTotal = product.getDailyPrice().multiply(BigDecimal.valueOf(days));
       booking.getItems().add(BookingItem.builder()
           .booking(booking)

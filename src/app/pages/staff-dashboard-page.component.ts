@@ -147,26 +147,36 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
               <a routerLink="/admin/inventory/new">Add product</a>
             }
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Product</th><th>Category</th><th>Daily price</th><th>Status</th>@if (canEditInventory()) { <th>Actions</th> }</tr></thead>
-              <tbody>
-                @for (product of pagedInventory(); track product.id) {
-                  <tr>
-                    <td><strong>{{ product.name }}</strong><span>{{ product.brand }}</span></td>
-                    <td>{{ product.category }}</td>
-                    <td>{{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }}</td>
-                    <td>{{ product.availabilityStatus }}</td>
-                    @if (canEditInventory()) {
-                      <td><a class="table-action" [routerLink]="['/admin/inventory/edit', product.id]">Edit</a></td>
-                    }
-                  </tr>
+          <div class="inventory-card-panel">
+            @for (product of pagedInventory(); track product.id) {
+              <article class="inventory-dashboard-card">
+                <div class="inventory-dashboard-main">
+                  <div class="inventory-dashboard-title">
+                    <div>
+                      <span>Product</span>
+                      <strong>{{ product.name }}</strong>
+                      <small>{{ product.brand }} - {{ product.category }}</small>
+                    </div>
+                    <b>{{ product.availabilityStatus }}</b>
+                  </div>
+                  <dl>
+                    <div><dt>Daily price</dt><dd>{{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }}</dd></div>
+                    <div><dt>Category</dt><dd>{{ product.category }}</dd></div>
+                  </dl>
+                </div>
+                @if (canEditInventory()) {
+                  <div class="inventory-dashboard-actions">
+                    <span>Actions</span>
+                    <a class="table-action" [routerLink]="['/admin/inventory/edit', product.id]">Edit</a>
+                    <button type="button" class="danger-btn delete-btn inventory-delete-btn" [disabled]="deletingProductId === product.id" (click)="deleteProduct(product)">
+                      {{ deletingProductId === product.id ? 'Deleting...' : 'Delete' }}
+                    </button>
+                  </div>
                 }
-                @if (!inventory().length) {
-                  <tr><td [attr.colspan]="canEditInventory() ? 5 : 4" class="empty-cell">No inventory items found.</td></tr>
-                }
-              </tbody>
-            </table>
+              </article>
+            } @empty {
+              <div class="empty-cell inventory-dashboard-empty">No inventory items found.</div>
+            }
           </div>
           @if (inventory().length > inventoryPageSize) {
             <div class="pager">
@@ -341,7 +351,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
                 </div>
                 <div class="form-actions">
                   @if (editingBlogPostId) {
-                    <button type="button" class="danger-btn" [disabled]="isSubmittingBlog" (click)="deleteBlogPost()">Delete</button>
+                    <button type="button" class="danger-btn delete-btn" [disabled]="isSubmittingBlog" (click)="deleteBlogPost()">Delete</button>
                   }
                   <button type="submit" class="save-btn" [disabled]="isSubmittingBlog">{{ isSubmittingBlog ? 'Saving...' : editingBlogPostId ? 'Update post' : 'Create post' }}</button>
                 </div>
@@ -387,7 +397,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
                     <article>
                       <img [src]="image.imageUrl" [alt]="image.altText">
                       <div><strong>{{ image.altText }}</strong><span>Order {{ image.displayOrder }} - {{ image.active ? 'Live' : 'Hidden' }}</span></div>
-                      <button type="button" class="danger-btn" (click)="deleteGalleryImage(image)">Delete</button>
+                      <button type="button" class="danger-btn delete-btn" (click)="deleteGalleryImage(image)">Delete</button>
                     </article>
                   } @empty {
                     <p class="muted">No gallery images have been added yet.</p>
@@ -456,14 +466,31 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .pager div { display: flex; gap: .5rem; }
     .pager button { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; font-size: .86rem; min-height: 42px; min-width: 92px; padding: .65rem 1rem; }
     .pager button:disabled, .pager button:disabled:hover { background: #fff; border-color: rgba(17,17,17,.12); box-shadow: none; color: #777; cursor: not-allowed; opacity: .55; transform: none; }
-    .list-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .inventory-card-panel { display: grid; gap: .85rem; }
+    .inventory-dashboard-card { align-items: stretch; background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr) 104px; padding: 1rem; }
+    .inventory-dashboard-main { display: grid; gap: .72rem; min-width: 0; }
+    .inventory-dashboard-title { align-items: flex-start; border-bottom: 1px solid rgba(17,17,17,.08); display: flex; gap: .8rem; justify-content: space-between; padding-bottom: .7rem; }
+    .inventory-dashboard-title > div { min-width: 0; }
+    .inventory-dashboard-title span, .inventory-dashboard-actions span { color: #777; font-size: .68rem; font-weight: 950; line-height: 1.25; text-transform: uppercase; }
+    .inventory-dashboard-title strong { color: #111; font-size: 1rem; font-weight: 950; line-height: 1.25; overflow-wrap: anywhere; }
+    .inventory-dashboard-title small { color: #555; display: block; font-size: .84rem; font-weight: 820; line-height: 1.38; margin-top: .22rem; overflow-wrap: anywhere; }
+    .inventory-dashboard-title b { background: #fff7e6; border-radius: 999px; color: #9a6a00; flex: 0 0 auto; font-size: .7rem; font-weight: 950; line-height: 1.2; padding: .36rem .58rem; text-transform: uppercase; }
+    .inventory-dashboard-card dl { display: grid; gap: .62rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+    .inventory-dashboard-card dl div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 6px; min-width: 0; padding: .66rem .7rem; }
+    .inventory-dashboard-card dt { color: #777; font-size: .68rem; font-weight: 950; line-height: 1.25; text-transform: uppercase; }
+    .inventory-dashboard-card dd { color: #111; font-size: .84rem; font-weight: 850; line-height: 1.38; margin: .22rem 0 0; overflow-wrap: anywhere; }
+    .inventory-dashboard-actions { align-content: start; background: #fffaf2; border: 1px solid rgba(255,151,0,.18); border-radius: 7px; display: grid; gap: .42rem; min-width: 0; padding: .62rem; }
+    .inventory-dashboard-actions .table-action, .inventory-dashboard-actions .inventory-delete-btn { align-items: center; border-radius: 999px; display: inline-flex; font-size: .72rem; font-weight: 900; justify-content: center; min-height: 30px; padding: .38rem .55rem; text-decoration: none; width: 100%; }
+    .inventory-dashboard-actions .table-action { background: #111; color: #fff; }
+    .inventory-dashboard-empty { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; padding: 1rem; }    .list-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .list-grid.compact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .list-row { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; box-shadow: 0 18px 45px rgba(17,17,17,.06); padding: 1rem; }
     .movement-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .movement-column { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: .85rem; min-width: 0; padding: 1rem; }
     .compact-head { align-items: flex-start; border-bottom: 1px solid rgba(17,17,17,.08); padding-bottom: .75rem; }
     .single-list { grid-template-columns: 1fr; }
-    .movement-row { display: grid; gap: .35rem; }
+    .movement-row { display: grid; gap: .35rem; justify-items: start; text-align: left; }
+    .movement-row strong, .movement-row span, .movement-row small, .movement-row b { display: block; text-align: left; width: 100%; }
     .movement-row b { color: #027a48; font-size: .82rem; font-weight: 900; line-height: 1.35; }
     .clickable-movement { cursor: pointer; text-align: left; width: 100%; }
     .clickable-movement:hover, .selected-movement { background: #fffaf2; border-color: rgba(255,151,0,.42); transform: translateY(-1px); }
@@ -503,8 +530,10 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .mini-btn { background: #111; box-shadow: 0 10px 22px rgba(0,0,0,.14); color: #fff; }
     .ghost-mini { background: #fff; border: 1px solid rgba(17,17,17,.12); color: #111; }
     .danger-btn { background: #fff1f1; border: 1px solid rgba(180,35,24,.16); color: #b42318; }
+    .delete-btn, .delete-btn:hover { background: #111; border-color: #111; box-shadow: 0 12px 24px rgba(0,0,0,.16); color: #fff; }
     .mini-btn:hover, .ghost-mini:hover { background: #ff9700; color: #fff; transform: translateY(-1px); }
     .danger-btn:hover { background: #b42318; color: #fff; transform: translateY(-1px); }
+    .delete-btn:hover { background: #000; color: #fff; transform: translateY(-1px); }
     .content-grid { align-items: start; display: grid; gap: 1rem; grid-template-columns: minmax(280px, .8fr) minmax(0, 1.2fr); }
     .content-list, .content-editor-form { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: 1rem; padding: 1rem; }
     .blog-list { grid-template-columns: 1fr; }
@@ -530,6 +559,24 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,6
     .gallery-admin-grid { display: grid; gap: .75rem; }
     .gallery-admin-grid article { align-items: center; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: .7rem; grid-template-columns: 76px minmax(0, 1fr) auto; padding: .65rem; }
     .gallery-admin-grid img { aspect-ratio: 1; border-radius: 6px; object-fit: cover; width: 76px; }
+    .movement-panel button.movement-row,
+    .movement-panel .movement-row,
+    .movement-panel .movement-row strong,
+    .movement-panel .movement-row span,
+    .movement-panel .movement-row small,
+    .movement-panel .movement-row b {
+      align-items: flex-start !important;
+      justify-content: flex-start !important;
+      justify-items: start !important;
+      justify-self: start !important;
+      text-align: left !important;
+      white-space: normal !important;
+    }
+    .movement-panel button.movement-row,
+    .movement-panel .movement-row strong,
+    .movement-panel .movement-row span,
+    .movement-panel .movement-row small,
+    .movement-panel .movement-row b { width: 100%; }
     @media (max-width: 1100px) {
       .staff-layout { grid-template-columns: 1fr; }
       .staff-sidebar { position: static; }
@@ -633,6 +680,7 @@ export class StaffDashboardPageComponent implements OnInit {
   deliveryOtpDraft = '';
   isSubmittingBlog = false;
   isSubmittingGallery = false;
+  deletingProductId?: number;
   private selectedBlogCoverFile?: File;
   private selectedGalleryFile?: File;
 
@@ -753,6 +801,26 @@ export class StaffDashboardPageComponent implements OnInit {
 
   canUseInventory(): boolean {
     return this.authService.hasRole('MANAGER') || this.authService.hasRole('INVENTORY_STAFF');
+  }
+
+  deleteProduct(product: AdminProductResponse): void {
+    if (this.deletingProductId || !window.confirm(`Delete ${product.name}?`)) {
+      return;
+    }
+
+    this.deletingProductId = product.id;
+    this.adminService.deleteProduct(product.id)
+      .pipe(finalize(() => {
+        this.deletingProductId = undefined;
+      }))
+      .subscribe({
+        next: () => {
+          this.inventory.update((items) => items.filter((item) => item.id !== product.id));
+          this.inventoryPage.set(Math.min(this.inventoryPageCount(), Math.max(1, this.inventoryPage())));
+          this.showMessage('Product deleted.', 2200);
+        },
+        error: (error) => this.showMessage(this.authService.getErrorMessage(error), 3600)
+      });
   }
 
   canEditInventory(): boolean {

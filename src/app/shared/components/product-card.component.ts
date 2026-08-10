@@ -60,11 +60,11 @@ import { WishlistService } from '../../services/wishlist.service';
     .product-card { background: #f6f6f4; border: 1px solid rgba(17,17,17,.06); border-radius: 24px; box-shadow: none; display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: .65rem; position: relative; transition: box-shadow .28s ease, transform .28s ease; }
     .product-card:hover { box-shadow: 0 24px 48px rgba(0,0,0,.14); transform: translateY(-8px); }
     .media-link { aspect-ratio: 4 / 3; background: #ececea; border-radius: 19px; display: block; max-width: 100%; overflow: hidden; position: relative; width: 100%; }
-    .wishlist-btn { align-items: center; background: rgba(255,255,255,.94); border: 0; border-radius: 999px; box-shadow: 0 10px 24px rgba(0,0,0,.14); color: #111; display: inline-flex; height: 42px; justify-content: center; padding: 0; position: absolute; right: 1rem; top: 1rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease; width: 42px; z-index: 2; }
-    .wishlist-btn svg { fill: none; height: 21px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; width: 21px; }
-    .wishlist-btn:hover { background: #111; box-shadow: 0 14px 30px rgba(0,0,0,.18); color: #fff; transform: translateY(-2px); }
-    .wishlist-btn.active { background: #ff9700; color: #111; }
-    .wishlist-btn.active svg { fill: currentColor; }
+    .wishlist-btn { align-items: center; background: #fff; border: 1px solid rgba(17,17,17,.18); border-radius: 999px; box-shadow: 0 10px 24px rgba(0,0,0,.1); color: #fff; display: inline-flex; height: 42px; justify-content: center; padding: 0; position: absolute; right: 1rem; top: 1rem; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease, color .25s ease; width: 42px; z-index: 2; }
+    .wishlist-btn svg { fill: none; height: 21px; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; width: 21px; filter: drop-shadow(0 1px 1px rgba(17,17,17,.58)); }
+    .wishlist-btn:hover { background: #ff9700; border-color: #ff9700; box-shadow: 0 14px 30px rgba(255,151,0,.24); color: #fff; transform: translateY(-2px); }
+    .wishlist-btn.active { background: #ff9700; border-color: #ff9700; color: #fff; }
+    .wishlist-btn.active svg { fill: #fff; stroke: #fff; filter: none; }
     img { display: block; height: 100%; max-height: 100%; max-width: 100%; object-fit: cover; width: 100%; transition: transform .35s ease; }
     img.logo-fallback { background: #fff; object-fit: contain; padding: clamp(1.4rem, 14%, 3rem); }
     .product-card:hover img { transform: scale(1.06); }

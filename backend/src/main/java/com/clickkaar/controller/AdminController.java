@@ -252,6 +252,14 @@ public class AdminController {
     contentService.deleteGalleryImage(imageId);
   }
 
+  @DeleteMapping("/inventory/{productId}")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Transactional
+  public void deleteInventoryProduct(@PathVariable Long productId) {
+    productService.delete(productId);
+  }
+
   @PatchMapping("/inventory/{productId}/maintenance")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER','INVENTORY_STAFF')")
   @Transactional
@@ -482,7 +490,7 @@ public class AdminController {
   @GetMapping("/reports/categories")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   public List<CategoryReportResponse> categoryReports() {
-    return productRepository.findAll().stream()
+    return productRepository.findByDeletedFalse().stream()
         .collect(Collectors.groupingBy(product -> product.getCategory().getDisplayName(), Collectors.counting()))
         .entrySet().stream()
         .map(entry -> new CategoryReportResponse(entry.getKey(), entry.getValue()))

@@ -58,6 +58,7 @@ interface AdminBooking {
   returnStatus: 'Not due' | 'Due today' | 'Returned' | 'Late';
   total: number;
   notes: string;
+  noteLog: string[];
   deliveryOtpVerified: boolean;
 }
 
@@ -481,51 +482,49 @@ interface AdminNoteDialog {
                   <p class="error-text import-status-text">{{ inventoryImportError }}</p>
                 }
 
-                <div class="surface table-panel inventory-table-panel">
-                  <table>
-                    <thead>
-                      <tr><th>Product</th><th>Category</th><th>Price</th><th>Warranty</th><th>Invoice</th><th>Stock</th><th>Status</th><th>Booked days</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody>
-                      @for (product of pagedProducts(); track product.id) {
-                        <tr>
-                          <td>
-                            <div class="product-cell">
-                              @if (product.image && !product.imageLoadFailed) {
-                                <img [src]="product.image" [alt]="product.name" (error)="markProductImageFailed(product.id)">
-                              } @else {
-                                <span class="image-short-name">{{ product.imageLabel }}</span>
-                              }
-                              <div><strong>{{ product.name }}</strong><span>{{ product.brand }}</span></div>
-                            </div>
-                          </td>
-                          <td>{{ product.category }}</td>
-                          <td>{{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }} / day</td>
-                          <td>{{ product.warrantyDate ? (product.warrantyDate | date:'mediumDate') : '-' }}</td>
-                          <td>
-                            @if (product.invoiceUrl) {
-                              <a class="table-link" [href]="product.invoiceUrl" target="_blank" rel="noreferrer">View invoice</a>
-                            } @else {
-                              <span class="muted">-</span>
-                            }
-                          </td>
-                          <td>{{ product.stock }}</td>
-                          <td><b class="status" [class]="statusClass(product.status)">{{ product.status }}</b></td>
-                          <td><span class="calendar-strip">{{ bookedDays(product.name) }}</span></td>
-                          <td class="action-cell inventory-action-cell">
-                            <button type="button" class="mini-btn" (click)="editProduct(product)">Edit</button>
-                            @if (product.status === 'Maintenance') {
-                              <button type="button" class="return-btn" (click)="returnFromMaintenance(product)">Return</button>
-                            } @else {
-                              <button type="button" class="danger-btn" (click)="markMaintenance(product)">Maintenance</button>
-                            }
-                          </td>
-                        </tr>
-                      } @empty {
-                        <tr><td colspan="9" class="empty-cell">No inventory matches those filters.</td></tr>
-                      }
-                    </tbody>
-                  </table>
+                <div class="inventory-card-panel inventory-table-panel">
+                  @for (product of pagedProducts(); track product.id) {
+                    <article class="surface inventory-desktop-card">
+                      <div class="inventory-desktop-media">
+                        @if (product.image && !product.imageLoadFailed) {
+                          <img [src]="product.image" [alt]="product.name" (error)="markProductImageFailed(product.id)">
+                        } @else {
+                          <span class="image-short-name">{{ product.imageLabel }}</span>
+                        }
+                      </div>
+                      <div class="inventory-desktop-main">
+                        <div class="inventory-desktop-title">
+                          <div>
+                            <span>Product</span>
+                            <strong>{{ product.name }}</strong>
+                            <small>{{ product.brand }} - {{ product.category }}</small>
+                          </div>
+                          <b class="status" [class]="statusClass(product.status)">{{ product.status }}</b>
+                        </div>
+                        <dl class="inventory-desktop-grid">
+                          <div><dt>Price</dt><dd>{{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }} / day</dd></div>
+                          <div><dt>Warranty</dt><dd>{{ product.warrantyDate ? (product.warrantyDate | date:'mediumDate') : '-' }}</dd></div>
+                          <div><dt>Stock</dt><dd>{{ product.stock }}</dd></div>
+                          <div><dt>Booked days</dt><dd>{{ bookedDays(product.name) }}</dd></div>
+                          <div class="wide-detail"><dt>Invoice</dt><dd>@if (product.invoiceUrl) { <a class="table-link" [href]="product.invoiceUrl" target="_blank" rel="noreferrer">View invoice</a> } @else { - }</dd></div>
+                        </dl>
+                      </div>
+                      <div class="inventory-desktop-actions">
+                        <span>Actions</span>
+                        <button type="button" class="mini-btn" (click)="editProduct(product)">Edit</button>
+                        @if (product.status === 'Maintenance') {
+                          <button type="button" class="return-btn" (click)="returnFromMaintenance(product)">Return</button>
+                        } @else {
+                          <button type="button" class="danger-btn" (click)="markMaintenance(product)">Maintenance</button>
+                        }
+                        <button type="button" class="danger-btn delete-btn" [disabled]="deletingProductId === product.id" (click)="deleteProduct(product)">
+                          {{ deletingProductId === product.id ? 'Deleting...' : 'Delete' }}
+                        </button>
+                      </div>
+                    </article>
+                  } @empty {
+                    <div class="surface empty-cell inventory-desktop-empty">No inventory matches those filters.</div>
+                  }
                 </div>
                 <div class="inventory-mobile-list">
                   @for (product of pagedProducts(); track product.id) {
@@ -581,6 +580,9 @@ interface AdminNoteDialog {
                       } @else {
                         <button type="button" class="danger-btn" (click)="markMaintenance(selectedInventoryProduct)">Maintenance</button>
                       }
+                      <button type="button" class="danger-btn delete-btn" [disabled]="deletingProductId === selectedInventoryProduct.id" (click)="deleteProduct(selectedInventoryProduct)">
+                        {{ deletingProductId === selectedInventoryProduct.id ? 'Deleting...' : 'Delete' }}
+                      </button>
                     </div>
                   </section>
                 }
@@ -609,27 +611,78 @@ interface AdminNoteDialog {
                     <button type="button" class="ghost-mini" (click)="bookingMonthFilter.set(''); bookingsPage = 1">Clear month</button>
                   }
                 </div>
-                <div class="surface table-panel booking-table-panel">
-                  <table>
-                    <thead><tr><th>Booking</th><th>From date</th><th>To date</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th><th>Return</th><th class="booking-actions-heading">Actions</th></tr></thead>
-                    <tbody>
-                      @for (booking of pagedBookings(); track booking.id) {
-                        <tr>
-                          <td><strong>{{ booking.id }}</strong><span>{{ booking.customer }} - {{ booking.phone }}</span></td>
-                          <td>{{ booking.startDate | date:'mediumDate' }}</td>
-                          <td>{{ booking.endDate | date:'mediumDate' }}</td>
-                          <td>{{ booking.products.join(', ') }}</td>
-                          <td>{{ booking.total | currency:'INR':'symbol':'1.0-0' }}</td>
-                          <td><b class="status" [class]="statusClass(booking.status)">{{ booking.status }}</b></td>
-                          <td><b class="status" [class]="statusClass(booking.paymentStatus)">{{ booking.paymentStatus }}</b></td>
-                          <td>{{ booking.returnStatus }}</td>
-                          <td class="action-cell booking-action-cell">
-                            <button type="button" class="ghost-mini" (click)="addNote(booking)">Note</button>
-                          </td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
+                <div class="booking-card-panel booking-table-panel">
+                  @for (booking of pagedBookings(); track booking.id) {
+                    <article class="surface booking-desktop-card">
+                      <div class="booking-desktop-main">
+                        <div class="booking-desktop-title">
+                          <div>
+                            <span>Booking</span>
+                            <strong>{{ booking.id }}</strong>
+                            <small>{{ booking.customer }}{{ booking.phone ? ' - ' + booking.phone : '' }}</small>
+                          </div>
+                          <div class="booking-desktop-statuses">
+                            <b class="status" [class]="statusClass(booking.status)">{{ booking.status }}</b>
+                            <b class="status" [class]="statusClass(booking.paymentStatus)">{{ booking.paymentStatus }}</b>
+                          </div>
+                        </div>
+                        <p class="booking-desktop-products">{{ booking.products.join(', ') }}</p>
+                        <dl class="booking-desktop-grid">
+                          <div><dt>From date</dt><dd>{{ booking.startDate | date:'mediumDate' }}</dd></div>
+                          <div><dt>To date</dt><dd>{{ booking.endDate | date:'mediumDate' }}</dd></div>
+                          <div><dt>Total</dt><dd>{{ booking.total | currency:'INR':'symbol':'1.0-0' }}</dd></div>
+                          <div><dt>Return</dt><dd>{{ booking.returnStatus }}</dd></div>
+                        </dl>
+                      </div>
+                      <div class="booking-desktop-note">
+                        <label>Note</label>
+                        <div class="note-control">
+                          <input
+                            class="note-input"
+                            aria-label="Booking note"
+                            placeholder="Note"
+                            [ngModel]="booking.notes"
+                            [disabled]="isSavingBookingNote(booking.backendId)"
+                            (ngModelChange)="updateBookingNoteDraft(booking, $event)"
+                            (keydown.enter)="$event.preventDefault(); saveBookingNote(booking.backendId)">
+                          <button type="button" class="mini-btn" [disabled]="isSavingBookingNote(booking.backendId)" (click)="saveBookingNote(booking.backendId)">
+                            {{ isSavingBookingNote(booking.backendId) ? 'Saving...' : 'Save' }}
+                          </button>
+                        </div>
+                        <button type="button" class="remark-log-btn" [disabled]="bookingNoteCount(booking) === 0" (click)="toggleBookingNoteLog(booking)">
+                          View exact log ({{ bookingNoteCount(booking) }})
+                        </button>
+                      </div>
+                    </article>
+                    @if (activeNoteLogBooking?.backendId === booking.backendId) {
+                      <div class="remark-log-inline booking-desktop-log">
+                        <div class="remark-log-head">
+                          <p class="eyebrow">Booking note log</p>
+                          <h3>{{ booking.id }}</h3>
+                          <span>{{ booking.customer }} - {{ bookingNoteCount(booking) }} changes</span>
+                        </div>
+                        @if (bookingNoteEntries(booking).length) {
+                          <div class="remark-log-list">
+                            @for (note of bookingNoteEntries(booking); track $index) {
+                              <article>
+                                <div>
+                                  <strong>Note {{ $index + 1 }}</strong>
+                                  <span>{{ booking.id }}</span>
+                                </div>
+                                <dl>
+                                  <div><dt>Saved note</dt><dd>{{ note }}</dd></div>
+                                </dl>
+                              </article>
+                            }
+                          </div>
+                        } @else {
+                          <p class="muted">No saved note changes were found.</p>
+                        }
+                      </div>
+                    }
+                  } @empty {
+                    <div class="surface empty-cell booking-desktop-empty">No bookings match those filters.</div>
+                  }
                 </div>
                 <div class="booking-mobile-list">
                   @for (booking of pagedBookings(); track booking.id) {
@@ -773,7 +826,7 @@ interface AdminNoteDialog {
                             <button type="button" [class.danger-btn]="!customer.blocked" [class.mini-btn]="customer.blocked" (click)="$event.stopPropagation(); toggleCustomerBlock(customer)">
                               {{ customer.blocked ? 'Unblock customer' : 'Block customer' }}
                             </button>
-                            <button type="button" class="danger-btn" [disabled]="deletingCustomerId === customer.id" (click)="$event.stopPropagation(); deleteCustomer(customer)">
+                            <button type="button" class="danger-btn delete-btn" [disabled]="deletingCustomerId === customer.id" (click)="$event.stopPropagation(); deleteCustomer(customer)">
                               {{ deletingCustomerId === customer.id ? 'Deleting...' : 'Delete customer' }}
                             </button>
                           </div>
@@ -880,76 +933,80 @@ interface AdminNoteDialog {
                 </div>
               }
               @case ('payments') {
-                <div class="surface table-panel payments-table-panel">
-                  <table>
-                    <thead><tr><th>Transaction</th><th>Booking</th><th>Customer</th><th>Gateway</th><th>Policy</th><th>Amount</th><th>Status</th><th>Remark</th></tr></thead>
-                    <tbody>
-                      @for (payment of pagedPayments(); track payment.id) {
-                        <tr>
-                          <td><strong>{{ payment.id }}</strong><span>{{ payment.paidAt | date:'mediumDate' }}</span></td>
-                          <td>{{ payment.bookingId }}</td>
-                          <td>{{ payment.customer }}</td>
-                          <td>{{ payment.gateway }}</td>
-                          <td>{{ payment.mode }}</td>
-                          <td>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</td>
-                          <td><b class="status" [class]="statusClass(payment.status)">{{ payment.status }}</b></td>
-                          <td class="remark-cell">
-                            <div class="remark-control">
-                              <input
-                                class="remark-input"
-                                aria-label="Payment remark"
-                                placeholder="Remark"
-                                [ngModel]="payment.remark"
-                                [disabled]="isSavingPaymentRemark(payment.backendId)"
-                                (ngModelChange)="updatePaymentRemarkDraft(payment, $event)"
-                                (keydown.enter)="$event.preventDefault(); savePaymentRemark(payment.backendId)">
-                              <button type="button" class="mini-btn" [disabled]="isSavingPaymentRemark(payment.backendId)" (click)="savePaymentRemark(payment.backendId)">
-                                {{ isSavingPaymentRemark(payment.backendId) ? 'Saving...' : 'Save' }}
-                              </button>
-                            </div>
-                            <button type="button" class="remark-log-btn" [disabled]="payment.remarkChangeCount === 0" (click)="togglePaymentRemarkLog(payment)">
-                              View exact log ({{ payment.remarkChangeCount }})
-                            </button>
-                          </td>
-                        </tr>
-                        @if (activeRemarkLogPayment?.backendId === payment.backendId) {
-                          <tr class="remark-log-table-row">
-                            <td colspan="8">
-                              <div class="remark-log-inline">
-                                <div class="remark-log-head">
-                                  <p class="eyebrow">Payment remark log</p>
-                                  <h3>{{ payment.bookingId }}</h3>
-                                  <span>{{ payment.customer }} - {{ payment.remarkChangeCount }} changes</span>
+                <div class="payments-card-panel payments-table-panel">
+                  @for (payment of pagedPayments(); track payment.id) {
+                    <article class="surface payment-desktop-card">
+                      <div class="payment-desktop-main">
+                        <div class="payment-desktop-title">
+                          <div>
+                            <span>Transaction</span>
+                            <strong>{{ payment.id }}</strong>
+                            <small>{{ payment.paidAt | date:'mediumDate' }}</small>
+                          </div>
+                          <b class="status" [class]="statusClass(payment.status)">{{ payment.status }}</b>
+                        </div>
+                        <dl class="payment-desktop-grid">
+                          <div><dt>Booking</dt><dd>{{ payment.bookingId }}</dd></div>
+                          <div><dt>Customer</dt><dd>{{ payment.customer }}</dd></div>
+                          <div><dt>Gateway</dt><dd>{{ payment.gateway }}</dd></div>
+                          <div><dt>Policy</dt><dd>{{ payment.mode }}</dd></div>
+                          <div><dt>Amount</dt><dd>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</dd></div>
+                        </dl>
+                      </div>
+                      <div class="payment-desktop-remark">
+                        <label>Remark</label>
+                        <div class="remark-control">
+                          <input
+                            class="remark-input"
+                            aria-label="Payment remark"
+                            placeholder="Remark"
+                            [ngModel]="payment.remark"
+                            [disabled]="isSavingPaymentRemark(payment.backendId)"
+                            (ngModelChange)="updatePaymentRemarkDraft(payment, $event)"
+                            (keydown.enter)="$event.preventDefault(); savePaymentRemark(payment.backendId)">
+                          <button type="button" class="mini-btn" [disabled]="isSavingPaymentRemark(payment.backendId)" (click)="savePaymentRemark(payment.backendId)">
+                            {{ isSavingPaymentRemark(payment.backendId) ? 'Saving...' : 'Save' }}
+                          </button>
+                        </div>
+                        <button type="button" class="remark-log-btn" [disabled]="payment.remarkChangeCount === 0" (click)="togglePaymentRemarkLog(payment)">
+                          View exact log ({{ payment.remarkChangeCount }})
+                        </button>
+                      </div>
+                    </article>
+                    @if (activeRemarkLogPayment?.backendId === payment.backendId) {
+                      <div class="remark-log-inline payment-desktop-log">
+                        <div class="remark-log-head">
+                          <p class="eyebrow">Payment remark log</p>
+                          <h3>{{ payment.bookingId }}</h3>
+                          <span>{{ payment.customer }} - {{ payment.remarkChangeCount }} changes</span>
+                        </div>
+                        @if (isLoadingPaymentRemarkLog) {
+                          <p class="muted">Loading exact remark log...</p>
+                        } @else if (paymentRemarkLogError) {
+                          <p class="error-text">{{ paymentRemarkLogError }}</p>
+                        } @else if (activePaymentRemarkLogs.length) {
+                          <div class="remark-log-list">
+                            @for (log of activePaymentRemarkLogs; track log.id) {
+                              <article>
+                                <div>
+                                  <strong>{{ log.changedAt | date:'medium' }}</strong>
+                                  <span>{{ log.changedBy || 'Admin' }}</span>
                                 </div>
-                                @if (isLoadingPaymentRemarkLog) {
-                                  <p class="muted">Loading exact remark log...</p>
-                                } @else if (paymentRemarkLogError) {
-                                  <p class="error-text">{{ paymentRemarkLogError }}</p>
-                                } @else if (activePaymentRemarkLogs.length) {
-                                  <div class="remark-log-list">
-                                    @for (log of activePaymentRemarkLogs; track log.id) {
-                                      <article>
-                                        <div>
-                                          <strong>{{ log.changedAt | date:'medium' }}</strong>
-                                          <span>{{ log.changedBy || 'Admin' }}</span>
-                                        </div>
-                                        <dl>
-                                          <div><dt>From</dt><dd>{{ log.oldRemark || '-' }}</dd></div>
-                                          <div><dt>To</dt><dd>{{ log.newRemark || '-' }}</dd></div>
-                                        </dl>
-                                      </article>
-                                    }
-                                  </div>
-                                } @else {
-                                  <p class="muted">No saved remark changes were found.</p>
-                                }
-                              </div>
-                            </td>
-                          </tr>
+                                <dl>
+                                  <div><dt>From</dt><dd>{{ log.oldRemark || '-' }}</dd></div>
+                                  <div><dt>To</dt><dd>{{ log.newRemark || '-' }}</dd></div>
+                                </dl>
+                              </article>
+                            }
+                          </div>
+                        } @else {
+                          <p class="muted">No saved remark changes were found.</p>
                         }
-                      }
-                    </tbody>
-                  </table>
+                      </div>
+                    }
+                  } @empty {
+                    <div class="surface empty-cell payments-desktop-empty">No payments are available.</div>
+                  }
                 </div>
                 <div class="payments-mobile-list">
                   @for (payment of pagedPayments(); track payment.id) {
@@ -1103,7 +1160,7 @@ interface AdminNoteDialog {
                             >
                               {{ updatingCouponStatusId === coupon.id ? 'Saving...' : coupon.active ? 'Active' : 'Inactive' }}
                             </button>
-                            <button type="button" class="danger-btn" [disabled]="deletingCouponId === coupon.id" (click)="deleteCoupon(coupon)">
+                            <button type="button" class="danger-btn delete-btn" [disabled]="deletingCouponId === coupon.id" (click)="deleteCoupon(coupon)">
                               {{ deletingCouponId === coupon.id ? 'Deleting...' : 'Delete' }}
                             </button>
                           </div>
@@ -1180,7 +1237,7 @@ interface AdminNoteDialog {
                       </div>
                       <div class="blog-form-actions">
                         @if (editingBlogPostId) {
-                          <button type="button" class="danger-btn" [disabled]="isSubmittingBlog" (click)="deleteBlogPost()">Delete</button>
+                          <button type="button" class="danger-btn delete-btn" [disabled]="isSubmittingBlog" (click)="deleteBlogPost()">Delete</button>
                         }
                         <button type="submit" class="primary-btn" [disabled]="isSubmittingBlog">{{ isSubmittingBlog ? 'Saving...' : editingBlogPostId ? 'Update post' : 'Create post' }}</button>
                       </div>
@@ -1240,7 +1297,7 @@ interface AdminNoteDialog {
                             <strong>{{ image.altText }}</strong>
                             <span>Order {{ image.displayOrder }} - {{ image.active ? 'Live' : 'Hidden' }}</span>
                           </div>
-                          <button type="button" class="danger-btn" (click)="deleteGalleryImage(image)">Delete</button>
+                          <button type="button" class="danger-btn delete-btn" (click)="deleteGalleryImage(image)">Delete</button>
                         </article>
                       } @empty {
                         <p class="muted">No gallery images have been added yet.</p>
@@ -1294,7 +1351,7 @@ interface AdminNoteDialog {
                           <div class="row-actions">
                             <button type="button" class="mini-btn" [disabled]="isSavingReviewReply" (click)="saveReviewReply(selectedReview)">{{ isSavingReviewReply ? 'Saving...' : 'Save reply' }}</button>
                             <button type="button" class="ghost-mini" [disabled]="isSavingReviewReply || !reviewReplyDraft.trim()" (click)="clearReviewReply(selectedReview)">Clear reply</button>
-                            <button type="button" class="danger-btn" (click)="deleteReview(selectedReview)">Delete review</button>
+                            <button type="button" class="danger-btn delete-btn" (click)="deleteReview(selectedReview)">Delete review</button>
                           </div>
                         </div>
                       </div>
@@ -1321,7 +1378,7 @@ interface AdminNoteDialog {
                           </div>
                           <div class="row-actions">
                             <button type="button" class="mini-btn" (click)="$event.stopPropagation(); replyToReviewFromList(review)">Reply</button>
-                            <button type="button" class="danger-btn" (click)="$event.stopPropagation(); deleteReview(review)">Delete</button>
+                            <button type="button" class="danger-btn delete-btn" (click)="$event.stopPropagation(); deleteReview(review)">Delete</button>
                           </div>
                         </article>
                       } @empty {
@@ -1425,7 +1482,7 @@ interface AdminNoteDialog {
                             }
                           </div>
                           <div class="row-actions employee-actions">
-                            <button type="button" class="danger-btn employee-delete-btn" [disabled]="employee.roles.includes('ADMIN') || deletingEmployeeId === employee.userId" (click)="deleteEmployee(employee)">
+                            <button type="button" class="danger-btn delete-btn employee-delete-btn" [disabled]="employee.roles.includes('ADMIN') || deletingEmployeeId === employee.userId" (click)="deleteEmployee(employee)">
                               {{ deletingEmployeeId === employee.userId ? 'Deleting...' : 'Delete' }}
                             </button>
                           </div>
@@ -1577,7 +1634,23 @@ interface AdminNoteDialog {
     .sheet-import-control input { display: none; }
     .sheet-import-control span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .import-status-text { margin: -.45rem 0 .1rem; }
-    .inventory-mobile-list, .inventory-mobile-detail { display: none; }
+    .inventory-card-panel { display: grid; gap: .9rem; }
+    .inventory-desktop-card { align-items: stretch; display: grid; gap: 1rem; grid-template-columns: 128px minmax(0, 1fr) 118px; padding: 1rem; }
+    .inventory-desktop-media { align-items: center; aspect-ratio: 1; background: #f3f3ef; border: 1px solid rgba(17,17,17,.07); border-radius: 8px; display: flex; justify-content: center; overflow: hidden; width: 128px; }
+    .inventory-desktop-media img { height: 100%; object-fit: cover; width: 100%; }
+    .inventory-desktop-main { display: grid; gap: .78rem; min-width: 0; }
+    .inventory-desktop-title { align-items: flex-start; border-bottom: 1px solid var(--admin-line); display: flex; gap: 1rem; justify-content: space-between; min-width: 0; padding-bottom: .76rem; }
+    .inventory-desktop-title > div { display: grid; gap: .22rem; min-width: 0; }
+    .inventory-desktop-title span, .inventory-desktop-actions span { color: #777; font-size: .68rem; font-weight: 950; line-height: 1.25; text-transform: uppercase; }
+    .inventory-desktop-title strong { color: #111; font-size: 1.02rem; font-weight: 950; line-height: 1.22; overflow-wrap: anywhere; }
+    .inventory-desktop-title small { color: #57534d; font-size: .82rem; font-weight: 850; line-height: 1.38; overflow-wrap: anywhere; }
+    .inventory-desktop-grid { display: grid; gap: .62rem; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; }
+    .inventory-desktop-grid div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 6px; min-width: 0; padding: .66rem .7rem; }
+    .inventory-desktop-grid dt { color: #777; font-size: .68rem; font-weight: 950; line-height: 1.25; text-transform: uppercase; }
+    .inventory-desktop-grid dd { color: #111; font-size: .84rem; font-weight: 850; line-height: 1.38; margin: .22rem 0 0; overflow-wrap: anywhere; }
+    .inventory-desktop-actions { align-content: start; background: #fffaf2; border: 1px solid rgba(255,151,0,.18); border-radius: 7px; display: grid; gap: .42rem; min-width: 0; padding: .62rem; }
+    .inventory-desktop-actions button { font-size: .72rem; min-height: 30px; padding: .38rem .55rem; width: 100%; }
+    .inventory-desktop-empty { padding: 1rem; }    .inventory-mobile-list, .inventory-mobile-detail { display: none; }
     .inventory-mobile-card { align-items: center; display: grid; gap: .75rem; grid-template-columns: 58px minmax(0, 1fr) auto; padding: .78rem; }
     .inventory-mobile-card.active { background: #fffaf2; border-color: rgba(255,151,0,.34); }
     .inventory-card-media, .inventory-detail-media { align-items: center; aspect-ratio: 1; background: #f3f3ef; border-radius: 6px; display: flex; justify-content: center; overflow: hidden; width: 58px; }
@@ -1603,10 +1676,10 @@ interface AdminNoteDialog {
     .movement-panel { align-content: start; }
     .movement-list { display: grid; gap: .75rem; }
     .movement-card { background: #fff; border: 1px solid rgba(17,17,17,.09); border-radius: 8px; display: grid; gap: .65rem; min-width: 0; padding: 1rem 1rem 1rem .7rem; }
-    .movement-card div { align-items: start; display: flex; gap: .75rem; justify-content: space-between; min-width: 0; }
-    .movement-card strong { color: #111; font-weight: 950; line-height: 1.2; }
-    .movement-card span, .movement-card small { color: #666; font-size: .82rem; font-weight: 850; line-height: 1.35; }
-    .movement-card p { color: #333; font-size: .92rem; font-weight: 700; line-height: 1.45; margin: 0; overflow-wrap: anywhere; }
+    .movement-card div { align-items: flex-start; display: flex; flex-direction: column; gap: .24rem; justify-content: flex-start; min-width: 0; text-align: left; width: 100%; }
+    .movement-card strong { color: #111; font-weight: 950; line-height: 1.2; text-align: left; width: 100%; }
+    .movement-card span, .movement-card small { color: #666; font-size: .82rem; font-weight: 850; line-height: 1.35; text-align: left; width: 100%; }
+    .movement-card p { color: #333; font-size: .92rem; font-weight: 700; line-height: 1.45; margin: 0; overflow-wrap: anywhere; text-align: left; width: 100%; }
     .movement-card .status { justify-self: start; }
     .movement-empty { border: 1px dashed rgba(17,17,17,.14); border-radius: 8px; padding: 1rem; }
     .clickable-movement { cursor: pointer; text-align: left; width: 100%; }
@@ -1636,6 +1709,25 @@ interface AdminNoteDialog {
     .booking-filter-row .search-input { flex: 0 1 320px; max-width: 320px; }
     .booking-filter-row select { flex: 0 0 190px; width: 190px; }
     .booking-filter-row .month-input { flex: 0 0 170px; width: 170px; }
+    .booking-card-panel { display: grid; gap: .9rem; }
+    .booking-desktop-card { align-items: stretch; display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr) minmax(280px, .44fr); padding: 1rem; }
+    .booking-desktop-main { display: grid; gap: .78rem; min-width: 0; }
+    .booking-desktop-title { align-items: flex-start; border-bottom: 1px solid var(--admin-line); display: flex; gap: 1rem; justify-content: space-between; min-width: 0; padding-bottom: .76rem; }
+    .booking-desktop-title > div:first-child { display: grid; gap: .22rem; min-width: 0; }
+    .booking-desktop-title span, .booking-desktop-note label { color: #777; font-size: .68rem; font-weight: 950; line-height: 1.25; text-transform: uppercase; }
+    .booking-desktop-title strong { color: #111; font-size: 1.02rem; font-weight: 950; line-height: 1.22; overflow-wrap: anywhere; }
+    .booking-desktop-title small { color: #57534d; font-size: .82rem; font-weight: 850; line-height: 1.38; overflow-wrap: anywhere; }
+    .booking-desktop-statuses { align-items: flex-end; display: grid; flex: 0 0 auto; gap: .42rem; justify-items: end; }
+    .booking-desktop-products { color: #333; font-size: .86rem; font-weight: 820; line-height: 1.45; margin: 0; overflow-wrap: anywhere; }
+    .booking-desktop-grid { display: grid; gap: .62rem; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; }
+    .booking-desktop-grid div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 6px; min-width: 0; padding: .66rem .7rem; }
+    .booking-desktop-grid dt { color: #777; font-size: .68rem; font-weight: 950; line-height: 1.25; text-transform: uppercase; }
+    .booking-desktop-grid dd { color: #111; font-size: .84rem; font-weight: 850; line-height: 1.38; margin: .22rem 0 0; overflow-wrap: anywhere; }
+    .booking-desktop-note { align-content: start; background: #fffaf2; border: 1px solid rgba(255,151,0,.18); border-radius: 7px; display: grid; gap: .58rem; min-width: 0; padding: .78rem; }
+    .note-control { align-items: center; display: grid; gap: .48rem; grid-template-columns: minmax(0, 1fr) auto; }
+    .note-input { font-size: .84rem; font-weight: 750; line-height: 1.35; min-height: 38px; min-width: 0; padding: .58rem .68rem; }
+    .booking-desktop-log { background: #fff7ec; border: 1px solid rgba(255,151,0,.18); border-radius: 8px; }
+    .booking-desktop-empty { padding: 1rem; }
     .booking-mobile-list { display: none; }
     .booking-mobile-card { display: grid; gap: .72rem; padding: .9rem; }
     .booking-card-top { align-items: start; display: flex; gap: .75rem; justify-content: space-between; }
@@ -1659,10 +1751,28 @@ interface AdminNoteDialog {
     .employee-role-select::-ms-expand { display: none; }
     .table-link { color: var(--admin-accent); font-size: .78rem; font-weight: 900; text-decoration: none; white-space: nowrap; }
     .table-link:hover { color: #111; text-decoration: underline; }
+    .payments-card-panel { display: grid; gap: .9rem; }
+    .payment-desktop-card { align-items: stretch; display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr) minmax(280px, .44fr); padding: 1rem; }
+    .payment-desktop-main { display: grid; gap: .82rem; min-width: 0; }
+    .payment-desktop-title { align-items: flex-start; border-bottom: 1px solid var(--admin-line); display: flex; gap: 1rem; justify-content: space-between; min-width: 0; padding-bottom: .78rem; }
+    .payment-desktop-title > div { display: grid; gap: .22rem; min-width: 0; }
+    .payment-desktop-title span, .payment-desktop-remark label { color: #777; font-size: .68rem; font-weight: 950; line-height: 1.25; text-transform: uppercase; }
+    .payment-desktop-title strong { color: #111; font-size: 1.02rem; font-weight: 950; line-height: 1.22; overflow-wrap: anywhere; }
+    .payment-desktop-title small { color: #68635b; font-size: .78rem; font-weight: 850; line-height: 1.35; }
+    .payment-desktop-grid { display: grid; gap: .62rem; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; }
+    .payment-desktop-grid div { background: #f8f8f6; border: 1px solid rgba(17,17,17,.07); border-radius: 6px; min-width: 0; padding: .66rem .7rem; }
+    .payment-desktop-grid dt { color: #777; font-size: .68rem; font-weight: 950; line-height: 1.25; text-transform: uppercase; }
+    .payment-desktop-grid dd { color: #111; font-size: .84rem; font-weight: 850; line-height: 1.38; margin: .22rem 0 0; overflow-wrap: anywhere; }
+    .payment-desktop-remark { align-content: start; background: #fffaf2; border: 1px solid rgba(255,151,0,.18); border-radius: 7px; display: grid; gap: .58rem; min-width: 0; padding: .78rem; }
     .remark-input { min-width: 220px; }
     .remark-cell { min-width: 340px; }
     .remark-control { align-items: center; display: grid; gap: .45rem; grid-template-columns: minmax(220px, 1fr) auto; }
     .remark-log-btn { background: transparent; border: 0; box-shadow: none; color: var(--admin-muted); display: inline-flex; font-size: .72rem; font-weight: 900; justify-content: flex-start; margin-top: .32rem; min-height: auto; padding: 0; text-transform: uppercase; }
+    .payments-card-panel .remark-input { font-size: .84rem; font-weight: 750; line-height: 1.35; min-height: 38px; min-width: 0; padding: .58rem .68rem; }
+    .payments-card-panel .remark-control { gap: .48rem; grid-template-columns: minmax(0, 1fr) auto; }
+    .payments-card-panel .remark-log-btn, .booking-card-panel .remark-log-btn { color: #785600; font-weight: 950; line-height: 1.3; margin-top: .12rem; text-align: left; white-space: normal; }
+    .payment-desktop-log { background: #fff7ec; border: 1px solid rgba(255,151,0,.18); border-radius: 8px; }
+    .payments-desktop-empty { padding: 1rem; }
     .remark-log-btn:hover { color: var(--admin-accent); transform: none; }
     .remark-log-btn:disabled, .remark-log-btn:disabled:hover { color: var(--admin-muted); cursor: default; opacity: .65; }
     .payments-mobile-list, .payment-mobile-detail { display: none; }
@@ -1693,6 +1803,8 @@ interface AdminNoteDialog {
     .mini-btn:hover { background: var(--admin-accent); box-shadow: 0 14px 28px rgba(255,151,0,.22); color: #fff; transform: translateY(-2px); }
     .danger-btn { background: #fff1f1; box-shadow: 0 8px 22px rgba(180,35,24,.08); color: #b42318; }
     .danger-btn:hover { background: #b42318; border-color: #b42318; box-shadow: 0 14px 28px rgba(180,35,24,.18); color: #fff; transform: translateY(-2px); }
+    .delete-btn, .delete-btn:hover { background: #111; border-color: #111; box-shadow: 0 12px 26px rgba(0,0,0,.16); color: #fff; }
+    .delete-btn:hover { background: #000; box-shadow: 0 14px 28px rgba(0,0,0,.2); transform: translateY(-2px); }
     .return-btn { background: #ecfdf3; border: 1px solid rgba(2,122,72,.2); box-shadow: 0 8px 22px rgba(2,122,72,.08); color: #027a48; }
     .return-btn:hover { background: #027a48; border-color: #027a48; box-shadow: 0 14px 28px rgba(2,122,72,.18); color: #fff; transform: translateY(-2px); }
     .ghost-mini, .link-btn { background: #fff; border: 1px solid rgba(17,17,17,.12); box-shadow: 0 8px 22px rgba(0,0,0,.05); color: #111; }
@@ -1944,6 +2056,7 @@ interface AdminNoteDialog {
     .customer-card-actions button { justify-self: stretch; min-height: 38px; width: 100%; }
     .customer-card-actions .danger-btn { border: 1px solid rgba(180,35,24,.22); }
     .customer-card-actions .danger-btn:hover { border-color: rgba(180,35,24,.72); }
+    .customer-card-actions .delete-btn, .customer-card-actions .delete-btn:hover { border-color: #111; }
     .customer-detail-panel { align-content: start; }
     .customer-detail-profile { align-items: center; background: #fffaf2; border: 1px solid rgba(255,151,0,.24); border-radius: 8px; display: grid; gap: .8rem; grid-template-columns: 54px minmax(0, 1fr); padding: .9rem; }
     .customer-detail-profile h3 { color: #111; font-size: 1.08rem; line-height: 1.25; margin: 0 0 .2rem; overflow-wrap: anywhere; }
@@ -1973,6 +2086,27 @@ interface AdminNoteDialog {
     .success-text { color: #027a48; font-weight: 900; margin: .8rem 0 0; }
     .access-card { margin: 0 auto; max-width: 680px; text-align: center; }
     .access-card h1 { font-size: clamp(2rem, 5vw, 4rem); line-height: .96; }
+    .movement-panel button.movement-card,
+    .movement-panel .movement-card,
+    .movement-panel .movement-card > div,
+    .movement-panel .movement-card strong,
+    .movement-panel .movement-card span,
+    .movement-panel .movement-card small,
+    .movement-panel .movement-card p,
+    .movement-panel .movement-card .status {
+      align-items: flex-start !important;
+      justify-content: flex-start !important;
+      justify-items: start !important;
+      justify-self: start !important;
+      text-align: left !important;
+      white-space: normal !important;
+    }
+    .movement-panel button.movement-card,
+    .movement-panel .movement-card > div,
+    .movement-panel .movement-card strong,
+    .movement-panel .movement-card span,
+    .movement-panel .movement-card small,
+    .movement-panel .movement-card p { width: 100%; }
     @media (max-width: 1100px) {
       .admin-layout { grid-template-columns: 1fr; }
       .admin-sidebar { position: static; }
@@ -2212,6 +2346,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   deletingCouponId?: number;
   deletingEmployeeId?: number;
   deletingCustomerId?: number;
+  deletingProductId?: number;
   updatingCouponStatusId?: number;
   isSubmittingBlog = false;
   isSubmittingGallery = false;
@@ -2226,6 +2361,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   confirmDialog?: AdminConfirmDialog;
   noteDialog?: AdminNoteDialog;
   selectedOutwardBooking?: AdminBooking;
+  activeNoteLogBooking?: AdminBooking;
   selectedInventoryProduct?: AdminProduct;
   selectedPaymentDetail?: AdminPayment;
   openBookingCardId?: string;
@@ -2239,6 +2375,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   activeDocumentPreview?: DocumentPreview;
   private documentPreviewReturnTarget?: HTMLElement;
   private readonly savingPaymentRemarkIds = new Set<number>();
+  private readonly savingBookingNoteIds = new Set<number>();
   activeRemarkLogPayment?: AdminPayment;
   activePaymentRemarkLogs: PaymentRemarkLogView[] = [];
   isLoadingPaymentRemarkLog = false;
@@ -2994,6 +3131,28 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
 
+  deleteProduct(product: AdminProduct): void {
+    this.openConfirmDialog('Delete product?', `${product.name} will be removed from inventory.`, 'Delete', 'danger', () => {
+      this.deletingProductId = product.id;
+      this.adminService.deleteProduct(product.id)
+        .pipe(finalize(() => {
+          this.deletingProductId = undefined;
+        }))
+        .subscribe({
+          next: () => {
+            this.products.update((items) => items.filter((item) => item.id !== product.id));
+            if (this.selectedInventoryProduct?.id === product.id) {
+              this.selectedInventoryProduct = undefined;
+            }
+            this.clampAdminPages();
+            this.showTopMessage('Product deleted.', 2200);
+          },
+          error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+        });
+    });
+  }
+
+
   openOutwardDetails(booking: AdminBooking): void {
     this.selectedOutwardBooking = booking;
     this.deliveryOtpDraft = '';
@@ -3051,6 +3210,56 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   cancelNoteDialog(): void {
     this.noteDialog = undefined;
+  }
+
+  updateBookingNoteDraft(booking: AdminBooking, note: string): void {
+    this.bookings.update((items) => items.map((item) => item.backendId === booking.backendId ? { ...item, notes: note } : item));
+    if (this.selectedOutwardBooking?.backendId === booking.backendId) {
+      this.selectedOutwardBooking = { ...this.selectedOutwardBooking, notes: note };
+    }
+    if (this.activeNoteLogBooking?.backendId === booking.backendId) {
+      this.activeNoteLogBooking = { ...this.activeNoteLogBooking, notes: note };
+    }
+  }
+
+  toggleBookingNoteLog(booking: AdminBooking): void {
+    this.activeNoteLogBooking = this.activeNoteLogBooking?.backendId === booking.backendId ? undefined : booking;
+  }
+
+  bookingNoteEntries(booking: AdminBooking): string[] {
+    return booking.noteLog;
+  }
+
+  bookingNoteCount(booking: AdminBooking): number {
+    return booking.noteLog.length;
+  }
+
+  saveBookingNote(bookingId: number): void {
+    const booking = this.bookings().find((item) => item.backendId === bookingId);
+    if (!booking || this.isSavingBookingNote(bookingId)) {
+      return;
+    }
+
+    this.savingBookingNoteIds.add(bookingId);
+    this.adminService.addBookingNote(bookingId, booking.notes)
+      .pipe(finalize(() => {
+        this.savingBookingNoteIds.delete(bookingId);
+      }))
+      .subscribe({
+        next: (updatedBooking) => {
+          const mappedBooking = this.mapBooking(updatedBooking);
+          this.bookings.update((items) => items.map((item) => item.backendId === mappedBooking.backendId ? mappedBooking : item));
+          if (this.selectedOutwardBooking?.backendId === mappedBooking.backendId) {
+            this.selectedOutwardBooking = mappedBooking;
+          }
+          this.showTopMessage('Internal note saved.', 1800);
+        },
+        error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+      });
+  }
+
+  isSavingBookingNote(bookingId: number): boolean {
+    return this.savingBookingNoteIds.has(bookingId);
   }
 
   saveNoteDialog(): void {
@@ -3728,6 +3937,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   private mapBooking(booking: AdminBookingResponse): AdminBooking {
+    const savedNotes = (booking.notes ?? [])
+      .map((note) => note.trim())
+      .filter(Boolean);
+    const currentNote = savedNotes.at(-1) ?? '';
+
     return {
       backendId: booking.id,
       id: booking.bookingNumber,
@@ -3740,7 +3954,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       paymentStatus: this.paymentStatusFromApi(booking.paymentStatus),
       returnStatus: this.returnStatusFromApi(booking.returnStatus),
       total: Number(booking.total),
-      notes: booking.notes?.join('\\n') ?? '',
+      notes: currentNote,
+      noteLog: savedNotes.slice(0, -1).reverse(),
       deliveryOtpVerified: booking.deliveryOtpVerified
     };
   }

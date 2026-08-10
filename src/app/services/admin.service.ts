@@ -352,6 +352,12 @@ export class AdminService {
     });
   }
 
+  deleteProduct(productId: number): Observable<void> {
+    return this.http.delete<void>(`${API_URL}/inventory/${productId}`, {
+      headers: this.authHeaders()
+    });
+  }
+
   getBookings(): Observable<AdminBookingResponse[]> {
     return this.http.get<AdminBookingResponse[]>(`${API_URL}/bookings`, {
       headers: this.authHeaders()
