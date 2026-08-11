@@ -424,8 +424,8 @@ public class AdminController {
     if (customer.getRoles().stream().noneMatch(role -> role.getName() == RoleName.CUSTOMER)) {
       throw new ResourceNotFoundException("Customer not found");
     }
-    if (!bookingRepository.findByCustomerId(customerId).isEmpty()) {
-      throw new BadRequestException("Customer with booking history cannot be deleted. Block the customer instead.");
+    if (bookingRepository.existsByCustomerIdAndStatusIn(customerId, List.of(BookingStatus.CONFIRMED, BookingStatus.ACTIVE, BookingStatus.OVERDUE))) {
+      throw new BadRequestException("Customer with active booking cannot be deleted. Block the customer instead.");
     }
     wishlistRepository.findByUserId(customerId).forEach(wishlistRepository::delete);
     userRepository.delete(customer);

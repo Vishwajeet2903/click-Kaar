@@ -3602,6 +3602,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   deleteCustomer(customer: AdminCustomer): void {
+    if (customer.activeBookings > 0) {
+      this.showTopMessage('Customer with active booking cannot be deleted. Block the customer instead.', 4200);
+      return;
+    }
+
     this.openConfirmDialog('Delete customer?', `${customer.name} will be permanently removed if they have no booking history.`, 'Delete customer', 'danger', () => {
       this.deletingCustomerId = customer.id;
       this.adminService.deleteCustomer(customer.id)
