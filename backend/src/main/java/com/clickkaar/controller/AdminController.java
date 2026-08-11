@@ -973,6 +973,20 @@ public class AdminController {
     int slashIndex = normalized.lastIndexOf('/');
     return slashIndex >= 0 ? normalized.substring(slashIndex + 1) : normalized;
   }
+  private Path resolveRegistrationDocumentPath(String documentName, Path uploadRoot) {
+    String fileName = documentFileName(documentName);
+    List<Path> candidates = new ArrayList<>();
+    candidates.add(Path.of(documentName).toAbsolutePath().normalize());
+    if (!fileName.isBlank()) {
+      candidates.add(uploadRoot.resolve(fileName).normalize());
+    }
+
+    return candidates.stream()
+        .filter(candidate -> candidate.startsWith(uploadRoot))
+        .filter(candidate -> Files.exists(candidate) && Files.isRegularFile(candidate))
+        .findFirst()
+        .orElse(null);
+  }
   private ResponseEntity<Resource> registrationDocumentResponse(String documentName) {
     if (documentName == null || documentName.isBlank()) {
       throw new BadRequestException("Registration document not found");
