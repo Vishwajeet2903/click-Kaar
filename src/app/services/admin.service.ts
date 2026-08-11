@@ -578,6 +578,12 @@ export class AdminService {
     });
   }
 
+  deletePendingCustomer(requestId: number): Observable<void> {
+    return this.http.delete<void>(`${API_URL}/customers/pending/${requestId}`, {
+      headers: this.authHeaders()
+    });
+  }
+
   verifyCustomer(requestId: number): Observable<CustomerVerificationResponse> {
     return this.http.patch<CustomerVerificationResponse>(`${API_URL}/customers/${requestId}/verify`, null, {
       headers: this.authHeaders()

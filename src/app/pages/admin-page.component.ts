@@ -304,18 +304,17 @@ interface AdminNoteDialog {
                     } @else if (pendingCustomers.length) {
                       <div class="dense-list request-list dashboard-request-list">
                         @for (customer of pendingCustomers.slice(0, 4); track customer.requestId) {
-                          <article>
-                            <button type="button" class="request-summary" (click)="openPendingDetails(customer)">
+                          <article class="clickable-request" tabindex="0" role="button" [attr.aria-label]="'Open pending registration for ' + customer.fullName" (click)="openPendingDetails(customer)" (keydown.enter)="openPendingDetails(customer)" (keydown.space)="$event.preventDefault(); openPendingDetails(customer)">
+                            <div class="request-summary">
                               <span class="request-avatar">{{ initials(customer.fullName) }}</span>
                               <span class="request-copy">
                                 <strong>{{ customer.fullName }}</strong>
                                 <span>{{ customer.email }}</span>
                                 <small>{{ customer.mobile || 'Mobile not added' }} - {{ customer.city || 'City not added' }}</small>
                               </span>
-                            </button>
+                            </div>
                             <div class="request-meta">
                               <span class="status-chip">{{ customer.status }}</span>
-                              <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">Open</button>
                             </div>
                           </article>
                         }
@@ -351,18 +350,17 @@ interface AdminNoteDialog {
                     } @else if (pendingCustomers.length) {
                       <div class="dense-list request-list">
                         @for (customer of pendingPageItems(); track customer.requestId) {
-                          <article [class.active]="selectedPendingCustomer?.requestId === customer.requestId">
-                            <button type="button" class="request-summary" (click)="openPendingDetails(customer)">
+                          <article class="clickable-request" [class.active]="selectedPendingCustomer?.requestId === customer.requestId" tabindex="0" role="button" [attr.aria-label]="'Open pending registration for ' + customer.fullName" (click)="openPendingDetails(customer)" (keydown.enter)="openPendingDetails(customer)" (keydown.space)="$event.preventDefault(); openPendingDetails(customer)">
+                            <div class="request-summary">
                               <span class="request-avatar">{{ initials(customer.fullName) }}</span>
                               <span class="request-copy">
                                 <strong>{{ customer.fullName }}</strong>
                                 <span>{{ customer.email }}</span>
                                 <small>{{ customer.mobile || 'Mobile not added' }} - {{ customer.city || 'City not added' }}{{ customer.state ? ', ' + customer.state : '' }}</small>
                               </span>
-                            </button>
+                            </div>
                             <div class="request-meta">
                               <span class="status-chip">{{ customer.status }}</span>
-                              <button type="button" class="mini-btn" (click)="openPendingDetails(customer)">View</button>
                             </div>
                           </article>
                         }
@@ -478,7 +476,8 @@ interface AdminNoteDialog {
                         @if (registrationDetailPage < 3) {
                           <button type="button" class="mini-btn" (click)="changeRegistrationDetailPage(1)">Next</button>
                         } @else {
-                          <button type="button" class="primary-btn" [disabled]="verifyingRequestId === selectedPendingCustomer.requestId" (click)="verifyCustomer(selectedPendingCustomer)">
+                          <button type="button" class="danger-btn bordered-danger-action" [disabled]="deletingPendingRequestId === selectedPendingCustomer.requestId || verifyingRequestId === selectedPendingCustomer.requestId" (click)="deletePendingCustomer(selectedPendingCustomer)">{{ deletingPendingRequestId === selectedPendingCustomer.requestId ? 'Deleting...' : 'Delete request' }}</button>
+                          <button type="button" class="primary-btn compact-registration-action" [disabled]="verifyingRequestId === selectedPendingCustomer.requestId || deletingPendingRequestId === selectedPendingCustomer.requestId" (click)="verifyCustomer(selectedPendingCustomer)">
                             {{ verifyingRequestId === selectedPendingCustomer.requestId ? 'Granting...' : 'Grant login access' }}
                           </button>
                         }
@@ -1993,6 +1992,9 @@ interface AdminNoteDialog {
     .queue-state.compact-state { min-height: 162px; }
     .queue-state h3 { color: #111; font-size: 1rem; line-height: 1.25; margin: 0 0 .35rem; }
     .request-list article { align-items: center; flex-direction: row; padding: .7rem; }
+    .clickable-request { cursor: pointer; transition: transform .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease; }
+    .clickable-request:hover { background: #fffaf2; border-color: rgba(255,151,0,.42); box-shadow: 0 14px 30px rgba(255,151,0,.1); transform: translateY(-1px); }
+    .clickable-request:focus-visible { outline: 3px solid rgba(255,151,0,.34); outline-offset: 3px; }
     .request-summary { align-items: center; background: transparent; border: 0; color: #111; display: grid; flex: 1 1 auto; font: inherit; gap: .7rem; grid-template-columns: 42px minmax(0, 1fr); justify-content: stretch; min-height: 44px; min-width: 0; padding: 0; text-align: left; white-space: normal; }
     .request-summary:hover { transform: none; }
     .request-avatar { align-items: center; aspect-ratio: 1; background: #eef4ff; border-radius: 999px; color: #ff9700 !important; display: inline-flex !important; font-size: .78rem !important; font-weight: 950; justify-content: center; letter-spacing: 0; margin: 0 !important; width: 42px; }
@@ -2045,6 +2047,9 @@ interface AdminNoteDialog {
     .detail-grid dt { color: #777; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
     .detail-grid dd { color: #111; font-weight: 800; margin: .25rem 0 0; overflow-wrap: anywhere; }
     .detail-actions { align-items: center; border-top: 1px solid var(--admin-line); display: flex; gap: .55rem; justify-content: flex-end; padding-top: 1rem; }
+    .compact-registration-action { font-size: .78rem; min-height: 34px; padding: .48rem .78rem; }
+    .bordered-danger-action { border: 1px solid rgba(180,35,24,.34); }
+    .bordered-danger-action:hover { border-color: rgba(180,35,24,.82); }
     .document-grid { display: grid; gap: .85rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .document-grid article { background: #fff; border: 1px solid var(--admin-line); border-radius: 6px; min-width: 0; padding: .75rem; }
     .document-frame { align-items: center; aspect-ratio: 4 / 3; background: #f2f1ed; border-radius: 6px; display: flex; justify-content: center; margin-bottom: .65rem; overflow: hidden; }
@@ -2544,6 +2549,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   editingBlogPostId?: number;
   isLoadingPending = false;
   verifyingRequestId?: number;
+  deletingPendingRequestId?: number;
   selectedPendingCustomer?: CustomerVerificationResponse;
   selectedCustomerDetail?: AdminCustomerDetailResponse;
   selectedCustomerError = '';
@@ -3024,6 +3030,40 @@ export class AdminPageComponent implements OnInit, OnDestroy {
           this.showTopMessage(this.authService.getErrorMessage(error), 3600);
         }
       });
+  }
+
+
+  deletePendingCustomer(customer: CustomerVerificationResponse): void {
+    if (this.deletingPendingRequestId || this.verifyingRequestId === customer.requestId) {
+      return;
+    }
+
+    this.openConfirmDialog('Delete registration request?', `${customer.fullName} will be removed from pending registrations.`, 'Delete request', 'danger', () => {
+      this.deletingPendingRequestId = customer.requestId;
+      this.adminService.deletePendingCustomer(customer.requestId)
+        .pipe(finalize(() => {
+          if (this.deletingPendingRequestId === customer.requestId) {
+            this.deletingPendingRequestId = undefined;
+          }
+        }))
+        .subscribe({
+          next: () => {
+            this.pendingCustomers = this.pendingCustomers.filter((item) => item.requestId !== customer.requestId);
+            this.clampPendingPage();
+            if (this.selectedPendingCustomer?.requestId === customer.requestId) {
+              this.clearDocumentPreviews();
+              this.selectedPendingCustomer = this.pendingPageItems()[0] ?? this.pendingCustomers[0];
+              this.registrationDetailPage = 1;
+              if (this.selectedPendingCustomer) {
+                this.loadDocumentPreviews(this.selectedPendingCustomer);
+              }
+            }
+            this.updateTabCount('registrations', String(this.pendingCustomers.length));
+            this.showTopMessage('Registration request deleted.', 2400);
+          },
+          error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+        });
+    });
   }
 
   loadPendingCustomers(): void {

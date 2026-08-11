@@ -715,6 +715,16 @@ public class AdminController {
         .toList();
   }
 
+  @DeleteMapping("/customers/pending/{requestId}")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Transactional
+  public void deletePendingCustomer(@PathVariable Long requestId) {
+    PendingRegistration pendingRegistration = pendingRegistrationRepository.findById(requestId)
+        .orElseThrow(() -> new BadRequestException("Pending registration not found"));
+    pendingRegistrationRepository.delete(pendingRegistration);
+  }
+
   @GetMapping("/customers/{requestId}/documents/{documentType}")
   @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public ResponseEntity<Resource> pendingCustomerDocument(@PathVariable Long requestId, @PathVariable String documentType) {
