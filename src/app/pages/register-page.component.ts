@@ -6,6 +6,8 @@ import { finalize } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.directive';
 
+const MAX_UPLOAD_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_UPLOAD_FILE_SIZE_LABEL = '5MB';
 type DocumentKey = 'photo' | 'drivingLicense' | 'electricityBill' | 'rentAgreement' | 'companyBonafideLetter';
 type RegisterControlName =
   | 'firstName'
@@ -484,9 +486,17 @@ export class RegisterPageComponent {
   setFile(key: DocumentKey, event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
-    if (file) {
-      this.selectedFiles[key] = file;
+    if (!file) {
+      return;
     }
+    if (file.size > MAX_UPLOAD_FILE_SIZE) {
+      input.value = '';
+      delete this.selectedFiles[key];
+      this.formError = `File size must be ${MAX_UPLOAD_FILE_SIZE_LABEL} or less.`;
+      return;
+    }
+    this.formError = '';
+    this.selectedFiles[key] = file;
   }
 
   lookupCityByPincode(): void {

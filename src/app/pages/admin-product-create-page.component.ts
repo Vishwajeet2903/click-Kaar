@@ -7,6 +7,8 @@ import { AuthService } from '../services/auth.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 import { ProductCardComponent } from '../shared/components/product-card.component';
 
+const MAX_UPLOAD_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_UPLOAD_FILE_SIZE_LABEL = '5MB';
 type ProductStatus = 'Available' | 'Unavailable' | 'Maintenance';
 
 @Component({
@@ -405,7 +407,15 @@ export class AdminProductCreatePageComponent implements OnInit {
       URL.revokeObjectURL(this.selectedProductPreviewUrl);
       this.selectedProductPreviewUrl = '';
     }
-    this.selectedProductImage = input?.files?.[0];
+    const file = input?.files?.[0];
+    if (file && file.size > MAX_UPLOAD_FILE_SIZE) {
+      if (input) input.value = '';
+      this.selectedProductImage = undefined;
+      this.productFormError = `Image size must be ${MAX_UPLOAD_FILE_SIZE_LABEL} or less.`;
+      return;
+    }
+    this.productFormError = '';
+    this.selectedProductImage = file;
     if (this.selectedProductImage) {
       this.selectedProductPreviewUrl = URL.createObjectURL(this.selectedProductImage);
     }

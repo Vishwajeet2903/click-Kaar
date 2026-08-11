@@ -18,6 +18,8 @@ import { AuthService } from '../services/auth.service';
 import { GalleryImage, GalleryService } from '../services/gallery.service';
 import { BreadcrumbComponent } from '../shared/components/breadcrumb.component';
 
+const MAX_UPLOAD_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_UPLOAD_FILE_SIZE_LABEL = '5MB';
 interface StaffGalleryImage {
   id: number;
   imageUrl: string;
@@ -925,7 +927,16 @@ export class StaffDashboardPageComponent implements OnInit {
 
   setBlogCoverImage(event: Event): void {
     const input = event.target as HTMLInputElement | null;
-    this.selectedBlogCoverFile = input?.files?.[0];
+    const file = input?.files?.[0];
+    if (file && file.size > MAX_UPLOAD_FILE_SIZE) {
+      if (input) input.value = '';
+      this.selectedBlogCoverFile = undefined;
+      this.blogCoverFileName = '';
+      this.blogFormError = `Image size must be ${MAX_UPLOAD_FILE_SIZE_LABEL} or less.`;
+      return;
+    }
+    this.blogFormError = '';
+    this.selectedBlogCoverFile = file;
     this.blogCoverFileName = this.selectedBlogCoverFile?.name ?? '';
   }
 
@@ -984,6 +995,14 @@ export class StaffDashboardPageComponent implements OnInit {
     const input = event.target as HTMLInputElement | null;
     const file = input?.files?.[0];
     this.clearGalleryPreview();
+    if (file && file.size > MAX_UPLOAD_FILE_SIZE) {
+      if (input) input.value = '';
+      this.selectedGalleryFile = undefined;
+      this.galleryFileName = '';
+      this.galleryFormError = `Image size must be ${MAX_UPLOAD_FILE_SIZE_LABEL} or less.`;
+      return;
+    }
+    this.galleryFormError = '';
     this.selectedGalleryFile = file;
     this.galleryFileName = file?.name ?? '';
     if (file) this.galleryPreviewUrl = URL.createObjectURL(file);
