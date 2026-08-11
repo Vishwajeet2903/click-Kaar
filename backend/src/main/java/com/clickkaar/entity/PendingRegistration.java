@@ -1,11 +1,14 @@
 package com.clickkaar.entity;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,10 +58,30 @@ public class PendingRegistration extends AuditableEntity {
   private String companyName;
   private String socialMediaProfile;
   private String photoDocumentName;
+  private String photoDocumentContentType;
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private byte[] photoDocumentData;
   private String drivingLicenseDocumentName;
+  private String drivingLicenseDocumentContentType;
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private byte[] drivingLicenseDocumentData;
   private String electricityBillDocumentName;
+  private String electricityBillDocumentContentType;
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private byte[] electricityBillDocumentData;
   private String rentAgreementDocumentName;
+  private String rentAgreementDocumentContentType;
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private byte[] rentAgreementDocumentData;
   private String companyBonafideLetterDocumentName;
+  private String companyBonafideLetterDocumentContentType;
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private byte[] companyBonafideLetterDocumentData;
 
   @Column(nullable = false)
   private String password;

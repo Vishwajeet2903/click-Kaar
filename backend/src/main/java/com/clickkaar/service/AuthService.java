@@ -74,6 +74,12 @@ public class AuthService {
     }
     validateRequiredDocuments(request);
 
+    UploadedDocument photoDocument = saveDocument(request.photo());
+    UploadedDocument drivingLicenseDocument = saveDocument(request.drivingLicense());
+    UploadedDocument electricityBillDocument = saveDocument(request.electricityBill());
+    UploadedDocument rentAgreementDocument = saveDocument(request.rentAgreement());
+    UploadedDocument companyBonafideLetterDocument = saveDocument(request.companyBonafideLetter());
+
     PendingRegistration pendingRegistration = PendingRegistration.builder()
         .fullName(request.fullName())
         .firstName(request.firstName())
@@ -92,11 +98,21 @@ public class AuthService {
         .occupation(request.occupation())
         .companyName(request.companyName())
         .socialMediaProfile(request.socialMediaProfile())
-        .photoDocumentName(saveDocument(request.photo()))
-        .drivingLicenseDocumentName(saveDocument(request.drivingLicense()))
-        .electricityBillDocumentName(saveDocument(request.electricityBill()))
-        .rentAgreementDocumentName(saveDocument(request.rentAgreement()))
-        .companyBonafideLetterDocumentName(saveDocument(request.companyBonafideLetter()))
+        .photoDocumentName(photoDocument.name())
+        .photoDocumentContentType(photoDocument.contentType())
+        .photoDocumentData(photoDocument.data())
+        .drivingLicenseDocumentName(drivingLicenseDocument.name())
+        .drivingLicenseDocumentContentType(drivingLicenseDocument.contentType())
+        .drivingLicenseDocumentData(drivingLicenseDocument.data())
+        .electricityBillDocumentName(electricityBillDocument.name())
+        .electricityBillDocumentContentType(electricityBillDocument.contentType())
+        .electricityBillDocumentData(electricityBillDocument.data())
+        .rentAgreementDocumentName(rentAgreementDocument.name())
+        .rentAgreementDocumentContentType(rentAgreementDocument.contentType())
+        .rentAgreementDocumentData(rentAgreementDocument.data())
+        .companyBonafideLetterDocumentName(companyBonafideLetterDocument.name())
+        .companyBonafideLetterDocumentContentType(companyBonafideLetterDocument.contentType())
+        .companyBonafideLetterDocumentData(companyBonafideLetterDocument.data())
         .password(passwordEncoder.encode(request.password()))
         .build();
 
@@ -337,23 +353,30 @@ public class AuthService {
     }
   }
 
-  private String saveDocument(MultipartFile file) {
+  private UploadedDocument saveDocument(MultipartFile file) {
     if (file == null || file.isEmpty()) {
-      return null;
+      return UploadedDocument.empty();
     }
 
     String originalFilename = file.getOriginalFilename() == null ? "document" : file.getOriginalFilename();
     String safeFilename = originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
-    Path uploadDirectory = Path.of("uploads", "registration-documents");
-    Path destination = uploadDirectory.resolve(UUID.randomUUID() + "-" + safeFilename).normalize();
+    String storedFilename = UUID.randomUUID() + "-" + safeFilename;
 
     try {
+      byte[] documentData = file.getBytes();
+      Path uploadDirectory = Path.of("uploads", "registration-documents");
+      Path destination = uploadDirectory.resolve(storedFilename).normalize();
       Files.createDirectories(uploadDirectory);
       file.transferTo(destination);
-      return destination.toString();
+      return new UploadedDocument(storedFilename, file.getContentType(), documentData);
     } catch (IOException exception) {
       throw new BadRequestException("Unable to save registration document");
     }
   }
-}
 
+  private record UploadedDocument(String name, String contentType, byte[] data) {
+    static UploadedDocument empty() {
+      return new UploadedDocument(null, null, null);
+    }
+  }
+}

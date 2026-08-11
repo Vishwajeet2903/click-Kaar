@@ -58,6 +58,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -397,7 +398,7 @@ public class AdminController {
       throw new ResourceNotFoundException("Customer not found");
     }
     String documentName = documentNameForType(customer, documentType);
-    return registrationDocumentResponse(documentName);
+    return registrationDocumentResponse(documentName, documentDataForType(customer, documentType), documentContentTypeForType(customer, documentType));
   }
 
   @PatchMapping("/customers/{customerId}/blocked")
@@ -714,7 +715,11 @@ public class AdminController {
   public ResponseEntity<Resource> pendingCustomerDocument(@PathVariable Long requestId, @PathVariable String documentType) {
     PendingRegistration pendingRegistration = pendingRegistrationRepository.findById(requestId)
         .orElseThrow(() -> new BadRequestException("Pending registration not found"));
-    return registrationDocumentResponse(documentNameForType(pendingRegistration, documentType));
+    return registrationDocumentResponse(
+        documentNameForType(pendingRegistration, documentType),
+        documentDataForType(pendingRegistration, documentType),
+        documentContentTypeForType(pendingRegistration, documentType)
+    );
   }
 
   @PatchMapping("/customers/{requestId}/verify")
@@ -944,6 +949,28 @@ public class AdminController {
     };
   }
 
+
+  private String documentContentTypeForType(PendingRegistration pendingRegistration, String documentType) {
+    return switch (documentType) {
+      case "photo" -> pendingRegistration.getPhotoDocumentContentType();
+      case "drivingLicense" -> pendingRegistration.getDrivingLicenseDocumentContentType();
+      case "electricityBill" -> pendingRegistration.getElectricityBillDocumentContentType();
+      case "rentAgreement" -> pendingRegistration.getRentAgreementDocumentContentType();
+      case "companyBonafideLetter" -> pendingRegistration.getCompanyBonafideLetterDocumentContentType();
+      default -> null;
+    };
+  }
+
+  private byte[] documentDataForType(PendingRegistration pendingRegistration, String documentType) {
+    return switch (documentType) {
+      case "photo" -> pendingRegistration.getPhotoDocumentData();
+      case "drivingLicense" -> pendingRegistration.getDrivingLicenseDocumentData();
+      case "electricityBill" -> pendingRegistration.getElectricityBillDocumentData();
+      case "rentAgreement" -> pendingRegistration.getRentAgreementDocumentData();
+      case "companyBonafideLetter" -> pendingRegistration.getCompanyBonafideLetterDocumentData();
+      default -> null;
+    };
+  }
   private List<RegistrationDocumentResponse> documentsFor(User customer) {
     List<RegistrationDocumentResponse> documents = new ArrayList<>();
     addDocument(documents, "photo", "Photo", customer.getPhotoDocumentName());
@@ -965,6 +992,27 @@ public class AdminController {
     };
   }
 
+  private String documentContentTypeForType(User customer, String documentType) {
+    return switch (documentType) {
+      case "photo" -> customer.getPhotoDocumentContentType();
+      case "drivingLicense" -> customer.getDrivingLicenseDocumentContentType();
+      case "electricityBill" -> customer.getElectricityBillDocumentContentType();
+      case "rentAgreement" -> customer.getRentAgreementDocumentContentType();
+      case "companyBonafideLetter" -> customer.getCompanyBonafideLetterDocumentContentType();
+      default -> null;
+    };
+  }
+
+  private byte[] documentDataForType(User customer, String documentType) {
+    return switch (documentType) {
+      case "photo" -> customer.getPhotoDocumentData();
+      case "drivingLicense" -> customer.getDrivingLicenseDocumentData();
+      case "electricityBill" -> customer.getElectricityBillDocumentData();
+      case "rentAgreement" -> customer.getRentAgreementDocumentData();
+      case "companyBonafideLetter" -> customer.getCompanyBonafideLetterDocumentData();
+      default -> null;
+    };
+  }
   private String documentFileName(String documentName) {
     if (documentName == null || documentName.isBlank()) {
       return "";
@@ -987,9 +1035,19 @@ public class AdminController {
         .findFirst()
         .orElse(null);
   }
-  private ResponseEntity<Resource> registrationDocumentResponse(String documentName) {
+  private ResponseEntity<Resource> registrationDocumentResponse(String documentName, byte[] documentData, String documentContentType) {
     if (documentName == null || documentName.isBlank()) {
       throw new BadRequestException("Registration document not found");
+    }
+
+    if (documentData != null && documentData.length > 0) {
+      MediaType mediaType = documentContentType == null || documentContentType.isBlank()
+          ? MediaType.APPLICATION_OCTET_STREAM
+          : MediaType.parseMediaType(documentContentType);
+      return ResponseEntity.ok()
+          .contentType(mediaType)
+          .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + documentFileName(documentName) + "\"")
+          .body(new ByteArrayResource(documentData));
     }
 
     Path uploadRoot = Path.of("uploads", "registration-documents").toAbsolutePath().normalize();
