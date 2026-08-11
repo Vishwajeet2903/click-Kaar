@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { API_BASE_URL } from './api.config';
 
-const API_URL = `${API_BASE_URL}/admin`;
+const API_URL = API_BASE_URL + '/admin';
+const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
 
 export interface EmployeeRequest {
   fullName: string;
@@ -97,6 +98,33 @@ export interface ProductImportResponse {
   products: AdminProductResponse[];
 }
 
+export interface AdminKitRequest {
+  name: string;
+  description: string;
+  imageUrl: string;
+  rent: number;
+  productIds: number[];
+  active: boolean;
+}
+
+export interface AdminKitProductResponse {
+  id: number;
+  name: string;
+  brand: string;
+  category: string;
+  dailyPrice: number;
+}
+
+export interface AdminKitResponse {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+  rent: number;
+  active: boolean;
+  products: AdminKitProductResponse[];
+  createdAt: string;
+}
 export interface AdminBookingResponse {
   id: number;
   bookingNumber: string;
@@ -431,6 +459,29 @@ export class AdminService {
     });
   }
 
+  getKits(): Observable<AdminKitResponse[]> {
+    return this.http.get<AdminKitResponse[]>(`${API_URL}/kits`, {
+      headers: this.authHeaders()
+    });
+  }
+
+  createKit(request: AdminKitRequest): Observable<AdminKitResponse> {
+    return this.http.post<AdminKitResponse>(`${API_URL}/kits`, request, {
+      headers: this.authHeaders()
+    });
+  }
+
+  createKitWithImage(request: AdminKitRequest, image: File): Observable<AdminKitResponse> {
+    return this.http.post<AdminKitResponse>(`${API_URL}/kits/save`, this.kitFormData(request, image), {
+      headers: this.authHeaders()
+    });
+  }
+
+  deleteKit(kitId: number): Observable<void> {
+    return this.http.delete<void>(`${API_URL}/kits/${kitId}`, {
+      headers: this.authHeaders()
+    });
+  }
   uploadImage(file: File): Observable<ImageUploadResponse> {
     const formData = new FormData();
     formData.append('image', file);
@@ -560,6 +611,17 @@ export class AdminService {
     }
     return formData;
   }
+  private resolveKitImageUrl(kit: AdminKitResponse): AdminKitResponse {
+    if (kit.imageUrl.startsWith('/uploads/')) {
+      return { ...kit, imageUrl: `${API_ORIGIN}${kit.imageUrl}` };
+    }
+    return kit;
+  }
+  private kitFormData(request: AdminKitRequest, image: File): FormData {
+    const formData = new FormData();
+    formData.append('kit', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+    formData.append('image', image);
+    return formData;
+  }
 }
-
 

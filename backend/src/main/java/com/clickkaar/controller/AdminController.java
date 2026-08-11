@@ -5,6 +5,8 @@ import com.clickkaar.dto.admin.EmployeeRequest;
 import com.clickkaar.dto.admin.EmployeeResponse;
 import com.clickkaar.dto.admin.CustomerVerificationResponse;
 import com.clickkaar.dto.admin.RegistrationDocumentResponse;
+import com.clickkaar.dto.admin.KitRequest;
+import com.clickkaar.dto.admin.KitResponse;
 import com.clickkaar.dto.content.CustomerReviewResponse;
 import com.clickkaar.dto.content.GalleryImageRequest;
 import com.clickkaar.dto.content.GalleryImageResponse;
@@ -47,6 +49,7 @@ import com.clickkaar.repository.WishlistRepository;
 import com.clickkaar.service.ProductImportService;
 import com.clickkaar.service.ProductService;
 import com.clickkaar.service.ContentService;
+import com.clickkaar.service.KitService;
 import com.clickkaar.util.BusinessIdFormatter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -121,6 +124,7 @@ public class AdminController {
   private final ProductService productService;
   private final ProductImportService productImportService;
   private final ContentService contentService;
+  private final KitService kitService;
   private final ObjectMapper objectMapper;
   private final JavaMailSender mailSender;
 
@@ -245,6 +249,35 @@ public class AdminController {
     return new ImageUploadResponse(contentService.uploadImage(image));
   }
 
+  @GetMapping("/kits")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
+  public List<KitResponse> kits() {
+    return kitService.findAll();
+  }
+
+  @PostMapping("/kits")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
+  @ResponseStatus(HttpStatus.CREATED)
+  public KitResponse createKit(@Valid @RequestBody KitRequest request) {
+    return kitService.create(request);
+  }
+
+  @PostMapping(value = "/kits/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
+  @ResponseStatus(HttpStatus.CREATED)
+  public KitResponse createKitWithImage(
+      @RequestPart("kit") String kitJson,
+      @RequestPart("image") MultipartFile image
+  ) {
+    return kitService.create(kitRequestWithImage(kitJson, image));
+  }
+
+  @DeleteMapping("/kits/{kitId}")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteKit(@PathVariable Long kitId) {
+    kitService.delete(kitId);
+  }
   @DeleteMapping("/gallery/{imageId}")
   @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','CONTENT_EDITOR')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -896,7 +929,7 @@ public class AdminController {
 
   private void addDocument(List<RegistrationDocumentResponse> documents, String type, String label, String documentName) {
     if (documentName != null && !documentName.isBlank()) {
-      documents.add(new RegistrationDocumentResponse(type, label, Path.of(documentName).getFileName().toString()));
+      documents.add(new RegistrationDocumentResponse(type, label, documentFileName(documentName)));
     }
   }
 
@@ -1165,6 +1198,25 @@ public class AdminController {
   public record AdminCouponResponse(Long id, String code, BigDecimal discountPercent, boolean active, Integer usageLimit, int usedCount, LocalDate validUntil, LocalDateTime createdAt) {}
   public record PaymentRemarkLogResponse(Long id, String oldRemark, String newRemark, String changedBy, LocalDateTime changedAt) {}
   public record AdminBlogPostResponse(Long id, String title, String slug, String coverImage, String category, String author, BlogStatus status, LocalDate publishDate, String tags, String seoTitle, String metaDescription, String seoKeywords, String content) {}
+  private KitRequest kitRequestWithImage(String kitJson, MultipartFile image) {
+    try {
+      KitRequest request = objectMapper.readValue(kitJson, KitRequest.class);
+      if (image == null || image.isEmpty()) {
+        return request;
+      }
+      String imageUrl = contentService.uploadImage(image);
+      return new KitRequest(
+          request.name(),
+          request.description(),
+          imageUrl,
+          request.rent(),
+          request.productIds(),
+          request.active()
+      );
+    } catch (JsonProcessingException exception) {
+      throw new BadRequestException("Invalid kit payload");
+    }
+  }
   public record ImageUploadResponse(String imageUrl) {}
   public record AdminStaticContentResponse(String key, String title, LocalDateTime updatedAt, String status) {}
   public record AdminContentResponse(List<AdminBlogPostResponse> blogPosts, List<AdminStaticContentResponse> staticContent) {}

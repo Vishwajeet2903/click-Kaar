@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.directive';
+import { Kit, KitService } from '../services/kit.service';
 
 @Component({
   selector: 'app-showcase-section',
@@ -16,8 +17,8 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       </div>
 
       <div class="package-showcase">
-        @for (item of showcase; track item.title; let index = $index) {
-          <a routerLink="/catalogue" [queryParams]="{ package: item.package }" class="package-card" appScrollReveal="slide-left" [revealStagger]="index * 120">
+        @for (item of showcase(); track item.title; let index = $index) {
+          <a routerLink="/catalogue" [queryParams]="{ package: item.packageSlug }" class="package-card" appScrollReveal="slide-left" [revealStagger]="index * 120">
             <img [src]="item.image" [alt]="item.title">
             <div class="listing-meta">
               <b>{{ item.price }}</b>
@@ -66,10 +67,12 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
     }
   `]
 })
-export class ShowcaseSectionComponent {
-  readonly showcase = [
+export class ShowcaseSectionComponent implements OnInit {
+  private readonly kitService = inject(KitService);
+
+  private readonly fallbackShowcase: Array<{ packageSlug: string; kicker: string; title: string; price: string; status: string; text: string; image: string }> = [
     {
-      package: 'wedding',
+      packageSlug: 'wedding',
       kicker: 'Wedding Package',
       title: 'Wedding Photography Kit',
       price: 'From Rs. 4,999/day',
@@ -78,7 +81,7 @@ export class ShowcaseSectionComponent {
       image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80'
     },
     {
-      package: 'wildlife',
+      packageSlug: 'wildlife',
       kicker: 'Wildlife Package',
       title: 'Wildlife Photography Kit',
       price: 'From Rs. 3,499/day',
@@ -87,7 +90,7 @@ export class ShowcaseSectionComponent {
       image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80'
     },
     {
-      package: 'podcast',
+      packageSlug: 'podcast',
       kicker: 'Podcast Package',
       title: 'Podcast Studio Kit',
       price: 'From Rs. 2,499/day',
@@ -96,7 +99,7 @@ export class ShowcaseSectionComponent {
       image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=900&q=80'
     },
     {
-      package: 'youtube',
+      packageSlug: 'youtube',
       kicker: 'YouTube Package',
       title: 'YouTube Creator Kit',
       price: 'From Rs. 2,999/day',
@@ -105,4 +108,36 @@ export class ShowcaseSectionComponent {
       image: 'https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=80'
     }
   ];
+
+  readonly showcase = signal<Array<{ packageSlug: string; kicker: string; title: string; price: string; status: string; text: string; image: string }>>(this.fallbackShowcase);
+
+  ngOnInit(): void {
+    this.kitService.getKits().subscribe({
+      next: (kits) => {
+        if (kits.length) {
+          this.showcase.set(kits.map((kit) => this.mapKitCard(kit)));
+        }
+      }
+    });
+  }
+
+  private mapKitCard(kit: Kit): { packageSlug: string; kicker: string; title: string; price: string; status: string; text: string; image: string } {
+    return {
+      packageSlug: this.slugify(kit.name),
+      kicker: 'Gear Kit',
+      title: kit.name,
+      price: `From Rs. ${this.formatRent(kit.rent)}/day`,
+      status: 'Shoot ready',
+      text: kit.description,
+      image: kit.imageUrl
+    };
+  }
+
+  private formatRent(rent: number): string {
+    return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(rent);
+  }
+
+  private slugify(value: string): string {
+    return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'kit';
+  }
 }

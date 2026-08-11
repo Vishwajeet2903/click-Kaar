@@ -10,6 +10,7 @@ import {
   AdminBlogPostResponse,
   AdminCouponResponse,
   AdminContentResponse,
+  AdminKitResponse,
   AdminCustomerDetailResponse,
   AdminPaymentResponse,
   AdminProductRequest,
@@ -122,6 +123,24 @@ interface AdminGalleryImage {
   createdAt: string;
 }
 
+interface AdminKitProduct {
+  id: number;
+  name: string;
+  brand: string;
+  category: string;
+  dailyPrice: number;
+}
+
+interface AdminKit {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+  rent: number;
+  active: boolean;
+  products: AdminKitProduct[];
+  createdAt: string;
+}
 interface BlogPostAdmin {
   id: number;
   title: string;
@@ -1197,6 +1216,7 @@ interface AdminNoteDialog {
                 <div class="content-switcher surface">
                   <button type="button" [class.active]="activeContentSection() === 'blog'" (click)="setAdminContentSection('blog')">Blog & SEO</button>
                   <button type="button" [class.active]="activeContentSection() === 'gallery'" (click)="setAdminContentSection('gallery')">Gallery</button>
+                  <button type="button" [class.active]="activeContentSection() === 'kits'" (click)="setAdminContentSection('kits')">Kits</button>
                 </div>
 
                 @if (activeContentSection() === 'blog') {
@@ -1316,6 +1336,115 @@ interface AdminNoteDialog {
                         <p class="muted">No gallery images have been added yet.</p>
                       }
                     </div>
+                    </section>
+                  </div>
+                }
+
+                @if (activeContentSection() === 'kits') {
+                  <div class="split-grid content-gallery-grid">
+                    <form class="surface panel kit-form" [formGroup]="kitForm" (ngSubmit)="submitKit()">
+                      <h3 class="gallery-card-title">Create kit</h3>
+                      @if (kitFormError) {
+                        <p class="form-alert" role="alert">{{ kitFormError }}</p>
+                      }
+                      <div class="gallery-upload-flow">
+                        <div class="gallery-image-field">
+                          <span>Kit image</span>
+                          <label class="gallery-upload-box" [class.has-preview]="kitPreviewUrl">
+                            <input type="file" accept="image/*" (change)="setKitFile($event)">
+                            @if (kitPreviewUrl) {
+                              <img [src]="kitPreviewUrl" [alt]="kitForm.controls.name.value || 'Selected kit image preview'">
+                            } @else {
+                              <b>Choose image</b>
+                              <small>JPG, PNG, or WebP up to 10MB</small>
+                            }
+                          </label>
+                        </div>
+                        <div class="gallery-upload-fields">
+                          <label>Kit name<input formControlName="name" placeholder="Wedding creator kit"></label>
+                          <label>Description<textarea formControlName="description" rows="4" placeholder="What this kit includes and when to rent it"></textarea></label>
+                          <label>Kit rent<input type="number" formControlName="rent" min="1"></label>
+                          <label class="checkbox-label"><input type="checkbox" formControlName="active"><span>Show as active</span></label>
+                          @if (kitPreviewUrl) {
+                            <div class="selected-file">
+                              <span>Image selected</span>
+                              <button type="button" class="ghost-mini" (click)="clearKitFile()">Remove</button>
+                            </div>
+                          }
+                        </div>
+                      </div>
+
+                      <div class="kit-product-picker">
+                        <div class="detail-section-head">
+                          <h4>Products</h4>
+                          <span>{{ kitForm.controls.productIds.value.length }} selected - {{ kitProductsTotal() | currency:'INR':'symbol':'1.0-0' }} daily total</span>
+                        </div>
+                        @for (product of products(); track product.id) {
+                          <label class="kit-product-option">
+                            <input type="checkbox" [checked]="kitProductSelected(product.id)" (change)="toggleKitProduct(product.id, $any($event.target).checked)">
+                            <span>
+                              <strong>{{ product.name }}</strong>
+                              <small>{{ product.brand }} - {{ product.category }} - {{ product.dailyPrice | currency:'INR':'symbol':'1.0-0' }} / day</small>
+                            </span>
+                          </label>
+                        } @empty {
+                          <p class="muted">Add products in Inventory before creating a kit.</p>
+                        }
+                      </div>
+
+                      <div class="kit-form-actions">
+                        <button type="button" class="ghost-btn" (click)="openKitPreview()">Preview</button>
+                        <button type="submit" class="primary-btn" [disabled]="isSubmittingKit">{{ isSubmittingKit ? 'Creating...' : 'Create kit' }}</button>
+                      </div>
+                    </form>
+
+                    @if (showKitPreview()) {
+                      <section class="surface panel kit-preview-panel" id="kitPreviewPanel" tabindex="-1">
+                        <div class="panel-head">
+                          <h3>Kit preview</h3>
+                          <button type="button" class="link-btn" (click)="showKitPreview.set(false)">Hide</button>
+                        </div>
+                        <article class="kit-preview-card">
+                          @if (kitPreviewUrl) {
+                            <img [src]="kitPreviewUrl" [alt]="kitForm.controls.name.value || 'Kit preview'">
+                          } @else {
+                            <span class="image-short-name">KIT</span>
+                          }
+                          <div class="listing-meta">
+                            <b>{{ kitPreviewPrice() }}</b>
+                            <small>{{ kitForm.controls.active.value ? 'Shoot ready' : 'Hidden' }}</small>
+                          </div>
+                          <span>Gear Kit</span>
+                          <h3>{{ kitForm.controls.name.value || 'Kit name' }}</h3>
+                          <p>{{ kitForm.controls.description.value || 'Kit description preview.' }}</p>
+                        </article>
+                        <div class="kit-preview-products">
+                          <span>Included products</span>
+                          <strong>{{ selectedKitProductNames() || 'No products selected' }}</strong>
+                        </div>
+                      </section>
+                    }
+
+                    <section class="surface panel">
+                      <div class="panel-head">
+                        <h3>Kits</h3>
+                        <button type="button" class="link-btn" (click)="loadKits()">Refresh</button>
+                      </div>
+                      <div class="kit-admin-grid">
+                        @for (kit of kits(); track kit.id) {
+                          <article>
+                            <img [src]="kit.imageUrl" [alt]="kit.name">
+                            <div>
+                              <strong>{{ kit.name }}</strong>
+                              <span>{{ kit.rent | currency:'INR':'symbol':'1.0-0' }} rent - {{ kit.products.length }} product{{ kit.products.length === 1 ? '' : 's' }} - {{ kit.active ? 'Active' : 'Hidden' }}</span>
+                              <small>{{ kitProductNames(kit) }}</small>
+                            </div>
+                            <button type="button" class="danger-btn delete-btn" [disabled]="deletingKitId === kit.id" (click)="deleteKit(kit)">{{ deletingKitId === kit.id ? 'Deleting...' : 'Delete' }}</button>
+                          </article>
+                        } @empty {
+                          <p class="muted">No kits have been created yet.</p>
+                        }
+                      </div>
                     </section>
                   </div>
                 }
@@ -2012,6 +2141,31 @@ interface AdminNoteDialog {
     .gallery-admin-grid img { aspect-ratio: 16 / 10; border-radius: 6px; object-fit: cover; width: 100%; }
     .gallery-admin-grid strong, .gallery-admin-grid span { display: block; overflow-wrap: anywhere; }
     .gallery-admin-grid span { color: var(--admin-muted); font-size: .8rem; font-weight: 800; margin-top: .2rem; }
+    .kit-product-picker { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 8px; display: grid; gap: .55rem; max-height: 340px; overflow-y: auto; padding: .85rem; }
+    .kit-product-option { align-items: start; background: #fff; border: 1px solid rgba(17,17,17,.07); border-radius: 6px; cursor: pointer; display: grid; gap: .65rem; grid-template-columns: 18px minmax(0, 1fr); padding: .65rem; }
+    .kit-product-option input { margin-top: .2rem; min-height: 18px; width: 18px; }
+    .kit-product-option span, .kit-product-option strong, .kit-product-option small { display: block; min-width: 0; overflow-wrap: anywhere; }
+    .kit-product-option small { color: var(--admin-muted); font-size: .76rem; font-weight: 800; line-height: 1.35; margin-top: .18rem; }
+    .kit-form-actions { display: grid; gap: .75rem; grid-template-columns: minmax(120px, .35fr) minmax(160px, .65fr); }
+    .kit-form-actions button { width: 100%; }
+    .kit-preview-panel { align-content: start; overflow: visible; outline: none; position: sticky; top: 92px; }
+    .kit-preview-card { background: #f6f6f4; border-radius: 18px; box-shadow: 0 18px 38px rgba(0,0,0,.1); display: grid; gap: .4rem; overflow: hidden; padding: .6rem; }
+    .kit-preview-card img, .kit-preview-card > .image-short-name { aspect-ratio: 1.22; border-radius: 13px; object-fit: cover; width: 100%; }
+    .kit-preview-card .listing-meta { align-items: center; background: #fff; border-radius: 999px; display: flex; gap: .6rem; justify-content: space-between; margin: .55rem .15rem .1rem; padding: .45rem .6rem; }
+    .kit-preview-card .listing-meta b { color: #111; font-size: .76rem; font-weight: 950; }
+    .kit-preview-card .listing-meta small { color: var(--admin-accent); font-size: .66rem; font-weight: 900; }
+    .kit-preview-card > span { color: var(--admin-accent); display: block; font-size: .64rem; font-weight: 900; letter-spacing: .14em; margin: .45rem .25rem .1rem; text-transform: uppercase; }
+    .kit-preview-card h3 { color: #111; font-size: 1.32rem; line-height: 1.08; margin: 0 .25rem .35rem; overflow-wrap: anywhere; }
+    .kit-preview-card p { color: #555; display: block; font-size: .82rem; font-weight: 800; line-height: 1.45; margin: 0 .25rem .35rem; overflow-wrap: anywhere; }
+    .kit-preview-products { background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 8px; display: grid; gap: .22rem; margin-top: .7rem; padding: .7rem; }
+    .kit-preview-products span { color: #777; font-size: .68rem; font-weight: 950; text-transform: uppercase; }
+    .kit-preview-products strong { color: #111; font-size: .82rem; line-height: 1.4; overflow-wrap: anywhere; }
+    .kit-admin-grid { display: grid; gap: .85rem; }
+    .kit-admin-grid article { align-items: start; background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; display: grid; gap: .75rem; grid-template-columns: 92px minmax(0, 1fr) auto; padding: .75rem; }
+    .kit-admin-grid img { aspect-ratio: 1; border-radius: 6px; object-fit: cover; width: 92px; }
+    .kit-admin-grid strong, .kit-admin-grid span, .kit-admin-grid small { display: block; overflow-wrap: anywhere; }
+    .kit-admin-grid span { color: var(--admin-muted); font-size: .8rem; font-weight: 850; margin-top: .2rem; }
+    .kit-admin-grid small { color: #8a6200; font-size: .74rem; font-weight: 800; line-height: 1.35; margin-top: .25rem; }
     .selected-file { align-items: center; background: var(--admin-soft); border: 1px solid var(--admin-line); border-radius: 8px; display: flex; gap: .5rem; justify-content: space-between; min-width: 0; padding: .42rem .55rem; }
     .selected-file span { color: #333; font-size: .82rem; font-weight: 800; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .review-list article { align-items: start; }
@@ -2181,7 +2335,9 @@ interface AdminNoteDialog {
       .blog-form-grid .wide-field { grid-column: auto; }
       .blog-form-actions { align-items: stretch; flex-direction: column; }
       .blog-form-actions button { width: 100%; }
-      .content-switcher { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+      .kit-form-actions { grid-template-columns: 1fr; }
+      .kit-preview-panel { position: static; }
+      .content-switcher { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
       .content-switcher button { width: 100%; }
       .gallery-upload-box { min-height: 132px; }
       .inventory-filter-row .search-input, .inventory-filter-row select, .booking-filter-row .search-input, .booking-filter-row select, .booking-filter-row .month-input, .search-input { flex-basis: auto; max-width: none; width: 100%; }
@@ -2218,6 +2374,8 @@ interface AdminNoteDialog {
       .inventory-action-cell, .booking-action-cell, .action-cell { align-items: stretch; flex-direction: column; flex-wrap: nowrap; min-width: 0; }
       .inventory-action-cell .mini-btn, .inventory-action-cell .danger-btn, .inventory-action-cell .return-btn, .booking-action-cell .mini-btn, .booking-action-cell .ghost-mini { width: 100%; }
       .request-list article { align-items: stretch; flex-direction: column; }
+      .kit-admin-grid article { grid-template-columns: 1fr; }
+      .kit-admin-grid img { width: 100%; }
       .request-summary { grid-template-columns: 38px minmax(0, 1fr); }
       .request-avatar { width: 38px; }
       .request-meta { align-items: stretch; grid-template-columns: 1fr; justify-items: stretch; }
@@ -2322,6 +2480,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly coupons = signal<AdminCoupon[]>([]);
   readonly reviews = signal<AdminReview[]>([]);
   readonly galleryImages = signal<AdminGalleryImage[]>([]);
+  readonly kits = signal<AdminKit[]>([]);
+  readonly showKitPreview = signal(false);
   readonly blogPosts = signal<BlogPostAdmin[]>([]);
   readonly staticContent = signal<StaticContentItem[]>([]);
 
@@ -2335,7 +2495,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   readonly employeeQuery = signal('');
   readonly reviewQuery = signal('');
   readonly reviewRatingFilter = signal('');
-  readonly activeContentSection = signal<'blog' | 'gallery'>('blog');
+  readonly activeContentSection = signal<'blog' | 'gallery' | 'kits'>('blog');
   readonly employeeView = signal<'manage' | 'create'>('manage');
   editingProductId?: number;
   createdEmployee?: EmployeeResponse;
@@ -2347,8 +2507,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   couponFormError = '';
   blogFormError = '';
   galleryFormError = '';
+  kitFormError = '';
   galleryFileName = '';
   galleryPreviewUrl = '';
+  kitPreviewUrl = '';
   blogCoverFileName = '';
   pendingCustomers: CustomerVerificationResponse[] = [];
   pendingPage = 1;
@@ -2371,9 +2533,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   deletingEmployeeId?: number;
   deletingCustomerId?: number;
   deletingProductId?: number;
+  deletingKitId?: number;
   updatingCouponStatusId?: number;
   isSubmittingBlog = false;
   isSubmittingGallery = false;
+  isSubmittingKit = false;
   editingBlogPostId?: number;
   isLoadingPending = false;
   verifyingRequestId?: number;
@@ -2406,6 +2570,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   paymentRemarkLogError = '';
   selectedInventoryImportFile?: File;
   private selectedGalleryFile?: File;
+  private selectedKitFile?: File;
   private selectedBlogCoverFile?: File;
 
   readonly tabs: { id: AdminTab; label: string; count: string }[] = [
@@ -2468,6 +2633,13 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     active: [true]
   });
 
+  readonly kitForm = this.fb.nonNullable.group({
+    name: ['', Validators.required],
+    description: ['', Validators.required],
+    rent: [0, [Validators.required, Validators.min(1)]],
+    productIds: [[] as number[], Validators.required],
+    active: [true]
+  });
   readonly blogForm = this.fb.nonNullable.group({
     title: ['', Validators.required],
     slug: ['', Validators.required],
@@ -2505,7 +2677,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       customers: 'Customer management',
       payments: 'Payments & refunds',
       coupons: 'Coupon management',
-      content: 'Blog, content & gallery',
+      content: 'Blog, content, gallery & kits',
       reviews: 'Review management',
       reports: 'Reports & analytics',
       employees: 'Employee management',
@@ -2620,6 +2792,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.clearDocumentPreviews();
     this.clearGalleryPreview();
+    this.clearKitPreview();
   }
 
   private loadAdminData(): void {
@@ -2630,6 +2803,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.loadCoupons();
     this.loadReviews();
     this.loadGalleryImages();
+    this.loadKits();
     this.loadContent();
     this.loadCategoryReports();
     this.loadRolePermissions();
@@ -2762,6 +2936,15 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  loadKits(): void {
+    this.adminService.getKits().subscribe({
+      next: (kits) => {
+        this.kits.set(kits.map((kit) => this.mapKit(kit)));
+        this.updateContentTabCount();
+      },
+      error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+    });
+  }
   private loadContent(): void {
     this.adminService.getContent().subscribe({
       next: (content) => this.applyContent(content),
@@ -2889,7 +3072,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.scrollToSectionTop();
   }
 
-  setAdminContentSection(section: 'blog' | 'gallery'): void {
+  setAdminContentSection(section: 'blog' | 'gallery' | 'kits'): void {
     this.activeContentSection.set(section);
     this.scrollToActiveSection();
   }
@@ -3561,8 +3744,43 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.selectedGalleryFile = undefined;
     this.galleryFileName = '';
     this.clearGalleryPreview();
+    this.clearKitPreview();
   }
 
+  setKitFile(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const file = input?.files?.[0];
+    this.clearKitPreview();
+    this.selectedKitFile = file;
+    if (file) {
+      this.kitPreviewUrl = URL.createObjectURL(file);
+    }
+  }
+
+  clearKitFile(): void {
+    this.selectedKitFile = undefined;
+    this.clearKitPreview();
+  }
+
+  toggleKitProduct(productId: number, checked: boolean): void {
+    const currentIds = this.kitForm.controls.productIds.value;
+    const nextIds = checked
+      ? Array.from(new Set([...currentIds, productId]))
+      : currentIds.filter((id) => id !== productId);
+    this.kitForm.controls.productIds.setValue(nextIds);
+    this.kitForm.controls.productIds.markAsTouched();
+  }
+
+  kitProductSelected(productId: number): boolean {
+    return this.kitForm.controls.productIds.value.includes(productId);
+  }
+
+  kitProductsTotal(): number {
+    const selectedIds = new Set(this.kitForm.controls.productIds.value);
+    return this.products()
+      .filter((product) => selectedIds.has(product.id))
+      .reduce((total, product) => total + product.dailyPrice, 0);
+  }
   submitCoupon(): void {
     this.couponFormError = '';
     this.normalizeCouponInput();
@@ -3736,6 +3954,86 @@ export class AdminPageComponent implements OnInit, OnDestroy {
           this.blogFormError = this.authService.getErrorMessage(error);
         }
       });
+    });
+  }
+
+  openKitPreview(): void {
+    this.showKitPreview.set(true);
+    window.setTimeout(() => {
+      document.querySelector('#kitPreviewPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  kitPreviewPrice(): string {
+    const rent = Number(this.kitForm.controls.rent.value) || 0;
+    return `From Rs. ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(rent)}/day`;
+  }
+  selectedKitProductNames(): string {
+    const selectedIds = new Set(this.kitForm.controls.productIds.value);
+    return this.products()
+      .filter((product) => selectedIds.has(product.id))
+      .map((product) => product.name)
+      .join(', ');
+  }
+  kitProductNames(kit: AdminKit): string {
+    return kit.products.map((product) => product.name).join(', ');
+  }
+  submitKit(): void {
+    this.kitFormError = '';
+    if (this.kitForm.invalid || !this.selectedKitFile || this.isSubmittingKit) {
+      this.kitForm.markAllAsTouched();
+      this.kitFormError = 'Add a kit image, name, description, rent, and at least one product.';
+      return;
+    }
+
+    this.isSubmittingKit = true;
+    const value = this.kitForm.getRawValue();
+    this.adminService.createKitWithImage({
+      name: value.name,
+      description: value.description,
+      imageUrl: '',
+      rent: Number(value.rent),
+      productIds: value.productIds,
+      active: value.active
+    }, this.selectedKitFile)
+      .pipe(finalize(() => {
+        this.isSubmittingKit = false;
+      }))
+      .subscribe({
+        next: (kit) => {
+          this.kits.update((items) => [this.mapKit(kit), ...items]);
+          this.updateContentTabCount();
+          this.kitForm.reset({ name: '', description: '', rent: 0, productIds: [], active: true });
+          this.clearKitFile();
+          this.showTopMessage('Kit created.', 2400);
+        },
+        error: (error) => {
+          this.kitFormError = this.authService.getErrorMessage(error);
+        }
+      });
+  }
+
+  deleteKit(kit: AdminKit): void {
+    if (this.deletingKitId) {
+      return;
+    }
+
+    this.openConfirmDialog('Delete kit?', kit.name, 'Delete kit', 'danger', () => {
+      this.deletingKitId = kit.id;
+      this.adminService.deleteKit(kit.id)
+        .pipe(finalize(() => {
+          if (this.deletingKitId === kit.id) {
+            this.deletingKitId = undefined;
+          }
+        }))
+        .subscribe({
+          next: () => {
+            this.kits.update((items) => items.filter((item) => item.id !== kit.id));
+            this.updateContentTabCount();
+            this.showTopMessage('Kit deleted.', 2200);
+          },
+          error: (error) => this.showTopMessage(this.authService.getErrorMessage(error), 3600)
+        });
     });
   }
 
@@ -4122,6 +4420,24 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapKit(kit: AdminKitResponse): AdminKit {
+    return {
+      id: kit.id,
+      name: kit.name,
+      description: kit.description,
+      imageUrl: kit.imageUrl,
+      rent: Number(kit.rent),
+      active: kit.active,
+      products: kit.products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        brand: product.brand,
+        category: this.categoryFromApi(product.category),
+        dailyPrice: Number(product.dailyPrice)
+      })),
+      createdAt: kit.createdAt
+    };
+  }
   private mapReview(review: AdminReviewResponse): AdminReview {
     return {
       id: review.id,
@@ -4190,7 +4506,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   private updateContentTabCount(): void {
-    this.updateTabCount('content', String(this.blogPosts().length + this.galleryImages().length));
+    this.updateTabCount('content', String(this.blogPosts().length + this.galleryImages().length + this.kits().length));
   }
 
   private productRequestFromForm(): AdminProductRequest {
@@ -4478,6 +4794,12 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  private clearKitPreview(): void {
+    if (this.kitPreviewUrl) {
+      URL.revokeObjectURL(this.kitPreviewUrl);
+      this.kitPreviewUrl = '';
+    }
+  }
   private downloadCsv(filename: string, rows: unknown[]): void {
     if (!rows.length) {
       this.showTopMessage('No rows available to export.', 2200);

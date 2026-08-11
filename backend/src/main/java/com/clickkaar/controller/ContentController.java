@@ -6,10 +6,12 @@ import com.clickkaar.dto.content.CustomerReviewResponse;
 import com.clickkaar.dto.content.FaqRequest;
 import com.clickkaar.dto.content.GalleryImageResponse;
 import com.clickkaar.dto.content.StaticContentRequest;
+import com.clickkaar.dto.admin.KitResponse;
 import com.clickkaar.entity.ContactMessage;
 import com.clickkaar.entity.Faq;
 import com.clickkaar.entity.StaticContent;
 import com.clickkaar.service.ContentService;
+import com.clickkaar.service.KitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContentController {
   private final ContentService contentService;
+  private final KitService kitService;
 
   @PostMapping("/contact")
   public ContactMessage contact(@Valid @RequestBody ContactMessageRequest request) {
