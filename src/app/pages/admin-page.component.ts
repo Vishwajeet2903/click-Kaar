@@ -1,4 +1,5 @@
 import { CurrencyPipe, DatePipe, PercentPipe, formatDate } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -4701,7 +4702,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           if (this.selectedPendingCustomer?.requestId === customer.requestId) {
-            this.documentPreviewError = this.authService.getErrorMessage(error);
+            this.documentPreviewError = this.documentErrorMessage(error);
           }
           markComplete();
         },
@@ -4740,7 +4741,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           if (this.selectedCustomerDetail?.id === customer.id) {
-            this.documentPreviewError = this.authService.getErrorMessage(error);
+            this.documentPreviewError = this.documentErrorMessage(error);
           }
           markComplete();
         },
@@ -4749,6 +4750,23 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         }
       });
     });
+  }
+  private documentErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 400 || error.status === 404) {
+        return 'One or more uploaded documents are not available on the deployed backend.';
+      }
+      if (error.status === 401 || error.status === 403) {
+        return 'You are not authorized to view these uploaded documents.';
+      }
+      if (error.status === 0) {
+        return 'Unable to reach the backend while loading uploaded documents.';
+      }
+      if (error.status >= 500) {
+        return 'Backend server error while loading uploaded documents.';
+      }
+    }
+    return this.authService.getErrorMessage(error);
   }
   private createDocumentPreview(document: RegistrationDocumentResponse, blob: Blob): DocumentPreview {
     return {

@@ -378,7 +378,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers/{customerId}/details")
-  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public AdminCustomerDetailResponse customerDetails(@PathVariable Long customerId) {
     User customer = userRepository.findById(customerId)
         .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -389,7 +389,7 @@ public class AdminController {
   }
 
   @GetMapping("/customers/verified/{customerId}/documents/{documentType}")
-  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public ResponseEntity<Resource> verifiedCustomerDocument(@PathVariable Long customerId, @PathVariable String documentType) {
     User customer = userRepository.findById(customerId)
         .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -978,10 +978,9 @@ public class AdminController {
       throw new BadRequestException("Registration document not found");
     }
 
-    Path documentPath = Path.of(documentName).normalize();
     Path uploadRoot = Path.of("uploads", "registration-documents").toAbsolutePath().normalize();
-    Path absoluteDocumentPath = documentPath.toAbsolutePath().normalize();
-    if (!absoluteDocumentPath.startsWith(uploadRoot) || !Files.exists(absoluteDocumentPath)) {
+    Path absoluteDocumentPath = resolveRegistrationDocumentPath(documentName, uploadRoot);
+    if (absoluteDocumentPath == null) {
       throw new BadRequestException("Registration document not found");
     }
 
