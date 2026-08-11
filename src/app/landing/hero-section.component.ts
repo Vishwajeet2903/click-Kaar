@@ -103,6 +103,15 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
       0% { opacity: 0; transform: translateY(14px) scale(.82); }
       72% { opacity: 1; transform: var(--handle-transform) scale(1.08); }
       100% { opacity: 1; transform: var(--handle-transform); }
+    }    @media (min-width: 1600px) and (min-height: 900px) {
+      .hero-section { padding-top: 3.6rem; }
+      .hero-copy { max-width: 1040px; }
+      h1 { font-size: clamp(6.2rem, 7.4vw, 8.6rem); margin-bottom: .7rem; }
+      .hero-collage { height: clamp(580px, 56vh, 640px); max-width: 1520px; }
+      .collage-card { height: clamp(270px, 28vh, 320px); width: clamp(305px, 18vw, 360px); }
+      .handle { font-size: 1.05rem; padding: .72rem .95rem; }
+      .handle-blue { left: 16%; top: 12%; }
+      .handle-green { right: 10%; top: 18%; }
     }
     @media (max-width: 900px) {
       .card-1 { --final-transform: translate(-150%, -18%) rotate(-12deg); transform: var(--final-transform); }
