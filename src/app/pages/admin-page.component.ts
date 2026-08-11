@@ -360,7 +360,7 @@ interface AdminNoteDialog {
                     }
                   </section>
 
-                  <section class="surface panel registration-detail">
+                  <section #registrationDetailPanel class="surface panel registration-detail">
                     @if (selectedPendingCustomer) {
                       <div class="panel-head">
                         <div>
@@ -2156,7 +2156,7 @@ interface AdminNoteDialog {
       .admin-topbar h2 { font-size: clamp(.95rem, 5.6vw, 1.3rem); }
       .split-grid, .metric-grid, .card-grid, .form-grid, .blog-form-grid, .detail-grid, .document-grid, .gallery-upload-flow, .gallery-toggle-row, .gallery-admin-grid { grid-template-columns: 1fr; }
       .customer-management-grid { grid-template-columns: 1fr; }
-      .customer-detail-panel { scroll-margin-top: 7rem; }
+      .customer-detail-panel, .registration-detail { scroll-margin-top: 7rem; }
 
       .employee-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .employee-page-head { align-items: stretch; }
@@ -2302,6 +2302,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   @ViewChild('outwardDetailPanel') private outwardDetailPanel?: ElementRef<HTMLElement>;
   @ViewChild('inventoryProductDetailPanel') private inventoryProductDetailPanel?: ElementRef<HTMLElement>;
   @ViewChild('paymentDetailPanel') private paymentDetailPanel?: ElementRef<HTMLElement>;
+  @ViewChild('registrationDetailPanel') private registrationDetailPanel?: ElementRef<HTMLElement>;
 
   readonly authService = inject(AuthService);
 
@@ -2868,6 +2869,19 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     this.registrationDetailPage = 1;
     this.activeTab.set('registrations');
     this.loadDocumentPreviews(customer);
+    this.scrollToRegistrationDetailOnMobile();
+  }
+
+  private scrollToRegistrationDetailOnMobile(): void {
+    if (!window.matchMedia('(max-width: 760px)').matches) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      if (this.registrationDetailPanel?.nativeElement) {
+        this.smoothScrollToElement(this.registrationDetailPanel.nativeElement, 88, 760);
+      }
+    });
   }
 
   selectAdminTab(tab: AdminTab): void {
