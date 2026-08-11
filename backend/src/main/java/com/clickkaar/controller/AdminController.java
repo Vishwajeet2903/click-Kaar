@@ -965,6 +965,14 @@ public class AdminController {
     };
   }
 
+  private String documentFileName(String documentName) {
+    if (documentName == null || documentName.isBlank()) {
+      return "";
+    }
+    String normalized = documentName.replace('\\', '/');
+    int slashIndex = normalized.lastIndexOf('/');
+    return slashIndex >= 0 ? normalized.substring(slashIndex + 1) : normalized;
+  }
   private ResponseEntity<Resource> registrationDocumentResponse(String documentName) {
     if (documentName == null || documentName.isBlank()) {
       throw new BadRequestException("Registration document not found");
