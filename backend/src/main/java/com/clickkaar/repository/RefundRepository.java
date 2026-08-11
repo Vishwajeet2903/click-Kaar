@@ -4,4 +4,5 @@ import com.clickkaar.entity.Refund;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RefundRepository extends JpaRepository<Refund, Long> {
+  void deleteByPaymentBookingCustomerId(Long customerId);
 }

@@ -428,6 +428,11 @@ public class AdminController {
       throw new BadRequestException("Customer with active booking cannot be deleted. Block the customer instead.");
     }
     wishlistRepository.findByUserId(customerId).forEach(wishlistRepository::delete);
+    paymentRemarkLogRepository.deleteByPaymentBookingCustomerId(customerId);
+    refundRepository.deleteByPaymentBookingCustomerId(customerId);
+    paymentRepository.deleteByBookingCustomerId(customerId);
+    bookingNoteRepository.deleteByBookingCustomerId(customerId);
+    bookingRepository.deleteByCustomerId(customerId);
     userRepository.delete(customer);
   }
 
