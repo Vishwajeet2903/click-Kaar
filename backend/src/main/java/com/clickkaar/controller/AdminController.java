@@ -61,6 +61,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -317,7 +318,7 @@ public class AdminController {
   @GetMapping("/bookings")
   @Transactional(readOnly = true)
   public List<AdminBookingResponse> bookings() {
-    return bookingRepository.findAll().stream().map(this::adminBookingResponse).toList();
+    return bookingRepository.findAll(newestFirstSort()).stream().map(this::adminBookingResponse).toList();
   }
 
   @PatchMapping("/bookings/{bookingId}/status")
@@ -372,7 +373,7 @@ public class AdminController {
   @GetMapping("/customers")
   @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public List<AdminCustomerResponse> customers() {
-    return userRepository.findAll().stream()
+    return userRepository.findAll(newestFirstSort()).stream()
         .filter(user -> user.getRoles().stream().anyMatch(role -> role.getName() == RoleName.CUSTOMER))
         .map(this::adminCustomerResponse)
         .toList();
@@ -710,7 +711,7 @@ public class AdminController {
   @GetMapping("/customers/pending")
   @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER')")
   public List<CustomerVerificationResponse> pendingCustomers() {
-    return pendingRegistrationRepository.findAll().stream()
+    return pendingRegistrationRepository.findAll(newestFirstSort()).stream()
         .map(this::customerVerificationResponse)
         .toList();
   }
@@ -935,6 +936,10 @@ public class AdminController {
 
   private String configuredLoginUrl() {
     return loginUrl == null || loginUrl.isBlank() ? "https://click-kaar.com/login" : loginUrl.trim();
+  }
+
+  private Sort newestFirstSort() {
+    return Sort.by(Sort.Order.desc("createdAt"), Sort.Order.desc("id"));
   }
 
   private List<RegistrationDocumentResponse> documentsFor(PendingRegistration pendingRegistration) {
@@ -1318,6 +1323,4 @@ public class AdminController {
   public record RolePermissionResponse(String module, String superAdmin, String manager, String inventory, String content) {}
   public record AdminSettingsRequest(String gateway, String paymentPolicy, Integer depositPercent, Integer gstPercent, String notificationEmail, String whatsappNumber, String recaptchaKey, String analyticsId) {}
 }
-
-
 
