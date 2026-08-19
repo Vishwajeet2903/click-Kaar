@@ -450,7 +450,7 @@ export class AdminProductCreatePageComponent implements OnInit {
   }
 
   canManageInventory(): boolean {
-    return this.authService.hasRole('ADMIN') || this.authService.hasRole('MANAGER') || this.authService.hasRole('INVENTORY_STAFF');
+    return this.authService.hasRole('SUPER_ADMIN') || this.authService.hasRole('ADMIN') || this.authService.hasRole('MANAGER') || this.authService.hasRole('INVENTORY_STAFF');
   }
 
   resetProductForm(): void {

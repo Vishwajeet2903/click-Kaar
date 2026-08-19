@@ -38,19 +38,19 @@ public class ProductController {
   }
 
   @PostMapping
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public ProductResponse create(@Valid @RequestBody ProductRequest request) {
     return productService.create(request);
   }
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public ProductResponse update(@PathVariable Long id, @Valid @RequestBody ProductRequest request) {
     return productService.update(id, request);
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN','MANAGER','INVENTORY_STAFF')")
   public void delete(@PathVariable Long id) {
     productService.delete(id);
   }
