@@ -12,6 +12,7 @@ import com.clickkaar.entity.CustomerReview;
 import com.clickkaar.entity.Faq;
 import com.clickkaar.entity.GalleryImage;
 import com.clickkaar.entity.StaticContent;
+import com.clickkaar.entity.UploadedImage;
 import com.clickkaar.exception.BadRequestException;
 import com.clickkaar.exception.ResourceNotFoundException;
 import com.clickkaar.repository.ContactMessageRepository;
@@ -19,6 +20,7 @@ import com.clickkaar.repository.CustomerReviewRepository;
 import com.clickkaar.repository.FaqRepository;
 import com.clickkaar.repository.GalleryImageRepository;
 import com.clickkaar.repository.StaticContentRepository;
+import com.clickkaar.repository.UploadedImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,7 @@ public class ContentService {
   private final FaqRepository faqRepository;
   private final GalleryImageRepository galleryImageRepository;
   private final StaticContentRepository staticContentRepository;
+  private final UploadedImageRepository uploadedImageRepository;
 
   public ContactMessage contact(ContactMessageRequest request) {
     // reCAPTCHA validation placeholder: verify request.recaptchaToken() with Google before production.
@@ -207,16 +210,26 @@ public class ContentService {
 
     String originalFilename = file.getOriginalFilename() == null ? "image" : file.getOriginalFilename();
     String safeFilename = originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
+    String filename = UUID.randomUUID() + "-" + safeFilename;
+    String imageUrl = "/uploads/" + folder + "/" + filename;
     Path uploadDirectory = Path.of("uploads", folder);
-    Path destination = uploadDirectory.resolve(UUID.randomUUID() + "-" + safeFilename).normalize();
+    Path destination = uploadDirectory.resolve(filename).normalize();
 
     try {
+      byte[] data = file.getBytes();
+      uploadedImageRepository.save(UploadedImage.builder()
+          .path(imageUrl)
+          .filename(filename)
+          .folder(folder)
+          .contentType(contentType)
+          .data(data)
+          .build());
       Files.createDirectories(uploadDirectory);
-      file.transferTo(destination);
+      Files.write(destination, data);
     } catch (IOException exception) {
       throw new BadRequestException("Unable to save image");
     }
 
-    return "/uploads/" + folder + "/" + destination.getFileName();
+    return imageUrl;
   }
 }
